@@ -21,7 +21,7 @@ interface BannerProps {
 }
 
 function Banner({ notification, onDismiss }: BannerProps) {
-  const openWindow = useStore((s) => s.openWindow);
+  const launchApp = useStore((s) => s.launchApp);
   const apps = useStore((s) => s.apps);
   const { osTheme } = useTheme();
 
@@ -34,7 +34,7 @@ function Banner({ notification, onDismiss }: BannerProps) {
 
   const handleClick = () => {
     const app = apps[notification.appId];
-    if (app) openWindow(app);
+    if (app) launchApp(app);
     onDismiss();
   };
 

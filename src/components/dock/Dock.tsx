@@ -14,12 +14,12 @@ interface DockProps {
 }
 
 export function Dock({ onOpenApp }: DockProps) {
+  void onOpenApp;
   const dockAppIds = useStore((s) => s.dockAppIds);
   const apps = useStore((s) => s.apps);
   const runningAppIds = useStore((s) => s.runningAppIds);
   const windows = useStore((s) => s.windows);
-  const restoreWindow = useStore((s) => s.restoreWindow);
-  const focusWindow = useStore((s) => s.focusWindow);
+  const launchApp = useStore((s) => s.launchApp);
 
   const mouseX = useMotionValue(Infinity);
 
@@ -28,26 +28,7 @@ export function Dock({ onOpenApp }: DockProps) {
     .filter(Boolean) as AppConfig[];
 
   const handleDockClick = (app: AppConfig) => {
-    // If app has a minimized window → restore it
-    const minimizedWin = Object.values(windows).find(
-      (w) => w.appId === app.id && w.isMinimized
-    );
-    if (minimizedWin) {
-      restoreWindow(minimizedWin.id);
-      return;
-    }
-
-    // If app has an open window → focus it
-    const openWin = Object.values(windows).find(
-      (w) => w.appId === app.id && !w.isMinimized
-    );
-    if (openWin) {
-      focusWindow(openWin.id);
-      return;
-    }
-
-    // Otherwise open a new window
-    onOpenApp(app);
+    launchApp(app);
   };
 
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, startTransition } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, X } from 'lucide-react';
 import { useStore } from '@/store';
@@ -27,23 +27,23 @@ export function Spotlight({ open, onClose }: SpotlightProps) {
   const [selectedIdx, setSelectedIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const apps = useStore((s) => s.apps);
-  const openWindow = useStore((s) => s.openWindow);
-  const setRunning = useStore((s) => s.setRunning);
+  const launchApp = useStore((s) => s.launchApp);
 
   // Focus input when opened
   useEffect(() => {
     if (open) {
-      setQuery('');
-      setSelectedIdx(0);
+      startTransition(() => {
+        setQuery('');
+        setSelectedIdx(0);
+      });
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [open]);
 
   const handleOpenApp = useCallback((app: AppConfig) => {
-    openWindow(app);
-    setRunning(app.id, true);
+    launchApp(app);
     onClose();
-  }, [openWindow, setRunning, onClose]);
+  }, [launchApp, onClose]);
 
   const appList = Object.values(apps).filter((a) => !a.disabled);
 

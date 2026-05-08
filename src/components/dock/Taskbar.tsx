@@ -21,19 +21,11 @@ export function Taskbar({ onOpenApp }: TaskbarProps) {
   const dockAppIds = useStore((s) => s.dockAppIds);
   const apps = useStore((s) => s.apps);
   const runningAppIds = useStore((s) => s.runningAppIds);
-  const windows = useStore((s) => s.windows);
-  const focusWindow = useStore((s) => s.focusWindow);
+  const launchApp = useStore((s) => s.launchApp);
 
   const dockApps = dockAppIds.map((id) => apps[id]).filter(Boolean) as AppConfig[];
-  const runningWindows = Object.values(windows);
-
   const handleClick = (app: AppConfig) => {
-    const openWin = runningWindows.find((w) => w.appId === app.id);
-    if (openWin) {
-      focusWindow(openWin.id);
-    } else {
-      onOpenApp(app);
-    }
+    launchApp(app);
   };
 
   return (

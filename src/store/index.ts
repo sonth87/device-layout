@@ -20,7 +20,10 @@ export const useStore = create<RootStore>()(
         const s = set as unknown as (fn: (state: RootStore) => void) => void;
         const g = get as unknown as () => RootStore;
         return {
-          ...createWindowSlice(s),
+          ...createWindowSlice(s, g as unknown as () => WindowSlice & {
+            setRunning: (appId: string, running: boolean) => void;
+            setActiveApp: (appId: string | null) => void;
+          }),
           ...createAppSlice(s),
           ...createThemeSlice(s),
           ...createDesktopSlice(s),

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, startTransition } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '@/store';
 import { AppIconImage } from '@/components/shared/AppIconImage';
@@ -16,9 +16,7 @@ interface AppSwitcherProps {
 export function AppSwitcher({ open, onClose }: AppSwitcherProps) {
   const apps = useStore((s) => s.apps);
   const runningAppIds = useStore((s) => s.runningAppIds);
-  const windows = useStore((s) => s.windows);
-  const focusWindow = useStore((s) => s.focusWindow);
-  const openWindow = useStore((s) => s.openWindow);
+  const launchApp = useStore((s) => s.launchApp);
   const dockAppIds = useStore((s) => s.dockAppIds);
 
   // All pinned + running apps
@@ -29,7 +27,9 @@ export function AppSwitcher({ open, onClose }: AppSwitcherProps) {
 
   useEffect(() => {
     if (!open) return;
-    setSelectedIdx(0);
+    startTransition(() => {
+      setSelectedIdx(0);
+    });
 
     const handler = (e: KeyboardEvent) => {
       if (!e.metaKey && !e.ctrlKey) { onClose(); return; }
@@ -48,9 +48,7 @@ export function AppSwitcher({ open, onClose }: AppSwitcherProps) {
         // Commit selection on Meta/Ctrl release
         const app = switcherApps[selectedIdx];
         if (app) {
-          const openWin = Object.values(windows).find((w) => w.appId === app.id && !w.isMinimized);
-          if (openWin) focusWindow(openWin.id);
-          else openWindow(app);
+          launchApp(app);
         }
         onClose();
       }
@@ -81,8 +79,7 @@ export function AppSwitcher({ open, onClose }: AppSwitcherProps) {
                 <button
                   key={app.id}
                   onClick={() => {
-                    const w = Object.values(windows).find((w) => w.appId === app.id && !w.isMinimized);
-                    if (w) focusWindow(w.id); else openWindow(app);
+                    launchApp(app);
                     onClose();
                   }}
                   onMouseEnter={() => setSelectedIdx(i)}

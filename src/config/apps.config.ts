@@ -16,6 +16,7 @@ export const APPS_CONFIG: AppConfig[] = [
     minSize: { width: 400, height: 300 },
     hasMenuBar: true,
     category: 'system',
+    launchMode: 'multi',
     contextMenu: [
       { key: 'new-window', label: 'New Finder Window', action: 'newWindow' },
       { key: 'sep1', label: '', action: '', separator: true },
@@ -32,6 +33,7 @@ export const APPS_CONFIG: AppConfig[] = [
     minSize: { width: 360, height: 240 },
     hasStatusBar: true,
     category: 'developer',
+    launchMode: 'multi',
     contextMenu: [
       { key: 'new-tab', label: 'New Tab', action: 'newTab' },
       { key: 'new-window', label: 'New Window', action: 'newWindow' },
@@ -59,6 +61,7 @@ export const APPS_CONFIG: AppConfig[] = [
     hasMenuBar: true,
     hasStatusBar: false,
     category: 'internet',
+    launchMode: 'multi',
     contextMenu: [
       { key: 'new-tab', label: 'New Tab', action: 'newTab' },
       { key: 'new-window', label: 'New Window', action: 'newWindow' },
@@ -75,6 +78,7 @@ export const APPS_CONFIG: AppConfig[] = [
     minSize: { width: 320, height: 240 },
     hasMenuBar: true,
     category: 'productivity',
+    launchMode: 'multi',
     contextMenu: [
       { key: 'new', label: 'New Document', action: 'newDocument' },
     ],

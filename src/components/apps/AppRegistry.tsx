@@ -3,6 +3,7 @@
 import { lazy, Suspense } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useStore } from '@/store';
+import { AppViewportProvider } from './AppViewport';
 
 // Each app is code-split — loaded only when its window opens
 const APP_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentType<AppContentProps>>> = {
@@ -56,7 +57,9 @@ export function AppContent({ appId, windowId }: AppContentProps) {
 
   return (
     <Suspense fallback={<AppLoadingSkeleton />}>
-      <Component appId={appId} windowId={windowId} />
+      <AppViewportProvider>
+        <Component appId={appId} windowId={windowId} />
+      </AppViewportProvider>
     </Suspense>
   );
 }

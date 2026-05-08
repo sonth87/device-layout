@@ -35,8 +35,7 @@ export function ThemeProvider() {
   const resolvedColorScheme = useStore((s) => s.resolvedColorScheme);
   const resolveColorScheme = useStore((s) => s.resolveColorScheme);
   const registerApps = useStore((s) => s.registerApps);
-  const openWindow = useStore((s) => s.openWindow);
-  const setRunning = useStore((s) => s.setRunning);
+  const launchApp = useStore((s) => s.launchApp);
   const glassEnabled = useStore((s) => s.glassEnabled);
 
   const [spotlightOpen, setSpotlightOpen] = useState(false);
@@ -71,9 +70,8 @@ export function ThemeProvider() {
   }, [osTheme, resolvedColorScheme, glassEnabled]);
 
   const handleOpenApp = useCallback((appConfig: AppConfig) => {
-    openWindow(appConfig);
-    setRunning(appConfig.id, true);
-  }, [openWindow, setRunning]);
+    launchApp(appConfig);
+  }, [launchApp]);
 
   const isMacLike = osTheme === 'macos' || osTheme === 'ipad';
   const showsDesktopIconGrid = osTheme !== 'ipad' && osTheme !== 'iphone' && osTheme !== 'android';

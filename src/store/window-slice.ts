@@ -8,11 +8,16 @@ export interface WindowOpenOptions extends Partial<WindowRect> {
   prevRect?: WindowRect | null;
 }
 
+export interface LaunchAppOptions extends WindowOpenOptions {
+  forceNewWindow?: boolean;
+}
+
 export interface WindowSlice {
   windows: Record<string, WindowState>;
   zCounter: number;
   focusedWindowId: string | null;
 
+  launchApp: (appConfig: AppConfig, options?: LaunchAppOptions) => string;
   openWindow: (appConfig: AppConfig, options?: WindowOpenOptions) => string;
   closeWindow: (id: string) => void;
   minimizeWindow: (id: string) => void;
@@ -28,6 +33,10 @@ export interface WindowSlice {
 
 type S = WindowSlice;
 type Setter = (fn: (state: S) => void) => void;
+type Getter = () => WindowSlice & {
+  setRunning: (appId: string, running: boolean) => void;
+  setActiveApp: (appId: string | null) => void;
+};
 
 function defaultRect(appConfig: AppConfig, overrides?: WindowOpenOptions): WindowRect {
   const width = overrides?.width ?? appConfig.defaultSize?.width ?? 800;
@@ -47,11 +56,37 @@ function defaultRect(appConfig: AppConfig, overrides?: WindowOpenOptions): Windo
   );
 }
 
-export function createWindowSlice(set: Setter): WindowSlice {
+export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
   return {
     windows: {},
     zCounter: 10,
     focusedWindowId: null,
+
+    launchApp(appConfig, options) {
+      const forceNewWindow = options?.forceNewWindow ?? false;
+      const appWindows = Object.values(get().windows).filter((w) => w.appId === appConfig.id);
+
+      if (!forceNewWindow) {
+        const openWin = appWindows.find((w) => !w.isMinimized);
+        if (openWin) {
+          get().focusWindow(openWin.id);
+          return openWin.id;
+        }
+
+        const minimizedWin = appWindows.find((w) => w.isMinimized);
+        if (minimizedWin) {
+          get().restoreWindow(minimizedWin.id);
+          return minimizedWin.id;
+        }
+      }
+
+      if (appConfig.launchMode !== 'multi' && appWindows[0]) {
+        get().focusWindow(appWindows[0].id);
+        return appWindows[0].id;
+      }
+
+      return get().openWindow(appConfig, options);
+    },
 
     openWindow(appConfig, options) {
       const id = nanoid(8);
@@ -75,10 +110,13 @@ export function createWindowSlice(set: Setter): WindowSlice {
         }
         state.focusedWindowId = id;
       });
+      get().setRunning(appConfig.id, true);
+      get().setActiveApp(appConfig.id);
       return id;
     },
 
     closeWindow(id) {
+      const appId = get().windows[id]?.appId;
       set((state) => {
         delete state.windows[id];
         if (state.focusedWindowId === id) {
@@ -87,6 +125,9 @@ export function createWindowSlice(set: Setter): WindowSlice {
           if (state.focusedWindowId) state.windows[state.focusedWindowId].isFocused = true;
         }
       });
+      if (appId && !Object.values(get().windows).some((win) => win.appId === appId)) {
+        get().setRunning(appId, false);
+      }
     },
 
     minimizeWindow(id) {
@@ -103,6 +144,10 @@ export function createWindowSlice(set: Setter): WindowSlice {
           if (state.focusedWindowId) state.windows[state.focusedWindowId].isFocused = true;
         }
       });
+      const appId = get().windows[id]?.appId;
+      if (appId && !Object.values(get().windows).some((win) => win.appId === appId && !win.isMinimized)) {
+        get().setActiveApp(null);
+      }
     },
 
     restoreWindow(id) {
@@ -116,6 +161,8 @@ export function createWindowSlice(set: Setter): WindowSlice {
         }
         state.focusedWindowId = id;
       });
+      const appId = get().windows[id]?.appId ?? null;
+      get().setActiveApp(appId);
     },
 
     maximizeWindow(id, viewportRect) {
@@ -154,6 +201,8 @@ export function createWindowSlice(set: Setter): WindowSlice {
         state.windows[id].zIndex = state.zCounter;
         state.focusedWindowId = id;
       });
+      const appId = get().windows[id]?.appId ?? null;
+      get().setActiveApp(appId);
     },
 
     moveWindow(id, x, y) {
@@ -186,6 +235,8 @@ export function createWindowSlice(set: Setter): WindowSlice {
         const focused = windows.find((w) => w.isFocused);
         state.focusedWindowId = focused?.id ?? null;
       });
+      const runningAppIds = Array.from(new Set(windows.map((w) => w.appId)));
+      for (const appId of runningAppIds) get().setRunning(appId, true);
     },
   };
 }

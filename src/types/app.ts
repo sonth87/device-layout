@@ -37,6 +37,8 @@ export interface AppConfig {
   mdxSlug?: string;
   /** Dock/taskbar badge text or number */
   badge?: string | number;
+  /** Default launcher behavior for this app */
+  launchMode?: 'single' | 'multi';
 }
 
 export interface AppInstance {
