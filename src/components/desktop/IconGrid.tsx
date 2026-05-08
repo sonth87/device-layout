@@ -1,13 +1,15 @@
 'use client';
 
 import { useRef } from 'react';
+import { useTheme } from '@/hooks/useTheme';
+import { useViewportSize } from '@/hooks/useResizeObserver';
 import { useStore } from '@/store';
 import { AppIcon } from './AppIcon';
 import type { AppConfig } from '@/types/app';
 
-const CELL_W = 88;
-const CELL_H = 108;
-const PAD = 16;
+const CELL_W = 108;
+const CELL_H = 124;
+const PAD = 20;
 
 /** Calculate default pixel position for icon at given index (left column, top down) */
 function defaultPos(index: number, containerH: number): { x: number; y: number } {
@@ -22,10 +24,16 @@ interface IconGridProps {
 }
 
 export function IconGrid({ onOpenApp }: IconGridProps) {
+  const { config } = useTheme();
+  const viewport = useViewportSize();
   const apps = useStore((s) => s.apps);
   const iconLayout = useStore((s) => s.iconLayout);
   const moveIcon = useStore((s) => s.moveIcon);
   const containerRef = useRef<HTMLDivElement>(null);
+  const containerHeight = Math.max(
+    0,
+    viewport.height - config.layout.desktopInsets.top - config.layout.desktopInsets.bottom
+  );
 
   const appList = Object.values(apps).filter((a) => !a.disabled);
 
@@ -37,8 +45,7 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
 
   const getPos = (app: AppConfig, index: number) => {
     if (posMap[app.id]) return posMap[app.id];
-    const h = containerRef.current?.clientHeight ?? 600;
-    return defaultPos(index, h);
+    return defaultPos(index, containerHeight || 600);
   };
 
   const handleDrop = (appId: string, x: number, y: number) => {
@@ -56,7 +63,12 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
     <div
       ref={containerRef}
       className="absolute pointer-events-none"
-      style={{ top: 36, bottom: 100, left: 0, right: 0 }}
+      style={{
+        top: 'var(--desktop-inset-top)',
+        right: 'var(--desktop-inset-right)',
+        bottom: 'var(--desktop-inset-bottom)',
+        left: 'var(--desktop-inset-left)',
+      }}
     >
       {appList.map((app, index) => {
         const { x, y } = getPos(app, index);

@@ -1,22 +1,25 @@
 {
-  "name": "Desktop Layout",
-  "short_name": "Desktop",
-  "description": "A browser-based desktop OS simulator",
-  "start_url": "/desktop",
+  "name": "Device Layout",
+  "short_name": "DeviceLayout",
+  "description": "A browser-based multi-OS desktop simulator",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#1a1a2e",
+  "background_color": "#0a0a0a",
   "theme_color": "#1a1a2e",
-  "orientation": "landscape",
+  "orientation": "any",
   "icons": [
     {
       "src": "/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "categories": ["productivity", "utilities"]
 }

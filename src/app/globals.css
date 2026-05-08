@@ -11,10 +11,20 @@
 /* ── Shared design tokens ───────────────────────────────── */
 :root {
   --dock-height: 72px;
+  --dock-offset-bottom: 16px;
   --menubar-height: 28px;
   --taskbar-height: 48px;
   --navbar-height: 56px;
+  --statusbar-height: 40px;
   --window-chrome-height: 44px;
+  --desktop-inset-top: 36px;
+  --desktop-inset-right: 0px;
+  --desktop-inset-bottom: 100px;
+  --desktop-inset-left: 0px;
+  --window-maximize-top-inset: 28px;
+  --window-maximize-bottom-inset: 88px;
+  --window-drag-top-inset: 28px;
+  --window-min-title-visible-height: 40px;
   --window-min-width: 320px;
   --window-min-height: 240px;
   --radius-window: 10px;
@@ -127,13 +137,6 @@
 }
 
 /* ── OS canvas reset ────────────────────────────────────── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
 html,
 body {

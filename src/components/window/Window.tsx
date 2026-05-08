@@ -48,7 +48,6 @@ export function Window({ windowId }: WindowProps) {
   });
 
   if (!win) return null;
-  if (win.isMinimized) return null;
 
   const isFullscreen = isMobile || win.isMaximized;
   const isFloatingWindow = isFloating && !isMobile;
@@ -57,16 +56,20 @@ export function Window({ windowId }: WindowProps) {
     <motion.div
       id={`window-${windowId}`}
       initial={{ scale: 0.9, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
+      animate={
+        win.isMinimized
+          ? { scale: 0.05, opacity: 0, transition: { duration: 0.25, ease: [0.4, 0, 0.2, 1] } }
+          : { scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 500, damping: 38 } }
+      }
       exit={{ scale: 0.88, opacity: 0, transition: { duration: 0.15 } }}
-      transition={{ type: 'spring', stiffness: 500, damping: 38 }}
       style={
         isFullscreen
-          ? { position: 'absolute', inset: 0, zIndex: win.zIndex }
-          : { position: 'absolute', x: mx, y: my, width: mw, height: mh, zIndex: win.zIndex }
+          ? { position: 'absolute', inset: 0, zIndex: win.zIndex, transformOrigin: 'bottom center' }
+          : { position: 'absolute', x: mx, y: my, width: mw, height: mh, zIndex: win.zIndex, transformOrigin: 'bottom center' }
       }
       className={cn(
-        'flex flex-col overflow-hidden pointer-events-auto',
+        'flex flex-col overflow-hidden',
+        win.isMinimized ? 'pointer-events-none' : 'pointer-events-auto',
         'rounded-(--radius-window)',
         // Shadow: focused = strong, unfocused = subtle
         win.isFocused

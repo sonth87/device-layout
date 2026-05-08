@@ -11,6 +11,12 @@ const APP_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   Settings: lazy(() => import('./Settings').then((m) => ({ default: m.Settings }))),
   Browser: lazy(() => import('./Browser').then((m) => ({ default: m.Browser }))),
   TextEditor: lazy(() => import('./TextEditor').then((m) => ({ default: m.TextEditor }))),
+  Clock: lazy(() => import('./Clock').then((m) => ({ default: m.Clock }))),
+  Notes: lazy(() => import('./Notes').then((m) => ({ default: m.Notes }))),
+  Photos: lazy(() => import('./Photos').then((m) => ({ default: m.Photos }))),
+  Music: lazy(() => import('./Music').then((m) => ({ default: m.Music }))),
+  Calendar: lazy(() => import('./Calendar').then((m) => ({ default: m.Calendar }))),
+  Messages: lazy(() => import('./Messages').then((m) => ({ default: m.Messages }))),
   IframeApp: lazy(() => import('./IframeApp').then((m) => ({ default: m.IframeApp }))),
   MdxApp: lazy(() => import('./MdxApp').then((m) => ({ default: m.MdxApp }))),
 };

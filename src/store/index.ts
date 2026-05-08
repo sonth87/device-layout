@@ -5,8 +5,10 @@ import { createWindowSlice, type WindowSlice } from './window-slice';
 import { createAppSlice, type AppSlice } from './app-slice';
 import { createThemeSlice, type ThemeSlice } from './theme-slice';
 import { createDesktopSlice, type DesktopSlice } from './desktop-slice';
+import { createNotificationSlice, type NotificationSlice } from './notification-slice';
+import { createVFSSlice, type VFSSlice } from './vfs-slice';
 
-export type RootStore = WindowSlice & AppSlice & ThemeSlice & DesktopSlice;
+export type RootStore = WindowSlice & AppSlice & ThemeSlice & DesktopSlice & NotificationSlice & VFSSlice;
 
 export const useStore = create<RootStore>()(
   immer(
@@ -14,13 +16,16 @@ export const useStore = create<RootStore>()(
       // The set function passed by immer is typed as (fn: (state: RootStore) => void) => void
       // which is compatible with each slice factory's Setter type since RootStore extends each slice.
       // We cast to unknown first to bridge the structural mismatch in Zustand's internal types.
-      (set) => {
+      (set, get) => {
         const s = set as unknown as (fn: (state: RootStore) => void) => void;
+        const g = get as unknown as () => RootStore;
         return {
           ...createWindowSlice(s),
           ...createAppSlice(s),
           ...createThemeSlice(s),
           ...createDesktopSlice(s),
+          ...createNotificationSlice(s),
+          ...createVFSSlice(s, g),
         };
       },
       {
@@ -38,6 +43,8 @@ export const useStore = create<RootStore>()(
           wallpaperId: state.wallpaperId,
           iconLayout: state.iconLayout,
           dockAppIds: state.dockAppIds,
+          notifications: state.notifications,
+          vfs: state.vfs,
         }),
       }
     )
@@ -49,3 +56,6 @@ export const useApps = () => useStore((s) => s.apps);
 export const useOSTheme = () => useStore((s) => s.osTheme);
 export const useColorScheme = () => useStore((s) => s.resolvedColorScheme);
 export const useGlassEnabled = () => useStore((s) => s.glassEnabled);
+export const useNotifications = () => useStore((s) => s.notifications);
+export const useUnreadCount = (appId?: string) =>
+  useStore((s) => s.notifications.filter((n) => !n.read && (!appId || n.appId === appId)).length);

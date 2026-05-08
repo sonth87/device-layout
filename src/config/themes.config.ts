@@ -12,6 +12,23 @@ export const THEMES_CONFIG: Record<OSTheme, ThemeConfig> = {
     hasTaskbar: false,
     hasNavBar: false,
     defaultWallpaper: 'macos-default',
+    layout: {
+      desktopInsets: { top: 36, right: 0, bottom: 100, left: 0 },
+      chrome: {
+        menuBarHeight: 28,
+        dockHeight: 72,
+        dockOffsetBottom: 16,
+        taskbarHeight: 0,
+        navBarHeight: 0,
+        statusBarHeight: 0,
+        windowChromeHeight: 44,
+      },
+      window: {
+        maximizeInsets: { top: 28, bottom: 88 },
+        dragTopInset: 28,
+        minTitleVisibleHeight: 40,
+      },
+    },
   },
   ipad: {
     id: 'ipad',
@@ -24,6 +41,23 @@ export const THEMES_CONFIG: Record<OSTheme, ThemeConfig> = {
     hasTaskbar: false,
     hasNavBar: false,
     defaultWallpaper: 'macos-default',
+    layout: {
+      desktopInsets: { top: 36, right: 0, bottom: 112, left: 0 },
+      chrome: {
+        menuBarHeight: 28,
+        dockHeight: 80,
+        dockOffsetBottom: 16,
+        taskbarHeight: 0,
+        navBarHeight: 0,
+        statusBarHeight: 28,
+        windowChromeHeight: 44,
+      },
+      window: {
+        maximizeInsets: { top: 28, bottom: 96 },
+        dragTopInset: 28,
+        minTitleVisibleHeight: 40,
+      },
+    },
   },
   iphone: {
     id: 'iphone',
@@ -36,6 +70,23 @@ export const THEMES_CONFIG: Record<OSTheme, ThemeConfig> = {
     hasTaskbar: false,
     hasNavBar: true,
     defaultWallpaper: 'macos-default',
+    layout: {
+      desktopInsets: { top: 40, right: 0, bottom: 80, left: 0 },
+      chrome: {
+        menuBarHeight: 0,
+        dockHeight: 0,
+        dockOffsetBottom: 0,
+        taskbarHeight: 0,
+        navBarHeight: 56,
+        statusBarHeight: 40,
+        windowChromeHeight: 0,
+      },
+      window: {
+        maximizeInsets: { top: 0, bottom: 0 },
+        dragTopInset: 0,
+        minTitleVisibleHeight: 40,
+      },
+    },
   },
   windows: {
     id: 'windows',
@@ -48,6 +99,23 @@ export const THEMES_CONFIG: Record<OSTheme, ThemeConfig> = {
     hasTaskbar: true,
     hasNavBar: false,
     defaultWallpaper: 'windows-default',
+    layout: {
+      desktopInsets: { top: 0, right: 0, bottom: 48, left: 0 },
+      chrome: {
+        menuBarHeight: 0,
+        dockHeight: 0,
+        dockOffsetBottom: 0,
+        taskbarHeight: 48,
+        navBarHeight: 0,
+        statusBarHeight: 0,
+        windowChromeHeight: 36,
+      },
+      window: {
+        maximizeInsets: { top: 0, bottom: 48 },
+        dragTopInset: 0,
+        minTitleVisibleHeight: 40,
+      },
+    },
   },
   android: {
     id: 'android',
@@ -60,5 +128,22 @@ export const THEMES_CONFIG: Record<OSTheme, ThemeConfig> = {
     hasTaskbar: false,
     hasNavBar: true,
     defaultWallpaper: 'android-default',
+    layout: {
+      desktopInsets: { top: 32, right: 0, bottom: 56, left: 0 },
+      chrome: {
+        menuBarHeight: 0,
+        dockHeight: 0,
+        dockOffsetBottom: 0,
+        taskbarHeight: 0,
+        navBarHeight: 56,
+        statusBarHeight: 32,
+        windowChromeHeight: 0,
+      },
+      window: {
+        maximizeInsets: { top: 0, bottom: 0 },
+        dragTopInset: 0,
+        minTitleVisibleHeight: 40,
+      },
+    },
   },
 };

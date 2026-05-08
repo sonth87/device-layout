@@ -3,16 +3,13 @@
 import { useCallback, useRef } from 'react';
 import type { MotionValue } from 'motion/react';
 import { useStore } from '@/store';
+import { useTheme } from '@/hooks/useTheme';
+import { emitSnapZone, getSnapZone, getSnapRect } from '@/lib/snap-events';
 
 // How many px from the edge before resistance kicks in
 const RESIST_ZONE = 80;
 // Resistance factor (0 = stuck, 1 = none)
 const RESIST_FACTOR = 0.12;
-// To escape the edge you must drag this far past it
-const ESCAPE_THRESHOLD = 60;
-
-const MENUBAR_H = 28;
-const MIN_TITLE_VISIBLE_H = 40; // at least 40px of title bar below menubar
 
 function applyResistance(raw: number, minStop: number, maxStop: number): number {
   if (raw < minStop - RESIST_ZONE) {
@@ -44,6 +41,8 @@ interface UseWindowDragOptions {
 
 export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
   const moveWindow = useStore((s) => s.moveWindow);
+  const resizeWindow = useStore((s) => s.resizeWindow);
+  const { config } = useTheme();
   const startRef = useRef<{
     mouseX: number;
     mouseY: number;
@@ -77,10 +76,12 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
 
         const winEl = document.getElementById(`window-${windowId}`);
         const winW = winEl?.offsetWidth ?? 600;
+        const dragTopInset = config.layout.window.dragTopInset;
+        const minTitleVisibleHeight = config.layout.window.minTitleVisibleHeight;
 
         // Y: can't go above menubar, hard floor below
-        const minY = MENUBAR_H;
-        const maxY = vpH - MIN_TITLE_VISIBLE_H;
+        const minY = dragTopInset;
+        const maxY = vpH - minTitleVisibleHeight;
 
         // X: keep at least some of window visible
         const minX = -(winW - 120);
@@ -91,14 +92,27 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
 
         x.set(nextX);
         y.set(nextY);
+
+        // Emit snap zone for visual feedback
+        const zone = getSnapZone(mv.clientX, mv.clientY);
+        emitSnapZone(zone, true);
       };
 
-      const onUp = () => {
+      const onUp = (uv: PointerEvent) => {
         if (!startRef.current) return;
-        // Snap back if escaped beyond soft limits
         const finalX = x.get();
         const finalY = y.get();
-        moveWindow(windowId, finalX, finalY);
+
+        // Check if we released over a snap zone
+        const zone = getSnapZone(uv.clientX, uv.clientY);
+        const snapRect = getSnapRect(zone);
+        if (snapRect) {
+          resizeWindow(windowId, snapRect);
+        } else {
+          moveWindow(windowId, finalX, finalY);
+        }
+
+        emitSnapZone(null, false);
         startRef.current = null;
         window.removeEventListener('pointermove', onMove);
         window.removeEventListener('pointerup', onUp);
@@ -107,7 +121,7 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
       window.addEventListener('pointermove', onMove);
       window.addEventListener('pointerup', onUp);
     },
-    [x, y, windowId, moveWindow]
+    [config.layout.window.dragTopInset, config.layout.window.minTitleVisibleHeight, x, y, windowId, moveWindow, resizeWindow]
   );
 
   return { onPointerDown };

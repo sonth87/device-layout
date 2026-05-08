@@ -24,23 +24,24 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
   const closeWindow = useStore((s) => s.closeWindow);
   const minimizeWindow = useStore((s) => s.minimizeWindow);
   const toggleMaximize = useStore((s) => s.toggleMaximize);
+  const { config } = useTheme();
   const viewport = useViewportSize();
   const [hovering, setHovering] = useState(false);
 
   if (!win) return null;
 
-  // Available desktop area: below menubar (28px), above dock (72px) + dock gap (16px)
+  const { top, bottom } = config.layout.window.maximizeInsets;
   const viewportRect = {
     x: 0,
-    y: 28,
+    y: top,
     width: viewport.width,
-    height: viewport.height - 28 - 88,
+    height: viewport.height - top - bottom,
   };
 
   return (
     <div
       className={cn(
-        'flex items-center gap-0 h-11 px-4 shrink-0',
+        'flex items-center gap-0 h-(--window-chrome-height) px-4 shrink-0',
         'select-none cursor-move',
         'border-b border-black/8 dark:border-white/8',
         win.isFocused
@@ -115,16 +116,23 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
   const closeWindow = useStore((s) => s.closeWindow);
   const minimizeWindow = useStore((s) => s.minimizeWindow);
   const toggleMaximize = useStore((s) => s.toggleMaximize);
+  const { config } = useTheme();
   const viewport = useViewportSize();
 
   if (!win) return null;
 
-  const viewportRect = { x: 0, y: 0, width: viewport.width, height: viewport.height - 48 };
+  const { top, bottom } = config.layout.window.maximizeInsets;
+  const viewportRect = {
+    x: 0,
+    y: top,
+    width: viewport.width,
+    height: viewport.height - top - bottom,
+  };
 
   return (
     <div
       className={cn(
-        'flex items-center h-9 shrink-0',
+        'flex items-center h-(--window-chrome-height) shrink-0',
         'bg-neutral-100/98 dark:bg-neutral-800/98',
         'border-b border-black/8 dark:border-white/8',
         'select-none cursor-move',

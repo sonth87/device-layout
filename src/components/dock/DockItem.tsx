@@ -16,7 +16,6 @@ interface DockItemProps {
 
 const BASE_SIZE = 54;
 const MAX_SIZE = 80;
-const NEIGHBOR_SIZE = 68;
 const MAGNETIC_RADIUS = 120;
 
 export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }: DockItemProps) {
@@ -57,13 +56,14 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }:
               whileTap={{ scale: 0.88 }}
               aria-label={appConfig.name}
             >
-              <motion.div style={{ width: size, height: size }}>
-                <AppIconImage
-                  appConfig={appConfig}
-                  size={MAX_SIZE}
-                  className="w-full h-full drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
-                />
-              </motion.div>
+            <motion.div style={{ width: size, height: size }}>
+              <AppIconImage
+                appConfig={appConfig}
+                size={MAX_SIZE}
+                fill
+                className="w-full h-full drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
+              />
+            </motion.div>
             </motion.button>
 
             {/* Running / minimized indicator dot */}

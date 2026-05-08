@@ -54,7 +54,7 @@ export function Dock({ onOpenApp }: DockProps) {
     >
       <LiquidGlass variant="dock">
         {/* Inner layout wrapper — gap/padding lives here, not on the glass outer div */}
-        <div className="flex items-end gap-3 px-4 pt-3 pb-2">
+        <div className="flex items-end gap-4 px-5 pt-3 pb-2">
           {dockApps.map((app) => (
             <DockItem
               key={app.id}

@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useStore } from '@/store';
 import { APPS_CONFIG } from '@/config/apps.config';
+import { THEMES_CONFIG } from '@/config/themes.config';
 import { GlassFilter } from '@/components/liquid-glass/GlassFilter';
 import { WindowManager } from '@/components/window/WindowManager';
 import { MacOSChrome } from './MacOSTheme';
@@ -12,6 +14,11 @@ import { WindowsChrome } from './WindowsTheme';
 import { AndroidChrome } from './AndroidTheme';
 import { Wallpaper } from '@/components/desktop/Wallpaper';
 import { IconGrid } from '@/components/desktop/IconGrid';
+import { Spotlight } from '@/components/macOS/Spotlight';
+import { AppSwitcher } from '@/components/macOS/AppSwitcher';
+import { NotificationBanner } from '@/components/notifications/NotificationBanner';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { getThemeCssVars } from '@/lib/theme-layout';
 import type { AppConfig } from '@/types/app';
 
 /**
@@ -31,6 +38,14 @@ export function ThemeProvider() {
   const openWindow = useStore((s) => s.openWindow);
   const setRunning = useStore((s) => s.setRunning);
   const glassEnabled = useStore((s) => s.glassEnabled);
+
+  const [spotlightOpen, setSpotlightOpen] = useState(false);
+  const [appSwitcherOpen, setAppSwitcherOpen] = useState(false);
+
+  useKeyboardShortcuts({
+    onSpotlight: () => setSpotlightOpen((v) => !v),
+    onAppSwitcher: () => setAppSwitcherOpen((v) => !v),
+  });
 
   useEffect(() => {
     registerApps(APPS_CONFIG);
@@ -60,14 +75,35 @@ export function ThemeProvider() {
     setRunning(appConfig.id, true);
   }, [openWindow, setRunning]);
 
+  const isMacLike = osTheme === 'macos' || osTheme === 'ipad';
+  const themeConfig = THEMES_CONFIG[osTheme];
+
   return (
     <div
       className="w-full h-full overflow-hidden relative select-none"
       data-os-theme={osTheme}
       data-glass={glassEnabled ? 'true' : 'false'}
+      style={getThemeCssVars(themeConfig)}
     >
       {/* SVG filter singleton */}
       <GlassFilter />
+
+      {/* Notification toasts — rendered above everything */}
+      <NotificationBanner />
+
+      {/* Spotlight + App Switcher (macOS / iPad only) */}
+      {isMacLike && (
+        <>
+          <Spotlight
+            open={spotlightOpen}
+            onClose={() => setSpotlightOpen(false)}
+          />
+          <AppSwitcher
+            open={appSwitcherOpen}
+            onClose={() => setAppSwitcherOpen(false)}
+          />
+        </>
+      )}
 
       {/* Desktop canvas — NEVER remounts, preserves WindowManager + useWindowUrlSync state */}
       <div className="absolute inset-0">
@@ -77,12 +113,23 @@ export function ThemeProvider() {
         </Wallpaper>
       </div>
 
-      {/* Chrome overlay — remounts on theme switch, but contains no window state */}
-      {osTheme === 'macos'   && <MacOSChrome  onOpenApp={handleOpenApp} />}
-      {osTheme === 'ipad'    && <IPadChrome   onOpenApp={handleOpenApp} />}
-      {osTheme === 'iphone'  && <IPhoneChrome onOpenApp={handleOpenApp} />}
-      {osTheme === 'windows' && <WindowsChrome onOpenApp={handleOpenApp} />}
-      {osTheme === 'android' && <AndroidChrome onOpenApp={handleOpenApp} />}
+      {/* Chrome overlay — animated cross-fade on theme switch */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={osTheme}
+          className="absolute inset-0 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          {osTheme === 'macos'   && <MacOSChrome   onOpenApp={handleOpenApp} onSpotlight={() => setSpotlightOpen(true)} onAppSwitcher={() => setAppSwitcherOpen(true)} />}
+          {osTheme === 'ipad'    && <IPadChrome    onOpenApp={handleOpenApp} onSpotlight={() => setSpotlightOpen(true)} />}
+          {osTheme === 'iphone'  && <IPhoneChrome  onOpenApp={handleOpenApp} />}
+          {osTheme === 'windows' && <WindowsChrome onOpenApp={handleOpenApp} />}
+          {osTheme === 'android' && <AndroidChrome onOpenApp={handleOpenApp} />}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

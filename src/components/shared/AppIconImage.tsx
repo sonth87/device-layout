@@ -7,6 +7,7 @@ import {
   Calculator, Map, Camera, Phone, Video, MessageSquare,
   Code2, Database, Terminal, Cpu, Layers, type LucideIcon,
 } from 'lucide-react';
+import { useStore } from '@/store';
 import type { AppConfig } from '@/types/app';
 
 const LUCIDE_MAP: Record<string, LucideIcon> = {
@@ -20,20 +21,32 @@ interface AppIconImageProps {
   appConfig: AppConfig;
   size?: number;
   className?: string;
+  fill?: boolean;
+}
+
+function getIconBorderRadius(osTheme: string, size: number): number {
+  switch (osTheme) {
+    case 'windows': return Math.round(size * 0.08);
+    case 'android': return Math.round(size * 0.28);
+    case 'iphone':
+    case 'ipad':    return Math.round(size * 0.225);
+    default:        return Math.round(size * 0.22); // macOS squircle approx
+  }
 }
 
 /**
  * Renders app icon: SVG/PNG image → Lucide icon → letter fallback.
- * Lucide icons are styled with macOS-like rounded squircle background.
+ * Lucide icons are styled with OS-appropriate rounded background.
  */
-export function AppIconImage({ appConfig, size = 56, className = '' }: AppIconImageProps) {
+export function AppIconImage({ appConfig, size = 56, className = '', fill = false }: AppIconImageProps) {
   const [imgFailed, setImgFailed] = useState(false);
+  const osTheme = useStore((s) => s.osTheme);
 
   const fromColor = appConfig.iconColor?.[0] ?? '#0a84ff';
   const toColor = appConfig.iconColor?.[1] ?? '#0055d4';
   const textColor = appConfig.iconTextColor ?? '#ffffff';
   const iconSize = Math.round(size * 0.5);
-  const borderRadius = Math.round(size * 0.22);
+  const borderRadius = getIconBorderRadius(osTheme, size);
 
   // Lucide icon with gradient background
   if (appConfig.icon.startsWith('lucide:')) {
@@ -44,8 +57,8 @@ export function AppIconImage({ appConfig, size = 56, className = '' }: AppIconIm
       <div
         className={`flex items-center justify-center flex-shrink-0 ${className}`}
         style={{
-          width: size,
-          height: size,
+          width: fill ? '100%' : size,
+          height: fill ? '100%' : size,
           background: `linear-gradient(145deg, ${fromColor}, ${toColor})`,
           borderRadius,
           boxShadow: `0 ${Math.round(size * 0.06)}px ${Math.round(size * 0.18)}px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)`,
@@ -75,7 +88,7 @@ export function AppIconImage({ appConfig, size = 56, className = '' }: AppIconIm
         width={size}
         height={size}
         className={`object-contain ${className}`}
-        style={{ width: size, height: size }}
+        style={{ width: fill ? '100%' : size, height: fill ? '100%' : size }}
         onError={() => setImgFailed(true)}
       />
     );
@@ -86,8 +99,8 @@ export function AppIconImage({ appConfig, size = 56, className = '' }: AppIconIm
     <div
       className={`flex items-center justify-center flex-shrink-0 ${className}`}
       style={{
-        width: size,
-        height: size,
+        width: fill ? '100%' : size,
+        height: fill ? '100%' : size,
         background: `linear-gradient(145deg, ${fromColor}, ${toColor})`,
         borderRadius,
         boxShadow: `0 ${Math.round(size * 0.06)}px ${Math.round(size * 0.18)}px rgba(0,0,0,0.35)`,

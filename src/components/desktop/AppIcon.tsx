@@ -103,11 +103,12 @@ export function AppIcon({ appConfig, x, y, onOpen, onDrop }: AppIconProps) {
             'absolute pointer-events-auto',
             appConfig.disabled && 'opacity-40 pointer-events-none'
           )}
-          style={{ left: pos.x, top: pos.y, width: 80, zIndex: dragging ? 1000 : 1 }}
+          style={{ left: pos.x, top: pos.y, width: 88, zIndex: dragging ? 1000 : 1 }}
         >
           <button
             className={cn(
-              'flex flex-col items-center gap-1.5 p-2 rounded-xl select-none w-20',
+              'flex flex-col items-center gap-2 p-2.5 rounded-xl select-none',
+              // 88px width matches parent container
               'hover:bg-white/15 focus:outline-none',
               'transition-transform duration-75',
               pressed && !dragging && 'scale-90 opacity-80',
@@ -117,7 +118,7 @@ export function AppIcon({ appConfig, x, y, onOpen, onDrop }: AppIconProps) {
             aria-label={`Open ${appConfig.name}`}
           >
             <div className="relative">
-              <AppIconImage appConfig={appConfig} size={60} className="drop-shadow-xl" />
+              <AppIconImage appConfig={appConfig} size={64} className="drop-shadow-xl" />
               {appConfig.badge !== undefined && (
                 <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 shadow">
                   {appConfig.badge}
@@ -125,7 +126,7 @@ export function AppIcon({ appConfig, x, y, onOpen, onDrop }: AppIconProps) {
               )}
             </div>
             <span
-              className="text-white text-[11px] font-medium text-center leading-tight w-full truncate"
+              className="text-white text-[11px] font-medium text-center leading-tight max-w-[76px] truncate"
               style={{ textShadow: '0 1px 3px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6)' }}
             >
               {appConfig.name}

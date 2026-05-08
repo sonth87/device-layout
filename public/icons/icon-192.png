@@ -1,0 +1,15 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='192' height='192' viewBox='0 0 192 192'>
+  <rect width='192' height='192' rx='40' fill='#1a1a2e'/>
+  <rect x='24' y='32' width='144' height='96' rx='8' fill='#16213e' stroke='#4a5568' stroke-width='2'/>
+  <rect x='32' y='40' width='128' height='80' rx='4' fill='#0f3460'/>
+  <circle cx='48' cy='48' r='4' fill='#ff6b6b'/>
+  <circle cx='62' cy='48' r='4' fill='#ffd93d'/>
+  <circle cx='76' cy='48' r='4' fill='#6bcb77'/>
+  <rect x='32' y='56' width='128' height='1' fill='#ffffff20'/>
+  <rect x='40' y='68' width='60' height='42' rx='4' fill='#ffffff10'/>
+  <rect x='108' y='68' width='44' height='20' rx='4' fill='#ffffff10'/>
+  <rect x='108' y='92' width='44' height='18' rx='4' fill='#ffffff10'/>
+  <rect x='72' y='140' width='48' height='8' rx='4' fill='#4a5568'/>
+  <rect x='56' y='150' width='80' height='4' rx='2' fill='#2d3748'/>
+  <text x='96' y='108' font-family='sans-serif' font-size='10' fill='#64b5f6' text-anchor='middle'>Device Layout</text>
+</svg>
