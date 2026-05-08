@@ -37,7 +37,7 @@ export const THEMES_CONFIG: Record<OSTheme, ThemeConfig> = {
     hasLiquidGlass: true,
     hasFloatingWindows: true,
     hasDock: true,
-    hasMenuBar: true,
+    hasMenuBar: false,
     hasTaskbar: false,
     hasNavBar: false,
     defaultWallpaper: 'macos-default',

@@ -107,8 +107,8 @@ export function AppIcon({ appConfig, x, y, onOpen, onDrop }: AppIconProps) {
         >
           <button
             className={cn(
-              'flex flex-col items-center gap-2 p-2.5 rounded-xl select-none',
-              // 88px width matches parent container
+              'flex w-full flex-col items-center gap-2 p-2.5 rounded-xl select-none',
+              // Match the fixed 88px icon slot so long labels do not shift icon alignment.
               'hover:bg-white/15 focus:outline-none',
               'transition-transform duration-75',
               pressed && !dragging && 'scale-90 opacity-80',
@@ -126,7 +126,7 @@ export function AppIcon({ appConfig, x, y, onOpen, onDrop }: AppIconProps) {
               )}
             </div>
             <span
-              className="text-white text-[11px] font-medium text-center leading-tight max-w-[76px] truncate"
+              className="block w-full max-w-[76px] text-white text-[11px] font-medium text-center leading-tight truncate"
               style={{ textShadow: '0 1px 3px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6)' }}
             >
               {appConfig.name}

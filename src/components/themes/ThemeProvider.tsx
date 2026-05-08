@@ -76,6 +76,7 @@ export function ThemeProvider() {
   }, [openWindow, setRunning]);
 
   const isMacLike = osTheme === 'macos' || osTheme === 'ipad';
+  const showsDesktopIconGrid = osTheme !== 'ipad' && osTheme !== 'iphone' && osTheme !== 'android';
   const themeConfig = THEMES_CONFIG[osTheme];
 
   return (
@@ -108,7 +109,7 @@ export function ThemeProvider() {
       {/* Desktop canvas — NEVER remounts, preserves WindowManager + useWindowUrlSync state */}
       <div className="absolute inset-0">
         <Wallpaper>
-          <IconGrid onOpenApp={handleOpenApp} />
+          {showsDesktopIconGrid && <IconGrid onOpenApp={handleOpenApp} />}
           <WindowManager />
         </Wallpaper>
       </div>
@@ -124,7 +125,7 @@ export function ThemeProvider() {
           transition={{ duration: 0.2 }}
         >
           {osTheme === 'macos'   && <MacOSChrome   onOpenApp={handleOpenApp} onSpotlight={() => setSpotlightOpen(true)} onAppSwitcher={() => setAppSwitcherOpen(true)} />}
-          {osTheme === 'ipad'    && <IPadChrome    onOpenApp={handleOpenApp} onSpotlight={() => setSpotlightOpen(true)} />}
+          {osTheme === 'ipad'    && <IPadChrome    onOpenApp={handleOpenApp} />}
           {osTheme === 'iphone'  && <IPhoneChrome  onOpenApp={handleOpenApp} />}
           {osTheme === 'windows' && <WindowsChrome onOpenApp={handleOpenApp} />}
           {osTheme === 'android' && <AndroidChrome onOpenApp={handleOpenApp} />}
