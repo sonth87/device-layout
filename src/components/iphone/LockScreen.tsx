@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { useStore } from '@/store';
 import { WALLPAPERS } from '@/config/wallpapers.config';
+import { useImageReady } from '@/hooks/useImageReady';
+import { useStoreHydrated } from '@/hooks/useStoreHydrated';
 
 function LockClock() {
   const [time, setTime] = useState('');
@@ -22,8 +24,11 @@ interface LockScreenProps {
 
 export function LockScreen({ onUnlock }: LockScreenProps) {
   const wallpaperId = useStore((s) => s.wallpaperId);
+  const hydrated = useStoreHydrated();
   const wallpaper = WALLPAPERS.find((w) => w.id === wallpaperId);
   const wallpaperUrl = wallpaper?.url ?? '/wallpapers/bg-1.jpg';
+  const wallpaperReady = useImageReady(wallpaperUrl, hydrated);
+  const backgroundImage = hydrated && wallpaperReady ? `url(${wallpaperUrl})` : 'none';
 
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
@@ -35,7 +40,8 @@ export function LockScreen({ onUnlock }: LockScreenProps) {
       exit={{ opacity: 0, y: -60, transition: { duration: 0.4, ease: 'easeIn' } }}
       className="absolute inset-0 z-[9999] flex flex-col items-center select-none"
       style={{
-        backgroundImage: `url(${wallpaperUrl})`,
+        backgroundColor: '#fff',
+        backgroundImage,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}

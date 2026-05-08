@@ -1,5 +1,10 @@
 import type { WindowRect, ResizeEdge } from '@/types/window';
 
+interface FitWindowRectOptions {
+  minWidth?: number;
+  minHeight?: number;
+}
+
 /**
  * Edge snap zones — macOS behavior:
  *  - Within RESIST_ZONE of screen edge: apply spring resistance (window slows)
@@ -7,7 +12,6 @@ import type { WindowRect, ResizeEdge } from '@/types/window';
  *  - On release within SNAP_ZONE: window snaps to edge
  */
 const RESIST_ZONE = 80;  // px — zone where resistance activates
-const ESCAPE_EXTRA = 40; // px extra drag needed to escape the edge
 const SNAP_ZONE = 20;    // px — snap on release if within this distance
 
 /**
@@ -41,6 +45,24 @@ export function snapIfClose(value: number, maxValue: number, zone = SNAP_ZONE): 
 /** Clamp value between min and max */
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
+}
+
+export function fitWindowRectToViewport(
+  rect: WindowRect,
+  viewportRect: WindowRect,
+  { minWidth = 320, minHeight = 240 }: FitWindowRectOptions = {}
+): WindowRect {
+  const widthLimit = Math.max(1, viewportRect.width);
+  const heightLimit = Math.max(1, viewportRect.height);
+  const nextWidth = clamp(rect.width, Math.min(minWidth, widthLimit), widthLimit);
+  const nextHeight = clamp(rect.height, Math.min(minHeight, heightLimit), heightLimit);
+
+  return {
+    x: clamp(rect.x, viewportRect.x, viewportRect.x + viewportRect.width - nextWidth),
+    y: clamp(rect.y, viewportRect.y, viewportRect.y + viewportRect.height - nextHeight),
+    width: nextWidth,
+    height: nextHeight,
+  };
 }
 
 /**

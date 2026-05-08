@@ -46,7 +46,7 @@ export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
 
   return (
     <div
-      className="absolute inset-0 pt-12 pb-36 px-6 overflow-hidden flex flex-col"
+      className="absolute inset-0 flex flex-col overflow-hidden px-6 pt-12 pb-36 pointer-events-auto"
       onDoubleClick={() => setJiggling((j) => !j)}
     >
       {/* App grid */}

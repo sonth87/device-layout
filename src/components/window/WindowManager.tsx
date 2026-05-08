@@ -1,7 +1,11 @@
 'use client';
 
+import { useEffect } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { useStore } from '@/store';
+import { useTheme } from '@/hooks/useTheme';
+import { useViewportSize } from '@/hooks/useResizeObserver';
+import { fitWindowRectToViewport } from '@/lib/window-math';
 import { Window } from './Window';
 import { useWindowUrlSync } from '@/hooks/useWindowUrlSync';
 
@@ -9,6 +13,49 @@ export function WindowManager() {
   useWindowUrlSync();
 
   const windows = useStore((s) => s.windows);
+  const apps = useStore((s) => s.apps);
+  const resizeWindow = useStore((s) => s.resizeWindow);
+  const viewport = useViewportSize();
+  const { config } = useTheme();
+
+  useEffect(() => {
+    const viewportRect = {
+      x: 0,
+      y: config.layout.window.maximizeInsets.top,
+      width: viewport.width,
+      height: Math.max(1, viewport.height - config.layout.window.maximizeInsets.top - config.layout.window.maximizeInsets.bottom),
+    };
+
+    for (const win of Object.values(windows)) {
+      const appConfig = apps[win.appId];
+      if (!appConfig) continue;
+
+      const nextRect = win.isMaximized
+        ? viewportRect
+        : fitWindowRectToViewport(win.rect, viewportRect, {
+            minWidth: appConfig.minSize?.width ?? 320,
+            minHeight: appConfig.minSize?.height ?? 240,
+          });
+
+      if (
+        nextRect.x !== win.rect.x ||
+        nextRect.y !== win.rect.y ||
+        nextRect.width !== win.rect.width ||
+        nextRect.height !== win.rect.height
+      ) {
+        resizeWindow(win.id, nextRect);
+      }
+    }
+  }, [
+    apps,
+    windows,
+    resizeWindow,
+    viewport.width,
+    viewport.height,
+    config.layout.window.maximizeInsets.top,
+    config.layout.window.maximizeInsets.bottom,
+  ]);
+
   // Sort by zIndex so AnimatePresence exits in correct order
   const windowIds = Object.values(windows)
     .sort((a, b) => a.zIndex - b.zIndex)

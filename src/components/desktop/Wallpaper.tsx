@@ -4,6 +4,8 @@ import { useState } from 'react';
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import { useStore } from '@/store';
 import { WALLPAPERS } from '@/config/wallpapers.config';
+import { useImageReady } from '@/hooks/useImageReady';
+import { useStoreHydrated } from '@/hooks/useStoreHydrated';
 import { WallpaperPicker } from './WallpaperPicker';
 
 interface WallpaperProps {
@@ -12,10 +14,13 @@ interface WallpaperProps {
 
 export function Wallpaper({ children }: WallpaperProps) {
   const wallpaperId = useStore((s) => s.wallpaperId);
+  const hydrated = useStoreHydrated();
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const wallpaper = WALLPAPERS.find((w) => w.id === wallpaperId);
   const wallpaperUrl = wallpaper?.url ?? '/wallpapers/bg-1.jpg';
+  const wallpaperReady = useImageReady(wallpaperUrl, hydrated);
+  const backgroundImage = hydrated && wallpaperReady ? `url(${wallpaperUrl})` : 'none';
 
   return (
     <ContextMenu.Root>
@@ -23,9 +28,11 @@ export function Wallpaper({ children }: WallpaperProps) {
         <div
           className="absolute inset-0 overflow-hidden"
           style={{
-            backgroundImage: `url(${wallpaperUrl})`,
+            backgroundColor: '#fff',
+            backgroundImage,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
+            transition: 'background-image 120ms ease-out',
           }}
         >
           {children}

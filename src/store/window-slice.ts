@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
 import type { WindowState, WindowRect } from '@/types/window';
 import type { AppConfig } from '@/types/app';
+import { fitWindowRectToViewport } from '@/lib/window-math';
 
 export interface WindowOpenOptions extends Partial<WindowRect> {
   isMaximized?: boolean;
@@ -29,11 +30,21 @@ type S = WindowSlice;
 type Setter = (fn: (state: S) => void) => void;
 
 function defaultRect(appConfig: AppConfig, overrides?: WindowOpenOptions): WindowRect {
-  const w = overrides?.width ?? appConfig.defaultSize?.width ?? 800;
-  const h = overrides?.height ?? appConfig.defaultSize?.height ?? 600;
-  const x = overrides?.x ?? appConfig.defaultPosition?.x ?? Math.round((typeof window !== 'undefined' ? window.innerWidth : 1280) / 2 - w / 2);
-  const y = overrides?.y ?? appConfig.defaultPosition?.y ?? Math.round((typeof window !== 'undefined' ? window.innerHeight : 800) / 2 - h / 2);
-  return { x, y, width: w, height: h };
+  const width = overrides?.width ?? appConfig.defaultSize?.width ?? 800;
+  const height = overrides?.height ?? appConfig.defaultSize?.height ?? 600;
+  const x = overrides?.x ?? appConfig.defaultPosition?.x ?? Math.round((typeof window !== 'undefined' ? window.innerWidth : 1280) / 2 - width / 2);
+  const y = overrides?.y ?? appConfig.defaultPosition?.y ?? Math.round((typeof window !== 'undefined' ? window.innerHeight : 800) / 2 - height / 2);
+
+  if (typeof window === 'undefined') return { x, y, width, height };
+
+  return fitWindowRectToViewport(
+    { x, y, width, height },
+    { x: 0, y: 0, width: window.innerWidth, height: window.innerHeight },
+    {
+      minWidth: appConfig.minSize?.width ?? 320,
+      minHeight: appConfig.minSize?.height ?? 240,
+    }
+  );
 }
 
 export function createWindowSlice(set: Setter): WindowSlice {
