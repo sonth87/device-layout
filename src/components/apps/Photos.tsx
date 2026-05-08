@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { Search, Grid3X3, List, Heart, Download, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -66,6 +66,41 @@ export function Photos() {
   const [search, setSearch] = useState('');
   const [listView, setListView] = useState(false);
 
+  // Photo viewer zoom / pan state
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const panDragRef = useRef<{ startX: number; startY: number; panX: number; panY: number } | null>(null);
+
+  const openPhoto = (photo: Photo) => {
+    setSelectedPhoto(photo);
+    setView('photo');
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
+
+  const handlePhotoWheel = (e: React.WheelEvent) => {
+    // ctrlKey is set by the OS for pinch-to-zoom trackpad gestures
+    if (e.ctrlKey) {
+      setZoom(z => Math.min(6, Math.max(0.5, z * (1 - e.deltaY * 0.008))));
+    }
+  };
+
+  const handlePhotoPanDown = (e: React.PointerEvent) => {
+    if (zoom <= 1) return;
+    panDragRef.current = { startX: e.clientX, startY: e.clientY, panX: pan.x, panY: pan.y };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handlePhotoPanMove = (e: React.PointerEvent) => {
+    if (!panDragRef.current) return;
+    setPan({
+      x: panDragRef.current.panX + e.clientX - panDragRef.current.startX,
+      y: panDragRef.current.panY + e.clientY - panDragRef.current.startY,
+    });
+  };
+
+  const handlePhotoPanUp = () => { panDragRef.current = null; };
+
   const photos = useMemo(() => {
     let list = selectedAlbum ? ALL_PHOTOS.filter(p => p.album === selectedAlbum) : ALL_PHOTOS;
     if (search) list = list.filter(p => p.emoji.includes(search) || p.album?.includes(search));
@@ -90,15 +125,35 @@ export function Photos() {
             <Heart className={cn('w-5 h-5', liked.has(selectedPhoto.id) ? 'fill-red-500 text-red-500' : 'text-white/60')} />
           </button>
         </div>
-        <div className="flex-1 flex items-center justify-center">
+        <div
+          className="flex-1 flex items-center justify-center overflow-hidden"
+          onWheel={handlePhotoWheel}
+          onPointerDown={handlePhotoPanDown}
+          onPointerMove={handlePhotoPanMove}
+          onPointerUp={handlePhotoPanUp}
+          style={{ cursor: zoom > 1 ? 'grab' : 'default' }}
+        >
           <div
-            className="w-72 h-72 rounded-2xl flex items-center justify-center text-[120px] shadow-2xl"
-            style={{ background: `linear-gradient(135deg, ${selectedPhoto.colors[0]}, ${selectedPhoto.colors[1]})` }}
+            className="w-72 h-72 rounded-2xl flex items-center justify-center text-[120px] shadow-2xl select-none"
+            style={{
+              background: `linear-gradient(135deg, ${selectedPhoto.colors[0]}, ${selectedPhoto.colors[1]})`,
+              transform: `scale(${zoom}) translate(${pan.x / zoom}px, ${pan.y / zoom}px)`,
+              transformOrigin: 'center',
+              transition: panDragRef.current ? 'none' : 'transform 0.05s ease-out',
+            }}
           >
             {selectedPhoto.emoji}
           </div>
         </div>
         <div className="p-4 text-white/60 text-sm text-center">
+          {zoom !== 1 && (
+            <button
+              className="text-blue-400 text-xs mr-3"
+              onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}
+            >
+              Reset zoom
+            </button>
+          )}
           {selectedPhoto.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           {selectedPhoto.album && ` • ${selectedPhoto.album}`}
         </div>
@@ -166,7 +221,7 @@ export function Photos() {
             {photos.map((photo) => (
               <button
                 key={photo.id}
-                onClick={() => { setSelectedPhoto(photo); setView('photo'); }}
+                onClick={() => openPhoto(photo)}
                 className="relative aspect-square group"
               >
                 <div className="w-full h-full flex items-center justify-center text-2xl"

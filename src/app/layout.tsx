@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { GestureBlocker } from '@/components/shared/GestureBlocker';
 
 export const metadata: Metadata = {
   title: 'Desktop Layout',
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" content="#1a1a2e" />
       </head>
       <body className="h-screen w-screen overflow-hidden bg-white">
+        <GestureBlocker />
         {children}
       </body>
     </html>
