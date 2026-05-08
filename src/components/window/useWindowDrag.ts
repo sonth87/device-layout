@@ -3,6 +3,7 @@
 import { useCallback, useRef } from 'react';
 import type { MotionValue } from 'motion/react';
 import { useStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 import { useTheme } from '@/hooks/useTheme';
 import { emitSnapZone, getSnapZone, getSnapRect } from '@/lib/snap-events';
 
@@ -40,9 +41,14 @@ interface UseWindowDragOptions {
 }
 
 export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
-  const moveWindow = useStore((s) => s.moveWindow);
-  const resizeWindow = useStore((s) => s.resizeWindow);
-  const maximizeWindow = useStore((s) => s.maximizeWindow);
+  const { moveWindow, resizeWindow, maximizeWindow, toggleMaximize } = useStore(
+    useShallow((s) => ({
+      moveWindow: s.moveWindow,
+      resizeWindow: s.resizeWindow,
+      maximizeWindow: s.maximizeWindow,
+      toggleMaximize: s.toggleMaximize,
+    }))
+  );
   const { config } = useTheme();
   const startRef = useRef<{
     mouseX: number;
@@ -59,13 +65,41 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
       e.stopPropagation();
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
 
-      startRef.current = {
-        mouseX: e.clientX,
-        mouseY: e.clientY,
-        winX: x.get(),
-        winY: y.get(),
-        escaped: false,
-      };
+      // If the window is currently maximized, unmaximize it first.
+      // Use prevRect as the drag origin so it "appears" to shrink under the cursor.
+      const win = useStore.getState().windows[windowId];
+      if (win?.isMaximized) {
+        const vpW = window.innerWidth;
+        const vpH = window.innerHeight;
+        const dragTopInset2 = config.layout.window.dragTopInset;
+        const bottomInset2 = config.layout.chrome.taskbarHeight;
+        const viewportRect = { x: 0, y: dragTopInset2, width: vpW, height: vpH - dragTopInset2 - bottomInset2 };
+        // This restores prevRect and clears isMaximized
+        toggleMaximize(windowId, viewportRect);
+        // After toggle, the store has restored prevRect → MotionValues will animate there.
+        // Set startRef to the restored position so drag math is correct.
+        const restored = win.prevRect ?? win.rect;
+        // We want the window to follow the cursor as if the drag started from restored position.
+        // Offset the drag origin so the pointer stays roughly where it was (proportional).
+        const ratioX = (e.clientX - win.rect.x) / win.rect.width;
+        const newWinX = Math.round(e.clientX - restored.width * Math.min(Math.max(ratioX, 0.1), 0.9));
+        const newWinY = restored.y;
+        startRef.current = {
+          mouseX: e.clientX,
+          mouseY: e.clientY,
+          winX: newWinX,
+          winY: newWinY,
+          escaped: false,
+        };
+      } else {
+        startRef.current = {
+          mouseX: e.clientX,
+          mouseY: e.clientY,
+          winX: x.get(),
+          winY: y.get(),
+          escaped: false,
+        };
+      }
 
       const dragTopInset = config.layout.window.dragTopInset;
       // For macOS (no taskbar): bottomInset = 0 so fullscreen fills to viewport bottom.
@@ -140,7 +174,7 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
       window.addEventListener('pointermove', onMove);
       window.addEventListener('pointerup', onUp);
     },
-    [config.layout.window.dragTopInset, config.layout.chrome.taskbarHeight, config.layout.window.minTitleVisibleHeight, x, y, windowId, moveWindow, resizeWindow, maximizeWindow]
+    [config.layout.window.dragTopInset, config.layout.chrome.taskbarHeight, config.layout.window.minTitleVisibleHeight, x, y, windowId, moveWindow, resizeWindow, maximizeWindow, toggleMaximize]
   );
 
   return { onPointerDown };

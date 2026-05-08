@@ -2,12 +2,17 @@ import { nanoid } from 'nanoid';
 import type { WindowState, WindowRect } from '@/types/window';
 import type { AppConfig } from '@/types/app';
 
+export interface WindowOpenOptions extends Partial<WindowRect> {
+  isMaximized?: boolean;
+  prevRect?: WindowRect | null;
+}
+
 export interface WindowSlice {
   windows: Record<string, WindowState>;
   zCounter: number;
   focusedWindowId: string | null;
 
-  openWindow: (appConfig: AppConfig, options?: Partial<WindowRect>) => string;
+  openWindow: (appConfig: AppConfig, options?: WindowOpenOptions) => string;
   closeWindow: (id: string) => void;
   minimizeWindow: (id: string) => void;
   restoreWindow: (id: string) => void;
@@ -23,7 +28,7 @@ export interface WindowSlice {
 type S = WindowSlice;
 type Setter = (fn: (state: S) => void) => void;
 
-function defaultRect(appConfig: AppConfig, overrides?: Partial<WindowRect>): WindowRect {
+function defaultRect(appConfig: AppConfig, overrides?: WindowOpenOptions): WindowRect {
   const w = overrides?.width ?? appConfig.defaultSize?.width ?? 800;
   const h = overrides?.height ?? appConfig.defaultSize?.height ?? 600;
   const x = overrides?.x ?? appConfig.defaultPosition?.x ?? Math.round((typeof window !== 'undefined' ? window.innerWidth : 1280) / 2 - w / 2);
@@ -45,10 +50,10 @@ export function createWindowSlice(set: Setter): WindowSlice {
           id,
           appId: appConfig.id,
           rect: defaultRect(appConfig, options),
-          prevRect: null,
+          prevRect: options?.prevRect ?? null,
           zIndex: state.zCounter,
           isMinimized: false,
-          isMaximized: false,
+          isMaximized: options?.isMaximized ?? false,
           isFocused: true,
           title: appConfig.name,
           hasMenuBar: appConfig.hasMenuBar ?? false,

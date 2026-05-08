@@ -30,7 +30,11 @@ export function useWindowUrlSync() {
       if (!decoded) continue;
       const appConfig = apps[decoded.appId];
       if (!appConfig) continue;
-      openWindow(appConfig, decoded.rect);
+      openWindow(appConfig, {
+        ...decoded.rect,
+        isMaximized: decoded.isMaximized,
+        prevRect: decoded.prevRect,
+      });
     }
   }, [apps, openWindow]);
 
