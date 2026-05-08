@@ -7,31 +7,40 @@ import { useShallow } from 'zustand/react/shallow';
 import { useTheme } from '@/hooks/useTheme';
 import { emitSnapZone, getSnapZone, getSnapRect } from '@/lib/snap-events';
 
-// How many px from the edge before resistance kicks in
-const RESIST_ZONE = 80;
-// Resistance factor (0 = stuck, 1 = none)
-const RESIST_FACTOR = 0.12;
+// How many px past the viewport edge the cursor must travel before the window breaks free
+const EDGE_SNAP_ESCAPE = 50;
 
-function applyResistance(raw: number, minStop: number, maxStop: number): number {
-  if (raw < minStop - RESIST_ZONE) {
-    // Deep off left/top edge — hard clamp
-    return minStop - RESIST_ZONE * RESIST_FACTOR;
+/**
+ * Applies viewport-edge magnetic snap to a single axis.
+ *
+ * While the window is between the viewport edge (snapLo / snapHi) and
+ * EDGE_SNAP_ESCAPE px beyond it, the window is clamped to the edge.
+ * Once the cursor overshoots by EDGE_SNAP_ESCAPE the window follows freely,
+ * offset so there is no position jump at the moment of release.
+ *
+ * hardMin / hardMax are the absolute limits beyond which the window can never go
+ * (ensures a minimum portion of the window stays reachable on screen).
+ */
+function applyEdgeSnap(
+  raw: number,
+  snapLo: number,
+  snapHi: number,
+  hardMin: number,
+  hardMax: number,
+  snapLoEnabled: boolean,
+  snapHiEnabled: boolean,
+): number {
+  const c = Math.max(hardMin, Math.min(hardMax, raw));
+
+  if (snapLoEnabled && snapLo > hardMin && c < snapLo) {
+    const over = snapLo - c;
+    return over < EDGE_SNAP_ESCAPE ? snapLo : c + EDGE_SNAP_ESCAPE;
   }
-  if (raw < minStop) {
-    // Near left/top — soft resistance
-    const t = (raw - (minStop - RESIST_ZONE)) / RESIST_ZONE;
-    return minStop - RESIST_ZONE * (1 - t) * (1 - RESIST_FACTOR);
+  if (snapHiEnabled && snapHi < hardMax && c > snapHi) {
+    const over = c - snapHi;
+    return over < EDGE_SNAP_ESCAPE ? snapHi : c - EDGE_SNAP_ESCAPE;
   }
-  if (raw > maxStop + RESIST_ZONE) {
-    // Deep off right/bottom edge — hard clamp
-    return maxStop + RESIST_ZONE * RESIST_FACTOR;
-  }
-  if (raw > maxStop) {
-    // Near right/bottom — soft resistance
-    const t = (raw - maxStop) / RESIST_ZONE;
-    return maxStop + RESIST_ZONE * t * RESIST_FACTOR;
-  }
-  return raw;
+  return c;
 }
 
 interface UseWindowDragOptions {
@@ -41,12 +50,13 @@ interface UseWindowDragOptions {
 }
 
 export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
-  const { moveWindow, resizeWindow, maximizeWindow, toggleMaximize } = useStore(
+  const { moveWindow, resizeWindow, maximizeWindow, toggleMaximize, focusWindow } = useStore(
     useShallow((s) => ({
       moveWindow: s.moveWindow,
       resizeWindow: s.resizeWindow,
       maximizeWindow: s.maximizeWindow,
       toggleMaximize: s.toggleMaximize,
+      focusWindow: s.focusWindow,
     }))
   );
   const { config } = useTheme();
@@ -63,6 +73,8 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
       if (e.button !== 0) return;
       e.preventDefault();
       e.stopPropagation();
+      // Bring window to front when drag starts (stopPropagation prevents Window.tsx handler)
+      focusWindow(windowId);
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
 
       // If the window is currently maximized, unmaximize it first.
@@ -116,26 +128,33 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
 
         const winEl = document.getElementById(`window-${windowId}`);
         const winW = winEl?.offsetWidth ?? 600;
+        const winH = winEl?.offsetHeight ?? 400;
         const minTitleVisibleHeight = config.layout.window.minTitleVisibleHeight;
 
-        // Y: can't go above menubar, hard floor below
-        const minY = dragTopInset;
-        const maxY = vpH - minTitleVisibleHeight;
+        // Absolute limits — ensure a portion of the window always stays reachable
+        const hardMinX = -(winW - 120);
+        const hardMaxX = vpW - 120;
+        const hardMinY = dragTopInset;
+        const hardMaxY = vpH - minTitleVisibleHeight;
 
-        // X: keep at least some of window visible
-        const minX = -(winW - 120);
-        const maxX = vpW - 120;
+        // Viewport-edge snap points
+        const leftEdge = 0;
+        const rightEdge = vpW - winW;
+        const bottomEdge = vpH - bottomInset - winH;
 
-        const nextX = applyResistance(rawX, minX, maxX);
-        const nextY = Math.min(maxY, Math.max(minY, rawY)); // Y: hard clamp (no resistance on vertical — feels odd)
+        // X: magnetic snap on left and right viewport edges
+        const nextX = applyEdgeSnap(rawX, leftEdge, rightEdge, hardMinX, hardMaxX, true, true);
+
+        // Y: hard clamp on top (menubar), magnetic snap on bottom edge
+        const nextY = applyEdgeSnap(rawY, hardMinY, bottomEdge, hardMinY, hardMaxY, false, true);
 
         x.set(nextX);
         y.set(nextY);
 
-        // Detect top snap by whether the window has hit the top boundary (minY),
+        // Detect top snap by whether the window has hit the top boundary (dragTopInset),
         // rather than raw pointer Y — the pointer is usually mid-titlebar so it
         // never gets close enough to viewport top to trigger the EDGE check.
-        const atTopBoundary = nextY <= minY && rawY < minY;
+        const atTopBoundary = nextY <= dragTopInset && rawY < dragTopInset;
         const zone = atTopBoundary ? 'top' : getSnapZone(mv.clientX, mv.clientY, dragTopInset);
         emitSnapZone(zone, true, dragTopInset, bottomInset);
       };
@@ -150,8 +169,7 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
         const finalRawY = startRef.current
           ? startRef.current.winY + (uv.clientY - startRef.current.mouseY)
           : y.get();
-        const minY = dragTopInset;
-        const atTopBoundary = finalX !== undefined && finalRawY < minY;
+        const atTopBoundary = finalX !== undefined && finalRawY < dragTopInset;
         const zone = atTopBoundary ? 'top' : getSnapZone(uv.clientX, uv.clientY, dragTopInset);
         const snapRect = getSnapRect(zone, dragTopInset, bottomInset);
         if (snapRect) {
@@ -174,7 +192,7 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
       window.addEventListener('pointermove', onMove);
       window.addEventListener('pointerup', onUp);
     },
-    [config.layout.window.dragTopInset, config.layout.chrome.taskbarHeight, config.layout.window.minTitleVisibleHeight, x, y, windowId, moveWindow, resizeWindow, maximizeWindow, toggleMaximize]
+    [config.layout.window.dragTopInset, config.layout.chrome.taskbarHeight, config.layout.window.minTitleVisibleHeight, x, y, windowId, moveWindow, resizeWindow, maximizeWindow, toggleMaximize, focusWindow]
   );
 
   return { onPointerDown };

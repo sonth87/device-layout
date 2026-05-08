@@ -55,13 +55,15 @@ export function Window({ windowId }: WindowProps) {
   return (
     <motion.div
       id={`window-${windowId}`}
-      initial={{ scale: 0.9, opacity: 0 }}
-      animate={
-        win.isMinimized
-          ? { scale: 0.05, opacity: 0, transition: { duration: 0.25, ease: [0.4, 0, 0.2, 1] } }
-          : { scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 500, damping: 38 } }
-      }
-      exit={{ scale: 0.88, opacity: 0, transition: { duration: 0.15 } }}
+      initial="hidden"
+      animate={win.isMinimized ? 'minimized' : 'visible'}
+      exit="exit"
+      variants={{
+        hidden: { scale: 0.9, opacity: 0 },
+        visible: { scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 500, damping: 38 } },
+        minimized: { scale: 0.05, opacity: 0, transition: { duration: 0.25, ease: [0.4, 0, 0.2, 1] } },
+        exit: { scale: 0.88, opacity: 0, transition: { duration: 0.15 } },
+      }}
       style={
         isFullscreen && !win.isMaximized
           ? { position: 'absolute', inset: 0, zIndex: win.zIndex, transformOrigin: 'bottom center' }

@@ -56,10 +56,10 @@ export function WindowManager() {
     config.layout.window.maximizeInsets.bottom,
   ]);
 
-  // Sort by zIndex so AnimatePresence exits in correct order
-  const windowIds = Object.values(windows)
-    .sort((a, b) => a.zIndex - b.zIndex)
-    .map((w) => w.id);
+  // Keep render order stable — zIndex in style handles visual stacking.
+  // Sorting by zIndex here would reorder AnimatePresence children on every focus
+  // and re-trigger the mount animation on the newly-focused window.
+  const windowIds = Object.keys(windows);
 
   return (
     // Full-screen layer — pointer-events-none so clicks pass through to desktop
