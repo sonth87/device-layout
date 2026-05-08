@@ -42,6 +42,7 @@ interface UseWindowDragOptions {
 export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
   const moveWindow = useStore((s) => s.moveWindow);
   const resizeWindow = useStore((s) => s.resizeWindow);
+  const maximizeWindow = useStore((s) => s.maximizeWindow);
   const { config } = useTheme();
   const startRef = useRef<{
     mouseX: number;
@@ -66,6 +67,11 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
         escaped: false,
       };
 
+      const dragTopInset = config.layout.window.dragTopInset;
+      // For macOS (no taskbar): bottomInset = 0 so fullscreen fills to viewport bottom.
+      // For Windows: bottomInset = taskbarHeight so maximize respects the taskbar.
+      const bottomInset = config.layout.chrome.taskbarHeight;
+
       const onMove = (mv: PointerEvent) => {
         if (!startRef.current) return;
         const vpW = window.innerWidth;
@@ -76,7 +82,6 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
 
         const winEl = document.getElementById(`window-${windowId}`);
         const winW = winEl?.offsetWidth ?? 600;
-        const dragTopInset = config.layout.window.dragTopInset;
         const minTitleVisibleHeight = config.layout.window.minTitleVisibleHeight;
 
         // Y: can't go above menubar, hard floor below
@@ -93,9 +98,12 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
         x.set(nextX);
         y.set(nextY);
 
-        // Emit snap zone for visual feedback
-        const zone = getSnapZone(mv.clientX, mv.clientY);
-        emitSnapZone(zone, true);
+        // Detect top snap by whether the window has hit the top boundary (minY),
+        // rather than raw pointer Y — the pointer is usually mid-titlebar so it
+        // never gets close enough to viewport top to trigger the EDGE check.
+        const atTopBoundary = nextY <= minY && rawY < minY;
+        const zone = atTopBoundary ? 'top' : getSnapZone(mv.clientX, mv.clientY, dragTopInset);
+        emitSnapZone(zone, true, dragTopInset, bottomInset);
       };
 
       const onUp = (uv: PointerEvent) => {
@@ -104,15 +112,26 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
         const finalY = y.get();
 
         // Check if we released over a snap zone
-        const zone = getSnapZone(uv.clientX, uv.clientY);
-        const snapRect = getSnapRect(zone);
+        // Same logic as onMove: use window position for top, pointer edges for sides.
+        const finalRawY = startRef.current
+          ? startRef.current.winY + (uv.clientY - startRef.current.mouseY)
+          : y.get();
+        const minY = dragTopInset;
+        const atTopBoundary = finalX !== undefined && finalRawY < minY;
+        const zone = atTopBoundary ? 'top' : getSnapZone(uv.clientX, uv.clientY, dragTopInset);
+        const snapRect = getSnapRect(zone, dragTopInset, bottomInset);
         if (snapRect) {
-          resizeWindow(windowId, snapRect);
+          if (zone === 'top') {
+            // Full-screen snap — mark as maximized so auto-hide dock triggers
+            maximizeWindow(windowId, snapRect);
+          } else {
+            resizeWindow(windowId, snapRect);
+          }
         } else {
           moveWindow(windowId, finalX, finalY);
         }
 
-        emitSnapZone(null, false);
+        emitSnapZone(null, false, dragTopInset, bottomInset);
         startRef.current = null;
         window.removeEventListener('pointermove', onMove);
         window.removeEventListener('pointerup', onUp);
@@ -121,7 +140,7 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
       window.addEventListener('pointermove', onMove);
       window.addEventListener('pointerup', onUp);
     },
-    [config.layout.window.dragTopInset, config.layout.window.minTitleVisibleHeight, x, y, windowId, moveWindow, resizeWindow]
+    [config.layout.window.dragTopInset, config.layout.chrome.taskbarHeight, config.layout.window.minTitleVisibleHeight, x, y, windowId, moveWindow, resizeWindow, maximizeWindow]
   );
 
   return { onPointerDown };

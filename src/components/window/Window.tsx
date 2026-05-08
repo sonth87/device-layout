@@ -63,7 +63,7 @@ export function Window({ windowId }: WindowProps) {
       }
       exit={{ scale: 0.88, opacity: 0, transition: { duration: 0.15 } }}
       style={
-        isFullscreen
+        isFullscreen && !win.isMaximized
           ? { position: 'absolute', inset: 0, zIndex: win.zIndex, transformOrigin: 'bottom center' }
           : { position: 'absolute', x: mx, y: my, width: mw, height: mh, zIndex: win.zIndex, transformOrigin: 'bottom center' }
       }

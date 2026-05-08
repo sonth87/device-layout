@@ -3,8 +3,11 @@
 import { useMotionValue } from 'motion/react';
 import { useStore } from '@/store';
 import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
-import { DockItem } from './DockItem';
+import { DockItem, BASE_SIZE, MAX_SIZE } from './DockItem';
 import type { AppConfig } from '@/types/app';
+
+// Extra space above the glass pill that captures mouse events for magnified icons
+const HOVER_OVERFLOW = MAX_SIZE - BASE_SIZE; // 26px
 
 interface DockProps {
   onOpenApp: (app: AppConfig) => void;
@@ -49,29 +52,26 @@ export function Dock({ onOpenApp }: DockProps) {
 
   return (
     /*
-     * Outer wrapper: relative + overflow-visible so magnified icons
-     * can escape upward without being clipped.
-     * Height is driven by the icon row content (pt-3 + DOCK_ITEM_HEIGHT + pb-2).
+     * Outer wrapper: extends HOVER_OVERFLOW px above the glass pill.
+     * This ensures onMouseMove fires even when the mouse is over the
+     * magnified portion of icons that overflow above the dock glass.
      */
     <div
       className="relative overflow-visible"
+      style={{ paddingTop: HOVER_OVERFLOW }}
       onMouseMove={(e) => mouseX.set(e.clientX)}
       onMouseLeave={() => mouseX.set(Infinity)}
     >
       {/*
-       * Glass pill — purely decorative background layer.
-       * absolute inset-0 means it exactly fills the content height
-       * defined by the icon row below. It has its own overflow-hidden
-       * (from LiquidGlass internals) so glass effects stay clipped to
-       * the pill shape, completely independent of the icons above.
+       * Wrapper positions the glass pill to cover only the icon row,
+       * leaving the HOVER_OVERFLOW padding-top area transparent (for mouse capture).
+       * LiquidGlass fills this wrapper absolutely.
        */}
-      <LiquidGlass variant="dock" className="absolute inset-0" />
+      <div className="absolute inset-x-0 bottom-0" style={{ top: HOVER_OVERFLOW }}>
+        <LiquidGlass variant="dock" className="absolute inset-0" />
+      </div>
 
-      {/*
-       * Icon row — sits on top of the glass, z-10, overflow-visible.
-       * items-end aligns all DockItem containers to the bottom edge,
-       * so icons anchor there and grow/overflow UPWARD on magnification.
-       */}
+      {/* Icon row — on top of glass, overflow-visible so icons can escape upward */}
       <div className="relative z-10 flex items-end gap-4 px-5 pt-3 pb-2 overflow-visible">
         {dockApps.map((app) => (
           <DockItem

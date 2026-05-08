@@ -45,20 +45,23 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }:
   return (
     <Tooltip.Provider delayDuration={500}>
       <Tooltip.Root>
-        <Tooltip.Trigger asChild>
+        {/*
+         * Outer container: animated width drives dock pill expansion.
+         * Height is FIXED so the glass dock doesn't grow on hover.
+         * overflow-visible lets the magnified icon escape upward.
+         * ref here gives a stable center for distance measurement.
+         */}
+        <motion.div
+          ref={ref}
+          className="relative flex flex-col justify-end items-center overflow-visible"
+          style={{ width: size, height: DOCK_ITEM_HEIGHT }}
+        >
           {/*
-           * Container: width follows size (so dock widens on hover),
-           * but height is FIXED at DOCK_ITEM_HEIGHT.
-           * flex-col + justify-end anchors children to the bottom,
-           * so when the icon grows it overflows UPWARD — not down.
-           * overflow-visible lets the icon escape the container boundary.
+           * Tooltip.Trigger wraps the button directly (not the outer container).
+           * This way the tooltip anchors to the button's rendered top edge,
+           * which rises as the icon magnifies — tooltip never gets covered.
            */}
-          <motion.div
-            ref={ref}
-            className="relative flex flex-col justify-end items-center overflow-visible"
-            style={{ width: size, height: DOCK_ITEM_HEIGHT }}
-          >
-            {/* Icon — grows upward when magnified */}
+          <Tooltip.Trigger asChild>
             <motion.button
               style={{ width: size, height: size }}
               className="relative shrink-0 flex items-center justify-center"
@@ -75,27 +78,42 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }:
                 className="w-full h-full drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
               />
             </motion.button>
+          </Tooltip.Trigger>
 
-            {/* Running / minimized indicator dot — always 6 px, below icon */}
-            <div className="shrink-0 h-1.5 flex items-center gap-1">
-              {isRunning && !hasMinimized && (
-                <span className="w-1 h-1 rounded-full bg-white/80 shadow" />
-              )}
-              {hasMinimized && (
-                <span className="w-1 h-1 rounded-full bg-white/40 shadow" />
-              )}
-            </div>
-          </motion.div>
-        </Tooltip.Trigger>
+          {/* Running / minimized indicator dot — always 6 px, below icon */}
+          <div className="shrink-0 h-1.5 flex items-center gap-1">
+            {isRunning && !hasMinimized && (
+              <span className="w-1 h-1 rounded-full bg-white/80 shadow" />
+            )}
+            {hasMinimized && (
+              <span className="w-1 h-1 rounded-full bg-white/40 shadow" />
+            )}
+          </div>
+        </motion.div>
 
         <Tooltip.Portal>
           <Tooltip.Content
             side="top"
-            sideOffset={12}
-            className="bg-neutral-800/90 backdrop-blur-md text-white text-[12px] font-medium px-2.5 py-1 rounded-lg shadow-xl pointer-events-none border border-white/10"
+            sideOffset={8}
+            className="
+              relative overflow-hidden
+              rounded-xl
+              backdrop-blur-2xl
+              bg-white/20 dark:bg-white/10
+              border border-white/40 dark:border-white/20
+              shadow-[0_8px_32px_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.5)]
+              text-white dark:text-white text-[12px] font-medium px-3 py-1.5
+              pointer-events-none
+              z-50
+            "
           >
-            {appConfig.name}
-            <Tooltip.Arrow className="fill-neutral-800/90" />
+            {/* top specular */}
+            <span
+              aria-hidden
+              className="absolute inset-x-0 top-0 h-px pointer-events-none"
+              style={{ background: 'linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.85) 50%, transparent 95%)' }}
+            />
+            <span className="relative z-10">{appConfig.name}</span>
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>

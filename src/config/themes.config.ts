@@ -24,7 +24,7 @@ export const THEMES_CONFIG: Record<OSTheme, ThemeConfig> = {
         windowChromeHeight: 44,
       },
       window: {
-        maximizeInsets: { top: 28, bottom: 88 },
+        maximizeInsets: { top: 28, bottom: 0 },
         dragTopInset: 28,
         minTitleVisibleHeight: 40,
       },

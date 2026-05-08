@@ -55,7 +55,7 @@ export function AppIconImage({ appConfig, size = 56, className = '', fill = fals
 
     return (
       <div
-        className={`flex items-center justify-center flex-shrink-0 ${className}`}
+        className={`flex items-center justify-center shrink-0 ${className}`}
         style={{
           width: fill ? '100%' : size,
           height: fill ? '100%' : size,
@@ -66,11 +66,15 @@ export function AppIconImage({ appConfig, size = 56, className = '', fill = fals
       >
         {LucideComp ? (
           <LucideComp
-            style={{ width: iconSize, height: iconSize, color: textColor }}
+            style={{
+              width: fill ? '50%' : iconSize,
+              height: fill ? '50%' : iconSize,
+              color: textColor,
+            }}
             strokeWidth={1.7}
           />
         ) : (
-          <span style={{ color: textColor, fontSize: iconSize * 0.65, fontWeight: 700 }}>
+          <span style={{ color: textColor, fontSize: fill ? '35%' : iconSize * 0.65, fontWeight: 700 }}>
             {appConfig.name.charAt(0)}
           </span>
         )}
@@ -97,7 +101,7 @@ export function AppIconImage({ appConfig, size = 56, className = '', fill = fals
   // Gradient + letter fallback
   return (
     <div
-      className={`flex items-center justify-center flex-shrink-0 ${className}`}
+      className={`flex items-center justify-center shrink-0 ${className}`}
       style={{
         width: fill ? '100%' : size,
         height: fill ? '100%' : size,
