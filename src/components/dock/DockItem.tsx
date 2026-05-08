@@ -14,15 +14,19 @@ interface DockItemProps {
   onOpen: (app: AppConfig) => void;
 }
 
-const BASE_SIZE = 54;
-const MAX_SIZE = 80;
+export const BASE_SIZE = 54;
+export const MAX_SIZE = 80;
 const MAGNETIC_RADIUS = 120;
+
+// Total height of the dock item slot: icon area + dot indicator area.
+// This is the fixed height the dock uses — icons overflow UPWARD beyond this.
+export const DOCK_ITEM_HEIGHT = BASE_SIZE + 6;
 
 export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }: DockItemProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [bouncing, setBouncing] = useState(false);
 
-  // Magnification based on distance from cursor
+  // Magnification: map cursor distance → icon size
   const distance = useTransform(mouseX, (mx) => {
     if (!ref.current) return MAGNETIC_RADIUS + 1;
     const rect = ref.current.getBoundingClientRect();
@@ -42,32 +46,38 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }:
     <Tooltip.Provider delayDuration={500}>
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
-          <div
+          {/*
+           * Container: width follows size (so dock widens on hover),
+           * but height is FIXED at DOCK_ITEM_HEIGHT.
+           * flex-col + justify-end anchors children to the bottom,
+           * so when the icon grows it overflows UPWARD — not down.
+           * overflow-visible lets the icon escape the container boundary.
+           */}
+          <motion.div
             ref={ref}
-            className="flex flex-col items-center relative"
-            style={{ height: MAX_SIZE + 6 }}
+            className="relative flex flex-col justify-end items-center overflow-visible"
+            style={{ width: size, height: DOCK_ITEM_HEIGHT }}
           >
+            {/* Icon — grows upward when magnified */}
             <motion.button
               style={{ width: size, height: size }}
-              className="relative flex items-center justify-center mt-auto"
+              className="relative shrink-0 flex items-center justify-center"
               animate={bouncing ? { y: [0, -22, -2, -14, 0, -6, 0] } : { y: 0 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               onClick={handleClick}
               whileTap={{ scale: 0.88 }}
               aria-label={appConfig.name}
             >
-            <motion.div style={{ width: size, height: size }}>
               <AppIconImage
                 appConfig={appConfig}
                 size={MAX_SIZE}
                 fill
                 className="w-full h-full drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
               />
-            </motion.div>
             </motion.button>
 
-            {/* Running / minimized indicator dot */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-1">
+            {/* Running / minimized indicator dot — always 6 px, below icon */}
+            <div className="shrink-0 h-1.5 flex items-center gap-1">
               {isRunning && !hasMinimized && (
                 <span className="w-1 h-1 rounded-full bg-white/80 shadow" />
               )}
@@ -75,7 +85,7 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }:
                 <span className="w-1 h-1 rounded-full bg-white/40 shadow" />
               )}
             </div>
-          </div>
+          </motion.div>
         </Tooltip.Trigger>
 
         <Tooltip.Portal>
