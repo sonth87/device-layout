@@ -1,0 +1,167 @@
+@import "tailwindcss";
+
+/* ── OS theme custom variants ───────────────────────────── */
+@custom-variant macos (&:is([data-os-theme="macos"] *), &[data-os-theme="macos"]);
+@custom-variant ipad (&:is([data-os-theme="ipad"] *), &[data-os-theme="ipad"]);
+@custom-variant iphone (&:is([data-os-theme="iphone"] *), &[data-os-theme="iphone"]);
+@custom-variant windows (&:is([data-os-theme="windows"] *), &[data-os-theme="windows"]);
+@custom-variant android (&:is([data-os-theme="android"] *), &[data-os-theme="android"]);
+@custom-variant glass-on ([data-glass="true"] &);
+
+/* ── Shared design tokens ───────────────────────────────── */
+:root {
+  --dock-height: 72px;
+  --menubar-height: 28px;
+  --taskbar-height: 48px;
+  --navbar-height: 56px;
+  --window-chrome-height: 44px;
+  --window-min-width: 320px;
+  --window-min-height: 240px;
+  --radius-window: 10px;
+  --radius-dock: 20px;
+
+  --dock-bg: rgba(255 255 255 / 0.18);
+  --dock-border: rgba(255 255 255 / 0.4);
+  --menubar-bg: rgba(255 255 255 / 0.72);
+  --menubar-blur: 20px;
+  --window-chrome-bg: rgba(236 236 236 / 0.95);
+  --window-body-bg: #ffffff;
+  --traffic-light-close: #ff5f57;
+  --traffic-light-minimize: #febc2e;
+  --traffic-light-maximize: #28c840;
+  --win-accent: #0067c0;
+  --android-primary: #6750a4;
+  --taskbar-bg: rgba(32 32 32 / 0.85);
+  --navbar-bg: rgba(255 255 255 / 0.8);
+}
+
+/* ── macOS 26 ───────────────────────────────────────────── */
+[data-os-theme="macos"] {
+  --dock-bg: rgba(255 255 255 / 0.18);
+  --dock-border: rgba(255 255 255 / 0.4);
+  --menubar-bg: rgba(255 255 255 / 0.72);
+  --menubar-blur: 20px;
+  --window-chrome-bg: rgba(236 236 236 / 0.95);
+  --window-body-bg: #ffffff;
+  --radius-window: 10px;
+  --radius-dock: 20px;
+}
+[data-os-theme="macos"].dark {
+  --dock-bg: rgba(30 30 30 / 0.65);
+  --dock-border: rgba(255 255 255 / 0.12);
+  --menubar-bg: rgba(20 20 20 / 0.72);
+  --window-chrome-bg: rgba(45 45 45 / 0.95);
+  --window-body-bg: #1c1c1e;
+}
+
+/* ── iPad OS 26 ─────────────────────────────────────────── */
+[data-os-theme="ipad"] {
+  --dock-height: 80px;
+  --dock-bg: rgba(255 255 255 / 0.22);
+  --dock-border: rgba(255 255 255 / 0.5);
+  --menubar-bg: rgba(255 255 255 / 0.65);
+  --radius-window: 16px;
+  --radius-dock: 22px;
+}
+[data-os-theme="ipad"].dark {
+  --dock-bg: rgba(30 30 30 / 0.6);
+  --menubar-bg: rgba(20 20 20 / 0.65);
+}
+
+/* ── iPhone OS 26 ───────────────────────────────────────── */
+[data-os-theme="iphone"] {
+  --navbar-bg: rgba(255 255 255 / 0.8);
+  --radius-window: 0px;
+}
+[data-os-theme="iphone"].dark {
+  --navbar-bg: rgba(20 20 20 / 0.8);
+}
+
+/* ── Windows 11 ─────────────────────────────────────────── */
+[data-os-theme="windows"] {
+  --taskbar-bg: rgba(32 32 32 / 0.85);
+  --window-chrome-bg: rgba(243 243 243 / 0.98);
+  --window-body-bg: #ffffff;
+  --radius-window: 8px;
+  --win-accent: #0067c0;
+}
+[data-os-theme="windows"].dark {
+  --taskbar-bg: rgba(20 20 20 / 0.9);
+  --window-chrome-bg: rgba(32 32 32 / 0.98);
+  --window-body-bg: #202020;
+}
+
+/* ── Android ────────────────────────────────────────────── */
+[data-os-theme="android"] {
+  --navbar-bg: rgba(28 27 31 / 0.95);
+  --android-primary: #6750a4;
+  --window-body-bg: #fffbfe;
+  --radius-window: 12px;
+}
+[data-os-theme="android"].dark {
+  --window-body-bg: #1c1b1f;
+}
+
+/* ── Tailwind v4 @theme tokens ──────────────────────────── */
+@theme inline {
+  --color-dock-bg: var(--dock-bg);
+  --color-menubar-bg: var(--menubar-bg);
+  --color-taskbar-bg: var(--taskbar-bg);
+  --color-navbar-bg: var(--navbar-bg);
+  --color-window-chrome: var(--window-chrome-bg);
+  --color-window-body: var(--window-body-bg);
+  --color-traffic-close: var(--traffic-light-close);
+  --color-traffic-minimize: var(--traffic-light-minimize);
+  --color-traffic-maximize: var(--traffic-light-maximize);
+  --color-win-accent: var(--win-accent);
+  --color-android-primary: var(--android-primary);
+  --spacing-dock: var(--dock-height);
+  --spacing-menubar: var(--menubar-height);
+  --spacing-taskbar: var(--taskbar-height);
+  --spacing-navbar: var(--navbar-height);
+  --spacing-chrome: var(--window-chrome-height);
+  --radius-window: var(--radius-window);
+  --radius-dock: var(--radius-dock);
+  /* z-index scale */
+  --z-index-9999: 9999;
+}
+
+/* ── OS canvas reset ────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Allow text selection inside window body content */
+.window-body * {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* ── Scrollbar styling ──────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(128 128 128 / 0.4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128 128 128 / 0.6);
+}

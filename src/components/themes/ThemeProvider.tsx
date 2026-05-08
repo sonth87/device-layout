@@ -1,0 +1,88 @@
+'use client';
+
+import { useEffect, useCallback } from 'react';
+import { useStore } from '@/store';
+import { APPS_CONFIG } from '@/config/apps.config';
+import { GlassFilter } from '@/components/liquid-glass/GlassFilter';
+import { WindowManager } from '@/components/window/WindowManager';
+import { MacOSChrome } from './MacOSTheme';
+import { IPadChrome } from './IPadTheme';
+import { IPhoneChrome } from './IPhoneTheme';
+import { WindowsChrome } from './WindowsTheme';
+import { AndroidChrome } from './AndroidTheme';
+import { Wallpaper } from '@/components/desktop/Wallpaper';
+import { IconGrid } from '@/components/desktop/IconGrid';
+import type { AppConfig } from '@/types/app';
+
+/**
+ * ThemeProvider — single root component.
+ *
+ * The desktop canvas (Wallpaper + IconGrid + WindowManager) is rendered
+ * DIRECTLY inside this component and NEVER remounts on theme switch.
+ * Only the chrome overlays (MacOSChrome, WindowsChrome, etc.) swap.
+ * This prevents useWindowUrlSync from re-running and creating duplicate windows.
+ */
+export function ThemeProvider() {
+  const osTheme = useStore((s) => s.osTheme);
+  const colorScheme = useStore((s) => s.colorScheme);
+  const resolvedColorScheme = useStore((s) => s.resolvedColorScheme);
+  const resolveColorScheme = useStore((s) => s.resolveColorScheme);
+  const registerApps = useStore((s) => s.registerApps);
+  const openWindow = useStore((s) => s.openWindow);
+  const setRunning = useStore((s) => s.setRunning);
+  const glassEnabled = useStore((s) => s.glassEnabled);
+
+  useEffect(() => {
+    registerApps(APPS_CONFIG);
+  }, [registerApps]);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) => resolveColorScheme(e.matches);
+    resolveColorScheme(mq.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [resolveColorScheme]);
+
+  useEffect(() => {
+    if (colorScheme !== 'auto') resolveColorScheme(colorScheme === 'dark');
+  }, [colorScheme, resolveColorScheme]);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    html.setAttribute('data-os-theme', osTheme);
+    html.setAttribute('data-glass', glassEnabled ? 'true' : 'false');
+    html.classList.toggle('dark', resolvedColorScheme === 'dark');
+  }, [osTheme, resolvedColorScheme, glassEnabled]);
+
+  const handleOpenApp = useCallback((appConfig: AppConfig) => {
+    openWindow(appConfig);
+    setRunning(appConfig.id, true);
+  }, [openWindow, setRunning]);
+
+  return (
+    <div
+      className="w-full h-full overflow-hidden relative select-none"
+      data-os-theme={osTheme}
+      data-glass={glassEnabled ? 'true' : 'false'}
+    >
+      {/* SVG filter singleton */}
+      <GlassFilter />
+
+      {/* Desktop canvas — NEVER remounts, preserves WindowManager + useWindowUrlSync state */}
+      <div className="absolute inset-0">
+        <Wallpaper>
+          <IconGrid onOpenApp={handleOpenApp} />
+          <WindowManager />
+        </Wallpaper>
+      </div>
+
+      {/* Chrome overlay — remounts on theme switch, but contains no window state */}
+      {osTheme === 'macos'   && <MacOSChrome  onOpenApp={handleOpenApp} />}
+      {osTheme === 'ipad'    && <IPadChrome   onOpenApp={handleOpenApp} />}
+      {osTheme === 'iphone'  && <IPhoneChrome onOpenApp={handleOpenApp} />}
+      {osTheme === 'windows' && <WindowsChrome onOpenApp={handleOpenApp} />}
+      {osTheme === 'android' && <AndroidChrome onOpenApp={handleOpenApp} />}
+    </div>
+  );
+}
