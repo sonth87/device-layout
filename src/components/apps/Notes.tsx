@@ -104,7 +104,7 @@ export function Notes() {
   );
 
   return (
-    <div className="h-full flex bg-[#fdf9ef] dark:bg-[#1c1c1c] text-black dark:text-white">
+    <div className="h-full flex bg-[#fdf9ef] dark:bg-[#0F1115] text-black dark:text-white">
       {/* Sidebar */}
       <div className="w-56 shrink-0 border-r border-black/10 dark:border-white/10 flex flex-col">
         {/* Search */}
@@ -145,7 +145,7 @@ export function Notes() {
         <div className="p-2 border-t border-black/10 dark:border-white/10 flex justify-end">
           <button
             onClick={createNote}
-            className="w-8 h-8 rounded-lg bg-yellow-400 dark:bg-yellow-500 flex items-center justify-center hover:opacity-80 transition-opacity"
+            className="w-8 h-8 rounded-lg bg-yellow-400 dark:bg-yellow-500 flex items-center justify-center hover:opacity-80 transition-opacity text-black dark:text-black"
           >
             <Plus className="w-4 h-4 text-black" />
           </button>

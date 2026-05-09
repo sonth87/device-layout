@@ -71,9 +71,9 @@ export function Finder({ windowId }: AppContentProps) {
 
   return (
     <AppSplitView
-      className="bg-white text-black dark:bg-neutral-900 dark:text-white"
+      className="bg-white text-black dark:bg-[#0F1115] dark:text-white"
       sidebarWidthClass="w-40"
-      sidebarClassName="overflow-y-auto bg-neutral-100/80 p-2 dark:bg-neutral-800/80"
+      sidebarClassName="overflow-y-auto bg-neutral-100/80 p-2 dark:bg-[#11141B]"
       sidebar={(
         <>
           <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-wider text-black/40 dark:text-white/40">Favourites</p>

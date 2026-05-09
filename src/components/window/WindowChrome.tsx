@@ -45,8 +45,8 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
         'select-none cursor-move',
         'border-b border-black/8 dark:border-white/8',
         win.isFocused
-          ? 'bg-neutral-100/95 dark:bg-neutral-800/95'
-          : 'bg-neutral-50/95 dark:bg-neutral-900/95',
+          ? 'bg-neutral-100/95 dark:bg-[#151821]/97'
+          : 'bg-neutral-50/95 dark:bg-[#0F1115]/97',
       )}
       onPointerDown={onPointerDown}
       onDoubleClick={() => toggleMaximize(windowId, viewportRect)}
@@ -133,7 +133,7 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
     <div
       className={cn(
         'flex items-center h-(--window-chrome-height) shrink-0',
-        'bg-neutral-100/98 dark:bg-neutral-800/98',
+        'bg-neutral-100/98 dark:bg-[#151821]/98',
         'border-b border-black/8 dark:border-white/8',
         'select-none cursor-move',
       )}

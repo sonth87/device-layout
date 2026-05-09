@@ -59,7 +59,7 @@ export function TerminalSettings() {
                 'rounded-[var(--radius-input)] px-3.5 py-1.5 text-sm font-medium transition-all',
                 fontSize === size
                   ? 'bg-blue-500 text-white'
-                  : 'bg-white dark:bg-neutral-700/50 hover:bg-black/5 dark:hover:bg-white/10'
+                  : 'bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10'
               )}
             >
               {size}px
@@ -79,7 +79,7 @@ export function TerminalSettings() {
                 'rounded-[var(--radius-input)] px-4 py-2 text-sm font-medium capitalize transition-all',
                 cursorStyle === style
                   ? 'bg-blue-500 text-white'
-                  : 'bg-white dark:bg-neutral-700/50 hover:bg-black/5 dark:hover:bg-white/10'
+                  : 'bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10'
               )}
             >
               {style}
@@ -90,7 +90,7 @@ export function TerminalSettings() {
 
       <div>
         <h3 className="text-sm font-semibold mb-3">Sound</h3>
-        <div className="rounded-[var(--radius-card)] bg-white dark:bg-neutral-700/50 px-4 py-3 flex items-center justify-between">
+          <div className="rounded-[var(--radius-card)] bg-white dark:bg-white/5 px-4 py-3 flex items-center justify-between">
           <div>
             <p className="text-sm font-medium">Bell Sound</p>
             <p className="text-xs text-black/50 dark:text-white/50 mt-0.5">Play a sound when the terminal bell is triggered</p>
@@ -99,7 +99,7 @@ export function TerminalSettings() {
             onClick={() => setBellEnabled(!bellEnabled)}
             className={cn(
               'relative h-6 w-11 shrink-0 rounded-full transition-colors ml-4',
-              bellEnabled ? 'bg-blue-500' : 'bg-neutral-300 dark:bg-neutral-600'
+              bellEnabled ? 'bg-blue-500' : 'bg-neutral-300 dark:bg-white/15'
             )}
           >
             <span className={cn(

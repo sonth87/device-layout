@@ -22,7 +22,7 @@ export function SettingsGeneral() {
         ].map(({ label, description }) => (
           <div
             key={label}
-            className="flex items-center justify-between rounded-[var(--radius-card)] bg-white dark:bg-neutral-700/50 px-4 py-3"
+            className="flex items-center justify-between rounded-[var(--radius-card)] bg-white dark:bg-white/5 px-4 py-3"
           >
             <span className="text-sm font-medium">{label}</span>
             <span className="text-sm text-black/40 dark:text-white/40 flex items-center gap-1">

@@ -32,7 +32,7 @@ export function SettingsDesktopDock() {
             return (
               <div
                 key={app.id}
-                className="flex items-center justify-between rounded-[var(--radius-card)] bg-white dark:bg-neutral-700/50 px-4 py-2.5"
+                className="flex items-center justify-between rounded-[var(--radius-card)] bg-white dark:bg-white/5 px-4 py-2.5"
               >
                 <div className="flex items-center gap-3">
                   <AppIconImage appConfig={app} size={32} />
@@ -42,7 +42,7 @@ export function SettingsDesktopDock() {
                   onClick={() => pinned ? unpinFromDock(app.id) : pinToDock(app.id)}
                   className={cn(
                     'relative h-6 w-11 shrink-0 rounded-full transition-colors',
-                    pinned ? 'bg-blue-500' : 'bg-neutral-300 dark:bg-neutral-600'
+                    pinned ? 'bg-blue-500' : 'bg-neutral-300 dark:bg-white/15'
                   )}
                 >
                   <span className={cn(

@@ -118,7 +118,7 @@ export function Messages() {
   };
 
   return (
-    <div className="h-full flex bg-white dark:bg-[#1c1c1e] text-black dark:text-white">
+    <div className="h-full flex bg-white dark:bg-[#0F1115] text-black dark:text-white">
       {/* Sidebar */}
       <div className="w-60 shrink-0 border-r border-black/10 dark:border-white/10 flex flex-col">
         <div className="p-3 border-b border-black/10 dark:border-white/10">

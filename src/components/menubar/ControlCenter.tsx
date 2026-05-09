@@ -29,7 +29,7 @@ export function ControlCenter() {
         <Popover.Content
           align="end"
           sideOffset={6}
-          className="w-72 bg-white/85 dark:bg-neutral-800/85 backdrop-blur-2xl rounded-[var(--radius-card)] shadow-2xl border border-black/10 dark:border-white/10 p-4 z-9999"
+          className="w-72 bg-white/85 dark:bg-[#151821]/90 backdrop-blur-2xl rounded-[var(--radius-card)] shadow-2xl border border-black/10 dark:border-white/8 p-4 z-9999"
         >
           <div className="grid grid-cols-2 gap-3">
             {/* WiFi */}
@@ -109,7 +109,7 @@ export function ControlCenter() {
                 onClick={() => setGlassEnabled(!glassEnabled)}
                 className={cn(
                   'w-10 h-5 rounded-full transition-colors relative',
-                  glassEnabled ? 'bg-blue-500' : 'bg-neutral-300 dark:bg-neutral-600'
+                  glassEnabled ? 'bg-blue-500' : 'bg-neutral-300 dark:bg-white/15'
                 )}
               >
                 <span className={cn(

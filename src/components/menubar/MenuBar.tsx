@@ -57,7 +57,7 @@ function MenuDropdown({
         {label}
       </button>
       {open && (
-        <div className="absolute top-full left-0 mt-1 min-w-48 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-2xl rounded-[var(--radius-card)] shadow-2xl border border-black/10 dark:border-white/10 py-1 z-9999">
+          <div className="absolute top-full left-0 mt-1 min-w-48 bg-white/90 dark:bg-[#151821]/95 backdrop-blur-2xl rounded-[var(--radius-card)] shadow-2xl border border-black/10 dark:border-white/8 py-1 z-9999">
           {items.map((item, i) =>
             item.separator ? (
               <div key={`sep-${i}`} className="my-1 mx-2 h-px bg-black/10 dark:bg-white/10" />

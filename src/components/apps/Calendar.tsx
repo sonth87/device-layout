@@ -67,7 +67,7 @@ export function Calendar() {
   };
 
   return (
-    <div className="h-full flex bg-white dark:bg-[#1c1c1e] text-black dark:text-white">
+    <div className="h-full flex bg-white dark:bg-[#0F1115] text-black dark:text-white">
       {/* Left: monthly grid */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}

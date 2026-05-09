@@ -47,8 +47,8 @@ function Banner({ notification, onDismiss }: BannerProps) {
       transition={{ type: 'spring', stiffness: 500, damping: 40 }}
       className={cn(
         'flex items-start gap-3 w-80 p-3 cursor-pointer select-none',
-        'bg-white/88 dark:bg-neutral-800/88 backdrop-blur-2xl',
-        'border border-black/10 dark:border-white/10',
+        'bg-white/88 dark:bg-[#151821]/90 backdrop-blur-2xl',
+        'border border-black/10 dark:border-white/8',
         'shadow-[0_8px_32px_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.15)]',
         isWindows ? 'rounded-lg' : 'rounded-2xl',
       )}

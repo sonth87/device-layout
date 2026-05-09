@@ -20,7 +20,7 @@ export function WallpaperPicker({ onClose }: WallpaperPickerProps) {
       onClick={onClose}
     >
       <div
-        className="bg-white/90 dark:bg-neutral-800/90 backdrop-blur-xl rounded-[var(--radius-card)] p-6 shadow-2xl w-120 max-w-[90vw]"
+        className="bg-white/90 dark:bg-[#151821]/95 backdrop-blur-xl rounded-[var(--radius-card)] p-6 shadow-2xl w-120 max-w-[90vw]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">

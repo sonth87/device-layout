@@ -156,7 +156,7 @@ export function Settings({ windowId }: AppContentProps) {
   })();
 
   const sidebar = (
-    <aside className="flex flex-col h-full overflow-y-auto bg-neutral-200/60 dark:bg-neutral-800/60 px-3 py-4 gap-1">
+    <aside className="flex flex-col h-full overflow-y-auto bg-neutral-200/60 dark:bg-[#11141B] px-3 py-4 gap-1">
       {/* Search bar placeholder */}
       <div className="mb-3 mx-1">
         <label className="flex items-center gap-2 bg-black/8 dark:bg-white/8 rounded-[var(--radius-input)] px-3 py-1.5">
@@ -211,7 +211,7 @@ export function Settings({ windowId }: AppContentProps) {
   );
 
   const content = (
-    <main className="flex-1 min-w-0 overflow-y-auto bg-neutral-100 dark:bg-neutral-900 p-5 pb-8">
+    <main className="flex-1 min-w-0 overflow-y-auto bg-neutral-100 dark:bg-[#0F1115] p-5 pb-8">
       {/* Mobile back button */}
       {isNarrow && (
         <button

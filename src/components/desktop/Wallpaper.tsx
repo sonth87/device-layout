@@ -40,7 +40,7 @@ export function Wallpaper({ children }: WallpaperProps) {
       </ContextMenu.Trigger>
 
       <ContextMenu.Portal>
-        <ContextMenu.Content className="min-w-44 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-xl rounded-[var(--radius-card)] shadow-2xl border border-black/10 dark:border-white/10 p-1 z-9999 text-xs">
+        <ContextMenu.Content className="min-w-44 bg-white/90 dark:bg-[#151821]/95 backdrop-blur-xl rounded-[var(--radius-card)] shadow-2xl border border-black/10 dark:border-white/8 p-1 z-9999 text-xs">
           <ContextMenu.Item
             onSelect={() => setPickerOpen(true)}
             className="flex items-center px-3 py-1.5 cursor-default hover:bg-blue-500 hover:text-white transition-colors outline-none"

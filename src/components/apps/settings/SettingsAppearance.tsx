@@ -42,7 +42,7 @@ export function SettingsAppearance() {
                       'rounded-[var(--radius-card)] border-2 p-3 text-left transition-all',
                       osTheme === theme
                         ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                        : 'border-transparent bg-white hover:border-black/10 dark:bg-neutral-700/50 dark:hover:border-white/10'
+                        : 'border-transparent bg-white hover:border-black/10 dark:bg-white/5 dark:hover:border-white/10'
                     )}
                   >
                     <p className="text-sm font-semibold">{config.name}</p>
@@ -66,7 +66,7 @@ export function SettingsAppearance() {
                     'rounded-[var(--radius-input)] px-4 py-2 text-sm font-medium transition-all',
                     colorScheme === id
                       ? 'bg-blue-500 text-white'
-                      : 'bg-white dark:bg-neutral-700/50 hover:bg-black/5 dark:hover:bg-white/10'
+                      : 'bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10'
                   )}
                 >
                   {label}
@@ -77,7 +77,7 @@ export function SettingsAppearance() {
 
           <div>
             <h3 className="text-sm font-semibold mb-3">Effects</h3>
-            <div className="rounded-[var(--radius-card)] bg-white dark:bg-neutral-700/50 px-4 py-3 flex items-center justify-between">
+            <div className="rounded-[var(--radius-card)] bg-white dark:bg-white/5 px-4 py-3 flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium">Liquid Glass</p>
                 <p className="text-xs text-black/50 dark:text-white/50 mt-0.5">
@@ -88,7 +88,7 @@ export function SettingsAppearance() {
                 onClick={() => setGlassEnabled(!glassEnabled)}
                 className={cn(
                   'relative h-6 w-11 shrink-0 rounded-full transition-colors ml-4',
-                  glassEnabled ? 'bg-blue-500' : 'bg-neutral-300 dark:bg-neutral-600'
+                  glassEnabled ? 'bg-blue-500' : 'bg-neutral-300 dark:bg-white/15'
                 )}
               >
                 <span className={cn(

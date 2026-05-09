@@ -93,10 +93,10 @@ export function Browser({ appId }: AppContentProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-neutral-900">
+    <div className="flex flex-col h-full bg-white dark:bg-[#0F1115]">
       {/* Navigation bar — also catches horizontal swipe for back/forward */}
       <div
-        className="flex items-center gap-2 px-3 py-2 border-b border-black/10 dark:border-white/10 bg-neutral-100 dark:bg-neutral-800 shrink-0"
+        className="flex items-center gap-2 px-3 py-2 border-b border-black/10 dark:border-white/10 bg-neutral-100 dark:bg-[#151821] shrink-0"
         onWheel={handleNavBarWheel}
       >
         <button
@@ -131,7 +131,7 @@ export function Browser({ appId }: AppContentProps) {
           />
           {inputUrl && (
             <button type="button" onClick={() => setInputUrl('')}>
-              <X className="w-3 h-3 text-black/30" />
+              <X className="w-3 h-3 text-black/30 dark:text-white/30" />
             </button>
           )}
         </form>
@@ -156,7 +156,7 @@ export function Browser({ appId }: AppContentProps) {
           title="Browser content"
         />
         {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-neutral-900 z-10">
+          <div className="absolute inset-0 flex items-center justify-center bg-white dark:bg-[#0F1115] z-10">
             <RefreshCw className="w-6 h-6 animate-spin text-black/30 dark:text-white/30" />
           </div>
         )}

@@ -162,7 +162,7 @@ export function Photos() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-white dark:bg-black text-black dark:text-white">
+    <div className="h-full flex flex-col bg-white dark:bg-[#0F1115] text-black dark:text-white">
       {/* Toolbar */}
       <div className="flex items-center gap-2 px-3 py-2 border-b border-black/10 dark:border-white/10 shrink-0">
         <div className="flex-1 flex items-center gap-1.5 px-2 py-1 bg-black/5 dark:bg-white/10 rounded-lg">
