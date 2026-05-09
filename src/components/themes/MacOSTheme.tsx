@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { MenuBar } from '@/components/menubar/MenuBar';
 import { Dock } from '@/components/dock/Dock';
 import { SnapAssist } from '@/components/window/SnapAssist';
+import { GlobalAboutDialog } from '@/components/shared/AboutDialog';
 import { useStore } from '@/store';
 import type { AppConfig } from '@/types/app';
 
@@ -49,6 +50,9 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
     <>
       {/* Snap assist overlay */}
       <SnapAssist />
+
+      {/* About dialog — listens globally for action:about events */}
+      <GlobalAboutDialog />
 
       {/* Menubar — on top, full width */}
       <div className="absolute top-0 inset-x-0 z-40 pointer-events-none">

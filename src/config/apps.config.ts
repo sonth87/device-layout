@@ -173,6 +173,28 @@ export const APPS_CONFIG: AppConfig[] = [
     minSize: { width: 480, height: 400 },
     hasMenuBar: false,
     category: 'system',
+    menuBarMenus: [
+      { label: 'Edit', items: [
+        { key: 'undo', label: 'Undo', shortcut: '⌘Z', action: 'undo' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'cut', label: 'Cut', shortcut: '⌘X', action: 'cut' },
+        { key: 'copy', label: 'Copy', shortcut: '⌘C', action: 'copy' },
+        { key: 'paste', label: 'Paste', shortcut: '⌘V', action: 'paste' },
+        { key: 'select-all', label: 'Select All', shortcut: '⌘A', action: 'selectAll' },
+      ]},
+      { label: 'View', items: [
+        { key: 'sidebar', label: 'Show Sidebar', shortcut: '⌃⌘S', action: 'toggleSidebar' },
+      ]},
+      { label: 'Window', items: [
+        { key: 'minimize', label: 'Minimize', shortcut: '⌘M', action: 'minimize' },
+        { key: 'zoom', label: 'Zoom', action: 'zoom' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'bring-all', label: 'Bring All to Front', action: 'bringAllToFront' },
+      ]},
+      { label: 'Help', items: [
+        { key: 'help', label: 'System Settings Help', shortcut: '⌘?', action: 'help' },
+      ]},
+    ],
   },
   {
     id: 'browser',

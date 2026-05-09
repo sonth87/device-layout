@@ -63,7 +63,7 @@
   --window-body-bg: #ffffff;
   --radius-window: 22px;
   --radius-dock: 22px;
-  --radius-card: 22px;
+  --radius-card: 6px;
   --radius-input: 14px;
 }
 [data-os-theme="macos"].dark {
