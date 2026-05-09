@@ -27,15 +27,32 @@ interface AppConfig {
   category?: string             // used for grouping in Spotlight / App Drawer
   disabled?: boolean            // hides from dock and desktop if true
 
-  contextMenu?: ContextMenuAction[]  // right-click actions on the desktop icon
+  contextMenu?: ContextMenuAction[]  // right-click / long-press actions on desktop icon
+  menuBarMenus?: MenuBarMenu[]       // top menu bar declarations in macOS MenuBar
+  appSettings?: string               // key in AppSettingsRegistry — shows panel in Settings
 }
 
 interface ContextMenuAction {
   key: string
   label: string
-  action: string               // dispatched to the app's context menu handler
+  action: string               // dispatched via 'app:context:action' CustomEvent
   shortcut?: string            // display-only keyboard shortcut hint
   separator?: boolean          // renders a separator before this item
+}
+
+interface MenuBarMenu {
+  label: string                // top-level menu title (e.g. "File", "Edit")
+  items: MenuBarItem[]
+}
+
+interface MenuBarItem {
+  key: string
+  label: string
+  action?: string              // dispatched via 'app:menu:action' CustomEvent
+  shortcut?: string
+  separator?: boolean
+  disabled?: boolean
+  children?: MenuBarItem[]     // reserved for sub-menus
 }
 ```
 
@@ -164,3 +181,121 @@ Built-in actions (handled by the shell, not the app):
 - `'openWindow'` — opens a new window of this app
 - `'closeAll'` — closes all windows of this app
 - `'quit'` — closes all windows and removes app instances
+
+---
+
+## Action Event Bus (`useMenuAction` / `useContextAction`)
+
+App menu bar items and context menu items dispatch their `action` strings as typed CustomEvents on `window`. Apps subscribe using hooks from `src/hooks/useMenuAction.ts`:
+
+```ts
+import { useMenuAction, useContextAction } from '@/hooks/useMenuAction';
+
+// Inside your app component:
+useMenuAction(appId, (action) => {
+  if (action === 'newWindow') { /* ... */ }
+  if (action === 'save')      { /* ... */ }
+});
+
+useContextAction(appId, (action) => {
+  if (action === 'getInfo') { /* ... */ }
+});
+```
+
+Events dispatched:
+| Source | CustomEvent name | detail shape |
+|--------|-----------------|--------------|
+| MenuBar item click | `app:menu:action` | `{ appId, action }` |
+| Desktop context menu | `app:context:action` | `{ appId, action }` |
+
+Only events where `detail.appId === appId` reach the hook callback.
+
+### Declaring menu bar menus in AppConfig
+
+```ts
+{
+  id: 'my-app',
+  menuBarMenus: [
+    {
+      label: 'File',
+      items: [
+        { key: 'new', label: 'New', shortcut: '⌘N', action: 'new' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'close', label: 'Close', shortcut: '⌘W', action: 'close' },
+      ],
+    },
+    {
+      label: 'Edit',
+      items: [
+        { key: 'cut', label: 'Cut', shortcut: '⌘X', action: 'cut' },
+        { key: 'copy', label: 'Copy', shortcut: '⌘C', action: 'copy' },
+        { key: 'paste', label: 'Paste', shortcut: '⌘V', action: 'paste' },
+      ],
+    },
+  ],
+}
+```
+
+The macOS `MenuBar` component reads `store.apps[activeAppId]?.menuBarMenus` and falls back to `DEFAULT_MENU_BAR_MENUS` (exported from `apps.config.ts`) when no app is focused.
+
+---
+
+## App-Specific Settings Panels
+
+Declare `appSettings: 'MyAppSettings'` in `AppConfig` to add a panel for this app under the **Applications** group in System Settings.
+
+**Step 1 — Declare in `AppConfig`:**
+
+```ts
+{ id: 'my-app', ..., appSettings: 'MyAppSettings' }
+```
+
+**Step 2 — Create the panel component:**
+
+```tsx
+// src/components/apps/settings/MyAppSettings.tsx
+'use client';
+
+export function MyAppSettings() {
+  return <div className="space-y-4">...settings UI...</div>;
+}
+```
+
+**Step 3 — Register in `AppSettingsRegistry.tsx`:**
+
+```ts
+MyAppSettings: lazy(() =>
+  import('./MyAppSettings').then((m) => ({ default: m.MyAppSettings }))
+),
+```
+
+The System Settings app automatically lists all apps with `appSettings` defined in the sidebar.
+
+---
+
+## Desktop Icon Grid
+
+Icons are laid out in a column-first grid with constants from `src/components/desktop/IconGrid.tsx`:
+
+```ts
+export const CELL_W = 108;   // column width in px
+export const CELL_H = 124;   // row height in px
+export const PAD    = 20;    // padding from container edge
+```
+
+When a drag ends, the icon **snaps to the nearest grid cell** automatically:
+
+```
+snappedX = round((rawX − PAD) / CELL_W) × CELL_W + PAD
+snappedY = round((rawY − PAD) / CELL_H) × CELL_H + PAD
+```
+
+Positions are then clamped to the container bounds before being committed to the store via `moveIcon`.
+
+---
+
+## Mobile Long-Press Context Menu
+
+On touch devices (`pointerType === 'touch'`), holding an app icon for **700 ms** without dragging opens a native-style context menu positioned near the finger. Moving the finger more than 6 px before the timer fires cancels the long-press and initiates a normal drag.
+
+The context menu items come from `AppConfig.contextMenu` and dispatch the same `app:context:action` CustomEvents as the desktop right-click menu.

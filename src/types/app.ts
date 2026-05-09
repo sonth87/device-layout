@@ -9,6 +9,22 @@ export interface ContextMenuAction {
   children?: ContextMenuAction[];
 }
 
+export interface MenuBarItem {
+  key: string;
+  label: string;
+  /** Action string dispatched via 'app:menu:action' CustomEvent */
+  action?: string;
+  shortcut?: string;
+  separator?: boolean;
+  disabled?: boolean;
+  children?: MenuBarItem[];
+}
+
+export interface MenuBarMenu {
+  label: string;
+  items: MenuBarItem[];
+}
+
 export interface AppConfig {
   id: string;
   name: string;
@@ -39,6 +55,10 @@ export interface AppConfig {
   badge?: string | number;
   /** Default launcher behavior for this app */
   launchMode?: 'single' | 'multi';
+  /** Top menu bar declarations for macOS MenuBar (replaces hardcoded APP_MENUS) */
+  menuBarMenus?: MenuBarMenu[];
+  /** Key in AppSettingsRegistry — renders this app's panel inside System Settings */
+  appSettings?: string;
 }
 
 export interface AppInstance {

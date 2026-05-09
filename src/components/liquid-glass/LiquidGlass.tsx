@@ -13,12 +13,12 @@ interface LiquidGlassProps {
   forceGlass?: boolean;
 }
 
-const VARIANT_RADIUS: Record<GlassVariant, string> = {
-  dock:    'rounded-[20px]',
-  menubar: 'rounded-none',
-  taskbar: 'rounded-none',
-  window:  'rounded-[var(--radius-window,10px)]',
-  panel:   'rounded-2xl',
+const VARIANT_RADIUS_VAR: Record<GlassVariant, string | null> = {
+  dock:    'var(--radius-dock)',
+  menubar: null,
+  taskbar: null,
+  window:  'var(--radius-window)',
+  panel:   'var(--radius-card)',
 };
 
 export function LiquidGlass({
@@ -29,18 +29,19 @@ export function LiquidGlass({
 }: LiquidGlassProps) {
   const globalGlass = useGlassEnabled();
   const isGlass = forceGlass !== undefined ? forceGlass : globalGlass;
-  const radius = VARIANT_RADIUS[variant];
+  const radiusVar = VARIANT_RADIUS_VAR[variant];
+  const radiusStyle: React.CSSProperties = radiusVar ? { borderRadius: radiusVar } : {};
 
   if (!isGlass) {
     return (
       <div
         className={cn(
-          radius,
           'bg-white/25 dark:bg-black/35',
           'backdrop-blur-xl',
           'border border-white/30 dark:border-white/15',
           className
         )}
+        style={radiusStyle}
       >
         {children}
       </div>
@@ -51,19 +52,19 @@ export function LiquidGlass({
     <div
       className={cn(
         'relative overflow-hidden',
-        radius,
         'backdrop-blur-2xl',
         'bg-white/25 dark:bg-white/10',
         'border border-white/40 dark:border-white/20',
         'shadow-[0_8px_32px_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.5)]',
         className
       )}
+      style={radiusStyle}
     >
       {/* ── SVG distortion layer (absolute, behind content) ── */}
       <div
         aria-hidden
-        className={cn('absolute inset-0 pointer-events-none overflow-hidden', radius)}
-        style={{ filter: 'url(#lg-distort)', opacity: 0.4 }}
+        className={cn('absolute inset-0 pointer-events-none overflow-hidden')}
+        style={{ ...radiusStyle, filter: 'url(#lg-distort)', opacity: 0.4 }}
       >
         <div className="absolute inset-0 bg-white/30 dark:bg-white/10" />
       </div>

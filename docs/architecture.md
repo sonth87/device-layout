@@ -91,11 +91,19 @@ src/
       Music.tsx
       Notes.tsx
       Photos.tsx
-      Settings.tsx
+      Settings.tsx            Two-panel System Settings (sidebar + content)
       Terminal.tsx
       TextEditor.tsx
       IframeApp.tsx           Generic iframe wrapper
       MdxApp.tsx              Generic MDX page renderer
+      settings/               Per-section settings panels
+        AppSettingsRegistry.tsx   Lazy map: appSettings key → React component
+        SettingsGeneral.tsx
+        SettingsAppearance.tsx
+        SettingsWallpaper.tsx
+        SettingsDesktopDock.tsx
+        SettingsNotifications.tsx
+        TerminalSettings.tsx      Example per-app settings panel
 
   config/
     apps.config.ts            AppConfig[] — the single source of truth for all apps
@@ -118,6 +126,7 @@ src/
     useLocalStorage.ts        SSR-safe localStorage hook
     useResizeObserver.ts      ResizeObserver wrapper + useViewportSize
     usePointerDrag.ts         Generic pointer-capture drag primitive
+    useMenuAction.ts          Subscribe to app:menu:action / app:context:action events
     useSwipeGesture.ts        Touch swipe detection (iOS/Android nav)
     useKeyboardShortcuts.ts   Global keyboard binding registry
 
@@ -226,3 +235,35 @@ offSnapZone(handler)
 
 `getSnapZone(px, py, topInset)` — returns the zone enum for a cursor position  
 `getSnapRect(zone, topInset, bottomInset)` — returns the pixel rect for a given zone
+
+---
+
+## Action Event Bus (Menu & Context Menu)
+
+App menu bar items and desktop context menu items dispatch actions as typed `CustomEvent`s on `window`. This keeps the MenuBar, AppIcon, and individual app components decoupled.
+
+| Source | Event name | detail |
+|--------|-----------|--------|
+| Menu bar item click | `app:menu:action` | `{ appId: string, action: string }` |
+| Desktop icon context menu | `app:context:action` | `{ appId: string, action: string }` |
+
+Apps subscribe using `useMenuAction` / `useContextAction` from `src/hooks/useMenuAction.ts`. The hooks filter by `appId` so only the focused app receives events.
+
+The MenuBar reads `store.apps[activeAppId]?.menuBarMenus` (declared in `AppConfig`). The hardcoded `APP_MENUS` dict has been removed — all menu declarations live in `apps.config.ts`.
+
+---
+
+## Settings System
+
+`Settings.tsx` is a two-panel app (sidebar + content area) modelled on macOS System Preferences.
+
+**Sidebar groups:**
+- **System** — General, Appearance, Wallpaper, Desktop & Dock, Notifications
+- **Applications** — any app where `AppConfig.appSettings` is set
+
+When width < 620 px (mobile/iPad), the layout shows one panel at a time with a back button.
+
+**Adding a settings panel for an app:**
+1. Set `appSettings: 'MyKey'` in the app's `AppConfig`
+2. Create `src/components/apps/settings/MyKey.tsx` with the panel UI
+3. Register it in `AppSettingsRegistry.tsx` lazy map

@@ -66,13 +66,12 @@ export function Window({ windowId }: WindowProps) {
       }}
       style={
         isFullscreen && !win.isMaximized
-          ? { position: 'absolute', inset: 0, zIndex: win.zIndex, transformOrigin: 'bottom center' }
-          : { position: 'absolute', x: mx, y: my, width: mw, height: mh, zIndex: win.zIndex, transformOrigin: 'bottom center' }
+          ? { position: 'absolute', inset: 0, zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: 'var(--radius-window)' }
+          : { position: 'absolute', x: mx, y: my, width: mw, height: mh, zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: 'var(--radius-window)' }
       }
       className={cn(
         'flex flex-col overflow-hidden',
         win.isMinimized ? 'pointer-events-none' : 'pointer-events-auto',
-        'rounded-(--radius-window)',
         // Shadow: focused = strong, unfocused = subtle
         win.isFocused
           ? 'shadow-[0_22px_70px_rgba(0,0,0,0.5),0_2px_8px_rgba(0,0,0,0.3)]'

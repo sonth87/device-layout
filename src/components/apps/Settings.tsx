@@ -1,186 +1,253 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState, useCallback } from 'react';
+import { ChevronLeft, Settings2, Paintbrush, Image, LayoutGrid, Bell, type LucideIcon } from 'lucide-react';
 import { useStore } from '@/store';
-import { THEMES_CONFIG } from '@/config/themes.config';
-import { WALLPAPERS } from '@/config/wallpapers.config';
 import { cn } from '@/lib/utils';
-import { AppSplitView } from './AppSplitView';
-import type { OSTheme, ColorScheme } from '@/types/theme';
+import { useResizeObserver } from '@/hooks/useResizeObserver';
+import { AppIconImage } from '@/components/shared/AppIconImage';
+import { SettingsGeneral } from './settings/SettingsGeneral';
+import { SettingsAppearance } from './settings/SettingsAppearance';
+import { SettingsWallpaper } from './settings/SettingsWallpaper';
+import { SettingsDesktopDock } from './settings/SettingsDesktopDock';
+import { SettingsNotifications } from './settings/SettingsNotifications';
+import { AppSettingsPanel } from './settings/AppSettingsRegistry';
 import type { AppContentProps } from './AppRegistry';
+import { useRef } from 'react';
 
-const OS_THEMES: OSTheme[] = ['macos', 'ipad', 'iphone', 'windows', 'android'];
-const COLOR_SCHEMES: { id: ColorScheme; label: string }[] = [
-  { id: 'auto', label: 'Auto' },
-  { id: 'light', label: 'Light' },
-  { id: 'dark', label: 'Dark' },
+// ─── System settings sections ──────────────────────────────────────────────
+
+type SystemSectionId = 'general' | 'appearance' | 'wallpaper' | 'desktop-dock' | 'notifications';
+
+const SYSTEM_SECTIONS: {
+  id: SystemSectionId;
+  label: string;
+  lucideIcon: LucideIcon;
+  color: [string, string];
+  component: () => React.ReactElement;
+}[] = [
+  {
+    id: 'general',
+    label: 'General',
+    lucideIcon: Settings2,
+    color: ['#636366', '#48484a'],
+    component: SettingsGeneral,
+  },
+  {
+    id: 'appearance',
+    label: 'Appearance',
+    lucideIcon: Paintbrush,
+    color: ['#5e5ce6', '#3634a3'],
+    component: SettingsAppearance,
+  },
+  {
+    id: 'wallpaper',
+    label: 'Wallpaper',
+    lucideIcon: Image,
+    color: ['#30d158', '#25a244'],
+    component: SettingsWallpaper,
+  },
+  {
+    id: 'desktop-dock',
+    label: 'Desktop & Dock',
+    lucideIcon: LayoutGrid,
+    color: ['#0a84ff', '#0055d4'],
+    component: SettingsDesktopDock,
+  },
+  {
+    id: 'notifications',
+    label: 'Notifications',
+    lucideIcon: Bell,
+    color: ['#ff3b30', '#cc2323'],
+    component: SettingsNotifications,
+  },
 ];
-const SETTINGS_SECTIONS = [
-  { id: 'appearance', label: 'Appearance' },
-  { id: 'wallpaper', label: 'Wallpaper' },
-] as const;
 
-type SettingsSection = typeof SETTINGS_SECTIONS[number]['id'];
+// ─── Sidebar item ────────────────────────────────────────────────────────────
 
-export function Settings({ windowId }: AppContentProps) {
-  const osTheme = useStore((s) => s.osTheme);
-  const colorScheme = useStore((s) => s.colorScheme);
-  const glassEnabled = useStore((s) => s.glassEnabled);
-  const wallpaperId = useStore((s) => s.wallpaperId);
-  const setOSTheme = useStore((s) => s.setOSTheme);
-  const setColorScheme = useStore((s) => s.setColorScheme);
-  const setGlassEnabled = useStore((s) => s.setGlassEnabled);
-  const setWallpaper = useStore((s) => s.setWallpaper);
-  const [activeSection, setActiveSection] = useState<SettingsSection>('appearance');
-  const appearanceRef = useRef<HTMLElement | null>(null);
-  const wallpaperRef = useRef<HTMLElement | null>(null);
-
-  void windowId;
-
-  const handleSectionSelect = (section: SettingsSection) => {
-    setActiveSection(section);
-    const target = section === 'appearance' ? appearanceRef.current : wallpaperRef.current;
-    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
+function SidebarItem({
+  lucideIcon: Icon,
+  iconColor,
+  label,
+  active,
+  onClick,
+  iconEl,
+}: {
+  lucideIcon?: LucideIcon;
+  iconColor?: [string, string];
+  label: string;
+  active: boolean;
+  onClick: () => void;
+  iconEl?: React.ReactNode;
+}) {
   return (
-    <AppSplitView
-      className="bg-neutral-100 dark:bg-neutral-900"
-      sidebarClassName="bg-white p-3 dark:bg-neutral-800"
-      sidebar={(
-        <>
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-black/40 dark:text-white/40">Settings</h2>
-          <div className="flex flex-col gap-2">
-            {SETTINGS_SECTIONS.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => handleSectionSelect(section.id)}
-                className={cn(
-                  'rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors',
-                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60',
-                  activeSection === section.id
-                    ? 'bg-blue-500 text-white'
-                    : 'hover:bg-black/5 dark:hover:bg-white/5'
-                )}
-                aria-current={activeSection === section.id ? 'page' : undefined}
-              >
-                {section.label}
-              </button>
-            ))}
-          </div>
-        </>
+    <button
+      onClick={onClick}
+      className={cn(
+        'w-full flex items-center gap-3 px-3 py-2 rounded-[var(--radius-input)] text-left transition-colors',
+        'focus:outline-none text-sm',
+        active
+          ? 'bg-red-500/90 text-white'
+          : 'hover:bg-black/5 dark:hover:bg-white/8'
       )}
     >
-      {({ width, height }) => {
-        const isCompact = width > 0 && width < 560;
-        const isWide = width >= 980;
-        const isShort = height > 0 && height < 520;
-        const cardGridClass = isCompact ? 'grid-cols-1' : isWide ? 'grid-cols-3' : 'grid-cols-2';
+      {iconEl ?? (
+        Icon ? (
+          <span
+            className="w-7 h-7 rounded-[var(--radius-input)] flex items-center justify-center shrink-0"
+            style={{ background: `linear-gradient(135deg, ${iconColor?.[0] ?? '#636366'}, ${iconColor?.[1] ?? '#48484a'})` }}
+          >
+            <Icon className="w-4 h-4 text-white" strokeWidth={1.8} />
+          </span>
+        ) : null
+      )}
+      <span className="truncate font-medium">{label}</span>
+    </button>
+  );
+}
 
-        return (
-          <div className={cn('h-full overflow-auto', isCompact ? 'p-3' : 'p-4', !isCompact && 'p-5')}>
-            <div className={cn(isShort ? 'space-y-6' : 'space-y-8')}>
-              <section ref={appearanceRef}>
-                <h3 className="mb-3 text-sm font-semibold">OS Theme</h3>
-                <div className={cn('grid gap-3', cardGridClass)}>
-                  {OS_THEMES.map((theme) => {
-                    const config = THEMES_CONFIG[theme];
-                    return (
-                      <button
-                        key={theme}
-                        onClick={(e) => { e.stopPropagation(); setOSTheme(theme); }}
-                        className={cn(
-                          'rounded-xl border-2 p-3 text-left transition-all',
-                          osTheme === theme
-                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                            : 'border-transparent bg-white hover:border-black/10 dark:bg-neutral-800 dark:hover:border-white/10'
-                        )}
-                      >
-                        <p className="text-sm font-semibold">{config.name}</p>
-                        <p className={cn(
-                          'mt-1 text-xs text-black/50 dark:text-white/50',
-                          isCompact ? 'leading-4' : 'leading-5'
-                        )}>
-                          {config.description}
-                        </p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
+// ─── Main Settings component ─────────────────────────────────────────────────
 
-              <section>
-                <h3 className="mb-3 text-sm font-semibold">Appearance</h3>
-                <div className="flex flex-wrap gap-2">
-                  {COLOR_SCHEMES.map(({ id, label }) => (
-                    <button
-                      key={id}
-                      onClick={() => setColorScheme(id)}
-                      className={cn(
-                        'rounded-lg px-4 py-2 text-sm font-medium transition-all',
-                        colorScheme === id
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-white hover:bg-black/5 dark:bg-neutral-800 dark:hover:bg-white/10'
-                      )}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </section>
+export function Settings({ windowId }: AppContentProps) {
+  const apps = useStore((s) => s.apps);
+  void windowId;
 
-              <section>
-                <h3 className="mb-3 text-sm font-semibold">Effects</h3>
-                <div className={cn(
-                  'rounded-xl bg-white p-4 dark:bg-neutral-800',
-                  isCompact ? 'space-y-3' : 'flex flex-col gap-4',
-                  !isCompact && 'flex-row items-center justify-between'
-                )}>
-                  <div>
-                    <p className="text-sm font-medium">Liquid Glass</p>
-                    <p className="text-xs text-black/50 dark:text-white/50">WebGL-powered glass effect for macOS/iPad/iPhone themes</p>
-                  </div>
-                  <button
-                    onClick={() => setGlassEnabled(!glassEnabled)}
-                    className={cn(
-                      'relative h-6 w-11 shrink-0 rounded-full transition-colors',
-                      glassEnabled ? 'bg-blue-500' : 'bg-neutral-300 dark:bg-neutral-600'
-                    )}
-                  >
-                    <span className={cn(
-                      'absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all',
-                      glassEnabled ? 'left-[22px]' : 'left-0.5'
-                    )} />
-                  </button>
-                </div>
-              </section>
+  // Apps that declare app-specific settings panels
+  const appSettingsList = Object.values(apps).filter(
+    (a) => !a.disabled && a.appSettings
+  );
 
-              <section ref={wallpaperRef}>
-                <h3 className="mb-3 text-sm font-semibold">Wallpaper</h3>
-                <div className={cn('grid gap-3', cardGridClass)}>
-                  {WALLPAPERS.map((w) => (
-                    <button
-                      key={w.id}
-                      onClick={() => setWallpaper(w.id)}
-                      className={cn(
-                        'aspect-video overflow-hidden rounded-xl border-2 transition-all',
-                        wallpaperId === w.id ? 'scale-105 border-blue-500 shadow-lg' : 'border-transparent hover:border-black/20 dark:hover:border-white/20'
-                      )}
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={w.thumbnail}
-                        alt={w.name}
-                        className="h-full w-full object-cover"
-                      />
-                    </button>
-                  ))}
+  type ActiveId = SystemSectionId | `app:${string}`;
+  const [activeId, setActiveId] = useState<ActiveId>('general');
+  // Whether the sidebar is visible on narrow screens
+  const [showContent, setShowContent] = useState(false);
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerSize = useResizeObserver(containerRef);
+  const isNarrow = containerSize.width > 0 && containerSize.width < 620;
+
+  const select = useCallback((id: ActiveId) => {
+    setActiveId(id);
+    if (isNarrow) setShowContent(true);
+  }, [isNarrow]);
+
+  const goBack = () => setShowContent(false);
+
+  // Resolve current content
+  const renderContent = () => {
+    if (activeId.startsWith('app:')) {
+      const appId = activeId.slice(4);
+      const app = apps[appId];
+      if (!app?.appSettings) return null;
+      return <AppSettingsPanel settingsKey={app.appSettings} />;
+    }
+    const section = SYSTEM_SECTIONS.find((s) => s.id === activeId);
+    if (!section) return null;
+    const Component = section.component;
+    return <Component />;
+  };
+
+  const activeSectionLabel = (() => {
+    if (activeId.startsWith('app:')) {
+      const appId = activeId.slice(4);
+      return apps[appId]?.name ?? '';
+    }
+    return SYSTEM_SECTIONS.find((s) => s.id === activeId)?.label ?? '';
+  })();
+
+  const sidebar = (
+    <aside className="flex flex-col h-full overflow-y-auto bg-neutral-200/60 dark:bg-neutral-800/60 px-3 py-4 gap-1">
+      {/* Search bar placeholder */}
+      <div className="mb-3 mx-1">
+        <label className="flex items-center gap-2 bg-black/8 dark:bg-white/8 rounded-[var(--radius-input)] px-3 py-1.5">
+          <svg className="w-3.5 h-3.5 text-black/40 dark:text-white/40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="search"
+            placeholder="Search"
+            className="bg-transparent text-sm text-black/80 dark:text-white/80 placeholder:text-black/35 dark:placeholder:text-white/35 outline-none w-full"
+          />
+        </label>
+      </div>
+
+      {/* System group */}
+      <p className="px-3 mb-1 text-[11px] font-semibold uppercase tracking-wider text-black/35 dark:text-white/35">
+        System
+      </p>
+      {SYSTEM_SECTIONS.map((section) => (
+        <SidebarItem
+          key={section.id}
+          lucideIcon={section.lucideIcon}
+          iconColor={section.color}
+          label={section.label}
+          active={activeId === section.id}
+          onClick={() => select(section.id)}
+        />
+      ))}
+
+      {/* Applications group */}
+      {appSettingsList.length > 0 && (
+        <>
+          <p className="px-3 mt-4 mb-1 text-[11px] font-semibold uppercase tracking-wider text-black/35 dark:text-white/35">
+            Applications
+          </p>
+          {appSettingsList.map((app) => (
+            <SidebarItem
+              key={app.id}
+              label={app.name}
+              active={activeId === `app:${app.id}`}
+              onClick={() => select(`app:${app.id}` as ActiveId)}
+              iconEl={
+                <div className="w-7 h-7 shrink-0">
+                  <AppIconImage appConfig={app} size={28} />
                 </div>
-              </section>
-            </div>
+              }
+            />
+          ))}
+        </>
+      )}
+    </aside>
+  );
+
+  const content = (
+    <main className="flex-1 min-w-0 overflow-y-auto bg-neutral-100 dark:bg-neutral-900 p-5 pb-8">
+      {/* Mobile back button */}
+      {isNarrow && (
+        <button
+          onClick={goBack}
+          className="flex items-center gap-1 text-blue-500 text-sm mb-4 -ml-1"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          Back
+        </button>
+      )}
+
+      {/* Section header */}
+      <div className="mb-6 flex items-center gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold">{activeSectionLabel}</h1>
+        </div>
+      </div>
+
+      {renderContent()}
+    </main>
+  );
+
+  return (
+    <div ref={containerRef} className="flex h-full overflow-hidden">
+      {isNarrow ? (
+        // Mobile: show either sidebar or content
+        showContent ? content : sidebar
+      ) : (
+        // Desktop: two-panel side by side
+        <>
+          <div className="w-56 shrink-0 border-r border-black/10 dark:border-white/10">
+            {sidebar}
           </div>
-        );
-      }}
-    </AppSplitView>
+          {content}
+        </>
+      )}
+    </div>
   );
 }

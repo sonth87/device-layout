@@ -7,9 +7,9 @@ import { useStore } from '@/store';
 import { AppIcon } from './AppIcon';
 import type { AppConfig } from '@/types/app';
 
-const CELL_W = 108;
-const CELL_H = 124;
-const PAD = 20;
+export const CELL_W = 108;
+export const CELL_H = 124;
+export const PAD = 20;
 
 /** Calculate default pixel position for icon at given index (left column, top down) */
 function defaultPos(index: number, containerH: number): { x: number; y: number } {
@@ -49,13 +49,16 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
   };
 
   const handleDrop = (appId: string, x: number, y: number) => {
-    // Clamp within container
     const container = containerRef.current;
     if (!container) return;
+    // Snap to nearest grid cell
+    const snappedX = Math.round((x - PAD) / CELL_W) * CELL_W + PAD;
+    const snappedY = Math.round((y - PAD) / CELL_H) * CELL_H + PAD;
+    // Clamp within container
     const maxX = container.clientWidth - CELL_W;
     const maxY = container.clientHeight - CELL_H;
-    const clampedX = Math.max(0, Math.min(maxX, x));
-    const clampedY = Math.max(0, Math.min(maxY, y));
+    const clampedX = Math.max(0, Math.min(maxX, snappedX));
+    const clampedY = Math.max(0, Math.min(maxY, snappedY));
     moveIcon(appId, clampedX, clampedY);
   };
 

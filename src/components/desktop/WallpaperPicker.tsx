@@ -20,7 +20,7 @@ export function WallpaperPicker({ onClose }: WallpaperPickerProps) {
       onClick={onClose}
     >
       <div
-        className="bg-white/90 dark:bg-neutral-800/90 backdrop-blur-xl rounded-2xl p-6 shadow-2xl w-120 max-w-[90vw]"
+        className="bg-white/90 dark:bg-neutral-800/90 backdrop-blur-xl rounded-[var(--radius-card)] p-6 shadow-2xl w-120 max-w-[90vw]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
@@ -36,7 +36,7 @@ export function WallpaperPicker({ onClose }: WallpaperPickerProps) {
               key={w.id}
               onClick={() => { setWallpaper(w.id); onClose(); }}
               className={cn(
-                'aspect-video rounded-xl overflow-hidden border-2 transition-all',
+                'aspect-video rounded-[var(--radius-input)] overflow-hidden border-2 transition-all',
                 wallpaperId === w.id
                   ? 'border-blue-500 scale-105 shadow-lg'
                   : 'border-transparent hover:border-white/40 hover:scale-102'

@@ -27,8 +27,13 @@
   --window-min-title-visible-height: 40px;
   --window-min-width: 320px;
   --window-min-height: 240px;
-  --radius-window: 10px;
-  --radius-dock: 20px;
+
+  /* ── Radius scale ────────────────────── */
+  --radius-window: 22px;
+  --radius-dock: 22px;
+  --radius-icon: 22.5%;      /* app icon squircle (square-relative %) */
+  --radius-card: 22px;
+  --radius-input: 22px;
 
   --dock-bg: rgba(255 255 255 / 0.18);
   --dock-border: rgba(255 255 255 / 0.4);
@@ -53,8 +58,10 @@
   --menubar-blur: 20px;
   --window-chrome-bg: rgba(236 236 236 / 0.95);
   --window-body-bg: #ffffff;
-  --radius-window: 10px;
-  --radius-dock: 20px;
+  --radius-window: 22px;
+  --radius-dock: 22px;
+  --radius-card: 22px;
+  --radius-input: 14px;
 }
 [data-os-theme="macos"].dark {
   --dock-bg: rgba(30 30 30 / 0.65);
@@ -70,8 +77,10 @@
   --dock-bg: rgba(255 255 255 / 0.22);
   --dock-border: rgba(255 255 255 / 0.5);
   --menubar-bg: rgba(255 255 255 / 0.65);
-  --radius-window: 16px;
+  --radius-window: 22px;
   --radius-dock: 22px;
+  --radius-card: 22px;
+  --radius-input: 14px;
 }
 [data-os-theme="ipad"].dark {
   --dock-bg: rgba(30 30 30 / 0.6);
@@ -81,7 +90,9 @@
 /* ── iPhone OS 26 ───────────────────────────────────────── */
 [data-os-theme="iphone"] {
   --navbar-bg: rgba(255 255 255 / 0.8);
-  --radius-window: 0px;
+  --radius-window: 22px;
+  --radius-card: 22px;
+  --radius-input: 14px;
 }
 [data-os-theme="iphone"].dark {
   --navbar-bg: rgba(20 20 20 / 0.8);
@@ -93,6 +104,7 @@
   --window-chrome-bg: rgba(243 243 243 / 0.98);
   --window-body-bg: #ffffff;
   --radius-window: 8px;
+  --radius-icon: 8%;
   --win-accent: #0067c0;
 }
 [data-os-theme="windows"].dark {
@@ -107,6 +119,7 @@
   --android-primary: #6750a4;
   --window-body-bg: #fffbfe;
   --radius-window: 12px;
+  --radius-icon: 28%;
 }
 [data-os-theme="android"].dark {
   --window-body-bg: #1c1b1f;
@@ -130,8 +143,6 @@
   --spacing-taskbar: var(--taskbar-height);
   --spacing-navbar: var(--navbar-height);
   --spacing-chrome: var(--window-chrome-height);
-  --radius-window: var(--radius-window);
-  --radius-dock: var(--radius-dock);
   /* z-index scale */
   --z-index-9999: 9999;
 }

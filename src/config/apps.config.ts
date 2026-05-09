@@ -1,10 +1,60 @@
-import type { AppConfig } from '@/types/app';
+import type { AppConfig, MenuBarMenu } from '@/types/app';
 
 /**
  * App registry — add new apps here.
  * icon: use "lucide:IconName" for lucide icons, or "/icons/file.svg" for custom SVGs
  * color: gradient color pair for the icon background [from, to]
  */
+
+/** Fallback menus shown when no specific app is focused */
+export const DEFAULT_MENU_BAR_MENUS: MenuBarMenu[] = [
+  {
+    label: 'File',
+    items: [
+      { key: 'new', label: 'New Window', shortcut: '⌘N', action: 'newWindow' },
+      { key: 'new-tab', label: 'New Tab', shortcut: '⌘T', action: 'newTab' },
+      { key: 'sep1', label: '', separator: true },
+      { key: 'close', label: 'Close', shortcut: '⌘W', action: 'close' },
+    ],
+  },
+  {
+    label: 'Edit',
+    items: [
+      { key: 'undo', label: 'Undo', shortcut: '⌘Z', action: 'undo' },
+      { key: 'redo', label: 'Redo', shortcut: '⌘⇧Z', action: 'redo' },
+      { key: 'sep1', label: '', separator: true },
+      { key: 'cut', label: 'Cut', shortcut: '⌘X', action: 'cut' },
+      { key: 'copy', label: 'Copy', shortcut: '⌘C', action: 'copy' },
+      { key: 'paste', label: 'Paste', shortcut: '⌘V', action: 'paste' },
+      { key: 'select-all', label: 'Select All', shortcut: '⌘A', action: 'selectAll' },
+    ],
+  },
+  {
+    label: 'View',
+    items: [
+      { key: 'zoom-in', label: 'Zoom In', shortcut: '⌘+', action: 'zoomIn' },
+      { key: 'zoom-out', label: 'Zoom Out', shortcut: '⌘-', action: 'zoomOut' },
+      { key: 'sep1', label: '', separator: true },
+      { key: 'fullscreen', label: 'Enter Full Screen', shortcut: '⌃⌘F', action: 'toggleFullscreen' },
+    ],
+  },
+  {
+    label: 'Window',
+    items: [
+      { key: 'minimize', label: 'Minimize', shortcut: '⌘M', action: 'minimize' },
+      { key: 'zoom', label: 'Zoom', action: 'zoom' },
+      { key: 'sep1', label: '', separator: true },
+      { key: 'bring-all', label: 'Bring All to Front', action: 'bringAllToFront' },
+    ],
+  },
+  {
+    label: 'Help',
+    items: [
+      { key: 'help', label: 'Desktop Layout Help', action: 'help' },
+    ],
+  },
+];
+
 export const APPS_CONFIG: AppConfig[] = [
   {
     id: 'finder',
@@ -22,6 +72,50 @@ export const APPS_CONFIG: AppConfig[] = [
       { key: 'sep1', label: '', action: '', separator: true },
       { key: 'get-info', label: 'Get Info', action: 'getInfo' },
     ],
+    menuBarMenus: [
+      { label: 'File', items: [
+        { key: 'new-window', label: 'New Finder Window', shortcut: '⌘N', action: 'newWindow' },
+        { key: 'new-folder', label: 'New Folder', shortcut: '⌘⇧N', action: 'newFolder' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'get-info', label: 'Get Info', shortcut: '⌘I', action: 'getInfo' },
+        { key: 'trash', label: 'Move to Trash', shortcut: '⌘⌫', action: 'moveToTrash' },
+        { key: 'sep2', label: '', separator: true },
+        { key: 'close', label: 'Close Window', shortcut: '⌘W', action: 'close' },
+      ]},
+      { label: 'Edit', items: [
+        { key: 'undo', label: 'Undo', shortcut: '⌘Z', action: 'undo' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'cut', label: 'Cut', shortcut: '⌘X', action: 'cut' },
+        { key: 'copy', label: 'Copy', shortcut: '⌘C', action: 'copy' },
+        { key: 'paste', label: 'Paste', shortcut: '⌘V', action: 'paste' },
+        { key: 'select-all', label: 'Select All', shortcut: '⌘A', action: 'selectAll' },
+      ]},
+      { label: 'View', items: [
+        { key: 'icons', label: 'As Icons', shortcut: '⌘1', action: 'viewIcons' },
+        { key: 'list', label: 'As List', shortcut: '⌘2', action: 'viewList' },
+        { key: 'columns', label: 'As Columns', shortcut: '⌘3', action: 'viewColumns' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'path-bar', label: 'Show Path Bar', shortcut: '⌥⌘P', action: 'togglePathBar' },
+        { key: 'status-bar', label: 'Show Status Bar', shortcut: '⌘/', action: 'toggleStatusBar' },
+      ]},
+      { label: 'Go', items: [
+        { key: 'back', label: 'Back', shortcut: '⌘[', action: 'goBack' },
+        { key: 'forward', label: 'Forward', shortcut: '⌘]', action: 'goForward' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'home', label: 'Home', shortcut: '⇧⌘H', action: 'goHome' },
+        { key: 'desktop', label: 'Desktop', shortcut: '⇧⌘D', action: 'goDesktop' },
+        { key: 'downloads', label: 'Downloads', shortcut: '⌥⌘L', action: 'goDownloads' },
+        { key: 'documents', label: 'Documents', shortcut: '⇧⌘O', action: 'goDocuments' },
+      ]},
+      { label: 'Window', items: [
+        { key: 'minimize', label: 'Minimize', shortcut: '⌘M', action: 'minimize' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'bring-all', label: 'Bring All to Front', action: 'bringAllToFront' },
+      ]},
+      { label: 'Help', items: [
+        { key: 'help', label: 'Finder Help', shortcut: '⌘?', action: 'help' },
+      ]},
+    ],
   },
   {
     id: 'terminal',
@@ -34,9 +128,39 @@ export const APPS_CONFIG: AppConfig[] = [
     hasStatusBar: true,
     category: 'developer',
     launchMode: 'multi',
+    appSettings: 'TerminalSettings',
     contextMenu: [
       { key: 'new-tab', label: 'New Tab', action: 'newTab' },
       { key: 'new-window', label: 'New Window', action: 'newWindow' },
+    ],
+    menuBarMenus: [
+      { label: 'Shell', items: [
+        { key: 'new-tab', label: 'New Tab', shortcut: '⌘T', action: 'newTab' },
+        { key: 'new-window', label: 'New Window', shortcut: '⌘N', action: 'newWindow' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'close', label: 'Close', shortcut: '⌘W', action: 'close' },
+        { key: 'close-all', label: 'Close All Windows', shortcut: '⌘Q', action: 'closeAll' },
+      ]},
+      { label: 'Edit', items: [
+        { key: 'paste', label: 'Paste', shortcut: '⌘V', action: 'paste' },
+        { key: 'select-all', label: 'Select All', shortcut: '⌘A', action: 'selectAll' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'find', label: 'Find', shortcut: '⌘F', action: 'find' },
+      ]},
+      { label: 'View', items: [
+        { key: 'bigger', label: 'Bigger', shortcut: '⌘+', action: 'fontBigger' },
+        { key: 'smaller', label: 'Smaller', shortcut: '⌘-', action: 'fontSmaller' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'clear', label: 'Clear Scrollback', shortcut: '⌘K', action: 'clearScrollback' },
+      ]},
+      { label: 'Window', items: [
+        { key: 'minimize', label: 'Minimize', shortcut: '⌘M', action: 'minimize' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'bring-all', label: 'Bring All to Front', action: 'bringAllToFront' },
+      ]},
+      { label: 'Help', items: [
+        { key: 'help', label: 'Terminal Help', shortcut: '⌘?', action: 'help' },
+      ]},
     ],
   },
   {
@@ -66,6 +190,41 @@ export const APPS_CONFIG: AppConfig[] = [
       { key: 'new-tab', label: 'New Tab', action: 'newTab' },
       { key: 'new-window', label: 'New Window', action: 'newWindow' },
     ],
+    menuBarMenus: [
+      { label: 'File', items: [
+        { key: 'new-tab', label: 'New Tab', shortcut: '⌘T', action: 'newTab' },
+        { key: 'new-window', label: 'New Window', shortcut: '⌘N', action: 'newWindow' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'close', label: 'Close Tab', shortcut: '⌘W', action: 'close' },
+      ]},
+      { label: 'Edit', items: [
+        { key: 'find', label: 'Find', shortcut: '⌘F', action: 'find' },
+        { key: 'select-all', label: 'Select All', shortcut: '⌘A', action: 'selectAll' },
+      ]},
+      { label: 'View', items: [
+        { key: 'reload', label: 'Reload Page', shortcut: '⌘R', action: 'reload' },
+        { key: 'force-reload', label: 'Force Reload', shortcut: '⇧⌘R', action: 'forceReload' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'zoom-in', label: 'Zoom In', shortcut: '⌘+', action: 'zoomIn' },
+        { key: 'zoom-out', label: 'Zoom Out', shortcut: '⌘-', action: 'zoomOut' },
+        { key: 'zoom-reset', label: 'Actual Size', shortcut: '⌘0', action: 'zoomReset' },
+        { key: 'sep2', label: '', separator: true },
+        { key: 'devtools', label: 'Developer Tools', shortcut: '⌥⌘I', action: 'devtools' },
+      ]},
+      { label: 'History', items: [
+        { key: 'back', label: 'Back', shortcut: '⌘[', action: 'goBack' },
+        { key: 'forward', label: 'Forward', shortcut: '⌘]', action: 'goForward' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'history', label: 'Show History', shortcut: '⌘Y', action: 'showHistory' },
+        { key: 'clear-history', label: 'Clear History...', action: 'clearHistory' },
+      ]},
+      { label: 'Window', items: [
+        { key: 'minimize', label: 'Minimize', shortcut: '⌘M', action: 'minimize' },
+      ]},
+      { label: 'Help', items: [
+        { key: 'help', label: 'Browser Help', shortcut: '⌘?', action: 'help' },
+      ]},
+    ],
   },
   {
     id: 'textedit',
@@ -82,11 +241,47 @@ export const APPS_CONFIG: AppConfig[] = [
     contextMenu: [
       { key: 'new', label: 'New Document', action: 'newDocument' },
     ],
+    menuBarMenus: [
+      { label: 'File', items: [
+        { key: 'new', label: 'New', shortcut: '⌘N', action: 'new' },
+        { key: 'open', label: 'Open...', shortcut: '⌘O', action: 'open' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'save', label: 'Save', shortcut: '⌘S', action: 'save' },
+        { key: 'save-as', label: 'Save As...', shortcut: '⇧⌘S', action: 'saveAs' },
+        { key: 'sep2', label: '', separator: true },
+        { key: 'close', label: 'Close', shortcut: '⌘W', action: 'close' },
+      ]},
+      { label: 'Edit', items: [
+        { key: 'undo', label: 'Undo', shortcut: '⌘Z', action: 'undo' },
+        { key: 'redo', label: 'Redo', shortcut: '⌘⇧Z', action: 'redo' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'cut', label: 'Cut', shortcut: '⌘X', action: 'cut' },
+        { key: 'copy', label: 'Copy', shortcut: '⌘C', action: 'copy' },
+        { key: 'paste', label: 'Paste', shortcut: '⌘V', action: 'paste' },
+        { key: 'select-all', label: 'Select All', shortcut: '⌘A', action: 'selectAll' },
+        { key: 'sep2', label: '', separator: true },
+        { key: 'find', label: 'Find', shortcut: '⌘F', action: 'find' },
+      ]},
+      { label: 'Format', items: [
+        { key: 'bold', label: 'Bold', shortcut: '⌘B', action: 'bold' },
+        { key: 'italic', label: 'Italic', shortcut: '⌘I', action: 'italic' },
+        { key: 'underline', label: 'Underline', shortcut: '⌘U', action: 'underline' },
+        { key: 'sep1', label: '', separator: true },
+        { key: 'font-bigger', label: 'Font Size +', shortcut: '⌘+', action: 'fontBigger' },
+        { key: 'font-smaller', label: 'Font Size -', shortcut: '⌘-', action: 'fontSmaller' },
+      ]},
+      { label: 'Window', items: [
+        { key: 'minimize', label: 'Minimize', shortcut: '⌘M', action: 'minimize' },
+      ]},
+      { label: 'Help', items: [
+        { key: 'help', label: 'TextEdit Help', shortcut: '⌘?', action: 'help' },
+      ]},
+    ],
   },
   {
     id: 'clock',
     name: 'Clock',
-    icon: 'lucide:AppWindow',
+    icon: 'lucide:Clock',
     iconColor: ['#1c1c1c', '#3a3a3a'],
     component: 'Clock',
     defaultSize: { width: 380, height: 580 },
@@ -97,7 +292,7 @@ export const APPS_CONFIG: AppConfig[] = [
   {
     id: 'notes',
     name: 'Notes',
-    icon: 'lucide:FileText',
+    icon: 'lucide:StickyNote',
     iconColor: ['#ffd60a', '#ff9f0a'],
     iconTextColor: '#1c1c1e',
     component: 'Notes',

@@ -97,7 +97,7 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }:
             sideOffset={8}
             className="
               relative overflow-hidden
-              rounded-xl
+              rounded-[var(--radius-card)]
               backdrop-blur-2xl
               bg-white/20 dark:bg-white/10
               border border-white/40 dark:border-white/20
