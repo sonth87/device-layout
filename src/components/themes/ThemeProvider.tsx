@@ -78,9 +78,10 @@ export function ThemeProvider() {
   const isMobile = osTheme === 'iphone' || osTheme === 'android';
   const themeConfig = THEMES_CONFIG[osTheme];
 
-  // Phone frame dimensions: iPhone 16 Pro Max viewport approx
-  const PHONE_W = 393;
-  const PHONE_H = 852;
+  // Phone frame: fill available height (up to 926px), derive width from 393:852 ratio
+  const PHONE_RATIO = 393 / 852;
+  const PHONE_MAX_H = 926;
+  const PHONE_MAX_W = Math.round(PHONE_MAX_H * PHONE_RATIO); // 427px
 
   return (
     <div
@@ -110,11 +111,18 @@ export function ThemeProvider() {
       )}
 
       {isMobile ? (
-        /* ── Phone frame: centered, fixed phone dimensions, clipped ── */
+        /* ── Phone frame: fills viewport on small screens, capped on large ── */
         <div className="absolute inset-0 flex items-center justify-center bg-black/60">
           <div
-            className="relative overflow-hidden rounded-[44px] shadow-2xl ring-1 ring-white/10"
-            style={{ width: PHONE_W, height: PHONE_H }}
+            className="relative overflow-hidden shadow-2xl ring-1 ring-white/10"
+            style={{
+              // Height: fill 100dvh with small padding, capped at PHONE_MAX_H
+              height: `min(calc(100dvh - 32px), ${PHONE_MAX_H}px)`,
+              // Width: derived from ratio, capped at PHONE_MAX_W; never exceeds 100vw
+              width: `min(calc((min(calc(100dvh - 32px), ${PHONE_MAX_H}px)) * ${PHONE_RATIO}), 100vw)`,
+              // Border-radius scales with height: 44px at max, smaller on small screens
+              borderRadius: `min(44px, calc(min(calc(100dvh - 32px), ${PHONE_MAX_H}px) * 0.047))`,
+            }}
           >
             {/* Wallpaper fills the phone frame */}
             <Wallpaper>{null}</Wallpaper>
