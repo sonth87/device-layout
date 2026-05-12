@@ -4,6 +4,8 @@ A browser-based desktop OS simulator. Renders a fully interactive multi-window d
 
 Built with Next.js 15, React 19, TypeScript, Tailwind CSS v4, Zustand, and Motion.
 
+**Live preview:** [device-layout.vercel.app](https://device-layout.vercel.app) · **Source:** [github.com/sonth87/device-layout](https://github.com/sonth87/device-layout)
+
 ---
 
 ## Documentation
@@ -89,4 +91,6 @@ npm run build
 npm run lint
 ```
 
-See [docs/content/apps.md](docs/content/apps.md) for how to add a new app.
+## Adding a New App
+
+See **[docs/content/apps.md](docs/content/apps.md)** for the full guide — AppConfig reference, layout patterns (sidebar, split-view, responsive grid), menu bar declarations, context menus, and settings panels.

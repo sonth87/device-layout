@@ -93,7 +93,7 @@ export function Spotlight({ open, onClose }: SpotlightProps) {
             transition={{ type: 'spring', stiffness: 600, damping: 40 }}
             className="fixed z-[9991] left-1/2 top-[18%] -translate-x-1/2 w-[640px] max-w-[95vw]"
           >
-            <LiquidGlass variant="panel" className="overflow-hidden shadow-2xl">
+            <LiquidGlass variant="window" className="overflow-hidden shadow-2xl">
               {/* Search input row */}
               <div className="flex items-center gap-3 px-4 py-3 border-b border-black/10 dark:border-white/10">
                 <Search className="w-5 h-5 text-black/40 dark:text-white/40 shrink-0" />

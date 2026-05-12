@@ -38,7 +38,7 @@ export function LockScreen({ onUnlock }: LockScreenProps) {
       key="lockscreen"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, y: -60, transition: { duration: 0.4, ease: 'easeIn' } }}
-      className="absolute inset-0 z-[9999] flex flex-col items-center select-none"
+      className="absolute inset-0 z-9999 flex flex-col items-center select-none"
       style={{
         backgroundColor: '#fff',
         backgroundImage,

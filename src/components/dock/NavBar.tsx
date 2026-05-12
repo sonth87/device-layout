@@ -1,17 +1,19 @@
 'use client';
 
 import { useStore } from '@/store';
-import Image from 'next/image';
+import { AppIconImage } from '@/components/shared/AppIconImage';
 import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
 
 interface NavBarProps {
   onOpenApp: (app: AppConfig) => void;
+  /** Height in px of the nav bar row (does not include home indicator) */
+  navBarHeight?: number;
 }
 
-/** Bottom navigation bar — used by iPhone OS and Android themes */
-export function NavBar({ onOpenApp }: NavBarProps) {
-  const dockAppIds = useStore((s) => s.dockAppIds).slice(0, 4); // Max 4 on mobile
+/** Bottom dock — used by iPhone OS and Android themes */
+export function NavBar({ onOpenApp, navBarHeight = 72 }: NavBarProps) {
+  const dockAppIds = useStore((s) => s.dockAppIds).slice(0, 4);
   const apps = useStore((s) => s.apps);
   const runningAppIds = useStore((s) => s.runningAppIds);
 
@@ -19,11 +21,12 @@ export function NavBar({ onOpenApp }: NavBarProps) {
 
   return (
     <div
-      className="absolute bottom-0 inset-x-0 z-50 flex items-center justify-around h-(--navbar-height) px-4 pb-safe"
+      className="flex items-center justify-around px-6"
       style={{
-        background: 'var(--navbar-bg)',
-        backdropFilter: 'blur(10px)',
-        borderTop: '1px solid rgba(255,255,255,0.15)',
+        height: navBarHeight,
+        background: 'rgba(255,255,255,0.18)',
+        backdropFilter: 'blur(24px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
       }}
     >
       {navApps.map((app) => (
@@ -31,19 +34,12 @@ export function NavBar({ onOpenApp }: NavBarProps) {
           key={app.id}
           onClick={() => onOpenApp(app)}
           className={cn(
-            'flex flex-col items-center gap-1 p-2 rounded-xl transition-opacity',
-            runningAppIds.includes(app.id) ? 'opacity-100' : 'opacity-70'
+            'flex items-center justify-center transition-opacity active:scale-95',
+            runningAppIds.includes(app.id) ? 'opacity-100' : 'opacity-90'
           )}
           aria-label={app.name}
         >
-          {app.icon.startsWith('/') ? (
-            <Image src={app.icon} alt={app.name} width={28} height={28} className="object-contain" />
-          ) : (
-            <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
-              <span className="text-white text-xs font-bold">{app.name.charAt(0)}</span>
-            </div>
-          )}
-          <span className="text-[10px] text-white/80">{app.name}</span>
+          <AppIconImage appConfig={app} size={52} />
         </button>
       ))}
     </div>

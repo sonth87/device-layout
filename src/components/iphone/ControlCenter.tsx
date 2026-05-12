@@ -46,7 +46,7 @@ export function IPhoneControlCenter({ open, onClose }: ControlCenterProps) {
         <>
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9985]"
+            className="absolute inset-0 z-9985"
             onClick={onClose}
           />
           <motion.div
@@ -54,7 +54,7 @@ export function IPhoneControlCenter({ open, onClose }: ControlCenterProps) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: '-100%', opacity: 0 }}
             transition={{ type: 'spring', stiffness: 400, damping: 38 }}
-            className="fixed top-0 right-0 z-[9986] p-4 pt-10 w-80"
+            className="absolute top-0 right-0 z-9986 p-4 pt-10 w-80"
           >
             <LiquidGlass variant="panel" className="p-4 space-y-3">
               {/* Connectivity toggles grid */}

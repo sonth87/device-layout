@@ -2,113 +2,145 @@
 
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useAppLayout } from '@/hooks/useAppLayout';
+import { AppSection, AppListGroup, AppListRow, AppToggle, AppGrid } from '@/components/apps/ui';
 
 const FONT_SIZES = [12, 13, 14, 16, 18, 20];
 const THEMES = [
-  { id: 'dark', label: 'Dark', bg: '#1c1c1e', fg: '#ffffff' },
-  { id: 'light', label: 'Light', bg: '#ffffff', fg: '#1c1c1e' },
+  { id: 'dark',      label: 'Dark',      bg: '#1c1c1e', fg: '#ffffff' },
+  { id: 'light',     label: 'Light',     bg: '#ffffff', fg: '#1c1c1e' },
   { id: 'solarized', label: 'Solarized', bg: '#002b36', fg: '#839496' },
-  { id: 'dracula', label: 'Dracula', bg: '#282a36', fg: '#f8f8f2' },
+  { id: 'dracula',   label: 'Dracula',   bg: '#282a36', fg: '#f8f8f2' },
 ];
+const CURSOR_STYLES = ['block', 'bar', 'underline'] as const;
 
 export function TerminalSettings() {
-  const [fontSize, setFontSize] = useState(14);
-  const [termTheme, setTermTheme] = useState('dark');
+  const [fontSize, setFontSize]       = useState(14);
+  const [termTheme, setTermTheme]     = useState('dark');
   const [cursorStyle, setCursorStyle] = useState<'block' | 'bar' | 'underline'>('block');
   const [bellEnabled, setBellEnabled] = useState(false);
 
+  const { isNarrow } = useAppLayout();
+
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold mb-1">Terminal</h2>
-        <p className="text-sm text-black/50 dark:text-white/50 mb-5">
-          Customize your terminal appearance and behavior.
-        </p>
-      </div>
+      {/* Theme */}
+      <AppSection title="Theme">
+        {isNarrow ? (
+          <AppListGroup>
+            {THEMES.map((t) => (
+              <AppListRow
+                key={t.id}
+                label={t.label}
+                icon={
+                  <span
+                    className="w-6 h-6 rounded-md shrink-0 flex items-center justify-center text-[10px] font-mono"
+                    style={{ background: t.bg, color: t.fg }}
+                  >$</span>
+                }
+                active={termTheme === t.id}
+                onPress={() => setTermTheme(t.id)}
+              />
+            ))}
+          </AppListGroup>
+        ) : (
+          <AppGrid narrow={2} medium={4} wide={4} gap="12px">
+            {THEMES.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setTermTheme(t.id)}
+                className={cn(
+                  'rounded-xl border-2 p-3 text-left transition-all',
+                  termTheme === t.id
+                    ? 'border-blue-500'
+                    : 'border-transparent hover:border-black/10 dark:hover:border-white/10'
+                )}
+                style={{ background: t.bg }}
+              >
+                <p className="text-xs font-mono mb-1" style={{ color: t.fg }}>$ _</p>
+                <p className="text-xs font-medium" style={{ color: t.fg }}>{t.label}</p>
+              </button>
+            ))}
+          </AppGrid>
+        )}
+      </AppSection>
 
-      <div>
-        <h3 className="text-sm font-semibold mb-3">Theme</h3>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {THEMES.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setTermTheme(t.id)}
-              className={cn(
-                'rounded-[var(--radius-card)] border-2 p-3 text-left transition-all',
-                termTheme === t.id
-                  ? 'border-blue-500'
-                  : 'border-transparent hover:border-black/10 dark:hover:border-white/10'
-              )}
-              style={{ background: t.bg }}
-            >
-              <p className="text-xs font-mono mb-1" style={{ color: t.fg }}>$ _</p>
-              <p className="text-xs font-medium" style={{ color: t.fg }}>{t.label}</p>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-sm font-semibold mb-3">Font Size</h3>
-        <div className="flex flex-wrap gap-2">
-          {FONT_SIZES.map((size) => (
-            <button
-              key={size}
-              onClick={() => setFontSize(size)}
-              className={cn(
-                'rounded-[var(--radius-input)] px-3.5 py-1.5 text-sm font-medium transition-all',
-                fontSize === size
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10'
-              )}
-            >
-              {size}px
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-sm font-semibold mb-3">Cursor Style</h3>
-        <div className="flex gap-2">
-          {(['block', 'bar', 'underline'] as const).map((style) => (
-            <button
-              key={style}
-              onClick={() => setCursorStyle(style)}
-              className={cn(
-                'rounded-[var(--radius-input)] px-4 py-2 text-sm font-medium capitalize transition-all',
-                cursorStyle === style
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10'
-              )}
-            >
-              {style}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <h3 className="text-sm font-semibold mb-3">Sound</h3>
-          <div className="rounded-[var(--radius-card)] bg-white dark:bg-white/5 px-4 py-3 flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium">Bell Sound</p>
-            <p className="text-xs text-black/50 dark:text-white/50 mt-0.5">Play a sound when the terminal bell is triggered</p>
+      {/* Font Size */}
+      <AppSection title="Font Size">
+        {isNarrow ? (
+          <AppListGroup>
+            {FONT_SIZES.map((size) => (
+              <AppListRow
+                key={size}
+                label={`${size}px`}
+                active={fontSize === size}
+                onPress={() => setFontSize(size)}
+              />
+            ))}
+          </AppListGroup>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {FONT_SIZES.map((size) => (
+              <button
+                key={size}
+                onClick={() => setFontSize(size)}
+                className={cn(
+                  'rounded-lg px-3.5 py-1.5 text-sm font-medium transition-all',
+                  fontSize === size
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10'
+                )}
+              >
+                {size}px
+              </button>
+            ))}
           </div>
-          <button
-            onClick={() => setBellEnabled(!bellEnabled)}
-            className={cn(
-              'relative h-6 w-11 shrink-0 rounded-full transition-colors ml-4',
-              bellEnabled ? 'bg-blue-500' : 'bg-neutral-300 dark:bg-white/15'
-            )}
-          >
-            <span className={cn(
-              'absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all',
-              bellEnabled ? 'left-5.5' : 'left-0.5'
-            )} />
-          </button>
-        </div>
-      </div>
+        )}
+      </AppSection>
+
+      {/* Cursor Style */}
+      <AppSection title="Cursor Style">
+        {isNarrow ? (
+          <AppListGroup>
+            {CURSOR_STYLES.map((style) => (
+              <AppListRow
+                key={style}
+                label={style.charAt(0).toUpperCase() + style.slice(1)}
+                active={cursorStyle === style}
+                onPress={() => setCursorStyle(style)}
+              />
+            ))}
+          </AppListGroup>
+        ) : (
+          <div className="flex gap-2">
+            {CURSOR_STYLES.map((style) => (
+              <button
+                key={style}
+                onClick={() => setCursorStyle(style)}
+                className={cn(
+                  'rounded-lg px-4 py-2 text-sm font-medium capitalize transition-all',
+                  cursorStyle === style
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10'
+                )}
+              >
+                {style}
+              </button>
+            ))}
+          </div>
+        )}
+      </AppSection>
+
+      {/* Sound */}
+      <AppSection title="Sound">
+        <AppListGroup>
+          <AppListRow
+            label="Bell Sound"
+            subtitle="Play a sound when the terminal bell is triggered"
+            control={<AppToggle checked={bellEnabled} onChange={setBellEnabled} />}
+          />
+        </AppListGroup>
+      </AppSection>
     </div>
   );
 }

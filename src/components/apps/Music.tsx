@@ -6,6 +6,7 @@ import {
   Heart, Volume2, VolumeX, ListMusic,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAppLayout } from '@/hooks/useAppLayout';
 
 interface Track {
   id: string;
@@ -45,6 +46,8 @@ export function Music() {
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const track = TRACKS[trackIdx];
+  const { isNarrow } = useAppLayout();
+  const artSize = isNarrow ? 160 : 192;
 
   // Simulate playback progress
   useEffect(() => {
@@ -102,8 +105,12 @@ export function Music() {
         <div className="flex-1 flex flex-col items-center justify-between p-6 overflow-hidden">
           {/* Album art */}
           <div
-            className="w-48 h-48 rounded-2xl shadow-2xl flex items-center justify-center text-7xl"
-            style={{ background: `linear-gradient(135deg, ${track.color[0]}, ${track.color[1]})` }}
+            className="rounded-2xl shadow-2xl flex items-center justify-center"
+            style={{
+              width: artSize, height: artSize,
+              fontSize: isNarrow ? 60 : 80,
+              background: `linear-gradient(135deg, ${track.color[0]}, ${track.color[1]})`,
+            }}
           >
             {track.emoji}
           </div>

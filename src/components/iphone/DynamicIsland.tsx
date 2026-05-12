@@ -22,7 +22,7 @@ export function DynamicIsland({ onClick }: DynamicIslandProps) {
   };
 
   return (
-    <div className="absolute top-2 left-1/2 -translate-x-1/2 z-50 cursor-pointer" onClick={toggle}>
+    <div className="cursor-pointer" onClick={toggle}>
       <motion.div
         animate={state === 'expanded'
           ? { width: 240, height: 72, borderRadius: 24 }

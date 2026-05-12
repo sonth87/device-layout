@@ -75,7 +75,12 @@ export function ThemeProvider() {
 
   const isMacLike = osTheme === 'macos' || osTheme === 'ipad';
   const showsDesktopIconGrid = osTheme !== 'ipad' && osTheme !== 'iphone' && osTheme !== 'android';
+  const isMobile = osTheme === 'iphone' || osTheme === 'android';
   const themeConfig = THEMES_CONFIG[osTheme];
+
+  // Phone frame dimensions: iPhone 16 Pro Max viewport approx
+  const PHONE_W = 393;
+  const PHONE_H = 852;
 
   return (
     <div
@@ -87,7 +92,7 @@ export function ThemeProvider() {
       {/* SVG filter singleton */}
       <GlassFilter />
 
-      {/* Notification toasts — rendered above everything */}
+      {/* Notification toasts — rendered above everything (outside phone frame) */}
       <NotificationBanner />
 
       {/* Spotlight + App Switcher (macOS / iPad only) */}
@@ -104,31 +109,59 @@ export function ThemeProvider() {
         </>
       )}
 
-      {/* Desktop canvas — NEVER remounts, preserves WindowManager + useWindowUrlSync state */}
-      <div className="absolute inset-0">
-        <Wallpaper>
-          {showsDesktopIconGrid && <IconGrid onOpenApp={handleOpenApp} />}
-          <WindowManager />
-        </Wallpaper>
-      </div>
+      {isMobile ? (
+        /* ── Phone frame: centered, fixed phone dimensions, clipped ── */
+        <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+          <div
+            className="relative overflow-hidden rounded-[44px] shadow-2xl ring-1 ring-white/10"
+            style={{ width: PHONE_W, height: PHONE_H }}
+          >
+            {/* Wallpaper fills the phone frame */}
+            <Wallpaper>{null}</Wallpaper>
 
-      {/* Chrome overlay — animated cross-fade on theme switch */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={osTheme}
-          className="absolute inset-0 pointer-events-none"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          {osTheme === 'macos'   && <MacOSChrome   onOpenApp={handleOpenApp} onSpotlight={() => setSpotlightOpen(true)} onAppSwitcher={() => setAppSwitcherOpen(true)} />}
-          {osTheme === 'ipad'    && <IPadChrome    onOpenApp={handleOpenApp} />}
-          {osTheme === 'iphone'  && <IPhoneChrome  onOpenApp={handleOpenApp} />}
-          {osTheme === 'windows' && <WindowsChrome onOpenApp={handleOpenApp} />}
-          {osTheme === 'android' && <AndroidChrome onOpenApp={handleOpenApp} />}
-        </motion.div>
-      </AnimatePresence>
+            {/* Chrome — scoped inside the phone frame */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={osTheme}
+                className="absolute inset-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {osTheme === 'iphone' && <IPhoneChrome onOpenApp={handleOpenApp} />}
+                {osTheme === 'android' && <AndroidChrome onOpenApp={handleOpenApp} />}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Desktop canvas — NEVER remounts, preserves WindowManager + useWindowUrlSync state */}
+          <div className="absolute inset-0">
+            <Wallpaper>
+              {showsDesktopIconGrid && <IconGrid onOpenApp={handleOpenApp} />}
+              <WindowManager />
+            </Wallpaper>
+          </div>
+
+          {/* Chrome overlay — animated cross-fade on theme switch */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={osTheme}
+              className="absolute inset-0 pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {osTheme === 'macos'   && <MacOSChrome   onOpenApp={handleOpenApp} onSpotlight={() => setSpotlightOpen(true)} onAppSwitcher={() => setAppSwitcherOpen(true)} />}
+              {osTheme === 'ipad'    && <IPadChrome    onOpenApp={handleOpenApp} />}
+              {osTheme === 'windows' && <WindowsChrome onOpenApp={handleOpenApp} />}
+            </motion.div>
+          </AnimatePresence>
+        </>
+      )}
     </div>
   );
 }

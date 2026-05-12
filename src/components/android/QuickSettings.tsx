@@ -60,14 +60,14 @@ export function AndroidQuickSettings({ open, onClose }: QuickSettingsProps) {
       {open && (
         <>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9980]" onClick={onClose} />
+            className="absolute inset-0 z-9980" onClick={onClose} />
 
           <motion.div
             initial={{ y: '-100%' }}
             animate={{ y: 0 }}
             exit={{ y: '-100%' }}
             transition={{ type: 'spring', stiffness: 380, damping: 38 }}
-            className="fixed top-0 inset-x-0 z-[9981] bg-neutral-900/97 backdrop-blur-3xl rounded-b-3xl pb-4 pt-10"
+            className="absolute top-0 inset-x-0 z-9981 bg-neutral-900/97 backdrop-blur-3xl rounded-b-3xl pb-4 pt-10"
           >
             {/* Close + expand */}
             <div className="flex items-center justify-between px-4 pb-2">

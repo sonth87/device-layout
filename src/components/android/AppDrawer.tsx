@@ -31,7 +31,7 @@ export function AndroidAppDrawer({ open, onClose, onOpenApp }: AppDrawerProps) {
         <>
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9980] bg-black"
+            className="absolute inset-0 z-9980 bg-black"
             onClick={onClose}
           />
           <motion.div
@@ -43,7 +43,7 @@ export function AndroidAppDrawer({ open, onClose, onOpenApp }: AppDrawerProps) {
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={0.2}
             onDragEnd={(_, info) => { if (info.offset.y > 100) onClose(); }}
-            className="fixed bottom-0 inset-x-0 z-[9981] bg-neutral-900/96 backdrop-blur-3xl rounded-t-3xl max-h-[85vh] flex flex-col overflow-hidden"
+            className="absolute bottom-0 inset-x-0 z-9981 bg-neutral-900/96 backdrop-blur-3xl rounded-t-3xl max-h-[85%] flex flex-col overflow-hidden"
           >
             {/* Handle bar */}
             <div className="flex justify-center pt-3 pb-1">

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { useAppLayout } from '@/hooks/useAppLayout';
 
 type ClockTab = 'worldclock' | 'alarm' | 'stopwatch' | 'timer';
 
@@ -16,7 +17,7 @@ const WORLD_CITIES = [
   { city: 'Los Angeles', tz: 'America/Los_Angeles', flag: '🇺🇸' },
 ];
 
-function AnalogClock({ date }: { date: Date }) {
+function AnalogClock({ date, size = 192 }: { date: Date; size?: number }) {
   const s = date.getSeconds();
   const m = date.getMinutes();
   const h = date.getHours() % 12;
@@ -26,7 +27,7 @@ function AnalogClock({ date }: { date: Date }) {
   const hourDeg = h * 30 + m * 0.5;
 
   return (
-    <div className="relative w-48 h-48 mx-auto">
+    <div className="relative mx-auto" style={{ width: size, height: size }}>
       <svg viewBox="0 0 200 200" className="w-full h-full">
         {/* Face */}
         <circle cx="100" cy="100" r="95" fill="var(--window-body-bg, #1c1c1e)" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
@@ -69,6 +70,7 @@ function AnalogClock({ date }: { date: Date }) {
 
 function WorldClockTab() {
   const [now, setNow] = useState(new Date());
+  const { isNarrow } = useAppLayout();
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
@@ -77,7 +79,7 @@ function WorldClockTab() {
   return (
     <div className="p-4">
       <div className="flex flex-col items-center mb-6">
-        <AnalogClock date={now} />
+        <AnalogClock date={now} size={isNarrow ? 148 : 192} />
         <p className="mt-3 text-4xl font-thin tabular-nums text-white/90">
           {now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
         </p>
@@ -235,25 +237,28 @@ function TimerTab() {
 
 export function Clock() {
   const [tab, setTab] = useState<ClockTab>('worldclock');
+  const { isNarrow } = useAppLayout();
 
-  const tabs: { id: ClockTab; label: string }[] = [
-    { id: 'worldclock', label: 'World Clock' },
-    { id: 'alarm', label: 'Alarm' },
-    { id: 'stopwatch', label: 'Stopwatch' },
-    { id: 'timer', label: 'Timer' },
+  const tabs: { id: ClockTab; label: string; short: string }[] = [
+    { id: 'worldclock', label: 'World Clock', short: 'World' },
+    { id: 'alarm',      label: 'Alarm',       short: 'Alarm' },
+    { id: 'stopwatch',  label: 'Stopwatch',   short: 'Stopwatch' },
+    { id: 'timer',      label: 'Timer',       short: 'Timer' },
   ];
 
   return (
     <div className="h-full flex flex-col bg-black/80">
       {/* Tab bar */}
-      <div className="flex border-b border-white/10 px-3 pt-2 gap-1 shrink-0">
-        {tabs.map(({ id, label }) => (
+      <div className="flex border-b border-white/10 px-2 pt-2 gap-0.5 shrink-0">
+        {tabs.map(({ id, label, short }) => (
           <button key={id} onClick={() => setTab(id)}
-            className={cn('px-4 py-1.5 text-sm rounded-t-lg transition-colors',
+            className={cn(
+              'flex-1 py-1.5 text-sm rounded-t-lg transition-colors truncate',
+              isNarrow ? 'text-xs px-1' : 'px-3',
               tab === id
                 ? 'bg-white/10 text-white font-medium border-b-2 border-orange-400'
                 : 'text-white/50 hover:text-white/80')}>
-            {label}
+            {isNarrow ? short : label}
           </button>
         ))}
       </div>
