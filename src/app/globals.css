@@ -37,6 +37,7 @@
   --radius-icon: 22.5%;      /* app icon squircle (square-relative %) */
   --radius-card: 22px;
   --radius-input: 22px;
+  --radius-menu: 12px;
 
   --dock-bg: rgba(255 255 255 / 0.18);
   --dock-border: rgba(255 255 255 / 0.4);
@@ -61,10 +62,11 @@
   --menubar-blur: 20px;
   --window-chrome-bg: rgba(236 236 236 / 0.95);
   --window-body-bg: #ffffff;
-  --radius-window: 22px;
-  --radius-dock: 22px;
-  --radius-card: 6px;
-  --radius-input: 14px;
+  --radius-window: 20px;
+  --radius-dock: 24px;
+  --radius-card: 14px;
+  --radius-input: 10px;
+  --radius-menu: 12px;
 }
 [data-os-theme="macos"].dark {
   --dock-bg: rgba(21 24 33 / 0.65);
@@ -80,10 +82,11 @@
   --dock-bg: rgba(255 255 255 / 0.22);
   --dock-border: rgba(255 255 255 / 0.5);
   --menubar-bg: rgba(255 255 255 / 0.65);
-  --radius-window: 22px;
-  --radius-dock: 22px;
+  --radius-window: 24px;
+  --radius-dock: 24px;
   --radius-card: 22px;
-  --radius-input: 14px;
+  --radius-input: 12px;
+  --radius-menu: 14px;
 }
 [data-os-theme="ipad"].dark {
   --dock-bg: rgba(21 24 33 / 0.6);
@@ -93,9 +96,10 @@
 /* ── iPhone OS 26 ───────────────────────────────────────── */
 [data-os-theme="iphone"] {
   --navbar-bg: rgba(255 255 255 / 0.8);
-  --radius-window: 22px;
+  --radius-window: 38px;
   --radius-card: 22px;
-  --radius-input: 14px;
+  --radius-input: 12px;
+  --radius-menu: 14px;
 }
 [data-os-theme="iphone"].dark {
   --navbar-bg: rgba(15 17 21 / 0.9);
@@ -106,10 +110,11 @@
   --taskbar-bg: rgba(32 32 32 / 0.85);
   --window-chrome-bg: rgba(243 243 243 / 0.98);
   --window-body-bg: #ffffff;
-  --radius-window: 4px;
-  --radius-card: 4px;
+  --radius-window: 8px;
+  --radius-card: 8px;
   --radius-input: 4px;
   --radius-icon: 8%;
+  --radius-menu: 8px;
   --win-accent: #0067c0;
 }
 [data-os-theme="windows"].dark {
@@ -123,7 +128,9 @@
   --navbar-bg: rgba(28 27 31 / 0.95);
   --android-primary: #6750a4;
   --window-body-bg: #fffbfe;
-  --radius-window: 12px;
+  --radius-window: 28px;
+  --radius-card: 24px;
+  --radius-menu: 16px;
   --radius-icon: 28%;
 }
 [data-os-theme="android"].dark {

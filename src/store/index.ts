@@ -7,8 +7,9 @@ import { createThemeSlice, type ThemeSlice } from './theme-slice';
 import { createDesktopSlice, type DesktopSlice } from './desktop-slice';
 import { createNotificationSlice, type NotificationSlice } from './notification-slice';
 import { createVFSSlice, type VFSSlice } from './vfs-slice';
+import { createWidgetSlice, type WidgetSlice } from './widget-slice';
 
-export type RootStore = WindowSlice & AppSlice & ThemeSlice & DesktopSlice & NotificationSlice & VFSSlice;
+export type RootStore = WindowSlice & AppSlice & ThemeSlice & DesktopSlice & NotificationSlice & VFSSlice & WidgetSlice;
 
 export const useStore = create<RootStore>()(
   immer(
@@ -29,6 +30,11 @@ export const useStore = create<RootStore>()(
           ...createDesktopSlice(s),
           ...createNotificationSlice(s),
           ...createVFSSlice(s, g),
+          ...createWidgetSlice(s, g as unknown as () => WidgetSlice & {
+            windows: Record<string, { id: string; isMinimized: boolean }>;
+            minimizeWindow: (id: string) => void;
+            restoreWindow: (id: string) => void;
+          }),
         };
       },
       {
@@ -46,8 +52,11 @@ export const useStore = create<RootStore>()(
           wallpaperId: state.wallpaperId,
           iconLayout: state.iconLayout,
           dockAppIds: state.dockAppIds,
+          useStacks: state.useStacks,
+          stackGroupBy: state.stackGroupBy,
           notifications: state.notifications,
           vfs: state.vfs,
+          widgetInstances: state.widgetInstances,
         }),
       }
     )

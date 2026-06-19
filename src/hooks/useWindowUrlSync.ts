@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useStore } from '@/store';
 import { encodeWindowToParam, decodeWindowFromParam } from '@/lib/url-codec';
 
@@ -14,13 +14,13 @@ export function useWindowUrlSync() {
   const windows = useStore((s) => s.windows);
   const apps = useStore((s) => s.apps);
   const openWindow = useStore((s) => s.openWindow);
-  const isHydrated = useRef(false);
+  const urlHydrated = useStore((s) => s.urlHydrated);
+  const setUrlHydrated = useStore((s) => s.setUrlHydrated);
 
   // Decode URL → open windows (only once, after apps are registered)
   useEffect(() => {
-    if (isHydrated.current) return;
+    if (urlHydrated) return;
     if (Object.keys(apps).length === 0) return; // wait for registerApps()
-    isHydrated.current = true;
 
     const params = new URLSearchParams(window.location.search);
     const wParams = params.getAll('w');
@@ -36,11 +36,13 @@ export function useWindowUrlSync() {
         prevRect: decoded.prevRect,
       });
     }
-  }, [apps, openWindow]);
+
+    setUrlHydrated(true);
+  }, [apps, openWindow, urlHydrated, setUrlHydrated]);
 
   // Encode windows → URL
   useEffect(() => {
-    if (!isHydrated.current) return;
+    if (!urlHydrated) return;
 
     const params = new URLSearchParams();
     for (const win of Object.values(windows)) {
@@ -51,5 +53,5 @@ export function useWindowUrlSync() {
     if (newUrl !== window.location.href.replace(window.location.origin, '')) {
       window.history.replaceState(null, '', newUrl);
     }
-  }, [windows]);
+  }, [windows, urlHydrated]);
 }

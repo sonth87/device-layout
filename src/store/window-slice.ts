@@ -17,6 +17,8 @@ export interface WindowSlice {
   zCounter: number;
   focusedWindowId: string | null;
 
+  urlHydrated: boolean;
+  setUrlHydrated: (hydrated: boolean) => void;
   launchApp: (appConfig: AppConfig, options?: LaunchAppOptions) => string;
   openWindow: (appConfig: AppConfig, options?: WindowOpenOptions) => string;
   closeWindow: (id: string) => void;
@@ -61,6 +63,10 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
     windows: {},
     zCounter: 10,
     focusedWindowId: null,
+    urlHydrated: false,
+    setUrlHydrated(hydrated) {
+      set((state) => { state.urlHydrated = hydrated; });
+    },
 
     launchApp(appConfig, options) {
       const forceNewWindow = options?.forceNewWindow ?? false;

@@ -16,7 +16,7 @@ export function ControlCenter() {
   const [brightness, setBrightness] = useState(80);
 
   return (
-    <Popover.Root open={open} onOpenChange={setOpen}>
+    <Popover.Root open={open} onOpenChange={setOpen} modal={false}>
       <Popover.Trigger asChild>
         <button
           className="p-1.5 rounded-md hover:bg-black/10 dark:hover:bg-white/10 transition-colors flex items-center gap-1"
@@ -30,6 +30,12 @@ export function ControlCenter() {
           align="end"
           sideOffset={6}
           className="w-72 bg-white/85 dark:bg-[#151821]/90 backdrop-blur-2xl rounded-[var(--radius-card)] shadow-2xl border border-black/10 dark:border-white/8 p-4 z-9999"
+          onInteractOutside={(e) => {
+            // Don't close when clicking inside the popover's own children
+            const target = e.target as Element;
+            if (target.closest('[data-radix-popper-content-wrapper]')) e.preventDefault();
+          }}
+          onFocusOutside={(e) => e.preventDefault()}
         >
           <div className="grid grid-cols-2 gap-3">
             {/* WiFi */}

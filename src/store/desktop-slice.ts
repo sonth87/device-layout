@@ -1,4 +1,4 @@
-import type { IconPosition } from '@/types/desktop';
+import type { IconPosition, StackGroupBy } from '@/types/desktop';
 import { DEFAULT_WALLPAPER_ID } from '@/config/wallpapers.config';
 import { DEFAULT_DOCK_APPS } from '@/config/apps.config';
 
@@ -6,6 +6,8 @@ export interface DesktopSlice {
   wallpaperId: string;
   iconLayout: IconPosition[];
   dockAppIds: string[];
+  useStacks: boolean;
+  stackGroupBy: StackGroupBy;
 
   setWallpaper: (id: string) => void;
   moveIcon: (appId: string, x: number, y: number) => void;
@@ -13,6 +15,8 @@ export interface DesktopSlice {
   pinToDock: (appId: string) => void;
   unpinFromDock: (appId: string) => void;
   reorderDock: (appIds: string[]) => void;
+  toggleStacks: () => void;
+  setStackGroupBy: (by: StackGroupBy) => void;
 }
 
 type S = DesktopSlice;
@@ -23,6 +27,8 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
     wallpaperId: DEFAULT_WALLPAPER_ID,
     iconLayout: [],
     dockAppIds: DEFAULT_DOCK_APPS,
+    useStacks: false,
+    stackGroupBy: 'kind',
 
     setWallpaper(id) {
       set((state) => { state.wallpaperId = id; });
@@ -59,5 +65,14 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
     reorderDock(appIds) {
       set((state) => { state.dockAppIds = appIds; });
     },
+
+    toggleStacks() {
+      set((state) => { state.useStacks = !state.useStacks; });
+    },
+
+    setStackGroupBy(by) {
+      set((state) => { state.stackGroupBy = by; });
+    },
   };
 }
+

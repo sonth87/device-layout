@@ -32,66 +32,58 @@ export function LiquidGlass({
   const radiusVar = VARIANT_RADIUS_VAR[variant];
   const radiusStyle: React.CSSProperties = radiusVar ? { borderRadius: radiusVar } : {};
 
-  if (!isGlass) {
-    return (
-      <div
-        className={cn(
-          'bg-white/25 dark:bg-black/35',
-          'backdrop-blur-xl',
-          'border border-white/30 dark:border-white/15',
-          className
-        )}
-        style={radiusStyle}
-      >
-        {children}
-      </div>
-    );
-  }
-
   return (
     <div
       className={cn(
         'relative overflow-hidden',
-        'backdrop-blur-2xl',
-        'bg-white/25 dark:bg-white/10',
-        'border border-white/40 dark:border-white/20',
-        'shadow-[0_8px_32px_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.5)]',
+        isGlass
+          ? 'backdrop-blur-2xl bg-white/25 dark:bg-white/10 border-white/40 dark:border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.5)]'
+          : 'backdrop-blur-xl bg-white/25 dark:bg-black/35 border-white/30 dark:border-white/15',
+        'border',
         className
       )}
       style={radiusStyle}
     >
       {/* ── SVG distortion layer (absolute, behind content) ── */}
-      <div
-        aria-hidden
-        className={cn('absolute inset-0 pointer-events-none overflow-hidden')}
-        style={{ ...radiusStyle, filter: 'url(#lg-distort)', opacity: 0.4 }}
-      >
-        <div className="absolute inset-0 bg-white/30 dark:bg-white/10" />
-      </div>
+      {isGlass && (
+        <div
+          aria-hidden
+          className={cn('absolute inset-0 pointer-events-none overflow-hidden')}
+          style={{ ...radiusStyle, filter: 'url(#lg-distort)', opacity: 0.4 }}
+        >
+          <div className="absolute inset-0 bg-white/30 dark:bg-white/10" />
+        </div>
+      )}
 
       {/* ── Top specular highlight ── */}
-      <div
-        aria-hidden
-        className="absolute inset-x-0 top-0 h-[1.5px] pointer-events-none z-10"
-        style={{
-          background: 'linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.85) 30%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0.85) 70%, transparent 95%)',
-        }}
-      />
+      {isGlass && (
+        <div
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-[1.5px] pointer-events-none z-10"
+          style={{
+            background: 'linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.85) 30%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0.85) 70%, transparent 95%)',
+          }}
+        />
+      )}
 
       {/* ── Left edge glow ── */}
-      <div
-        aria-hidden
-        className="absolute inset-y-0 left-0 w-px pointer-events-none z-10"
-        style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 60%, transparent 100%)' }}
-      />
+      {isGlass && (
+        <div
+          aria-hidden
+          className="absolute inset-y-0 left-0 w-px pointer-events-none z-10"
+          style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 60%, transparent 100%)' }}
+        />
+      )}
 
       {/* ── Content ── */}
-      <div className="relative z-20 min-w-0">
+      <div className="relative z-20 min-w-0 w-full h-full">
         {children}
       </div>
 
       {/* ── WebGL shimmer (subtle caustics overlay) ── */}
-      <GlassShimmer className="absolute inset-0 w-full h-full z-30 opacity-25 pointer-events-none" />
+      {isGlass && (
+        <GlassShimmer className="absolute inset-0 w-full h-full z-30 opacity-25 pointer-events-none" />
+      )}
     </div>
   );
 }

@@ -52,7 +52,7 @@ function DropdownPanel({ anchorRef, open, onClose, minWidth = 192, children }: D
   return createPortal(
     <div
       ref={panelRef}
-      className="fixed bg-white/92 dark:bg-[#1e2030]/98 backdrop-blur-2xl rounded-(--radius-card) shadow-2xl border border-black/10 dark:border-white/10 py-1 px-1"
+      className="fixed bg-white/92 dark:bg-[#1e2030]/98 backdrop-blur-2xl rounded-[var(--radius-menu)] shadow-2xl border border-black/10 dark:border-white/10 py-1 px-1"
       style={{ top: pos.top, left: pos.left, minWidth, zIndex: 99999 }}
     >
       {children}
@@ -132,7 +132,10 @@ function AppNameDropdown({
     <>
       <button
         ref={buttonRef}
-        onMouseDown={() => setOpen((o) => !o)}
+        onMouseDown={(e) => {
+          if (e.button !== 0) return;
+          setOpen((o) => !o);
+        }}
         className={cn(
           menuBarButtonClass,
           'font-semibold',
@@ -192,7 +195,10 @@ function MenuDropdown({
     <>
       <button
         ref={buttonRef}
-        onMouseDown={() => setOpen((o) => !o)}
+        onMouseDown={(e) => {
+          if (e.button !== 0) return;
+          setOpen((o) => !o);
+        }}
         className={cn(
           menuBarButtonClass,
           open
@@ -330,7 +336,10 @@ function AppleMenuDropdown() {
     <>
       <button
         ref={buttonRef}
-        onMouseDown={() => setOpen((o) => !o)}
+        onMouseDown={(e) => {
+          if (e.button !== 0) return;
+          setOpen((o) => !o);
+        }}
         className={cn(
           menuBarButtonClass,
           open

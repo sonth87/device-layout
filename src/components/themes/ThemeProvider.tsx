@@ -14,6 +14,8 @@ import { WindowsChrome } from './WindowsTheme';
 import { AndroidChrome } from './AndroidTheme';
 import { Wallpaper } from '@/components/desktop/Wallpaper';
 import { IconGrid } from '@/components/desktop/IconGrid';
+import { WidgetLayer } from '@/components/widgets/WidgetLayer';
+import { WidgetGalleryPanel } from '@/components/widgets/WidgetGalleryPanel';
 import { Spotlight } from '@/components/macOS/Spotlight';
 import { AppSwitcher } from '@/components/macOS/AppSwitcher';
 import { NotificationBanner } from '@/components/notifications/NotificationBanner';
@@ -37,6 +39,7 @@ export function ThemeProvider() {
   const registerApps = useStore((s) => s.registerApps);
   const launchApp = useStore((s) => s.launchApp);
   const glassEnabled = useStore((s) => s.glassEnabled);
+  const isEditingWidgets = useStore((s) => s.isEditingWidgets);
 
   const [spotlightOpen, setSpotlightOpen] = useState(false);
   const [appSwitcherOpen, setAppSwitcherOpen] = useState(false);
@@ -89,6 +92,7 @@ export function ThemeProvider() {
       data-os-theme={osTheme}
       data-glass={glassEnabled ? 'true' : 'false'}
       style={getThemeCssVars(themeConfig)}
+      onContextMenu={(e) => e.preventDefault()}
     >
       {/* SVG filter singleton */}
       <GlassFilter />
@@ -148,10 +152,16 @@ export function ThemeProvider() {
           {/* Desktop canvas — NEVER remounts, preserves WindowManager + useWindowUrlSync state */}
           <div className="absolute inset-0">
             <Wallpaper>
-              {showsDesktopIconGrid && <IconGrid onOpenApp={handleOpenApp} />}
-              <WindowManager />
+              <WidgetLayer />
+              {showsDesktopIconGrid && <IconGrid key="icon-grid" onOpenApp={handleOpenApp} />}
+              <WindowManager key="window-manager" />
             </Wallpaper>
           </div>
+
+          {/* Widget gallery panel — slides up on Edit Widgets */}
+          <AnimatePresence>
+            {isEditingWidgets && <WidgetGalleryPanel />}
+          </AnimatePresence>
 
           {/* Chrome overlay — animated cross-fade on theme switch */}
           <AnimatePresence mode="wait">

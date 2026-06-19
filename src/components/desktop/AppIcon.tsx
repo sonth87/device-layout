@@ -89,7 +89,7 @@ function MobileContextMenu({
       />
       {/* menu */}
       <div
-        className="fixed z-9999 min-w-48 bg-white/90 dark:bg-[#151821]/95 backdrop-blur-2xl rounded-[var(--radius-card)] shadow-2xl border border-black/10 dark:border-white/8 p-1 text-xs overflow-hidden"
+        className="fixed z-9999 min-w-48 bg-white/90 dark:bg-[#151821]/95 backdrop-blur-2xl rounded-[var(--radius-menu)] shadow-2xl border border-black/10 dark:border-white/8 p-1 text-xs overflow-hidden"
         style={{ left, top: anchorY - 8, transform: 'translateY(-100%)' }}
       >
         {items.map((item) =>
@@ -279,7 +279,7 @@ export function AppIcon({ appConfig, x, y, onOpen, onDrop }: AppIconProps) {
 
         {appConfig.contextMenu && appConfig.contextMenu.length > 0 && (
           <ContextMenu.Portal>
-            <ContextMenu.Content className="min-w-48 bg-white/85 dark:bg-[#151821]/92 backdrop-blur-2xl rounded-[var(--radius-card)] shadow-2xl border border-black/10 dark:border-white/8 p-1 text-xs overflow-hidden z-9999">
+            <ContextMenu.Content className="min-w-48 bg-white/85 dark:bg-[#151821]/92 backdrop-blur-2xl rounded-[var(--radius-menu)] shadow-2xl border border-black/10 dark:border-white/8 p-1 text-xs overflow-hidden z-9999">
               <ContextMenuItems
                 items={appConfig.contextMenu}
                 appId={appConfig.id}

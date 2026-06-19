@@ -1,4 +1,14 @@
+export type StackGroupBy =
+  | 'kind'
+  | 'shared-by'
+  | 'date-last-opened'
+  | 'date-added'
+  | 'date-modified'
+  | 'date-created'
+  | 'tags';
+
 export interface IconPosition {
+
   appId: string;
   x: number; // pixel offset from grid container left
   y: number; // pixel offset from grid container top

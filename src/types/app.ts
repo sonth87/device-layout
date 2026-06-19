@@ -1,3 +1,5 @@
+import type { WidgetDefinition } from './widget';
+
 export interface ContextMenuAction {
   key: string;
   label: string;
@@ -59,6 +61,11 @@ export interface AppConfig {
   menuBarMenus?: MenuBarMenu[];
   /** Key in AppSettingsRegistry — renders this app's panel inside System Settings */
   appSettings?: string;
+  /**
+   * Widgets this app provides.
+   * Omit appId here — it is auto-filled by widgets.config.ts from the AppConfig.id.
+   */
+  widgets?: Omit<WidgetDefinition, 'appId'>[];
 }
 
 export interface AppInstance {

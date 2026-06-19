@@ -2,62 +2,151 @@
 
 import { useState } from 'react';
 import * as ContextMenu from '@radix-ui/react-context-menu';
+import { Check, ChevronRight } from 'lucide-react';
 import { useStore } from '@/store';
 import { WALLPAPERS } from '@/config/wallpapers.config';
 import { useImageReady } from '@/hooks/useImageReady';
 import { useStoreHydrated } from '@/hooks/useStoreHydrated';
 import { WallpaperPicker } from './WallpaperPicker';
+import type { StackGroupBy } from '@/types/desktop';
+
 
 interface WallpaperProps {
   children: React.ReactNode;
 }
 
+const GROUP_BY_OPTIONS: { id: StackGroupBy; label: string }[] = [
+  { id: 'kind',             label: 'Kind' },
+  { id: 'shared-by',        label: 'Shared By' },
+  { id: 'date-last-opened', label: 'Date Last Opened' },
+  { id: 'date-added',       label: 'Date Added' },
+  { id: 'date-modified',    label: 'Date Modified' },
+  { id: 'date-created',     label: 'Date Created' },
+  { id: 'tags',             label: 'Tags' },
+];
+
+const ITEM_CLS =
+  'flex items-center gap-2 px-2.5 py-[5px] rounded-[5px] cursor-default outline-none select-none ' +
+  'text-[13px] text-black dark:text-white ' +
+  'data-[highlighted]:bg-blue-500 data-[highlighted]:text-white ' +
+  'data-[disabled]:opacity-40 data-[disabled]:pointer-events-none ' +
+  'transition-colors';
+
+const SEPARATOR_CLS = 'my-[3px] mx-0 h-px bg-black/10 dark:bg-white/10';
+
+const MENU_CLS =
+  'min-w-[220px] bg-[rgba(246,246,246,0.92)] dark:bg-[rgba(30,30,30,0.92)] ' +
+  'backdrop-blur-2xl rounded-[var(--radius-menu)] shadow-[0_8px_32px_rgba(0,0,0,0.28),0_0_0_0.5px_rgba(0,0,0,0.12)] ' +
+  'border border-black/[0.08] dark:border-white/[0.08] p-1 z-[9999] overflow-hidden';
+
 export function Wallpaper({ children }: WallpaperProps) {
-  const wallpaperId = useStore((s) => s.wallpaperId);
-  const hydrated = useStoreHydrated();
+  const wallpaperId        = useStore((s) => s.wallpaperId);
+  const useStacks          = useStore((s) => s.useStacks);
+  const stackGroupBy       = useStore((s) => s.stackGroupBy);
+  const toggleStacks       = useStore((s) => s.toggleStacks);
+  const setStackGroupBy    = useStore((s) => s.setStackGroupBy);
+  const openWidgetGallery  = useStore((s) => s.openWidgetGallery);
+  const hydrated           = useStoreHydrated();
   const [pickerOpen, setPickerOpen] = useState(false);
 
-  const wallpaper = WALLPAPERS.find((w) => w.id === wallpaperId);
+  const wallpaper    = WALLPAPERS.find((w) => w.id === wallpaperId);
   const wallpaperUrl = wallpaper?.url ?? '/wallpapers/bg-1.jpg';
-  const wallpaperReady = useImageReady(wallpaperUrl, hydrated);
+  const wallpaperReady  = useImageReady(wallpaperUrl, hydrated);
   const backgroundImage = hydrated && wallpaperReady ? `url(${wallpaperUrl})` : 'none';
 
   return (
-    <ContextMenu.Root>
-      <ContextMenu.Trigger asChild>
-        <div
-          className="absolute inset-0 overflow-hidden"
-          style={{
-            backgroundColor: '#fff',
-            backgroundImage,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            transition: 'background-image 120ms ease-out',
-          }}
-        >
-          {children}
-        </div>
-      </ContextMenu.Trigger>
+    <>
+      <ContextMenu.Root>
+        {/* Trigger wraps ONLY the bare wallpaper background div */}
+        <ContextMenu.Trigger asChild>
+          <div
+            className="absolute inset-0 overflow-hidden"
+            style={{
+              backgroundColor: '#1e1e2e',
+              backgroundImage,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              transition: 'background-image 120ms ease-out',
+            }}
+          />
+        </ContextMenu.Trigger>
 
-      <ContextMenu.Portal>
-        <ContextMenu.Content className="min-w-44 bg-white/90 dark:bg-[#151821]/95 backdrop-blur-xl rounded-(--radius-card) shadow-2xl border border-black/10 dark:border-white/8 p-1 z-9999 text-xs">
-          <ContextMenu.Item
-            onSelect={() => setPickerOpen(true)}
-            className="flex items-center px-3 py-1.5 cursor-default hover:bg-blue-500 hover:text-white transition-colors outline-none rounded-(--radius-card)"
-          >
-            Change Wallpaper…
-          </ContextMenu.Item>
-          <ContextMenu.Separator className="my-1 h-px bg-black/10 dark:bg-white/10" />
-          <ContextMenu.Item
-            className="flex items-center px-3 py-1.5 cursor-default hover:bg-blue-500 hover:text-white transition-colors outline-none rounded-(--radius-card)"
-            disabled
-          >
-            Sort Icons By Name
-          </ContextMenu.Item>
-        </ContextMenu.Content>
-      </ContextMenu.Portal>
+        <ContextMenu.Portal>
+          <ContextMenu.Content className={MENU_CLS}>
+
+            {/* Change Wallpaper */}
+            <ContextMenu.Item
+              className={ITEM_CLS}
+              onSelect={() => setPickerOpen(true)}
+            >
+              Change Wallpaper…
+            </ContextMenu.Item>
+
+            {/* Edit Widgets */}
+            <ContextMenu.Item
+              className={ITEM_CLS}
+              onSelect={() => openWidgetGallery()}
+            >
+              Edit Widgets…
+            </ContextMenu.Item>
+
+            <ContextMenu.Separator className={SEPARATOR_CLS} />
+
+            {/* Use Stacks */}
+            <ContextMenu.Item
+              className={ITEM_CLS}
+              onSelect={() => toggleStacks()}
+            >
+              <span className="w-3.5 shrink-0 flex items-center justify-center">
+                {useStacks && <Check className="w-3 h-3 stroke-[2.5]" />}
+              </span>
+              Use Stacks
+            </ContextMenu.Item>
+
+            {/* Group Stacks By — submenu */}
+            <ContextMenu.Sub>
+              <ContextMenu.SubTrigger
+                className={`${ITEM_CLS} data-[state=open]:bg-blue-500 data-[state=open]:text-white`}
+              >
+                <span className="w-3.5 shrink-0" />
+                <span className="flex-1">Group Stacks By</span>
+                <ChevronRight className="w-3.5 h-3.5 ml-auto opacity-60" />
+              </ContextMenu.SubTrigger>
+
+              <ContextMenu.Portal>
+                <ContextMenu.SubContent
+                  className={MENU_CLS}
+                  sideOffset={2}
+                  alignOffset={-4}
+                >
+                  {GROUP_BY_OPTIONS.map(({ id, label }) => (
+                    <ContextMenu.Item
+                      key={id}
+                      className={ITEM_CLS}
+                      onSelect={() => setStackGroupBy(id)}
+                    >
+                      <span className="w-3.5 shrink-0 flex items-center justify-center">
+                        {stackGroupBy === id && (
+                          <Check className="w-3 h-3 stroke-[2.5]" />
+                        )}
+                      </span>
+                      {label}
+                    </ContextMenu.Item>
+                  ))}
+                </ContextMenu.SubContent>
+              </ContextMenu.Portal>
+            </ContextMenu.Sub>
+
+          </ContextMenu.Content>
+        </ContextMenu.Portal>
+      </ContextMenu.Root>
+
+      {/* Render children inside a sibling overlay so they are outside of the Trigger DOM tree */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {children}
+      </div>
 
       {pickerOpen && <WallpaperPicker onClose={() => setPickerOpen(false)} />}
-    </ContextMenu.Root>
+    </>
   );
 }

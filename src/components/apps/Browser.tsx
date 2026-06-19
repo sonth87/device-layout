@@ -1,13 +1,20 @@
-'use client';
+"use client";
 
-import { useState, useRef, FormEvent } from 'react';
-import { ArrowLeft, ArrowRight, RefreshCw, Lock, X, ExternalLink } from 'lucide-react';
-import type { AppContentProps } from './AppRegistry';
-import { useStore } from '@/store';
+import { useState, useRef, FormEvent } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  RefreshCw,
+  Lock,
+  X,
+  ExternalLink,
+} from "lucide-react";
+import type { AppContentProps } from "./AppRegistry";
+import { useStore } from "@/store";
 
 export function Browser({ appId }: AppContentProps) {
   const appConfig = useStore((s) => s.apps[appId]);
-  const initialUrl = appConfig?.iframeUrl ?? 'https://example.com';
+  const initialUrl = appConfig?.iframeUrl ?? "https://dantri.com.vn";
 
   const [navHistory, setNavHistory] = useState<string[]>([initialUrl]);
   const [historyIdx, setHistoryIdx] = useState(0);
@@ -23,19 +30,24 @@ export function Browser({ appId }: AppContentProps) {
   const swipeTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Edge-strip pointer drag tracking
-  const edgeDragRef = useRef<{ startX: number; side: 'left' | 'right' } | null>(null);
+  const edgeDragRef = useRef<{ startX: number; side: "left" | "right" } | null>(
+    null,
+  );
 
   const navigate = (target: string) => {
     let normalized = target.trim();
-    if (!normalized.startsWith('http://') && !normalized.startsWith('https://')) {
+    if (
+      !normalized.startsWith("http://") &&
+      !normalized.startsWith("https://")
+    ) {
       if (/^[^/\s]+\.[^/\s]+/.test(normalized)) {
         normalized = `https://${normalized}`;
       } else {
         normalized = `https://www.google.com/search?q=${encodeURIComponent(normalized)}`;
       }
     }
-    setNavHistory(prev => [...prev.slice(0, historyIdx + 1), normalized]);
-    setHistoryIdx(prev => prev + 1);
+    setNavHistory((prev) => [...prev.slice(0, historyIdx + 1), normalized]);
+    setHistoryIdx((prev) => prev + 1);
     setInputUrl(normalized);
     setLoading(true);
   };
@@ -62,7 +74,7 @@ export function Browser({ appId }: AppContentProps) {
   };
 
   const openInNewTab = () => {
-    window.open(url, '_blank', 'noopener,noreferrer');
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   /** Horizontal wheel on the nav bar area → back/forward */
@@ -72,13 +84,20 @@ export function Browser({ appId }: AppContentProps) {
     if (Math.abs(dx) < Math.abs(e.deltaY)) return; // vertical scroll, ignore
     swipeAccRef.current += dx;
     clearTimeout(swipeTimerRef.current);
-    swipeTimerRef.current = setTimeout(() => { swipeAccRef.current = 0; }, 300);
-    if (swipeAccRef.current < -100) { goBack(); swipeAccRef.current = 0; }
-    else if (swipeAccRef.current > 100) { goForward(); swipeAccRef.current = 0; }
+    swipeTimerRef.current = setTimeout(() => {
+      swipeAccRef.current = 0;
+    }, 300);
+    if (swipeAccRef.current < -100) {
+      goBack();
+      swipeAccRef.current = 0;
+    } else if (swipeAccRef.current > 100) {
+      goForward();
+      swipeAccRef.current = 0;
+    }
   };
 
   /** Edge strip pointer handlers — left strip = back, right strip = forward */
-  const onEdgePointerDown = (e: React.PointerEvent, side: 'left' | 'right') => {
+  const onEdgePointerDown = (e: React.PointerEvent, side: "left" | "right") => {
     edgeDragRef.current = { startX: e.clientX, side };
     e.currentTarget.setPointerCapture(e.pointerId);
   };
@@ -88,8 +107,8 @@ export function Browser({ appId }: AppContentProps) {
     if (!drag) return;
     edgeDragRef.current = null;
     const delta = e.clientX - drag.startX;
-    if (drag.side === 'left' && delta > 40) goBack();
-    if (drag.side === 'right' && delta < -40) goForward();
+    if (drag.side === "left" && delta > 40) goBack();
+    if (drag.side === "right" && delta < -40) goForward();
   };
 
   return (
@@ -117,11 +136,16 @@ export function Browser({ appId }: AppContentProps) {
           className="p-1 rounded hover:bg-black/10 dark:hover:bg-white/10"
           onClick={() => navigate(url)}
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw
+            className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`}
+          />
         </button>
 
         {/* URL bar */}
-        <form onSubmit={onSubmit} className="flex-1 flex items-center gap-1.5 bg-white dark:bg-neutral-700 rounded-md px-2 py-1 border border-black/10 dark:border-white/10">
+        <form
+          onSubmit={onSubmit}
+          className="flex-1 flex items-center gap-1.5 bg-white dark:bg-neutral-700 rounded-md px-2 py-1 border border-black/10 dark:border-white/10"
+        >
           <Lock className="w-3 h-3 text-black/30 dark:text-white/30 shrink-0" />
           <input
             value={inputUrl}
@@ -130,7 +154,7 @@ export function Browser({ appId }: AppContentProps) {
             placeholder="Search or enter URL..."
           />
           {inputUrl && (
-            <button type="button" onClick={() => setInputUrl('')}>
+            <button type="button" onClick={() => setInputUrl("")}>
               <X className="w-3 h-3 text-black/30 dark:text-white/30" />
             </button>
           )}
@@ -164,16 +188,20 @@ export function Browser({ appId }: AppContentProps) {
         {/* Left edge strip — drag right to go back */}
         <div
           className="absolute left-0 top-0 bottom-0 w-3 z-20 cursor-w-resize"
-          onPointerDown={(e) => onEdgePointerDown(e, 'left')}
+          onPointerDown={(e) => onEdgePointerDown(e, "left")}
           onPointerUp={onEdgePointerUp}
-          onPointerCancel={() => { edgeDragRef.current = null; }}
+          onPointerCancel={() => {
+            edgeDragRef.current = null;
+          }}
         />
         {/* Right edge strip — drag left to go forward */}
         <div
           className="absolute right-0 top-0 bottom-0 w-3 z-20 cursor-e-resize"
-          onPointerDown={(e) => onEdgePointerDown(e, 'right')}
+          onPointerDown={(e) => onEdgePointerDown(e, "right")}
           onPointerUp={onEdgePointerUp}
-          onPointerCancel={() => { edgeDragRef.current = null; }}
+          onPointerCancel={() => {
+            edgeDragRef.current = null;
+          }}
         />
       </div>
     </div>

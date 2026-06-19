@@ -310,6 +310,22 @@ export const APPS_CONFIG: AppConfig[] = [
     minSize: { width: 320, height: 400 },
     category: 'utilities',
     mobileFullscreen: true,
+    widgets: [
+      {
+        id: 'clock-analog',
+        name: 'Analog Clock',
+        description: 'Classic analog clock face',
+        sizes: ['small'],
+        componentKey: 'ClockWidget',
+      },
+      {
+        id: 'clock-world',
+        name: 'World Clock',
+        description: 'Clock with city time list',
+        sizes: ['medium'],
+        componentKey: 'ClockWorldWidget',
+      },
+    ],
   },
   {
     id: 'notes',
@@ -323,6 +339,15 @@ export const APPS_CONFIG: AppConfig[] = [
     hasMenuBar: false,
     category: 'productivity',
     mobileFullscreen: false,
+    widgets: [
+      {
+        id: 'notes-preview',
+        name: 'Notes',
+        description: 'Quick note preview',
+        sizes: ['medium', 'large'],
+        componentKey: 'NotesWidget',
+      },
+    ],
   },
   {
     id: 'photos',
@@ -357,6 +382,15 @@ export const APPS_CONFIG: AppConfig[] = [
     hasMenuBar: false,
     category: 'productivity',
     mobileFullscreen: true,
+    widgets: [
+      {
+        id: 'calendar-mini',
+        name: 'Calendar',
+        description: 'Month view mini calendar',
+        sizes: ['small', 'medium', 'large'],
+        componentKey: 'CalendarWidget',
+      },
+    ],
   },
   {
     id: 'messages',
