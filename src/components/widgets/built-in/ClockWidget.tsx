@@ -48,7 +48,7 @@ export function ClockWidget({ size }: Props) {
   const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   return (
-    <div className="w-full h-full flex items-center justify-center bg-black/60 rounded-[20px] overflow-hidden">
+    <div className="w-full h-full flex items-center justify-center bg-black/10">
       <AnalogFace date={now} dim={size === 'small' ? 140 : 150} />
       {size !== 'small' && (
         <div className="flex flex-col ml-3">
@@ -76,7 +76,7 @@ export function ClockWorldWidget({ size: _size }: Props) {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col justify-center gap-1.5 bg-black/60 rounded-[20px] px-4 overflow-hidden">
+    <div className="w-full h-full flex flex-col justify-center gap-1.5 bg-black/10 px-4">
       {CITIES.map(({ city, tz }) => {
         const t = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', timeZone: tz }).format(now);
         return (
@@ -86,6 +86,194 @@ export function ClockWorldWidget({ size: _size }: Props) {
           </div>
         );
       })}
+    </div>
+  );
+}
+
+export function ClockDigitalWidget({ size }: Props) {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
+
+  const dayName = now.toLocaleDateString([], { weekday: 'long' });
+  const dateStr = now.toLocaleDateString([], { month: 'short', day: 'numeric' });
+
+  if (size === 'small') {
+    return (
+      <div className="w-full h-full flex flex-col justify-center p-4 select-none">
+        <p className="text-red-500 dark:text-red-400 text-[10px] font-bold uppercase tracking-widest leading-none">
+          {dayName}
+        </p>
+        <div className="flex items-baseline mt-1.5 text-zinc-800 dark:text-white">
+          <p className="text-4xl font-light leading-none tracking-tight tabular-nums">
+            {hours}:{minutes}
+          </p>
+          <span className="text-[12px] font-semibold text-zinc-400 dark:text-zinc-505 ml-1.5 tabular-nums">
+            {seconds}
+          </span>
+        </div>
+        <p className="text-zinc-500 dark:text-zinc-450 text-[12px] font-semibold mt-3">
+          {dateStr}
+        </p>
+      </div>
+    );
+  }
+
+  // Medium size
+  const secRatio = now.getSeconds() / 60;
+  const circ = 2 * Math.PI * 30; // radius is 30
+  const offset = circ * (1 - secRatio);
+
+  return (
+    <div className="w-full h-full flex items-center justify-between p-4 select-none">
+      <div className="flex flex-col justify-center">
+        <p className="text-red-500 dark:text-red-400 text-[10px] font-bold uppercase tracking-widest leading-none">
+          {dayName}
+        </p>
+        <div className="flex items-baseline mt-1 text-zinc-800 dark:text-white">
+          <p className="text-5xl font-light leading-none tracking-tight tabular-nums">
+            {hours}:{minutes}
+          </p>
+          <span className="text-[11px] font-bold text-zinc-400 dark:text-zinc-505 uppercase ml-1.5">
+            {ampm}
+          </span>
+        </div>
+        <p className="text-zinc-500 dark:text-zinc-450 text-xs font-semibold mt-2.5">
+          {now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' })}
+        </p>
+      </div>
+
+      {/* SVG Seconds ring graphic */}
+      <div className="relative w-24 h-24 flex items-center justify-center shrink-0">
+        <svg viewBox="0 0 100 100" className="w-full h-full">
+          <circle cx="50" cy="50" r="30" fill="none" className="stroke-black/5 dark:stroke-white/5" strokeWidth="4" />
+          <circle
+            cx="50"
+            cy="50"
+            r="30"
+            fill="none"
+            stroke="#ff3b30"
+            strokeWidth="4"
+            strokeDasharray={circ}
+            strokeDashoffset={offset}
+            strokeLinecap="round"
+            transform="rotate(-90 50 50)"
+            style={{ transition: 'stroke-dashoffset 0.3s ease' }}
+          />
+          <text x="50" y="55" textAnchor="middle" className="fill-zinc-800 dark:fill-white text-[12px] font-bold tabular-nums">
+            {seconds}s
+          </text>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+function FlipCard({ val, label }: { val: string | number; label?: string }) {
+  const displayVal = String(val).padStart(2, '0');
+  return (
+    <div className="flex flex-col items-center select-none">
+      <div className="relative bg-zinc-900 dark:bg-black border border-white/5 rounded-lg w-13 h-15 flex flex-col items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.3)] overflow-hidden">
+        {/* Top half */}
+        <div className="absolute top-0 left-0 w-full h-1/2 bg-zinc-850 dark:bg-[#1E1E20] border-b border-black/40" />
+        {/* Bottom half */}
+        <div className="absolute bottom-0 left-0 w-full h-1/2 bg-zinc-900 dark:bg-[#121214]" />
+        {/* Split line */}
+        <div className="absolute top-[29px] left-0 w-full h-[1px] bg-black/45 z-20" />
+        {/* Value */}
+        <span className="relative z-10 text-zinc-100 text-2xl font-black tracking-tight tabular-nums leading-none">
+          {displayVal}
+        </span>
+      </div>
+      {label && <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest mt-1.5">{label}</span>}
+    </div>
+  );
+}
+
+function FlipCalendarCard({ month, day }: { month: string; day: number }) {
+  return (
+    <div className="flex flex-col items-center select-none">
+      <div className="relative bg-zinc-900 dark:bg-black border border-white/5 rounded-lg w-18 h-20 flex flex-col items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.3)] overflow-hidden">
+        {/* Top half: Month (Red background) */}
+        <div className="absolute top-0 left-0 w-full h-1/2 bg-red-600 dark:bg-red-700 flex items-center justify-center pb-1">
+          <span className="text-white text-[9px] font-extrabold tracking-widest uppercase mt-2">
+            {month}
+          </span>
+        </div>
+        {/* Bottom half: Day */}
+        <div className="absolute bottom-0 left-0 w-full h-1/2 bg-zinc-850 dark:bg-[#121214]" />
+        {/* Split line */}
+        <div className="absolute top-[39px] left-0 w-full h-[1px] bg-black/45 z-20" />
+        {/* Large day number */}
+        <span className="relative z-10 text-zinc-100 text-3xl font-black tracking-tight tabular-nums leading-none mt-4">
+          {day}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+export function ClockFlipWidget({ size }: Props) {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const MONTHS_SHORT = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+  if (size === 'small') {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center p-3 select-none">
+        <p className="text-zinc-455 dark:text-zinc-500 text-[8px] font-bold uppercase tracking-widest mb-2">
+          FLIP TIME
+        </p>
+        <div className="flex items-center gap-1.5">
+          <FlipCard val={hours} />
+          <span className="text-zinc-500 animate-pulse font-bold text-xl mb-1">:</span>
+          <FlipCard val={minutes} />
+        </div>
+        <p className="text-zinc-550 dark:text-zinc-450 text-[10px] font-bold mt-2">
+          {now.toLocaleDateString([], { weekday: 'short', day: 'numeric' })}
+        </p>
+      </div>
+    );
+  }
+
+  // Medium layout: flip clock + flip calendar
+  return (
+    <div className="w-full h-full flex items-center justify-between px-6 py-4 select-none">
+      {/* Time Flip */}
+      <div className="flex flex-col">
+        <p className="text-zinc-455 dark:text-zinc-500 text-[8px] font-bold uppercase tracking-widest mb-1.5 ml-1">
+          CURRENT TIME
+        </p>
+        <div className="flex items-center gap-2">
+          <FlipCard val={hours} label="HOURS" />
+          <span className="text-zinc-500 animate-pulse font-bold text-2xl mb-5">:</span>
+          <FlipCard val={minutes} label="MINUTES" />
+        </div>
+      </div>
+
+      {/* Vertical divider */}
+      <div className="h-16 w-px bg-zinc-200 dark:bg-zinc-800 shrink-0" />
+
+      {/* Calendar Flip */}
+      <div className="flex flex-col items-end">
+        <p className="text-zinc-455 dark:text-zinc-500 text-[8px] font-bold uppercase tracking-widest mb-1.5 mr-1">
+          TODAY
+        </p>
+        <FlipCalendarCard month={MONTHS_SHORT[now.getMonth()]} day={now.getDate()} />
+      </div>
     </div>
   );
 }

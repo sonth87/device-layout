@@ -8,11 +8,14 @@ export interface WidgetComponentProps {
 }
 
 const WIDGET_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentType<WidgetComponentProps>>> = {
-  ClockWidget:     lazy(() => import('./built-in/ClockWidget').then((m) => ({ default: m.ClockWidget }))),
-  ClockWorldWidget: lazy(() => import('./built-in/ClockWidget').then((m) => ({ default: m.ClockWorldWidget }))),
-  CalendarWidget:  lazy(() => import('./built-in/CalendarWidget').then((m) => ({ default: m.CalendarWidget }))),
-  WeatherWidget:   lazy(() => import('./built-in/WeatherWidget').then((m) => ({ default: m.WeatherWidget }))),
-  NotesWidget:     lazy(() => import('./built-in/NotesWidget').then((m) => ({ default: m.NotesWidget }))),
+  ClockWidget:         lazy(() => import('./built-in/ClockWidget').then((m) => ({ default: m.ClockWidget }))),
+  ClockWorldWidget:    lazy(() => import('./built-in/ClockWidget').then((m) => ({ default: m.ClockWorldWidget }))),
+  ClockDigitalWidget:  lazy(() => import('./built-in/ClockWidget').then((m) => ({ default: m.ClockDigitalWidget }))),
+  ClockFlipWidget:     lazy(() => import('./built-in/ClockWidget').then((m) => ({ default: m.ClockFlipWidget }))),
+  CalendarWidget:      lazy(() => import('./built-in/CalendarWidget').then((m) => ({ default: m.CalendarWidget }))),
+  CalendarTodayWidget: lazy(() => import('./built-in/CalendarWidget').then((m) => ({ default: m.CalendarTodayWidget }))),
+  WeatherWidget:       lazy(() => import('./built-in/WeatherWidget').then((m) => ({ default: m.WeatherWidget }))),
+  NotesWidget:         lazy(() => import('./built-in/NotesWidget').then((m) => ({ default: m.NotesWidget }))),
 };
 
 interface Props {

@@ -44,7 +44,7 @@ function ContextMenuItems({
             key={item.key}
             disabled={item.disabled}
             onSelect={() => dispatch(item.action)}
-            className="flex items-center justify-between px-3 py-1.5 rounded-[var(--radius-input)] cursor-default outline-none hover:bg-blue-500 hover:text-white data-disabled:opacity-40 transition-colors"
+            className="flex items-center justify-between px-3 py-1.5 rounded-[5px] cursor-default outline-none hover:bg-blue-500 hover:text-white data-disabled:opacity-40 transition-colors"
           >
             {item.label}
             {item.shortcut && <span className="text-[10px] opacity-50 ml-4">{item.shortcut}</span>}
@@ -89,7 +89,7 @@ function MobileContextMenu({
       />
       {/* menu */}
       <div
-        className="fixed z-9999 min-w-48 bg-white/90 dark:bg-[#151821]/95 backdrop-blur-2xl rounded-[var(--radius-menu)] shadow-2xl border border-black/10 dark:border-white/8 p-1 text-xs overflow-hidden"
+        className="fixed z-9999 min-w-48 bg-white/90 dark:bg-[#151821]/95 backdrop-blur-2xl rounded-menu shadow-2xl border border-black/10 dark:border-white/8 p-1 text-xs overflow-hidden"
         style={{ left, top: anchorY - 8, transform: 'translateY(-100%)' }}
       >
         {items.map((item) =>
@@ -101,7 +101,7 @@ function MobileContextMenu({
               disabled={item.disabled}
               onPointerDown={(e) => { e.stopPropagation(); dispatch(item.action); }}
               className={cn(
-                'w-full flex items-center justify-between px-3 py-1.5 rounded-[var(--radius-input)] cursor-default outline-none text-left',
+                'w-full flex items-center justify-between px-3 py-1.5 rounded-[5px] cursor-default outline-none text-left',
                 item.disabled
                   ? 'opacity-40'
                   : 'hover:bg-blue-500 hover:text-white transition-colors'
@@ -279,7 +279,7 @@ export function AppIcon({ appConfig, x, y, onOpen, onDrop }: AppIconProps) {
 
         {appConfig.contextMenu && appConfig.contextMenu.length > 0 && (
           <ContextMenu.Portal>
-            <ContextMenu.Content className="min-w-48 bg-white/85 dark:bg-[#151821]/92 backdrop-blur-2xl rounded-[var(--radius-menu)] shadow-2xl border border-black/10 dark:border-white/8 p-1 text-xs overflow-hidden z-9999">
+            <ContextMenu.Content className="min-w-48 bg-white/85 dark:bg-[#151821]/92 backdrop-blur-2xl rounded-menu shadow-2xl border border-black/10 dark:border-white/8 p-1 text-xs overflow-hidden z-9999">
               <ContextMenuItems
                 items={appConfig.contextMenu}
                 appId={appConfig.id}

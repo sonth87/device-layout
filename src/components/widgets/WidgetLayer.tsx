@@ -10,9 +10,10 @@ import { WidgetCard } from './WidgetCard';
  */
 export function WidgetLayer() {
   const instances = useStore((s) => s.widgetInstances);
+  const isEditing = useStore((s) => s.isEditingWidgets);
 
   return (
-    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2 }}>
+    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: isEditing ? 1001 : 2 }}>
       <AnimatePresence>
         {instances.map((inst) => (
           <motion.div

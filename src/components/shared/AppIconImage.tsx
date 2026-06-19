@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import {
-  Folder, SquareTerminal, Settings2, Globe, FileText,
+  Folder, SquareTerminal, Settings, Globe, FileText,
   AppWindow, HelpCircle, Music, Image, Mail, Calendar,
   Calculator, Map, Camera, Phone, Video, MessageSquare,
   Code2, Database, Terminal, Cpu, Layers, Clock, StickyNote,
@@ -11,7 +11,7 @@ import {
 import type { AppConfig } from '@/types/app';
 
 const LUCIDE_MAP: Record<string, LucideIcon> = {
-  Folder, SquareTerminal, Settings2, Globe, FileText,
+  Folder, SquareTerminal, Settings, Globe, FileText,
   AppWindow, HelpCircle, Music, Image, Mail, Calendar,
   Calculator, Map, Camera, Phone, Video, MessageSquare,
   Code2, Database, Terminal, Cpu, Layers, Clock, StickyNote,

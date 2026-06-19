@@ -157,6 +157,10 @@
   --spacing-chrome: var(--window-chrome-height);
   /* z-index scale */
   --z-index-9999: 9999;
+  /* border-radius scale */
+  --radius-menu: var(--radius-menu);
+  --radius-card: var(--radius-card);
+  --radius-window: var(--radius-window);
 }
 
 /* ── OS canvas reset ────────────────────────────────────── */

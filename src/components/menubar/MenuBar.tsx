@@ -52,7 +52,7 @@ function DropdownPanel({ anchorRef, open, onClose, minWidth = 192, children }: D
   return createPortal(
     <div
       ref={panelRef}
-      className="fixed bg-white/92 dark:bg-[#1e2030]/98 backdrop-blur-2xl rounded-[var(--radius-menu)] shadow-2xl border border-black/10 dark:border-white/10 py-1 px-1"
+      className="fixed bg-white/92 dark:bg-[#1e2030]/98 backdrop-blur-2xl rounded-menu shadow-2xl border border-black/10 dark:border-white/10 py-1 px-1"
       style={{ top: pos.top, left: pos.left, minWidth, zIndex: 99999 }}
     >
       {children}
@@ -78,7 +78,7 @@ function MenuItem({
     <button
       disabled={disabled}
       className={cn(
-        'w-full flex items-center justify-between px-3 py-1.5 text-[13px] transition-colors cursor-default rounded-(--radius-card)',
+        'w-full flex items-center justify-between px-3 py-1.5 text-[13px] transition-colors cursor-default rounded-[5px]',
         disabled
           ? 'text-black/30 dark:text-white/30'
           : 'hover:bg-blue-500 hover:text-white'

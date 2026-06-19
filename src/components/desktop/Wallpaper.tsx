@@ -36,7 +36,7 @@ const SEPARATOR_CLS = 'my-[3px] mx-0 h-px bg-black/10 dark:bg-white/10';
 
 const MENU_CLS =
   'min-w-[220px] bg-[rgba(246,246,246,0.92)] dark:bg-[rgba(30,30,30,0.92)] ' +
-  'backdrop-blur-2xl rounded-[var(--radius-menu)] shadow-[0_8px_32px_rgba(0,0,0,0.28),0_0_0_0.5px_rgba(0,0,0,0.12)] ' +
+  'backdrop-blur-2xl rounded-menu shadow-[0_8px_32px_rgba(0,0,0,0.28),0_0_0_0.5px_rgba(0,0,0,0.12)] ' +
   'border border-black/[0.08] dark:border-white/[0.08] p-1 z-[9999] overflow-hidden';
 
 export function Wallpaper({ children }: WallpaperProps) {
@@ -59,16 +59,29 @@ export function Wallpaper({ children }: WallpaperProps) {
       <ContextMenu.Root>
         {/* Trigger wraps ONLY the bare wallpaper background div */}
         <ContextMenu.Trigger asChild>
-          <div
-            className="absolute inset-0 overflow-hidden"
-            style={{
-              backgroundColor: '#1e1e2e',
-              backgroundImage,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              transition: 'background-image 120ms ease-out',
-            }}
-          />
+          <div className="absolute inset-0 overflow-hidden bg-[#1e1e2e]">
+            {hydrated && wallpaper?.isLive && wallpaper.videoUrl ? (
+              <video
+                key={wallpaper.videoUrl}
+                src={wallpaper.videoUrl}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  transition: 'background-image 120ms ease-out',
+                }}
+              />
+            )}
+          </div>
         </ContextMenu.Trigger>
 
         <ContextMenu.Portal>

@@ -10,6 +10,7 @@ import { WIDGET_SIZE_PX } from '@/types/widget';
 import { cn } from '@/lib/utils';
 import { AppIconImage } from '@/components/shared/AppIconImage';
 import { WidgetRenderer } from './WidgetRenderer';
+import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
 import type { WidgetDefinition, WidgetSize } from '@/types/widget';
 
 /* ── Drag ghost that follows the pointer when dragging from the panel ── */
@@ -32,7 +33,9 @@ function DragGhost({ ghost }: { ghost: GhostState }) {
         height: h,
       }}
     >
-      <WidgetRenderer componentKey={ghost.def.componentKey} size={ghost.size} />
+      <LiquidGlass variant="widget" className="w-full h-full">
+        <WidgetRenderer componentKey={ghost.def.componentKey} size={ghost.size} />
+      </LiquidGlass>
     </div>,
     document.body
   );
@@ -66,10 +69,12 @@ function WidgetPreviewCard({
         style={{ width: displayW, height: displayH }}
       >
         <div style={{ width: w, height: h, transform: `scale(${scale})`, transformOrigin: 'top left', pointerEvents: 'none' }}>
-          <WidgetRenderer componentKey={def.componentKey} size={size} />
+          <LiquidGlass variant="widget" className="w-full h-full">
+            <WidgetRenderer componentKey={def.componentKey} size={size} />
+          </LiquidGlass>
         </div>
       </div>
-      <p className="text-white/70 text-[10px] text-center leading-tight max-w-[120px] truncate">{size}</p>
+      <p className="text-black/60 dark:text-white/70 text-[10px] text-center leading-tight max-w-[120px] truncate">{size}</p>
     </div>
   );
 }
@@ -94,8 +99,8 @@ function AppRow({
       className={cn(
         'w-full flex items-center gap-2.5 px-3 py-1.5 rounded-[8px] text-left transition-colors',
         selected
-          ? 'bg-white/15 text-white'
-          : 'text-white/70 hover:bg-white/8 hover:text-white'
+          ? 'bg-black/10 dark:bg-white/15 text-black dark:text-white'
+          : 'text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/8 hover:text-black dark:hover:text-white'
       )}
     >
       {app ? (
@@ -179,46 +184,48 @@ export function WidgetGalleryPanel() {
     return () => window.removeEventListener('keydown', handler);
   }, [closeWidgetGallery]);
 
+  const isDragging = ghost !== null;
+
   return (
     <>
       {/* Scrim */}
       <motion.div
-        className="fixed inset-0 z-[1000]"
+        className="fixed inset-0 z-[1000] bg-black/20 dark:bg-black/50"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{ opacity: isDragging ? 0 : 1 }}
         exit={{ opacity: 0 }}
-        style={{ background: 'rgba(0,0,0,0.25)' }}
+        onClick={closeWidgetGallery}
       />
 
       {/* Panel */}
       <motion.div
         ref={panelRef}
-        className="fixed bottom-0 left-0 right-0 z-[1001] flex flex-col"
+        className="fixed bottom-0 left-1/2 z-[1002] flex flex-col w-full max-w-[960px]"
         style={{ height: '58vh' }}
-        initial={{ y: '100%' }}
-        animate={{ y: 0 }}
-        exit={{ y: '100%' }}
+        initial={{ y: '100%', x: '-50%' }}
+        animate={{ y: isDragging ? '110%' : 0, x: '-50%' }}
+        exit={{ y: '100%', x: '-50%' }}
         transition={{ type: 'spring', stiffness: 340, damping: 36 }}
       >
         {/* Glass card */}
-        <div className="flex-1 mx-3 mb-0 rounded-t-[20px] overflow-hidden bg-[rgba(28,28,30,0.88)] backdrop-blur-3xl border border-white/[0.08] flex flex-col shadow-2xl">
+        <div className="flex-1 mx-3 mb-0 rounded-t-[20px] overflow-hidden bg-white/85 dark:bg-[rgba(28,28,30,0.88)] backdrop-blur-3xl border border-black/10 dark:border-white/[0.08] flex flex-col shadow-2xl">
 
           {/* Content */}
           <div className="flex flex-1 overflow-hidden">
             {/* ── Left sidebar ── */}
-            <div className="w-52 shrink-0 border-r border-white/[0.06] flex flex-col p-3 gap-1 overflow-y-auto">
+            <div className="w-52 shrink-0 border-r border-black/[0.06] dark:border-white/[0.06] flex flex-col p-3 gap-1 overflow-y-auto">
               {/* Search */}
               <div className="relative mb-2">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30"/>
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-black/30 dark:text-white/30"/>
                 <input
                   type="text"
                   placeholder="Search Widgets"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full bg-white/8 text-white text-[13px] placeholder-white/30 rounded-[8px] pl-8 pr-3 py-1.5 outline-none border border-white/10 focus:border-white/20 transition-colors"
+                  className="w-full bg-black/5 dark:bg-white/8 text-black dark:text-white text-[13px] placeholder-black/30 dark:placeholder-white/30 rounded-[8px] pl-8 pr-3 py-1.5 outline-none border border-black/10 dark:border-white/10 focus:border-black/20 dark:focus:border-white/20 transition-colors"
                 />
                 {search && (
-                  <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60">
+                  <button onClick={() => setSearch('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-black/30 dark:text-white/30 hover:text-black/60 dark:hover:text-white/60">
                     <X className="w-3 h-3"/>
                   </button>
                 )}
@@ -229,7 +236,7 @@ export function WidgetGalleryPanel() {
                 onClick={() => setSelectedApp('__all__')}
                 className={cn(
                   'w-full flex items-center gap-2.5 px-3 py-1.5 rounded-[8px] text-left transition-colors',
-                  selectedApp === '__all__' ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/8 hover:text-white'
+                  selectedApp === '__all__' ? 'bg-black/10 dark:bg-white/15 text-black dark:text-white' : 'text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/8 hover:text-black dark:hover:text-white'
                 )}
               >
                 <div className="w-5 h-5 rounded-md bg-gradient-to-br from-blue-500 to-purple-500 shrink-0" />
@@ -249,7 +256,7 @@ export function WidgetGalleryPanel() {
             {/* ── Right content area ── */}
             <div className="flex-1 overflow-y-auto p-4">
               {Object.keys(byApp).length === 0 ? (
-                <div className="flex items-center justify-center h-full text-white/30 text-sm">
+                <div className="flex items-center justify-center h-full text-black/30 dark:text-white/30 text-sm">
                   No widgets found
                 </div>
               ) : (
@@ -258,14 +265,14 @@ export function WidgetGalleryPanel() {
                   return (
                     <div key={appId} className="mb-8">
                       <div className="flex items-center justify-between mb-3">
-                        <p className="text-white text-[13px] font-semibold">{appLabel}</p>
+                        <p className="text-black dark:text-white text-[13px] font-semibold">{appLabel}</p>
                         {appId !== '__built-in__' && (
-                          <p className="text-white/30 text-[11px]">From {appLabel}</p>
+                          <p className="text-black/30 dark:text-white/30 text-[11px]">From {appLabel}</p>
                         )}
                       </div>
                       {defs.map((def) => (
                         <div key={def.id} className="mb-4">
-                          <p className="text-white/50 text-[11px] mb-2 font-medium">{def.name}</p>
+                          <p className="text-black/50 dark:text-white/50 text-[11px] mb-2 font-medium">{def.name}</p>
                           <div className="flex flex-wrap gap-4">
                             {def.sizes.map((sz) => (
                               <WidgetPreviewCard
@@ -286,8 +293,8 @@ export function WidgetGalleryPanel() {
           </div>
 
           {/* ── Bottom bar ── */}
-          <div className="flex items-center justify-between px-5 py-3 border-t border-white/[0.06] shrink-0">
-            <p className="text-white/40 text-[12px]">Drag a widget to place it on the desktop…</p>
+          <div className="flex items-center justify-between px-5 py-3 border-t border-black/[0.06] dark:border-white/[0.06] shrink-0">
+            <p className="text-black/40 dark:text-white/40 text-[12px]">Drag a widget to place it on the desktop…</p>
             <button
               onClick={closeWidgetGallery}
               className="px-5 py-1.5 bg-red-500 hover:bg-red-600 text-white text-[13px] font-semibold rounded-[8px] transition-colors"

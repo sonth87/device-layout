@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Settings2, Paintbrush, Image, LayoutGrid, Bell, type LucideIcon } from 'lucide-react';
+import { Settings as SettingsIcon, Paintbrush, Image, LayoutGrid, Bell, type LucideIcon } from 'lucide-react';
 import { useStore } from '@/store';
 import { cn } from '@/lib/utils';
 import { AppIconImage } from '@/components/shared/AppIconImage';
@@ -23,7 +23,7 @@ const SYSTEM_SECTIONS: {
   color: [string, string];
   component: () => React.ReactElement;
 }[] = [
-  { id: 'general',       label: 'General',       lucideIcon: Settings2, color: ['#636366', '#48484a'], component: SettingsGeneral },
+  { id: 'general',       label: 'General',       lucideIcon: SettingsIcon, color: ['#636366', '#48484a'], component: SettingsGeneral },
   { id: 'appearance',    label: 'Appearance',    lucideIcon: Paintbrush, color: ['#5e5ce6', '#3634a3'], component: SettingsAppearance },
   { id: 'wallpaper',     label: 'Wallpaper',     lucideIcon: Image,      color: ['#30d158', '#25a244'], component: SettingsWallpaper },
   { id: 'desktop-dock',  label: 'Desktop & Dock',lucideIcon: LayoutGrid, color: ['#0a84ff', '#0055d4'], component: SettingsDesktopDock },
@@ -73,7 +73,7 @@ export function Settings({ windowId }: AppContentProps) {
   const appSettingsList = Object.values(apps).filter((a) => !a.disabled && a.appSettings);
 
   type ActiveId = SystemSectionId | `app:${string}`;
-  const [activeId, setActiveId] = useState<ActiveId | null>(null);
+  const [activeId, setActiveId] = useState<ActiveId | null>('general');
 
   const select = useCallback((id: ActiveId) => setActiveId(id), []);
 

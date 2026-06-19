@@ -30,7 +30,7 @@ function WeatherIcon({ icon, className }: { icon: string; className?: string }) 
 export function WeatherWidget({ size }: Props) {
   if (size === 'small') {
     return (
-      <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-500/80 to-cyan-400/80 backdrop-blur-md rounded-[20px] overflow-hidden">
+      <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-500/35 to-cyan-400/25">
         <p className="text-white/70 text-[10px] font-medium">{MOCK.city.split(' ').slice(-2).join(' ')}</p>
         <p className="text-white text-4xl font-thin leading-none">{MOCK.temp}°</p>
         <Cloud className="w-8 h-8 text-white/60 my-1"/>
@@ -40,7 +40,7 @@ export function WeatherWidget({ size }: Props) {
   }
 
   return (
-    <div className="w-full h-full flex flex-col bg-gradient-to-br from-blue-500/80 to-cyan-400/80 backdrop-blur-md rounded-[20px] overflow-hidden p-4">
+    <div className="w-full h-full flex flex-col bg-gradient-to-br from-blue-500/35 to-cyan-400/25 p-4">
       <div className="flex items-start justify-between mb-auto">
         <div>
           <p className="text-white/80 text-[11px]">{MOCK.city}</p>

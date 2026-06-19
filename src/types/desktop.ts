@@ -20,6 +20,8 @@ export interface WallpaperConfig {
   url: string;
   thumbnail: string;
   themes?: string[]; // which OS themes this looks good on; empty = all
+  isLive?: boolean;
+  videoUrl?: string;
 }
 
 export interface DesktopConfig {

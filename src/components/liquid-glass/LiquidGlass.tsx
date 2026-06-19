@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { useGlassEnabled } from '@/store';
 import { GlassShimmer } from './GlassShimmer';
 
-export type GlassVariant = 'dock' | 'menubar' | 'taskbar' | 'window' | 'panel';
+export type GlassVariant = 'dock' | 'menubar' | 'taskbar' | 'window' | 'panel' | 'widget';
 
 interface LiquidGlassProps {
   children?: React.ReactNode;
@@ -19,6 +19,16 @@ const VARIANT_RADIUS_VAR: Record<GlassVariant, string | null> = {
   taskbar: null,
   window:  'var(--radius-window)',
   panel:   'var(--radius-card)',
+  widget:  'var(--radius-card)',
+};
+
+const VARIANT_SHADOW_CLS: Record<GlassVariant, string> = {
+  dock:    'shadow-[0_8px_24px_rgba(0,0,0,0.15)]',
+  menubar: 'shadow-sm',
+  taskbar: 'shadow-none',
+  window:  'shadow-[0_16px_48px_rgba(0,0,0,0.3)]',
+  panel:   'shadow-[0_8px_32px_rgba(0,0,0,0.25)]',
+  widget:  'shadow-none',
 };
 
 export function LiquidGlass({
@@ -31,14 +41,15 @@ export function LiquidGlass({
   const isGlass = forceGlass !== undefined ? forceGlass : globalGlass;
   const radiusVar = VARIANT_RADIUS_VAR[variant];
   const radiusStyle: React.CSSProperties = radiusVar ? { borderRadius: radiusVar } : {};
+  const shadowCls = VARIANT_SHADOW_CLS[variant];
 
   return (
     <div
       className={cn(
         'relative overflow-hidden',
         isGlass
-          ? 'backdrop-blur-2xl bg-white/25 dark:bg-white/10 border-white/40 dark:border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.25),0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.5)]'
-          : 'backdrop-blur-xl bg-white/25 dark:bg-black/35 border-white/30 dark:border-white/15',
+          ? cn('backdrop-blur-2xl bg-white/25 dark:bg-white/10 border-white/40 dark:border-white/20', shadowCls, 'inset_0_1px_0_rgba(255,255,255,0.5)')
+          : cn('backdrop-blur-xl bg-white/25 dark:bg-black/35 border-white/30 dark:border-white/15', shadowCls),
         'border',
         className
       )}

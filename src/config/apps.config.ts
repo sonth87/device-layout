@@ -166,7 +166,7 @@ export const APPS_CONFIG: AppConfig[] = [
   {
     id: 'settings',
     name: 'System Settings',
-    icon: 'lucide:Settings2',
+    icon: 'lucide:Settings',
     iconColor: ['#636366', '#48484a'],
     component: 'Settings',
     defaultSize: { width: 760, height: 520 },
@@ -319,6 +319,20 @@ export const APPS_CONFIG: AppConfig[] = [
         componentKey: 'ClockWidget',
       },
       {
+        id: 'clock-digital',
+        name: 'Digital Clock',
+        description: 'Modern digital time display',
+        sizes: ['small', 'medium'],
+        componentKey: 'ClockDigitalWidget',
+      },
+      {
+        id: 'clock-flip',
+        name: 'Retro Flip Clock',
+        description: 'Retro flip-card clock display',
+        sizes: ['small', 'medium'],
+        componentKey: 'ClockFlipWidget',
+      },
+      {
         id: 'clock-world',
         name: 'World Clock',
         description: 'Clock with city time list',
@@ -384,9 +398,16 @@ export const APPS_CONFIG: AppConfig[] = [
     mobileFullscreen: true,
     widgets: [
       {
+        id: 'calendar-today',
+        name: 'Calendar Today',
+        description: 'Today date card widget',
+        sizes: ['small'],
+        componentKey: 'CalendarTodayWidget',
+      },
+      {
         id: 'calendar-mini',
-        name: 'Calendar',
-        description: 'Month view mini calendar',
+        name: 'Calendar Month',
+        description: 'Month view calendar',
         sizes: ['small', 'medium', 'large'],
         componentKey: 'CalendarWidget',
       },

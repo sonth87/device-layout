@@ -7,6 +7,7 @@ import { useStore } from '@/store';
 import { WIDGET_SIZE_PX } from '@/types/widget';
 import { getWidgetDef } from '@/config/widgets.config';
 import { WidgetRenderer } from './WidgetRenderer';
+import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
 import type { WidgetInstance } from '@/types/widget';
 
 interface Props {
@@ -72,7 +73,7 @@ export function WidgetCard({ instance }: Props) {
   return (
     <motion.div
       className="absolute"
-      style={{ left: pos.x, top: pos.y, width: w, height: h, zIndex: 5 }}
+      style={{ left: pos.x, top: pos.y, width: w, height: h, zIndex: isEditing ? 1001 : 5 }}
       animate={isEditing ? { rotate: [-0.8, 0.8, -0.8] } : { rotate: 0 }}
       transition={isEditing
         ? { repeat: Infinity, duration: 0.25, ease: 'easeInOut' }
@@ -91,7 +92,9 @@ export function WidgetCard({ instance }: Props) {
         </button>
       )}
       <div className="w-full h-full cursor-grab active:cursor-grabbing">
-        <WidgetRenderer componentKey={def.componentKey} size={instance.size} />
+        <LiquidGlass variant="widget" className="w-full h-full">
+          <WidgetRenderer componentKey={def.componentKey} size={instance.size} />
+        </LiquidGlass>
       </div>
     </motion.div>
   );
