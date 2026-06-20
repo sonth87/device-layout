@@ -55,14 +55,15 @@ export function ThemeProvider() {
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = (e: MediaQueryListEvent) => resolveColorScheme(e.matches);
+    const handler = () => {
+      resolveColorScheme(mq.matches);
+    };
+
+    // Initialize and resolve based on current setting and system preference
     resolveColorScheme(mq.matches);
+
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
-  }, [resolveColorScheme]);
-
-  useEffect(() => {
-    if (colorScheme !== 'auto') resolveColorScheme(colorScheme === 'dark');
   }, [colorScheme, resolveColorScheme]);
 
   useEffect(() => {
