@@ -8,6 +8,7 @@ export interface DesktopSlice {
   dockAppIds: string[];
   useStacks: boolean;
   stackGroupBy: StackGroupBy;
+  language: 'en' | 'vi' | 'ja' | 'ko' | 'zh' | 'th';
 
   setWallpaper: (id: string) => void;
   moveIcon: (appId: string, x: number, y: number) => void;
@@ -17,6 +18,7 @@ export interface DesktopSlice {
   reorderDock: (appIds: string[]) => void;
   toggleStacks: () => void;
   setStackGroupBy: (by: StackGroupBy) => void;
+  setLanguage: (lang: 'en' | 'vi' | 'ja' | 'ko' | 'zh' | 'th') => void;
 }
 
 type S = DesktopSlice;
@@ -29,6 +31,7 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
     dockAppIds: DEFAULT_DOCK_APPS,
     useStacks: false,
     stackGroupBy: 'kind',
+    language: 'en',
 
     setWallpaper(id) {
       set((state) => { state.wallpaperId = id; });
@@ -72,6 +75,10 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
 
     setStackGroupBy(by) {
       set((state) => { state.stackGroupBy = by; });
+    },
+
+    setLanguage(lang) {
+      set((state) => { state.language = lang; });
     },
   };
 }

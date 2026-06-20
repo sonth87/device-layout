@@ -7,6 +7,7 @@ import { AppIconImage } from '@/components/shared/AppIconImage';
 import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
 import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface AppSwitcherProps {
   open: boolean;
@@ -18,6 +19,7 @@ export function AppSwitcher({ open, onClose }: AppSwitcherProps) {
   const runningAppIds = useStore((s) => s.runningAppIds);
   const launchApp = useStore((s) => s.launchApp);
   const dockAppIds = useStore((s) => s.dockAppIds);
+  const { getAppName } = useTranslation();
 
   // All pinned + running apps
   const switcherAppIds = Array.from(new Set([...runningAppIds, ...dockAppIds]));
@@ -95,14 +97,14 @@ export function AppSwitcher({ open, onClose }: AppSwitcherProps) {
                     'text-[11px] font-medium truncate max-w-[60px] text-center',
                     i === selectedIdx ? 'text-white' : 'text-white/70'
                   )}>
-                    {app.name}
+                    {getAppName(app.id, app.name)}
                   </span>
                 </button>
               ))}
             </div>
             {switcherApps[selectedIdx] && (
               <p className="text-center text-white/80 text-xs mt-1">
-                {switcherApps[selectedIdx].name}
+                {getAppName(switcherApps[selectedIdx].id, switcherApps[selectedIdx].name)}
               </p>
             )}
           </LiquidGlass>

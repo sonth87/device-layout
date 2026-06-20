@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { useStore } from '@/store';
 import { useTheme } from '@/hooks/useTheme';
 import { useViewportSize } from '@/hooks/useResizeObserver';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface WindowChromeProps {
   windowId: string;
@@ -27,6 +28,7 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
   const { config } = useTheme();
   const viewport = useViewportSize();
   const [hovering, setHovering] = useState(false);
+  const { getAppName } = useTranslation();
 
   if (!win) return null;
 
@@ -101,7 +103,7 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
           'text-[13px] font-medium truncate max-w-[220px]',
           win.isFocused ? 'text-black/75 dark:text-white/80' : 'text-black/35 dark:text-white/35'
         )}>
-          {win.title}
+          {getAppName(win.appId, win.title)}
         </span>
       </div>
 
@@ -118,6 +120,7 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
   const toggleMaximize = useStore((s) => s.toggleMaximize);
   const { config } = useTheme();
   const viewport = useViewportSize();
+  const { getAppName } = useTranslation();
 
   if (!win) return null;
 
@@ -141,7 +144,7 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
       onDoubleClick={() => toggleMaximize(windowId, viewportRect)}
     >
       <span className="flex-1 text-[12px] font-medium truncate text-black/75 dark:text-white/75 pl-3">
-        {win.title}
+        {getAppName(win.appId, win.title)}
       </span>
       <div className="flex items-center h-full" onPointerDown={(e) => e.stopPropagation()}>
         <button

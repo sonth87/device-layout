@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { AppIconImage } from '@/components/shared/AppIconImage';
 import type { AppConfig } from '@/types/app';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface DockItemProps {
   appConfig: AppConfig;
@@ -25,6 +26,8 @@ export const DOCK_ITEM_HEIGHT = BASE_SIZE + 6;
 export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }: DockItemProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [bouncing, setBouncing] = useState(false);
+  const { getAppName } = useTranslation();
+  const displayName = getAppName(appConfig.id, appConfig.name);
 
   // Magnification: map cursor distance → icon size
   const distance = useTransform(mouseX, (mx) => {
@@ -69,7 +72,7 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }:
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               onClick={handleClick}
               whileTap={{ scale: 0.88 }}
-              aria-label={appConfig.name}
+              aria-label={displayName}
             >
               <AppIconImage
                 appConfig={appConfig}
@@ -113,7 +116,7 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }:
               className="absolute inset-x-0 top-0 h-px pointer-events-none"
               style={{ background: 'linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.85) 50%, transparent 95%)' }}
             />
-            <span className="relative z-10">{appConfig.name}</span>
+            <span className="relative z-10">{displayName}</span>
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>

@@ -7,6 +7,7 @@ import { useStore } from '@/store';
 import { AppIconImage } from '@/components/shared/AppIconImage';
 import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface AppDrawerProps {
   open: boolean;
@@ -17,10 +18,11 @@ interface AppDrawerProps {
 export function AndroidAppDrawer({ open, onClose, onOpenApp }: AppDrawerProps) {
   const [search, setSearch] = useState('');
   const apps = useStore((s) => s.apps);
+  const { t, getAppName } = useTranslation();
 
   const allApps = Object.values(apps).filter((a) => !a.disabled) as AppConfig[];
   const filtered = search
-    ? allApps.filter((a) => a.name.toLowerCase().includes(search.toLowerCase()))
+    ? allApps.filter((a) => getAppName(a.id, a.name).toLowerCase().includes(search.toLowerCase()))
     : allApps;
 
   const handle = (app: AppConfig) => { onOpenApp(app); onClose(); };
@@ -57,7 +59,7 @@ export function AndroidAppDrawer({ open, onClose, onOpenApp }: AppDrawerProps) {
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search apps"
+                  placeholder={t.search}
                   className="flex-1 bg-transparent text-[13px] text-white placeholder:text-white/40 outline-none"
                 />
                 {search && <button onClick={() => setSearch('')}><X className="w-3.5 h-3.5 text-white/40" /></button>}
@@ -77,7 +79,7 @@ export function AndroidAppDrawer({ open, onClose, onOpenApp }: AppDrawerProps) {
                       <AppIconImage appConfig={app} size={56} />
                     </div>
                     <span className="text-white/80 text-[10px] text-center leading-tight max-w-[60px] truncate">
-                      {app.name}
+                      {getAppName(app.id, app.name)}
                     </span>
                   </button>
                 ))}

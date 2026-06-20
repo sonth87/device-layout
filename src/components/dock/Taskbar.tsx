@@ -9,6 +9,7 @@ import { MenuBarClock } from '@/components/menubar/MenuBarClock';
 import { StartMenu } from '@/components/windows/StartMenu';
 import { SystemTray } from '@/components/windows/SystemTray';
 import type { AppConfig } from '@/types/app';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface TaskbarProps {
   onOpenApp: (app: AppConfig) => void;
@@ -22,6 +23,7 @@ export function Taskbar({ onOpenApp }: TaskbarProps) {
   const apps = useStore((s) => s.apps);
   const runningAppIds = useStore((s) => s.runningAppIds);
   const launchApp = useStore((s) => s.launchApp);
+  const { t, getAppName } = useTranslation();
 
   const dockApps = dockAppIds.map((id) => apps[id]).filter(Boolean) as AppConfig[];
   const handleClick = (app: AppConfig) => {
@@ -70,7 +72,7 @@ export function Taskbar({ onOpenApp }: TaskbarProps) {
           </button>
           <button className="px-2 h-8 flex items-center gap-1.5 rounded hover:bg-white/10 transition-colors text-xs text-white/60">
             <Search className="w-3.5 h-3.5" />
-            <span>Search</span>
+            <span>{t.search}</span>
           </button>
         </div>
 
@@ -78,6 +80,7 @@ export function Taskbar({ onOpenApp }: TaskbarProps) {
         <div className="flex items-center gap-1">
           {dockApps.map((app) => {
             const isRunning = runningAppIds.includes(app.id);
+            const displayName = getAppName(app.id, app.name);
             return (
               <button
                 key={app.id}
@@ -87,14 +90,14 @@ export function Taskbar({ onOpenApp }: TaskbarProps) {
                   'hover:bg-white/10 active:bg-white/20',
                   isRunning && 'bg-white/10'
                 )}
-                aria-label={app.name}
-                title={app.name}
+                aria-label={displayName}
+                title={displayName}
               >
                 {app.icon.startsWith('/') ? (
-                  <Image src={app.icon} alt={app.name} width={28} height={28} className="object-contain" />
+                  <Image src={app.icon} alt={displayName} width={28} height={28} className="object-contain" />
                 ) : (
                   <div className="w-7 h-7 rounded-md bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">{app.name.charAt(0)}</span>
+                    <span className="text-white text-xs font-bold">{displayName.charAt(0)}</span>
                   </div>
                 )}
                 {isRunning && (

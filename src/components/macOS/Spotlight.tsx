@@ -8,6 +8,7 @@ import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
 import { AppIconImage } from '@/components/shared/AppIconImage';
 import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface SpotlightProps {
   open: boolean;
@@ -28,6 +29,7 @@ export function Spotlight({ open, onClose }: SpotlightProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const apps = useStore((s) => s.apps);
   const launchApp = useStore((s) => s.launchApp);
+  const { t, getAppName } = useTranslation();
 
   // Focus input when opened
   useEffect(() => {
@@ -49,16 +51,16 @@ export function Spotlight({ open, onClose }: SpotlightProps) {
 
   const results: Result[] = query.trim()
     ? appList
-        .filter((a) => a.name.toLowerCase().includes(query.toLowerCase()))
+        .filter((a) => getAppName(a.id, a.name).toLowerCase().includes(query.toLowerCase()))
         .map((a) => ({
           type: 'app' as const,
-          label: a.name,
+          label: getAppName(a.id, a.name),
           subtitle: a.category ?? 'Application',
           app: a,
         }))
     : appList.slice(0, 8).map((a) => ({
         type: 'app' as const,
-        label: a.name,
+        label: getAppName(a.id, a.name),
         subtitle: 'Application',
         app: a,
       }));
@@ -102,7 +104,7 @@ export function Spotlight({ open, onClose }: SpotlightProps) {
                   value={query}
                   onChange={(e) => { setQuery(e.target.value); setSelectedIdx(0); }}
                   onKeyDown={handleKeyDown}
-                  placeholder="Spotlight Search"
+                  placeholder={t.search}
                   className="flex-1 bg-transparent text-[17px] font-light outline-none placeholder:text-black/30 dark:placeholder:text-white/30"
                 />
                 {query && (
@@ -117,7 +119,7 @@ export function Spotlight({ open, onClose }: SpotlightProps) {
                 <div className="max-h-80 overflow-y-auto py-1">
                   {results.length > 0 && (
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-black/40 dark:text-white/30 px-4 pt-2 pb-1">
-                      {query ? 'Results' : 'Applications'}
+                      {query ? t.search : t.applications}
                     </p>
                   )}
                   {results.map((r, i) => (

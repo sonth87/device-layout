@@ -3,28 +3,23 @@
 import { useStore } from '@/store';
 import { cn } from '@/lib/utils';
 import { AppIconImage } from '@/components/shared/AppIconImage';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export function SettingsDesktopDock() {
-  const dockAppIds = useStore((s) => s.dockAppIds);
-  const apps = useStore((s) => s.apps);
-  const pinToDock = useStore((s) => s.pinToDock);
+  const dockAppIds  = useStore((s) => s.dockAppIds);
+  const apps        = useStore((s) => s.apps);
+  const pinToDock   = useStore((s) => s.pinToDock);
   const unpinFromDock = useStore((s) => s.unpinFromDock);
+  const { t } = useTranslation();
 
   const allApps = Object.values(apps).filter((a) => !a.disabled);
 
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-semibold mb-1">Desktop &amp; Dock</h2>
-        <p className="text-sm text-black/50 dark:text-white/50 mb-5">
-          Manage which apps appear in the Dock.
-        </p>
-      </div>
-
-      <div>
-        <h3 className="text-sm font-semibold mb-3">Dock Apps</h3>
+        <h3 className="text-sm font-semibold mb-1">{t.dockApps}</h3>
         <p className="text-xs text-black/40 dark:text-white/40 mb-3">
-          Toggle apps to add or remove them from the Dock.
+          {t.dockAppsDesc}
         </p>
         <div className="space-y-1.5">
           {allApps.map((app) => {

@@ -7,6 +7,7 @@ import { useStore } from '@/store';
 import { AppIconImage } from '@/components/shared/AppIconImage';
 import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface StartMenuProps {
   open: boolean;
@@ -24,11 +25,12 @@ export function StartMenu({ open, onClose, onOpenApp }: StartMenuProps) {
   const [search, setSearch] = useState('');
   const apps = useStore((s) => s.apps);
   const dockAppIds = useStore((s) => s.dockAppIds);
+  const { t, getAppName } = useTranslation();
 
   const pinnedApps = dockAppIds.map((id) => apps[id]).filter(Boolean) as AppConfig[];
   const allApps = Object.values(apps).filter((a) => !a.disabled) as AppConfig[];
   const filteredApps = search
-    ? allApps.filter((a) => a.name.toLowerCase().includes(search.toLowerCase()))
+    ? allApps.filter((a) => getAppName(a.id, a.name).toLowerCase().includes(search.toLowerCase()))
     : [];
 
   const handleApp = (app: AppConfig) => {
@@ -83,7 +85,7 @@ export function StartMenu({ open, onClose, onOpenApp }: StartMenuProps) {
                     >
                       <AppIconImage appConfig={app} size={32} />
                       <div>
-                        <p className="text-[13px] text-white font-medium">{app.name}</p>
+                        <p className="text-[13px] text-white font-medium">{getAppName(app.id, app.name)}</p>
                         <p className="text-[11px] text-white/40">{app.category ?? 'Application'}</p>
                       </div>
                     </button>
@@ -106,7 +108,7 @@ export function StartMenu({ open, onClose, onOpenApp }: StartMenuProps) {
                         className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl hover:bg-white/10 transition-colors"
                       >
                         <AppIconImage appConfig={app} size={36} />
-                        <span className="text-[10px] text-white/80 truncate w-full text-center leading-tight">{app.name}</span>
+                        <span className="text-[10px] text-white/80 truncate w-full text-center leading-tight">{getAppName(app.id, app.name)}</span>
                       </button>
                     ))}
                   </div>

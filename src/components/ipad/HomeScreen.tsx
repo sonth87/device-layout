@@ -7,6 +7,7 @@ import { AppIconImage } from '@/components/shared/AppIconImage';
 import { useSwipeGesture } from '@/hooks/useSwipeGesture';
 import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface IPadHomeScreenProps {
   onOpenApp: (app: AppConfig) => void;
@@ -21,6 +22,7 @@ const DOCK_COUNT = 6;
 
 export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
   const apps = useStore((s) => s.apps);
+  const { getAppName } = useTranslation();
   const [currentPage, setCurrentPage] = useState(0);
   const [jiggling, setJiggling] = useState(false);
 
@@ -85,7 +87,7 @@ export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
                   )}
                 </motion.div>
                 <span className="text-white text-xs font-medium text-center leading-tight drop-shadow-md max-w-[72px] truncate">
-                  {app.name}
+                  {getAppName(app.id, app.name)}
                 </span>
               </button>
             ))}
@@ -127,7 +129,7 @@ export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
               className="flex flex-col items-center gap-1.5"
             >
               <AppIconImage appConfig={app} size={64} />
-              <span className="text-white/80 text-[10px] font-medium">{app.name}</span>
+              <span className="text-white/80 text-[10px] font-medium">{getAppName(app.id, app.name)}</span>
             </button>
           ))}
         </div>

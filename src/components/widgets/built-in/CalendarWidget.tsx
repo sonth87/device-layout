@@ -3,12 +3,19 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useStore } from '@/store';
 import type { WidgetSize } from '@/types/widget';
 
 interface Props { size: WidgetSize }
 
-const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const localization = {
+  en: { upcoming: 'UPCOMING', schedule: "Today's Schedule" },
+  vi: { upcoming: 'SẮP TỚI', schedule: 'Lịch trình hôm nay' },
+  ja: { upcoming: '今後の予定', schedule: '今日のスケジュール' },
+  ko: { upcoming: '예정된 일정', schedule: '오늘의 일정' },
+  zh: { upcoming: '即将到来', schedule: '今日日程' },
+  th: { upcoming: 'เร็วๆ นี้', schedule: 'กำหนดการวันนี้' },
+};
 
 function getMondayFirstMonthCells(year: number, month: number) {
   const firstDay = new Date(year, month, 1).getDay(); // 0 = Sun, 1 = Mon, ...
@@ -52,17 +59,20 @@ function getMondayFirstMonthCells(year: number, month: number) {
 
 export function CalendarTodayWidget() {
   const today = new Date();
+  const language = useStore((s) => s.language) || 'en';
+  const monthName = today.toLocaleDateString(language, { month: 'short' });
+  const weekdayName = today.toLocaleDateString(language, { weekday: 'long' });
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center select-none p-4">
       <p className="text-red-500 dark:text-red-400 text-[11px] font-bold uppercase tracking-widest leading-none">
-        {MONTHS[today.getMonth()].slice(0, 3)}
+        {monthName}
       </p>
       <p className="text-zinc-800 dark:text-white text-5xl font-light leading-none mt-1.5">
         {today.getDate()}
       </p>
       <p className="text-zinc-500 dark:text-zinc-400 text-[11px] font-medium mt-2.5">
-        {today.toLocaleDateString([], { weekday: 'long' })}
+        {weekdayName}
       </p>
     </div>
   );
@@ -70,6 +80,7 @@ export function CalendarTodayWidget() {
 
 export function CalendarWidget({ size }: Props) {
   const today = new Date();
+  const language = useStore((s) => s.language) || 'en';
   const [viewYear, setViewYear] = useState(today.getFullYear());
   const [viewMonth, setViewMonth] = useState(today.getMonth());
 
@@ -77,6 +88,17 @@ export function CalendarWidget({ size }: Props) {
   const next = () => { if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); } else setViewMonth(m => m + 1); };
 
   const cells = getMondayFirstMonthCells(viewYear, viewMonth);
+
+  // Generate localized day headers starting on Monday (2026-06-15 is a Monday)
+  const dayHeaders = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(2026, 5, 15 + i);
+    return date.toLocaleDateString(language, { weekday: 'narrow' });
+  });
+
+  const loc = localization[language as keyof typeof localization] || localization.en;
+
+  const currentMonthShort = new Date(viewYear, viewMonth, 1).toLocaleDateString(language, { month: 'short' });
+  const currentMonthLong = new Date(viewYear, viewMonth, 1).toLocaleDateString(language, { month: 'long' });
 
   // Helper render for the month grid cells
   const renderGrid = (cellTextSize: string, circleSize: string) => (
@@ -113,13 +135,13 @@ export function CalendarWidget({ size }: Props) {
         {/* Header */}
         <div className="flex items-center justify-center mb-1 shrink-0">
           <p className="text-zinc-800 dark:text-zinc-200 text-[10px] font-bold tracking-wider uppercase">
-            {MONTHS[viewMonth].slice(0, 3)} {viewYear}
+            {currentMonthShort} {viewYear}
           </p>
         </div>
 
         {/* Day headers */}
         <div className="grid grid-cols-7 w-full text-center shrink-0">
-          {DAYS.map((d, i) => (
+          {dayHeaders.map((d, i) => (
             <div key={i} className="text-[8px] font-bold text-zinc-400 dark:text-zinc-500 py-0.5">
               {d}
             </div>
@@ -140,7 +162,7 @@ export function CalendarWidget({ size }: Props) {
         <div className="w-[40%] pr-3 border-r border-zinc-200 dark:border-zinc-850 flex flex-col justify-between shrink-0">
           <div>
             <p className="text-red-500 dark:text-red-400 text-[9px] font-bold uppercase tracking-widest leading-none">
-              {today.toLocaleDateString([], { weekday: 'long' })}
+              {today.toLocaleDateString(language, { weekday: 'long' })}
             </p>
             <p className="text-zinc-800 dark:text-white text-[40px] font-light leading-none mt-1.5">
               {today.getDate()}
@@ -150,7 +172,7 @@ export function CalendarWidget({ size }: Props) {
           {/* Agenda items for widgets */}
           <div className="mt-2 text-[10px]">
             <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-1.5" />
-            <p className="text-zinc-400 dark:text-zinc-500 font-bold uppercase tracking-wider text-[8px]">UPCOMING</p>
+            <p className="text-zinc-400 dark:text-zinc-500 font-bold uppercase tracking-wider text-[8px]">{loc.upcoming}</p>
             <div className="flex items-center gap-1.5 mt-1 text-zinc-700 dark:text-zinc-300">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
               <span className="truncate font-semibold text-zinc-800 dark:text-zinc-250">Weekly Sync</span>
@@ -164,7 +186,7 @@ export function CalendarWidget({ size }: Props) {
           {/* Header */}
           <div className="flex items-center justify-between mb-1 shrink-0">
             <p className="text-zinc-800 dark:text-white text-[11px] font-bold">
-              {MONTHS[viewMonth]} {viewYear}
+              {currentMonthLong} {viewYear}
             </p>
             <div className="flex gap-0.5">
               <button onClick={prev} className="p-0.5 rounded hover:bg-black/5 dark:hover:bg-white/10 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-white transition-colors">
@@ -178,7 +200,7 @@ export function CalendarWidget({ size }: Props) {
 
           {/* Day headers */}
           <div className="grid grid-cols-7 w-full text-center shrink-0">
-            {DAYS.map((d, i) => (
+            {dayHeaders.map((d, i) => (
               <div key={i} className="text-[8px] font-bold text-zinc-400 dark:text-zinc-500 py-0.5">
                 {d}
               </div>
@@ -200,7 +222,7 @@ export function CalendarWidget({ size }: Props) {
         {/* Header */}
         <div className="flex items-center justify-between mb-1.5 shrink-0">
           <p className="text-zinc-800 dark:text-white text-[12px] font-bold">
-            {MONTHS[viewMonth]} {viewYear}
+            {currentMonthLong} {viewYear}
           </p>
           <div className="flex gap-0.5">
             <button onClick={prev} className="p-0.5 rounded hover:bg-black/5 dark:hover:bg-white/10 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-white transition-colors">
@@ -214,7 +236,7 @@ export function CalendarWidget({ size }: Props) {
 
         {/* Day headers */}
         <div className="grid grid-cols-7 w-full text-center shrink-0">
-          {DAYS.map((d, i) => (
+          {dayHeaders.map((d, i) => (
             <div key={i} className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 py-0.5">
               {d}
             </div>
@@ -228,7 +250,7 @@ export function CalendarWidget({ size }: Props) {
       {/* Bottom half: Detailed events agenda */}
       <div className="flex-1 pt-3 flex flex-col justify-between min-h-0">
         <p className="text-zinc-400 dark:text-zinc-500 text-[9px] font-bold uppercase tracking-widest leading-none shrink-0 mb-1">
-          Today's Schedule
+          {loc.schedule}
         </p>
 
         <div className="flex flex-col gap-1.5 flex-1 min-h-0 overflow-y-auto mt-1">

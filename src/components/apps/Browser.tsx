@@ -1,6 +1,34 @@
 "use client";
 
 import { useState, useRef, FormEvent } from "react";
+import { useAppTranslation } from "@/hooks/useAppTranslation";
+
+const BROWSER_LOCALE = {
+  en: {
+    placeholder: "Search or enter URL...",
+    openInNewTab: "Open in new tab",
+  },
+  vi: {
+    placeholder: "Tìm kiếm hoặc nhập URL...",
+    openInNewTab: "Mở trong tab mới",
+  },
+  ja: {
+    placeholder: "検索またはURLを入力...",
+    openInNewTab: "新しいタブで開く",
+  },
+  ko: {
+    placeholder: "검색 또는 URL 입력...",
+    openInNewTab: "새 탭에서 열기",
+  },
+  zh: {
+    placeholder: "搜索或输入网址...",
+    openInNewTab: "在新标签页中打开",
+  },
+  th: {
+    placeholder: "ค้นหาหรือป้อน URL...",
+    openInNewTab: "เปิดในแท็บใหม่",
+  },
+} as const;
 import {
   ArrowLeft,
   ArrowRight,
@@ -13,6 +41,7 @@ import type { AppContentProps } from "./AppRegistry";
 import { useStore } from "@/store";
 
 export function Browser({ appId }: AppContentProps) {
+  const { t } = useAppTranslation(appId, BROWSER_LOCALE);
   const appConfig = useStore((s) => s.apps[appId]);
   const initialUrl = appConfig?.iframeUrl ?? "https://dantri.com.vn";
 
@@ -151,7 +180,7 @@ export function Browser({ appId }: AppContentProps) {
             value={inputUrl}
             onChange={(e) => setInputUrl(e.target.value)}
             className="flex-1 bg-transparent text-xs outline-none"
-            placeholder="Search or enter URL..."
+            placeholder={t.placeholder}
           />
           {inputUrl && (
             <button type="button" onClick={() => setInputUrl("")}>
@@ -163,7 +192,7 @@ export function Browser({ appId }: AppContentProps) {
         <button
           className="p-1 rounded hover:bg-black/10 dark:hover:bg-white/10 text-black/50 dark:text-white/50"
           onClick={openInNewTab}
-          title="Open in new tab"
+          title={t.openInNewTab}
         >
           <ExternalLink className="w-3.5 h-3.5" />
         </button>

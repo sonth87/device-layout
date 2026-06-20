@@ -1,8 +1,9 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { useGlassEnabled } from '@/store';
+import { useTheme } from '@/hooks/useTheme';
 import { GlassShimmer } from './GlassShimmer';
+import { useLiquidGlass } from './useLiquidGlass';
 
 export type GlassVariant = 'dock' | 'menubar' | 'taskbar' | 'window' | 'panel' | 'widget';
 
@@ -37,37 +38,41 @@ export function LiquidGlass({
   variant = 'panel',
   forceGlass,
 }: LiquidGlassProps) {
-  const globalGlass = useGlassEnabled();
-  const isGlass = forceGlass !== undefined ? forceGlass : globalGlass;
+  const { isGlass: themeGlass } = useTheme();
+  const isGlass = forceGlass !== undefined ? forceGlass : themeGlass;
   const radiusVar = VARIANT_RADIUS_VAR[variant];
+
   const radiusStyle: React.CSSProperties = radiusVar ? { borderRadius: radiusVar } : {};
   const shadowCls = VARIANT_SHADOW_CLS[variant];
 
+  // Dynamic glass maps generator hook
+  const { elementRef, maps } = useLiquidGlass();
+
+  const filterStr = (isGlass && maps)
+    ? `url(#${maps.filterId}) blur(24px)`
+    : isGlass
+    ? 'url(#lg-distort) blur(24px)'
+    : 'blur(20px)';
+
   return (
     <div
+      ref={elementRef}
       className={cn(
         'relative overflow-hidden',
         isGlass
-          ? cn('backdrop-blur-2xl bg-white/25 dark:bg-white/10 border-white/40 dark:border-white/20', shadowCls, 'inset_0_1px_0_rgba(255,255,255,0.5)')
-          : cn('backdrop-blur-xl bg-white/25 dark:bg-black/35 border-white/30 dark:border-white/15', shadowCls),
+          ? cn('bg-white/12 dark:bg-white/5 border-white/30 dark:border-white/15', shadowCls, 'inset_0_1px_0_rgba(255,255,255,0.4)')
+          : cn('bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10', shadowCls),
         'border',
         className
       )}
-      style={radiusStyle}
+      style={{
+        ...radiusStyle,
+        backdropFilter: filterStr,
+        WebkitBackdropFilter: filterStr,
+      }}
     >
-      {/* ── SVG distortion layer (absolute, behind content) ── */}
-      {isGlass && (
-        <div
-          aria-hidden
-          className={cn('absolute inset-0 pointer-events-none overflow-hidden')}
-          style={{ ...radiusStyle, filter: 'url(#lg-distort)', opacity: 0.4 }}
-        >
-          <div className="absolute inset-0 bg-white/30 dark:bg-white/10" />
-        </div>
-      )}
-
       {/* ── Top specular highlight ── */}
-      {isGlass && (
+      {isGlass && variant !== 'menubar' && variant !== 'taskbar' && (
         <div
           aria-hidden
           className="absolute inset-x-0 top-0 h-[1.5px] pointer-events-none z-10"
@@ -78,7 +83,7 @@ export function LiquidGlass({
       )}
 
       {/* ── Left edge glow ── */}
-      {isGlass && (
+      {isGlass && variant !== 'menubar' && variant !== 'taskbar' && (
         <div
           aria-hidden
           className="absolute inset-y-0 left-0 w-px pointer-events-none z-10"
@@ -95,6 +100,29 @@ export function LiquidGlass({
       {isGlass && (
         <GlassShimmer className="absolute inset-0 w-full h-full z-30 opacity-25 pointer-events-none" />
       )}
+
+      {/* ── Inline SVG filter definition for precise refraction ── */}
+      {isGlass && maps && (
+        <svg
+          aria-hidden
+          style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden', pointerEvents: 'none' }}
+        >
+          <filter id={maps.filterId} colorInterpolationFilters="sRGB">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="0.2" result="blurred_source" />
+            <feImage href={maps.displacementUrl} x="0" y="0" width={maps.width} height={maps.height} result="displacement_map" />
+            <feDisplacementMap in="blurred_source" in2="displacement_map" scale={80} xChannelSelector="R" yChannelSelector="G" result="displaced" />
+            <feColorMatrix in="displaced" type="saturate" result="displaced_saturated" values="6" />
+            <feImage href={maps.specularUrl} x="0" y="0" width={maps.width} height={maps.height} result="specular_layer" />
+            <feComposite in="displaced_saturated" in2="specular_layer" operator="in" result="specular_saturated" />
+            <feComponentTransfer in="specular_layer" result="specular_faded">
+              <feFuncA type="linear" slope="0.3" />
+            </feComponentTransfer>
+            <feBlend in="specular_saturated" in2="displaced" mode="normal" result="withSaturation" />
+            <feBlend in="specular_faded" in2="withSaturation" mode="normal" />
+          </filter>
+        </svg>
+      )}
     </div>
   );
 }
+

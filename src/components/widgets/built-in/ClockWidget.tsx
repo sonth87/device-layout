@@ -2,10 +2,65 @@
 
 import { useState, useEffect } from 'react';
 import type { WidgetSize } from '@/types/widget';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Props { size: WidgetSize }
 
-function AnalogFace({ date, dim }: { date: Date; dim: number }) {
+const localeMap: Record<string, string> = {
+  en: 'en-US',
+  vi: 'vi-VN',
+  ja: 'ja-JP',
+  ko: 'ko-KR',
+  zh: 'zh-CN',
+  th: 'th-TH',
+};
+
+const WIDGET_CLOCK_LOCALE = {
+  en: {
+    flipTime: 'FLIP TIME',
+    currentTime: 'CURRENT TIME',
+    today: 'TODAY',
+    hours: 'HOURS',
+    minutes: 'MINUTES',
+  },
+  vi: {
+    flipTime: 'ĐỒNG HỒ LẬT',
+    currentTime: 'GIỜ HIỆN TẠI',
+    today: 'HÔM NAY',
+    hours: 'GIỜ',
+    minutes: 'PHÚT',
+  },
+  ja: {
+    flipTime: 'フリップ時計',
+    currentTime: '現在時刻',
+    today: '今日',
+    hours: '時',
+    minutes: '分',
+  },
+  ko: {
+    flipTime: '플립 시계',
+    currentTime: '현재 시간',
+    today: '오늘',
+    hours: '시간',
+    minutes: '분',
+  },
+  zh: {
+    flipTime: '翻页时间',
+    currentTime: '当前时间',
+    today: '今天',
+    hours: '时',
+    minutes: '分',
+  },
+  th: {
+    flipTime: 'เวลาพับ',
+    currentTime: 'เวลาปัจจุบัน',
+    today: 'วันนี้',
+    hours: 'ชั่วโมง',
+    minutes: 'นาที',
+  },
+} as const;
+
+function AnalogFace({ date, dim, forceDark = false }: { date: Date; dim: number; forceDark?: boolean }) {
   const s = date.getSeconds();
   const m = date.getMinutes();
   const h = date.getHours() % 12;
@@ -20,41 +75,103 @@ function AnalogFace({ date, dim }: { date: Date; dim: number }) {
 
   return (
     <svg viewBox="0 0 200 200" style={{ width: dim, height: dim }}>
-      <circle cx={cx} cy={cy} r="95" fill="rgba(0,0,0,0.55)" stroke="rgba(255,255,255,0.12)" strokeWidth="2"/>
+      {/* Face circle: white/translucent in light mode, dark/translucent in dark mode */}
+      <circle
+        cx={cx}
+        cy={cy}
+        r="95"
+        className={forceDark ? "fill-black/55 stroke-white/12" : "fill-white/90 dark:fill-black/55 stroke-black/10 dark:stroke-white/12"}
+        strokeWidth="2"
+      />
       {Array.from({ length: 12 }, (_, i) => {
         const a = i * 30;
         const p1 = ray(a, 80); const p2 = ray(a, 90);
-        return <line key={i} x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round"/>;
+        return (
+          <line
+            key={i}
+            x1={p1.x}
+            y1={p1.y}
+            x2={p2.x}
+            y2={p2.y}
+            className={forceDark ? "stroke-white/40" : "stroke-black/40 dark:stroke-white/40"}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        );
       })}
-      {/* Hour */}
-      <line x1={cx} y1={cy} x2={ray(hourDeg, 50).x} y2={ray(hourDeg, 50).y} stroke="white" strokeWidth="5" strokeLinecap="round"/>
-      {/* Minute */}
-      <line x1={cx} y1={cy} x2={ray(minDeg, 68).x} y2={ray(minDeg, 68).y} stroke="white" strokeWidth="3" strokeLinecap="round"/>
-      {/* Second */}
+      {/* Hour hand */}
+      <line
+        x1={cx}
+        y1={cy}
+        x2={ray(hourDeg, 50).x}
+        y2={ray(hourDeg, 50).y}
+        className={forceDark ? "stroke-white" : "stroke-black dark:stroke-white"}
+        strokeWidth="5"
+        strokeLinecap="round"
+      />
+      {/* Minute hand */}
+      <line
+        x1={cx}
+        y1={cy}
+        x2={ray(minDeg, 68).x}
+        y2={ray(minDeg, 68).y}
+        className={forceDark ? "stroke-white" : "stroke-black dark:stroke-white"}
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      {/* Second hand */}
       <line x1={cx} y1={cy} x2={ray(secDeg, 72).x} y2={ray(secDeg, 72).y} stroke="#ff3b30" strokeWidth="1.5" strokeLinecap="round"/>
-      <circle cx={cx} cy={cy} r="4" fill="white"/>
+      <circle cx={cx} cy={cy} r="4" className={forceDark ? "fill-white" : "fill-black dark:fill-white"}/>
       <circle cx={cx} cy={cy} r="2" fill="#ff3b30"/>
     </svg>
   );
 }
 
 export function ClockWidget({ size }: Props) {
+  const { language } = useTranslation();
+  const currentLocale = localeMap[language] || 'en-US';
   const [now, setNow] = useState(new Date());
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const timeStr = now.toLocaleTimeString(currentLocale, { hour: '2-digit', minute: '2-digit' });
 
   return (
-    <div className="w-full h-full flex items-center justify-center bg-black/10">
+    <div className="w-full h-full flex items-center justify-center bg-transparent">
       <AnalogFace date={now} dim={size === 'small' ? 140 : 150} />
+      {size !== 'small' && (
+        <div className="flex flex-col ml-3">
+          <p className="text-zinc-800 dark:text-white text-2xl font-light tabular-nums">{timeStr}</p>
+          <p className="text-zinc-500 dark:text-white/50 text-[11px] mt-0.5">
+            {now.toLocaleDateString(currentLocale, { weekday: 'short', month: 'short', day: 'numeric' })}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function ClockDarkWidget({ size }: Props) {
+  const { language } = useTranslation();
+  const currentLocale = localeMap[language] || 'en-US';
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const timeStr = now.toLocaleTimeString(currentLocale, { hour: '2-digit', minute: '2-digit' });
+
+  return (
+    <div className="w-full h-full flex items-center justify-center bg-zinc-950/15 dark:bg-[#151518]/20">
+      <AnalogFace date={now} dim={size === 'small' ? 140 : 150} forceDark={true} />
       {size !== 'small' && (
         <div className="flex flex-col ml-3">
           <p className="text-white text-2xl font-light tabular-nums">{timeStr}</p>
           <p className="text-white/50 text-[11px] mt-0.5">
-            {now.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })}
+            {now.toLocaleDateString(currentLocale, { weekday: 'short', month: 'short', day: 'numeric' })}
           </p>
         </div>
       )}
@@ -69,6 +186,8 @@ const CITIES = [
 ];
 
 export function ClockWorldWidget({ size: _size }: Props) {
+  const { language } = useTranslation();
+  const currentLocale = localeMap[language] || 'en-US';
   const [now, setNow] = useState(new Date());
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
@@ -76,13 +195,13 @@ export function ClockWorldWidget({ size: _size }: Props) {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col justify-center gap-1.5 bg-black/10 px-4">
+    <div className="w-full h-full flex flex-col justify-center gap-1.5 bg-transparent px-4">
       {CITIES.map(({ city, tz }) => {
-        const t = new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', timeZone: tz }).format(now);
+        const t = new Intl.DateTimeFormat(currentLocale, { hour: '2-digit', minute: '2-digit', timeZone: tz }).format(now);
         return (
           <div key={city} className="flex items-center justify-between">
-            <p className="text-white/60 text-[12px]">{city}</p>
-            <p className="text-white text-[14px] font-medium tabular-nums">{t}</p>
+            <p className="text-zinc-500 dark:text-white/60 text-[12px]">{city}</p>
+            <p className="text-zinc-800 dark:text-white text-[14px] font-medium tabular-nums">{t}</p>
           </div>
         );
       })}
@@ -91,6 +210,8 @@ export function ClockWorldWidget({ size: _size }: Props) {
 }
 
 export function ClockDigitalWidget({ size }: Props) {
+  const { language } = useTranslation();
+  const currentLocale = localeMap[language] || 'en-US';
   const [now, setNow] = useState(new Date());
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
@@ -102,12 +223,16 @@ export function ClockDigitalWidget({ size }: Props) {
   const seconds = String(now.getSeconds()).padStart(2, '0');
   const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
 
-  const dayName = now.toLocaleDateString([], { weekday: 'long' });
-  const dateStr = now.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  const dayName = now.toLocaleDateString(currentLocale, { weekday: 'long' });
+  const dateStr = now.toLocaleDateString(currentLocale, { month: 'short', day: 'numeric' });
+
+  const secRatio = now.getSeconds() / 60;
+  const circ = 2 * Math.PI * 30; // radius is 30
+  const offset = circ * (1 - secRatio);
 
   if (size === 'small') {
     return (
-      <div className="w-full h-full flex flex-col justify-center p-4 select-none">
+      <div className="w-full h-full flex flex-col justify-center p-4 bg-transparent select-none">
         <p className="text-red-500 dark:text-red-400 text-[10px] font-bold uppercase tracking-widest leading-none">
           {dayName}
         </p>
@@ -115,24 +240,19 @@ export function ClockDigitalWidget({ size }: Props) {
           <p className="text-4xl font-light leading-none tracking-tight tabular-nums">
             {hours}:{minutes}
           </p>
-          <span className="text-[12px] font-semibold text-zinc-400 dark:text-zinc-505 ml-1.5 tabular-nums">
+          <span className="text-[12px] font-semibold text-zinc-400 dark:text-zinc-500 ml-1.5 tabular-nums">
             {seconds}
           </span>
         </div>
-        <p className="text-zinc-500 dark:text-zinc-450 text-[12px] font-semibold mt-3">
+        <p className="text-zinc-500 dark:text-zinc-400 text-[12px] font-semibold mt-3">
           {dateStr}
         </p>
       </div>
     );
   }
 
-  // Medium size
-  const secRatio = now.getSeconds() / 60;
-  const circ = 2 * Math.PI * 30; // radius is 30
-  const offset = circ * (1 - secRatio);
-
   return (
-    <div className="w-full h-full flex items-center justify-between p-4 select-none">
+    <div className="w-full h-full flex items-center justify-between p-4 bg-transparent select-none">
       <div className="flex flex-col justify-center">
         <p className="text-red-500 dark:text-red-400 text-[10px] font-bold uppercase tracking-widest leading-none">
           {dayName}
@@ -141,12 +261,12 @@ export function ClockDigitalWidget({ size }: Props) {
           <p className="text-5xl font-light leading-none tracking-tight tabular-nums">
             {hours}:{minutes}
           </p>
-          <span className="text-[11px] font-bold text-zinc-400 dark:text-zinc-505 uppercase ml-1.5">
+          <span className="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase ml-1.5">
             {ampm}
           </span>
         </div>
-        <p className="text-zinc-500 dark:text-zinc-450 text-xs font-semibold mt-2.5">
-          {now.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' })}
+        <p className="text-zinc-500 dark:text-zinc-400 text-xs font-semibold mt-2.5">
+          {now.toLocaleDateString(currentLocale, { weekday: 'long', month: 'long', day: 'numeric' })}
         </p>
       </div>
 
@@ -221,6 +341,9 @@ function FlipCalendarCard({ month, day }: { month: string; day: number }) {
 }
 
 export function ClockFlipWidget({ size }: Props) {
+  const { language } = useTranslation();
+  const currentLocale = localeMap[language] || 'en-US';
+  const t = WIDGET_CLOCK_LOCALE[language as keyof typeof WIDGET_CLOCK_LOCALE] || WIDGET_CLOCK_LOCALE.en;
   const [now, setNow] = useState(new Date());
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
@@ -233,17 +356,17 @@ export function ClockFlipWidget({ size }: Props) {
 
   if (size === 'small') {
     return (
-      <div className="w-full h-full flex flex-col items-center justify-center p-3 select-none">
-        <p className="text-zinc-455 dark:text-zinc-500 text-[8px] font-bold uppercase tracking-widest mb-2">
-          FLIP TIME
+      <div className="w-full h-full flex flex-col items-center justify-center bg-transparent p-3 select-none">
+        <p className="text-zinc-500 dark:text-zinc-400 text-[8px] font-bold uppercase tracking-widest mb-2">
+          {t.flipTime}
         </p>
         <div className="flex items-center gap-1.5">
           <FlipCard val={hours} />
-          <span className="text-zinc-500 animate-pulse font-bold text-xl mb-1">:</span>
+          <span className="text-zinc-400 dark:text-zinc-600 animate-pulse font-bold text-xl mb-1">:</span>
           <FlipCard val={minutes} />
         </div>
-        <p className="text-zinc-550 dark:text-zinc-450 text-[10px] font-bold mt-2">
-          {now.toLocaleDateString([], { weekday: 'short', day: 'numeric' })}
+        <p className="text-zinc-500 dark:text-zinc-450 text-[10px] font-bold mt-2">
+          {now.toLocaleDateString(currentLocale, { weekday: 'short', day: 'numeric' })}
         </p>
       </div>
     );
@@ -251,26 +374,26 @@ export function ClockFlipWidget({ size }: Props) {
 
   // Medium layout: flip clock + flip calendar
   return (
-    <div className="w-full h-full flex items-center justify-between px-6 py-4 select-none">
+    <div className="w-full h-full flex items-center justify-between bg-transparent px-6 py-4 select-none">
       {/* Time Flip */}
       <div className="flex flex-col">
-        <p className="text-zinc-455 dark:text-zinc-500 text-[8px] font-bold uppercase tracking-widest mb-1.5 ml-1">
-          CURRENT TIME
+        <p className="text-zinc-500 dark:text-zinc-400 text-[8px] font-bold uppercase tracking-widest mb-1.5 ml-1">
+          {t.currentTime}
         </p>
         <div className="flex items-center gap-2">
-          <FlipCard val={hours} label="HOURS" />
-          <span className="text-zinc-500 animate-pulse font-bold text-2xl mb-5">:</span>
-          <FlipCard val={minutes} label="MINUTES" />
+          <FlipCard val={hours} label={t.hours} />
+          <span className="text-zinc-450 dark:text-zinc-600 animate-pulse font-bold text-2xl mb-5">:</span>
+          <FlipCard val={minutes} label={t.minutes} />
         </div>
       </div>
 
       {/* Vertical divider */}
-      <div className="h-16 w-px bg-zinc-200 dark:bg-zinc-800 shrink-0" />
+      <div className="h-16 w-px bg-zinc-350 dark:bg-zinc-800 shrink-0" />
 
       {/* Calendar Flip */}
       <div className="flex flex-col items-end">
-        <p className="text-zinc-455 dark:text-zinc-500 text-[8px] font-bold uppercase tracking-widest mb-1.5 mr-1">
-          TODAY
+        <p className="text-zinc-500 dark:text-zinc-400 text-[8px] font-bold uppercase tracking-widest mb-1.5 mr-1">
+          {t.today}
         </p>
         <FlipCalendarCard month={MONTHS_SHORT[now.getMonth()]} day={now.getDate()} />
       </div>

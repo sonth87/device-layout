@@ -6,28 +6,31 @@ import { cn } from '@/lib/utils';
 import { useAppLayout } from '@/hooks/useAppLayout';
 import { AppSection, AppListGroup, AppListRow, AppToggle, AppGrid } from '@/components/apps/ui';
 import type { OSTheme, ColorScheme } from '@/types/theme';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const OS_THEMES: OSTheme[] = ['macos', 'ipad', 'iphone', 'windows', 'android'];
-const COLOR_SCHEMES: { id: ColorScheme; label: string }[] = [
-  { id: 'auto', label: 'Auto' },
-  { id: 'light', label: 'Light' },
-  { id: 'dark', label: 'Dark' },
-];
 
 export function SettingsAppearance() {
-  const osTheme   = useStore((s) => s.osTheme);
+  const osTheme     = useStore((s) => s.osTheme);
   const colorScheme = useStore((s) => s.colorScheme);
   const glassEnabled = useStore((s) => s.glassEnabled);
   const setOSTheme   = useStore((s) => s.setOSTheme);
   const setColorScheme = useStore((s) => s.setColorScheme);
   const setGlassEnabled = useStore((s) => s.setGlassEnabled);
+  const { t } = useTranslation();
 
   const { isNarrow } = useAppLayout();
+
+  const COLOR_SCHEMES: { id: ColorScheme; label: string }[] = [
+    { id: 'auto',  label: t.colorSchemeAuto },
+    { id: 'light', label: t.colorSchemeLight },
+    { id: 'dark',  label: t.colorSchemeDark },
+  ];
 
   return (
     <div className="space-y-6">
       {/* OS Theme */}
-      <AppSection title="OS Theme">
+      <AppSection title={t.osTheme}>
         {isNarrow ? (
           <AppListGroup>
             {OS_THEMES.map((theme) => (
@@ -64,7 +67,7 @@ export function SettingsAppearance() {
       </AppSection>
 
       {/* Color Scheme */}
-      <AppSection title="Color Scheme">
+      <AppSection title={t.colorScheme}>
         {isNarrow ? (
           <AppListGroup>
             {COLOR_SCHEMES.map(({ id, label }) => (
@@ -97,11 +100,11 @@ export function SettingsAppearance() {
       </AppSection>
 
       {/* Effects */}
-      <AppSection title="Effects">
+      <AppSection title={t.effects}>
         <AppListGroup>
           <AppListRow
-            label="Liquid Glass"
-            subtitle="Glass effect for macOS / iPad / iPhone themes"
+            label={t.liquidGlass}
+            subtitle={t.liquidGlassDesc}
             control={<AppToggle checked={glassEnabled} onChange={setGlassEnabled} />}
           />
         </AppListGroup>

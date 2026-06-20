@@ -4,6 +4,7 @@ import { useStore } from '@/store';
 import { AppIconImage } from '@/components/shared/AppIconImage';
 import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface NavBarProps {
   onOpenApp: (app: AppConfig) => void;
@@ -16,6 +17,7 @@ export function NavBar({ onOpenApp, navBarHeight = 72 }: NavBarProps) {
   const dockAppIds = useStore((s) => s.dockAppIds).slice(0, 4);
   const apps = useStore((s) => s.apps);
   const runningAppIds = useStore((s) => s.runningAppIds);
+  const { getAppName } = useTranslation();
 
   const navApps = dockAppIds.map((id) => apps[id]).filter(Boolean) as AppConfig[];
 
@@ -37,7 +39,7 @@ export function NavBar({ onOpenApp, navBarHeight = 72 }: NavBarProps) {
             'flex items-center justify-center transition-opacity active:scale-95',
             runningAppIds.includes(app.id) ? 'opacity-100' : 'opacity-90'
           )}
-          aria-label={app.name}
+          aria-label={getAppName(app.id, app.name)}
         >
           <AppIconImage appConfig={app} size={52} />
         </button>

@@ -7,6 +7,7 @@ import { AppIconImage } from '@/components/shared/AppIconImage';
 import { useSwipeGesture } from '@/hooks/useSwipeGesture';
 import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface HomeScreenProps {
   onOpenApp: (app: AppConfig) => void;
@@ -119,6 +120,8 @@ interface AppIconProps {
 }
 
 function AppIcon({ app, index, jiggling, onOpen }: AppIconProps) {
+  const { getAppName } = useTranslation();
+  const displayName = getAppName(app.id, app.name);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const didLongPress = useRef(false);
 
@@ -167,7 +170,7 @@ function AppIcon({ app, index, jiggling, onOpen }: AppIconProps) {
         )}
       </motion.div>
       <span className="text-white text-[11px] font-medium text-center leading-tight drop-shadow-[0_1px_1px_rgba(0,0,0,0.6)] max-w-[64px] truncate">
-        {app.name}
+        {displayName}
       </span>
     </button>
   );

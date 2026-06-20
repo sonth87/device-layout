@@ -4,6 +4,16 @@ import { useState, useRef, useEffect } from 'react';
 import { Send, Search, Phone, Video, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MobileSplitView, useMobileSplitBack } from './MobileSplitView';
+import { useTranslation } from '@/hooks/useTranslation';
+
+const MESSAGES_LOCALE = {
+  en: { search: 'Search', imessage: 'iMessage', messages: 'Messages' },
+  vi: { search: 'Tìm kiếm', imessage: 'iMessage', messages: 'Tin nhắn' },
+  ja: { search: '検索', imessage: 'iMessage', messages: 'メッセージ' },
+  ko: { search: '검색', imessage: 'iMessage', messages: '메시지' },
+  zh: { search: '搜索', imessage: 'iMessage', messages: '信息' },
+  th: { search: 'ค้นหา', imessage: 'iMessage', messages: 'ข้อความ' },
+} as const;
 
 interface Message {
   id: string;
@@ -59,6 +69,8 @@ const INITIAL_CONVOS: Conversation[] = [
 ];
 
 export function Messages() {
+  const { language } = useTranslation();
+  const tMsg = MESSAGES_LOCALE[language as keyof typeof MESSAGES_LOCALE] || MESSAGES_LOCALE.en;
   const [convos, setConvos] = useState<Conversation[]>(INITIAL_CONVOS);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [input, setInput] = useState('');
@@ -126,7 +138,7 @@ export function Messages() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search"
+            placeholder={tMsg.search}
             className="flex-1 bg-transparent text-sm outline-none placeholder:text-black/30 dark:placeholder:text-white/30"
           />
         </div>
@@ -193,7 +205,7 @@ export function Messages() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && send()}
-          placeholder="iMessage"
+          placeholder={tMsg.imessage}
           className="flex-1 px-3 py-1.5 rounded-full border border-black/15 dark:border-white/15 bg-transparent text-sm outline-none focus:ring-1 focus:ring-blue-500"
         />
         <button
@@ -220,6 +232,8 @@ export function Messages() {
 
 function ChatHeader({ convo, onBack }: { convo: Conversation; onBack: () => void }) {
   const mobileBack = useMobileSplitBack();
+  const { language } = useTranslation();
+  const tMsg = MESSAGES_LOCALE[language as keyof typeof MESSAGES_LOCALE] || MESSAGES_LOCALE.en;
   return (
     <div className="flex items-center gap-2 px-3 py-2.5 border-b border-black/10 dark:border-white/10 shrink-0">
       {mobileBack && (
@@ -230,7 +244,7 @@ function ChatHeader({ convo, onBack }: { convo: Conversation; onBack: () => void
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
-          <span className="text-[14px] font-medium">Messages</span>
+          <span className="text-[14px] font-medium">{tMsg.messages}</span>
         </button>
       )}
       <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-white/10 flex items-center justify-center text-lg shrink-0">

@@ -1,4 +1,5 @@
 import type { WidgetDefinition } from './widget';
+import type { AppLocale } from './locale';
 
 export interface ContextMenuAction {
   key: string;
@@ -66,6 +67,15 @@ export interface AppConfig {
    * Omit appId here — it is auto-filled by widgets.config.ts from the AppConfig.id.
    */
   widgets?: Omit<WidgetDefinition, 'appId'>[];
+  /**
+   * App-level locale dictionary.
+   * Declare translated strings for any languages the app supports.
+   * - `en` is required and used as the fallback.
+   * - The system language is used to pick the right locale; if the app
+   *   doesn't support the current language, `en` is used automatically.
+   * @see types/locale.ts
+   */
+  locale?: AppLocale;
 }
 
 export interface AppInstance {

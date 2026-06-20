@@ -57,6 +57,7 @@ export const useStore = create<RootStore>()(
           notifications: state.notifications,
           vfs: state.vfs,
           widgetInstances: state.widgetInstances,
+          language: state.language,
         }),
       }
     )

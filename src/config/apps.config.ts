@@ -319,6 +319,13 @@ export const APPS_CONFIG: AppConfig[] = [
         componentKey: 'ClockWidget',
       },
       {
+        id: 'clock-analog-dark',
+        name: 'Analog Clock (Dark)',
+        description: 'Classic analog clock with dark background',
+        sizes: ['small'],
+        componentKey: 'ClockDarkWidget',
+      },
+      {
         id: 'clock-digital',
         name: 'Digital Clock',
         description: 'Modern digital time display',

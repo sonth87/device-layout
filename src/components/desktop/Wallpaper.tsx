@@ -8,22 +8,13 @@ import { WALLPAPERS } from '@/config/wallpapers.config';
 import { useImageReady } from '@/hooks/useImageReady';
 import { useStoreHydrated } from '@/hooks/useStoreHydrated';
 import { WallpaperPicker } from './WallpaperPicker';
+import { useTranslation } from '@/hooks/useTranslation';
 import type { StackGroupBy } from '@/types/desktop';
 
 
 interface WallpaperProps {
   children: React.ReactNode;
 }
-
-const GROUP_BY_OPTIONS: { id: StackGroupBy; label: string }[] = [
-  { id: 'kind',             label: 'Kind' },
-  { id: 'shared-by',        label: 'Shared By' },
-  { id: 'date-last-opened', label: 'Date Last Opened' },
-  { id: 'date-added',       label: 'Date Added' },
-  { id: 'date-modified',    label: 'Date Modified' },
-  { id: 'date-created',     label: 'Date Created' },
-  { id: 'tags',             label: 'Tags' },
-];
 
 const ITEM_CLS =
   'flex items-center gap-2 px-2.5 py-[5px] rounded-[5px] cursor-default outline-none select-none ' +
@@ -40,6 +31,7 @@ const MENU_CLS =
   'border border-black/[0.08] dark:border-white/[0.08] p-1 z-[9999] overflow-hidden';
 
 export function Wallpaper({ children }: WallpaperProps) {
+  const { t } = useTranslation();
   const wallpaperId        = useStore((s) => s.wallpaperId);
   const useStacks          = useStore((s) => s.useStacks);
   const stackGroupBy       = useStore((s) => s.stackGroupBy);
@@ -53,6 +45,16 @@ export function Wallpaper({ children }: WallpaperProps) {
   const wallpaperUrl = wallpaper?.url ?? '/wallpapers/bg-1.jpg';
   const wallpaperReady  = useImageReady(wallpaperUrl, hydrated);
   const backgroundImage = hydrated && wallpaperReady ? `url(${wallpaperUrl})` : 'none';
+
+  const groupByOptions: { id: StackGroupBy; label: string }[] = [
+    { id: 'kind',             label: t.kind },
+    { id: 'shared-by',        label: t.sharedBy },
+    { id: 'date-last-opened', label: t.dateLastOpened },
+    { id: 'date-added',       label: t.dateAdded },
+    { id: 'date-modified',    label: t.dateModified },
+    { id: 'date-created',     label: t.dateCreated },
+    { id: 'tags',             label: t.tags },
+  ];
 
   return (
     <>
@@ -92,7 +94,7 @@ export function Wallpaper({ children }: WallpaperProps) {
               className={ITEM_CLS}
               onSelect={() => setPickerOpen(true)}
             >
-              Change Wallpaper…
+              {t.changeWallpaper}
             </ContextMenu.Item>
 
             {/* Edit Widgets */}
@@ -100,7 +102,7 @@ export function Wallpaper({ children }: WallpaperProps) {
               className={ITEM_CLS}
               onSelect={() => openWidgetGallery()}
             >
-              Edit Widgets…
+              {t.editWidgets}
             </ContextMenu.Item>
 
             <ContextMenu.Separator className={SEPARATOR_CLS} />
@@ -113,7 +115,7 @@ export function Wallpaper({ children }: WallpaperProps) {
               <span className="w-3.5 shrink-0 flex items-center justify-center">
                 {useStacks && <Check className="w-3 h-3 stroke-[2.5]" />}
               </span>
-              Use Stacks
+              {t.useStacks}
             </ContextMenu.Item>
 
             {/* Group Stacks By — submenu */}
@@ -122,7 +124,7 @@ export function Wallpaper({ children }: WallpaperProps) {
                 className={`${ITEM_CLS} data-[state=open]:bg-blue-500 data-[state=open]:text-white`}
               >
                 <span className="w-3.5 shrink-0" />
-                <span className="flex-1">Group Stacks By</span>
+                <span className="flex-1">{t.groupStacksBy}</span>
                 <ChevronRight className="w-3.5 h-3.5 ml-auto opacity-60" />
               </ContextMenu.SubTrigger>
 
@@ -132,7 +134,7 @@ export function Wallpaper({ children }: WallpaperProps) {
                   sideOffset={2}
                   alignOffset={-4}
                 >
-                  {GROUP_BY_OPTIONS.map(({ id, label }) => (
+                  {groupByOptions.map(({ id, label }) => (
                     <ContextMenu.Item
                       key={id}
                       className={ITEM_CLS}

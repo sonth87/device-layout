@@ -12,6 +12,7 @@ import { AppIconImage } from '@/components/shared/AppIconImage';
 import { WidgetRenderer } from './WidgetRenderer';
 import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
 import type { WidgetDefinition, WidgetSize } from '@/types/widget';
+import { useTranslation } from '@/hooks/useTranslation';
 
 /* ── Drag ghost that follows the pointer when dragging from the panel ── */
 interface GhostState {
@@ -90,8 +91,9 @@ function AppRow({
   onClick: () => void;
 }) {
   const apps = useStore((s) => s.apps);
+  const { t, getAppName } = useTranslation();
   const app = appId === '__built-in__' ? null : apps[appId];
-  const label = app?.name ?? 'Built-in';
+  const label = app ? getAppName(app.id, app.name) : t.builtIn;
 
   return (
     <button
@@ -118,6 +120,7 @@ export function WidgetGalleryPanel() {
   const closeWidgetGallery = useStore((s) => s.closeWidgetGallery);
   const addWidget          = useStore((s) => s.addWidget);
   const apps               = useStore((s) => s.apps);
+  const { t, getAppName, getWidgetName, getWidgetDescription } = useTranslation();
 
   const [search, setSearch]       = useState('');
   const [selectedApp, setSelectedApp] = useState<string>('__all__');
@@ -133,9 +136,9 @@ export function WidgetGalleryPanel() {
     const matchesApp = selectedApp === '__all__' || w.appId === selectedApp;
     const q = search.toLowerCase();
     const matchesSearch = !q ||
-      w.name.toLowerCase().includes(q) ||
-      (w.description ?? '').toLowerCase().includes(q) ||
-      (apps[w.appId]?.name ?? '').toLowerCase().includes(q);
+      getWidgetName(w.id, w.name).toLowerCase().includes(q) ||
+      getWidgetDescription(w.id, w.description ?? '').toLowerCase().includes(q) ||
+      getAppName(w.appId, apps[w.appId]?.name ?? '').toLowerCase().includes(q);
     return matchesApp && matchesSearch;
   });
 
@@ -219,7 +222,7 @@ export function WidgetGalleryPanel() {
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-black/30 dark:text-white/30"/>
                 <input
                   type="text"
-                  placeholder="Search Widgets"
+                  placeholder={t.searchWidgets}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="w-full bg-black/5 dark:bg-white/8 text-black dark:text-white text-[13px] placeholder-black/30 dark:placeholder-white/30 rounded-[8px] pl-8 pr-3 py-1.5 outline-none border border-black/10 dark:border-white/10 focus:border-black/20 dark:focus:border-white/20 transition-colors"
@@ -240,7 +243,7 @@ export function WidgetGalleryPanel() {
                 )}
               >
                 <div className="w-5 h-5 rounded-md bg-gradient-to-br from-blue-500 to-purple-500 shrink-0" />
-                <span className="text-[13px]">All Widgets</span>
+                <span className="text-[13px]">{t.allWidgets}</span>
               </button>
 
               {appIds.map((id) => (
@@ -257,22 +260,22 @@ export function WidgetGalleryPanel() {
             <div className="flex-1 overflow-y-auto p-4">
               {Object.keys(byApp).length === 0 ? (
                 <div className="flex items-center justify-center h-full text-black/30 dark:text-white/30 text-sm">
-                  No widgets found
+                  {t.noWidgetsFound}
                 </div>
               ) : (
                 Object.entries(byApp).map(([appId, defs]) => {
-                  const appLabel = appId === '__built-in__' ? 'Built-in' : (apps[appId]?.name ?? appId);
+                  const appLabel = appId === '__built-in__' ? t.builtIn : getAppName(appId, apps[appId]?.name ?? appId);
                   return (
                     <div key={appId} className="mb-8">
                       <div className="flex items-center justify-between mb-3">
                         <p className="text-black dark:text-white text-[13px] font-semibold">{appLabel}</p>
                         {appId !== '__built-in__' && (
-                          <p className="text-black/30 dark:text-white/30 text-[11px]">From {appLabel}</p>
+                          <p className="text-black/30 dark:text-white/30 text-[11px]">{t.fromApp} {appLabel}</p>
                         )}
                       </div>
                       {defs.map((def) => (
                         <div key={def.id} className="mb-4">
-                          <p className="text-black/50 dark:text-white/50 text-[11px] mb-2 font-medium">{def.name}</p>
+                          <p className="text-black/50 dark:text-white/50 text-[11px] mb-2 font-medium">{getWidgetName(def.id, def.name)}</p>
                           <div className="flex flex-wrap gap-4">
                             {def.sizes.map((sz) => (
                               <WidgetPreviewCard
@@ -294,12 +297,12 @@ export function WidgetGalleryPanel() {
 
           {/* ── Bottom bar ── */}
           <div className="flex items-center justify-between px-5 py-3 border-t border-black/[0.06] dark:border-white/[0.06] shrink-0">
-            <p className="text-black/40 dark:text-white/40 text-[12px]">Drag a widget to place it on the desktop…</p>
+            <p className="text-black/40 dark:text-white/40 text-[12px]">{t.dragWidgetHint}</p>
             <button
               onClick={closeWidgetGallery}
               className="px-5 py-1.5 bg-red-500 hover:bg-red-600 text-white text-[13px] font-semibold rounded-[8px] transition-colors"
             >
-              Done
+              {t.done}
             </button>
           </div>
         </div>

@@ -97,6 +97,52 @@ function MenuSeparator() {
   return <div className="my-1 mx-2 h-px bg-black/10 dark:bg-white/10" />;
 }
 
+import { useTranslation, TranslationKey } from '@/hooks/useTranslation';
+
+function getMenuLabel(label: string, t: any) {
+  const map: Record<string, TranslationKey> = {
+    'File': 'menuFile',
+    'Edit': 'menuEdit',
+    'View': 'menuView',
+    'Window': 'menuWindow',
+    'Help': 'menuHelp',
+    'History': 'menuHistory',
+    'Format': 'menuFormat',
+    'Shell': 'menuShell',
+    'Go': 'menuGo',
+  };
+  const key = map[label];
+  return key ? t[key] : label;
+}
+
+function getMenuItemLabel(label: string, t: any) {
+  const map: Record<string, TranslationKey> = {
+    'New Window': 'menuNewWindow',
+    'New Tab': 'menuNewTab',
+    'Close': 'menuClose',
+    'Close All Windows': 'menuCloseAll',
+    'Close Window': 'menuClose',
+    'Undo': 'menuUndo',
+    'Redo': 'menuRedo',
+    'Cut': 'menuCut',
+    'Copy': 'menuCopy',
+    'Paste': 'menuPaste',
+    'Select All': 'menuSelectAll',
+    'Find': 'menuFind',
+    'Minimize': 'menuMinimize',
+    'Zoom': 'menuZoom',
+    'Bring All to Front': 'menuBringAllToFront',
+    'Zoom In': 'menuZoomIn',
+    'Zoom Out': 'menuZoomOut',
+    'Enter Full Screen': 'menuFullscreen',
+    'Desktop Layout Help': 'menuHelp2',
+    'New Finder Window': 'menuNewWindow',
+    'New Folder': 'menuNewWindow',
+  };
+  const key = map[label];
+  return key ? t[key] : label;
+}
+
 // ─── App Name Dropdown ───────────────────────────────────────────────────────
 
 function AppNameDropdown({
@@ -109,8 +155,9 @@ function AppNameDropdown({
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const closeWindow = useStore((s) => s.closeWindow);
+  const { t, getAppName } = useTranslation();
 
-  const appName = appConfig?.name ?? 'Finder';
+  const appName = appConfig ? getAppName(appConfig.id, appConfig.name) : t.appNameFinder;
   const handleClose = useCallback(() => setOpen(false), []);
 
   const dispatchAction = (action: string) => {
@@ -149,18 +196,18 @@ function AppNameDropdown({
 
       <DropdownPanel anchorRef={buttonRef} open={open} onClose={handleClose} minWidth={208}>
         <MenuItem
-          label={`About ${appName}`}
+          label={`${t.aboutApp} ${appName}`}
           onClick={() => { setOpen(false); dispatchAction('about'); }}
           disabled={!appId}
         />
         <MenuSeparator />
-        <MenuItem label="Services" disabled />
+        <MenuItem label={t.services} disabled />
         <MenuSeparator />
-        <MenuItem label={`Hide ${appName}`} shortcut="⌘H" disabled />
-        <MenuItem label="Hide Others" shortcut="⌥⌘H" disabled />
-        <MenuItem label="Show All" disabled />
+        <MenuItem label={`${t.hide} ${appName}`} shortcut="⌘H" disabled />
+        <MenuItem label={t.hideOthers} shortcut="⌥⌘H" disabled />
+        <MenuItem label={t.showAll} disabled />
         <MenuSeparator />
-        <MenuItem label={`Quit ${appName}`} shortcut="⌘Q" onClick={handleQuit} />
+        <MenuItem label={`${t.quit} ${appName}`} shortcut="⌘Q" onClick={handleQuit} />
       </DropdownPanel>
     </>
   );
@@ -179,6 +226,7 @@ function MenuDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const { t } = useTranslation();
 
   const handleClose = useCallback(() => setOpen(false), []);
 
@@ -206,7 +254,7 @@ function MenuDropdown({
             : 'hover:bg-black/10 dark:hover:bg-white/10 text-black/80 dark:text-white/85'
         )}
       >
-        {label}
+        {getMenuLabel(label, t)}
       </button>
 
       <DropdownPanel anchorRef={buttonRef} open={open} onClose={handleClose} minWidth={192}>
@@ -216,7 +264,7 @@ function MenuDropdown({
           ) : (
             <MenuItem
               key={item.key}
-              label={item.label}
+              label={getMenuItemLabel(item.label, t)}
               shortcut={item.shortcut}
               disabled={item.disabled}
               onClick={() => handleItemClick(item)}
@@ -324,6 +372,7 @@ function AppleMenuDropdown() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const apps = useStore((s) => s.apps);
   const launchApp = useStore((s) => s.launchApp);
+  const { t } = useTranslation();
   const handleClose = useCallback(() => setOpen(false), []);
 
   const handleSystemSettings = () => {
@@ -352,11 +401,11 @@ function AppleMenuDropdown() {
 
       <DropdownPanel anchorRef={buttonRef} open={open} onClose={handleClose} minWidth={220}>
         <MenuItem
-          label="About This Mac"
+          label={t.aboutThisMac}
           onClick={() => { setOpen(false); setShowAbout(true); }}
         />
         <MenuSeparator />
-        <MenuItem label="System Settings…" onClick={handleSystemSettings} />
+        <MenuItem label={t.systemSettings} onClick={handleSystemSettings} />
       </DropdownPanel>
 
       {showAbout && <PersonalAboutDialog onClose={() => setShowAbout(false)} />}

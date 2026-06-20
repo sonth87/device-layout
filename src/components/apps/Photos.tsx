@@ -5,6 +5,7 @@ import { Search, Grid3X3, List, Heart, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppLayout } from '@/hooks/useAppLayout';
 import { AppGrid } from '@/components/apps/ui';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const PHOTO_COLORS: [string, string][] = [
   ['#667eea','#764ba2'],['#f093fb','#f5576c'],['#4facfe','#00f2fe'],['#43e97b','#38f9d7'],
@@ -31,7 +32,101 @@ function generatePhotos(): Photo[] {
 }
 const ALL_PHOTOS = generatePhotos();
 
+const PHOTOS_LOCALE = {
+  en: {
+    allPhotos: 'All Photos',
+    favorites: 'Favorites',
+    recents: 'Recents',
+    screenshots: 'Screenshots',
+    wallpapers: 'Wallpapers',
+    nature: 'Nature',
+    city: 'City',
+    search: 'Search photos',
+    showAll: 'Show all',
+    resetZoom: 'Reset zoom',
+    photosCount: 'photos',
+  },
+  vi: {
+    allPhotos: 'Tất cả ảnh',
+    favorites: 'Yêu thích',
+    recents: 'Gần đây',
+    screenshots: 'Ảnh chụp màn hình',
+    wallpapers: 'Hình nền',
+    nature: 'Thiên nhiên',
+    city: 'Thành phố',
+    search: 'Tìm kiếm ảnh',
+    showAll: 'Hiển thị tất cả',
+    resetZoom: 'Đặt lại thu phóng',
+    photosCount: 'ảnh',
+  },
+  ja: {
+    allPhotos: 'すべての写真',
+    favorites: 'お気に入り',
+    recents: '最近の項目',
+    screenshots: 'スクリーンショット',
+    wallpapers: '壁紙',
+    nature: '自然',
+    city: '都市',
+    search: '写真を検索',
+    showAll: 'すべて表示',
+    resetZoom: 'ズームをリセット',
+    photosCount: '枚の写真',
+  },
+  ko: {
+    allPhotos: '모든 사진',
+    favorites: '선호하는 사진',
+    recents: '최근 항목',
+    screenshots: '스크린샷',
+    wallpapers: '배경화면',
+    nature: '자연',
+    city: '도시',
+    search: '사진 검색',
+    showAll: '모두 보기',
+    resetZoom: '확대/축소 재설정',
+    photosCount: '장',
+  },
+  zh: {
+    allPhotos: '所有照片',
+    favorites: '个人收藏',
+    recents: '最近项目',
+    screenshots: '屏幕快照',
+    wallpapers: '壁纸',
+    nature: '自然',
+    city: '城市',
+    search: '搜索照片',
+    showAll: '显示全部',
+    resetZoom: '重置缩放',
+    photosCount: '张照片',
+  },
+  th: {
+    allPhotos: 'รูปภาพทั้งหมด',
+    favorites: 'รายการโปรด',
+    recents: 'ล่าสุด',
+    screenshots: 'ภาพถ่ายหน้าจอ',
+    wallpapers: 'ภาพพื้นหลัง',
+    nature: 'ธรรมชาติ',
+    city: 'เมือง',
+    search: 'ค้นหารูปภาพ',
+    showAll: 'แสดงทั้งหมด',
+    resetZoom: 'รีเซ็ตการซูม',
+    photosCount: 'รูปภาพ',
+  },
+} as const;
+
+const localeMap: Record<string, string> = {
+  en: 'en-US',
+  vi: 'vi-VN',
+  ja: 'ja-JP',
+  ko: 'ko-KR',
+  zh: 'zh-CN',
+  th: 'th-TH',
+};
+
 export function Photos() {
+  const { language } = useTranslation();
+  const currentLocale = localeMap[language] || 'en-US';
+  const t = PHOTOS_LOCALE[language as keyof typeof PHOTOS_LOCALE] || PHOTOS_LOCALE.en;
+
   const [view, setView]           = useState<'grid' | 'albums' | 'photo'>('grid');
   const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
@@ -42,6 +137,18 @@ export function Photos() {
   const panDragRef = useRef<{ startX: number; startY: number; panX: number; panY: number } | null>(null);
 
   const { isNarrow, cols } = useAppLayout();
+
+  const getAlbumLabel = (album: string) => {
+    const map: Record<string, string> = {
+      Favorites: t.favorites,
+      Recents: t.recents,
+      Screenshots: t.screenshots,
+      Wallpapers: t.wallpapers,
+      Nature: t.nature,
+      City: t.city,
+    };
+    return map[album] || album;
+  };
 
   const openPhoto = (photo: Photo) => { setSelectedPhoto(photo); setView('photo'); setZoom(1); setPan({ x: 0, y: 0 }); };
   const toggleLike = (id: string) => setLiked(s => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; });
@@ -58,13 +165,12 @@ export function Photos() {
 
   // ── Photo viewer ──────────────────────────────────────────────────────────
   if (view === 'photo' && selectedPhoto) {
-    // Responsive photo size
     const photoSize = isNarrow ? 240 : 288;
     return (
       <div className="h-full flex flex-col bg-black">
         <div className="flex items-center justify-between px-4 py-3 shrink-0">
           <button onClick={() => setView('grid')} className="flex items-center gap-1 text-blue-400 text-sm">
-            <ChevronLeft className="w-4 h-4" /> All Photos
+            <ChevronLeft className="w-4 h-4" /> {t.allPhotos}
           </button>
           <button onClick={() => toggleLike(selectedPhoto.id)}>
             <Heart className={cn('w-5 h-5', liked.has(selectedPhoto.id) ? 'fill-red-500 text-red-500' : 'text-white/60')} />
@@ -95,11 +201,11 @@ export function Photos() {
         <div className="p-4 text-white/60 text-sm text-center shrink-0">
           {zoom !== 1 && (
             <button className="text-blue-400 text-xs mr-3" onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}>
-              Reset zoom
+              {t.resetZoom}
             </button>
           )}
-          {selectedPhoto.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-          {selectedPhoto.album && ` • ${selectedPhoto.album}`}
+          {selectedPhoto.date.toLocaleDateString(currentLocale, { month: 'long', day: 'numeric', year: 'numeric' })}
+          {selectedPhoto.album && ` • ${getAlbumLabel(selectedPhoto.album)}`}
         </div>
       </div>
     );
@@ -112,7 +218,7 @@ export function Photos() {
       <div className="flex items-center gap-2 px-3 py-2 border-b border-black/10 dark:border-white/10 shrink-0">
         <div className="flex-1 flex items-center gap-1.5 px-2 py-1 bg-black/5 dark:bg-white/10 rounded-lg">
           <Search className="w-3.5 h-3.5 text-black/40 dark:text-white/40" />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search photos"
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder={t.search}
             className="flex-1 bg-transparent text-sm outline-none placeholder:text-black/30 dark:placeholder:text-white/30" />
         </div>
         <div className="flex border border-black/15 dark:border-white/15 rounded-md overflow-hidden">
@@ -129,10 +235,10 @@ export function Photos() {
       {view === 'grid' && (
         <div className="px-3 py-2 shrink-0 flex items-center justify-between">
           <h3 className="text-xs font-semibold text-black/50 dark:text-white/50 uppercase tracking-wide">
-            {selectedAlbum ?? 'All Photos'} — {photos.length}
+            {selectedAlbum ? getAlbumLabel(selectedAlbum) : t.allPhotos} — {photos.length} {t.photosCount}
           </h3>
           {selectedAlbum && (
-            <button onClick={() => setSelectedAlbum(null)} className="text-xs text-blue-500">Show all</button>
+            <button onClick={() => setSelectedAlbum(null)} className="text-xs text-blue-500">{t.showAll}</button>
           )}
         </div>
       )}
@@ -140,7 +246,6 @@ export function Photos() {
       <div className="flex-1 overflow-y-auto">
         {view === 'albums' ? (
           <div className="p-3">
-            {/* Albums: 2 cols narrow, 3 wide */}
             <AppGrid narrow={2} medium={3} wide={4} gap="12px">
               {ALBUMS.map((album) => {
                 const cover = ALL_PHOTOS.find(p => p.album === album);
@@ -153,8 +258,8 @@ export function Photos() {
                       {cover?.emoji}
                     </div>
                     <div className="px-2.5 py-2">
-                      <p className="text-sm font-medium truncate">{album}</p>
-                      <p className="text-xs text-black/40 dark:text-white/40">{albumCounts[album]} photos</p>
+                      <p className="text-sm font-medium truncate">{getAlbumLabel(album)}</p>
+                      <p className="text-xs text-black/40 dark:text-white/40">{albumCounts[album]} {t.photosCount}</p>
                     </div>
                   </button>
                 );

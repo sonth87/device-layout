@@ -7,6 +7,16 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppLayout } from '@/hooks/useAppLayout';
+import { useTranslation } from '@/hooks/useTranslation';
+
+const MUSIC_LOCALE = {
+  en: { nowPlaying: 'Now Playing', library: 'Library' },
+  vi: { nowPlaying: 'Đang phát', library: 'Thư viện' },
+  ja: { nowPlaying: '再生中', library: 'ライブラリ' },
+  ko: { nowPlaying: '지금 재생 중', library: '보관함' },
+  zh: { nowPlaying: '正在播放', library: '资料库' },
+  th: { nowPlaying: 'กำลังเล่น', library: 'คลังเพลง' },
+} as const;
 
 interface Track {
   id: string;
@@ -34,6 +44,8 @@ function fmt(s: number) {
 }
 
 export function Music() {
+  const { language } = useTranslation();
+  const tMusic = MUSIC_LOCALE[language as keyof typeof MUSIC_LOCALE] || MUSIC_LOCALE.en;
   const [trackIdx, setTrackIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -96,7 +108,7 @@ export function Music() {
           <button key={v} onClick={() => setView(v)}
             className={cn('text-sm font-medium capitalize transition-colors',
               view === v ? 'text-white' : 'text-white/40 hover:text-white/70')}>
-            {v === 'player' ? 'Now Playing' : 'Library'}
+            {v === 'player' ? tMusic.nowPlaying : tMusic.library}
           </button>
         ))}
       </div>

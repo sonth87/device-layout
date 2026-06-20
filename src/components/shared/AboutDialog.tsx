@@ -7,6 +7,8 @@ import { useStore } from '@/store';
 import { AppIconImage } from './AppIconImage';
 import type { AppConfig } from '@/types/app';
 
+import { useTranslation } from '@/hooks/useTranslation';
+
 // ─── About Dialog UI ─────────────────────────────────────────────────────────
 
 export function AboutDialog({
@@ -16,6 +18,7 @@ export function AboutDialog({
   appConfig: AppConfig;
   onClose: () => void;
 }) {
+  const { getAppName } = useTranslation();
   // Start centered; offset tracks drag delta from center
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [hovering, setHovering] = useState(false);
@@ -91,7 +94,7 @@ export function AboutDialog({
             <AppIconImage appConfig={appConfig} size={80} />
           </div>
           <div className="text-[17px] font-bold text-black/90 dark:text-white/90 text-center">
-            {appConfig.name}
+            {getAppName(appConfig.id, appConfig.name)}
           </div>
           <div className="text-[12px] text-black/50 dark:text-white/50 text-center">
             Version 1.0 (1.0)

@@ -9,6 +9,7 @@ export interface WidgetComponentProps {
 
 const WIDGET_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentType<WidgetComponentProps>>> = {
   ClockWidget:         lazy(() => import('./built-in/ClockWidget').then((m) => ({ default: m.ClockWidget }))),
+  ClockDarkWidget:     lazy(() => import('./built-in/ClockWidget').then((m) => ({ default: m.ClockDarkWidget }))),
   ClockWorldWidget:    lazy(() => import('./built-in/ClockWidget').then((m) => ({ default: m.ClockWorldWidget }))),
   ClockDigitalWidget:  lazy(() => import('./built-in/ClockWidget').then((m) => ({ default: m.ClockDigitalWidget }))),
   ClockFlipWidget:     lazy(() => import('./built-in/ClockWidget').then((m) => ({ default: m.ClockFlipWidget }))),

@@ -4,9 +4,8 @@ import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MobileSplitView, useMobileSplitBack } from './MobileSplitView';
-
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+import { useTranslation } from '@/hooks/useTranslation';
+import type { AppContentProps } from './AppRegistry';
 
 interface CalEvent {
   id: string;
@@ -23,10 +22,63 @@ const SAMPLE_EVENTS: CalEvent[] = [
   { id: '4', title: 'Weekly sync',     date: toDateStr(addDays(new Date(),7)), time: '10:00', color: 'bg-orange-500' },
 ];
 
+const CALENDAR_LOCALE = {
+  en: {
+    today: 'Today',
+    noEvents: 'No events',
+    eventTitle: 'Event title:',
+    eventTime: 'Time (HH:MM):',
+  },
+  vi: {
+    today: 'Hôm nay',
+    noEvents: 'Không có sự kiện',
+    eventTitle: 'Tiêu đề sự kiện:',
+    eventTime: 'Thời gian (Giờ:Phút):',
+  },
+  ja: {
+    today: '今日',
+    noEvents: 'イベントなし',
+    eventTitle: 'イベント名:',
+    eventTime: '時間 (HH:MM):',
+  },
+  ko: {
+    today: '오늘',
+    noEvents: '일정 없음',
+    eventTitle: '일정 제목:',
+    eventTime: '시간 (HH:MM):',
+  },
+  zh: {
+    today: '今天',
+    noEvents: '无日程',
+    eventTitle: '日程标题:',
+    eventTime: '时间 (HH:MM):',
+  },
+  th: {
+    today: 'วันนี้',
+    noEvents: 'ไม่มีกิจกรรม',
+    eventTitle: 'ชื่อกิจกรรม:',
+    eventTime: 'เวลา (HH:MM):',
+  },
+} as const;
+
 function toDateStr(d: Date) { return d.toISOString().slice(0, 10); }
 function addDays(d: Date, n: number) { const r = new Date(d); r.setDate(r.getDate() + n); return r; }
 
-export function Calendar() {
+const localeMap: Record<string, string> = {
+  en: 'en-US',
+  vi: 'vi-VN',
+  ja: 'ja-JP',
+  ko: 'ko-KR',
+  zh: 'zh-CN',
+  th: 'th-TH',
+};
+
+export function Calendar({ appId }: AppContentProps) {
+  const { language } = useTranslation();
+  const currentLocale = localeMap[language] || 'en-US';
+  const tCal = CALENDAR_LOCALE[language as keyof typeof CALENDAR_LOCALE] || CALENDAR_LOCALE.en;
+  void appId;
+
   const today = new Date();
   const [year, setYear]     = useState(today.getFullYear());
   const [month, setMonth]   = useState(today.getMonth());
@@ -49,15 +101,22 @@ export function Calendar() {
   }, {});
 
   const addEvent = (dateStr: string) => {
-    const title = prompt('Event title:');
+    const title = prompt(tCal.eventTitle);
     if (!title) return;
-    const time = prompt('Time (HH:MM):') ?? undefined;
+    const time = prompt(tCal.eventTime) ?? undefined;
     const colors = ['bg-blue-500','bg-green-500','bg-purple-500','bg-red-500','bg-orange-500'];
     setEvents((prev) => [...prev, {
       id: crypto.randomUUID(), title, date: dateStr, time,
       color: colors[Math.floor(Math.random() * colors.length)],
     }]);
   };
+
+  const daysOfWeek = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(2026, 5, 21 + i); // Sunday
+    return d.toLocaleDateString(currentLocale, { weekday: 'short' });
+  });
+
+  const monthYearLabel = new Date(year, month, 1).toLocaleDateString(currentLocale, { month: 'long', year: 'numeric' });
 
   // ── Calendar grid (always visible) ───────────────────────────────────────
   const calendarPanel = (
@@ -67,7 +126,7 @@ export function Calendar() {
         <button onClick={prevMonth} className="p-1 rounded hover:bg-black/5 dark:hover:bg-white/10">
           <ChevronLeft className="w-4 h-4" />
         </button>
-        <h2 className="flex-1 text-center font-semibold">{MONTHS[month]} {year}</h2>
+        <h2 className="flex-1 text-center font-semibold">{monthYearLabel}</h2>
         <button onClick={nextMonth} className="p-1 rounded hover:bg-black/5 dark:hover:bg-white/10">
           <ChevronRight className="w-4 h-4" />
         </button>
@@ -75,13 +134,13 @@ export function Calendar() {
           onClick={() => { setYear(today.getFullYear()); setMonth(today.getMonth()); }}
           className="text-xs px-2 py-1 rounded-lg bg-red-500 text-white font-medium hover:opacity-80"
         >
-          Today
+          {tCal.today}
         </button>
       </div>
 
       {/* Day headers */}
       <div className="grid grid-cols-7 border-b border-black/10 dark:border-white/10 shrink-0">
-        {DAYS.map((d) => (
+        {daysOfWeek.map((d) => (
           <div key={d} className="py-2 text-center text-xs font-medium text-black/50 dark:text-white/50">{d}</div>
         ))}
       </div>
@@ -126,6 +185,8 @@ export function Calendar() {
     selected={selected}
     events={events}
     onAddEvent={addEvent}
+    locale={currentLocale}
+    tCal={tCal}
   /> : null;
 
   return (
@@ -134,7 +195,7 @@ export function Calendar() {
       detail={agendaPanel}
       onBack={() => setSelected(null)}
       detailTitle={selected
-        ? new Date(selected + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        ? new Date(selected + 'T00:00:00').toLocaleDateString(currentLocale, { month: 'short', day: 'numeric' })
         : ''}
       className="bg-white dark:bg-[#0F1115]"
       sidebarWidth="w-52"
@@ -143,14 +204,16 @@ export function Calendar() {
 }
 
 // Separate component so it can call useMobileSplitBack
-function AgendaPanel({ selected, events, onAddEvent }: {
+function AgendaPanel({ selected, events, onAddEvent, locale, tCal }: {
   selected: string;
   events: CalEvent[];
   onAddEvent: (date: string) => void;
+  locale: string;
+  tCal: { today: string; noEvents: string; eventTitle: string; eventTime: string };
 }) {
   const mobileBack = useMobileSplitBack();
   const dayEvents  = events.filter((e) => e.date === selected);
-  const dateLabel  = new Date(selected + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  const dateLabel  = new Date(selected + 'T00:00:00').toLocaleDateString(locale, { weekday: 'long', month: 'long', day: 'numeric' });
 
   return (
     <div className="flex flex-col h-full bg-white dark:bg-[#0F1115] text-black dark:text-white">
@@ -178,7 +241,7 @@ function AgendaPanel({ selected, events, onAddEvent }: {
       {/* Events list */}
       <div className="flex-1 overflow-y-auto p-2 space-y-1">
         {dayEvents.length === 0 ? (
-          <p className="text-xs text-black/30 dark:text-white/30 text-center mt-4">No events</p>
+          <p className="text-xs text-black/30 dark:text-white/30 text-center mt-4">{tCal.noEvents}</p>
         ) : dayEvents.map((e) => (
           <div key={e.id} className="flex items-start gap-2 p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5">
             <div className={cn('w-2 h-2 rounded-full mt-1.5 shrink-0', e.color)} />

@@ -2,7 +2,17 @@
 
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { useStore } from '@/store';
+import { useTranslation } from '@/hooks/useTranslation';
 import type { AppContentProps } from './AppRegistry';
+
+const TERMINAL_LOCALE = {
+  en: { welcome: 'Desktop Layout OS — Terminal v1.0\nType "help" for available commands.\n' },
+  vi: { welcome: 'Hệ điều hành Desktop Layout — Terminal v1.0\nNhập "help" để hiển thị các lệnh có sẵn.\n' },
+  ja: { welcome: 'Desktop Layout OS — ターミナル v1.0\n利用可能なコマンドについては "help" を入力してください。\n' },
+  ko: { welcome: 'Desktop Layout OS — 터미널 v1.0\n사용 가능한 명령어를 보려면 "help"를 입력하세요.\n' },
+  zh: { welcome: 'Desktop Layout OS — 终端 v1.0\n输入 "help" 查看可用命令。\n' },
+  th: { welcome: 'ระบบปฏิบัติการ Desktop Layout — เทอร์มินัล v1.0\nพิมพ์ "help" เพื่อดูคำสั่งที่ใช้งานได้\n' },
+} as const;
 
 interface HistoryEntry {
   type: 'input' | 'output' | 'error';
@@ -96,11 +106,20 @@ function buildCommands(store: ReturnType<typeof useStore.getState>): Record<stri
   };
 }
 
-export function Terminal({ windowId }: AppContentProps) {
+export function Terminal({ windowId, appId }: AppContentProps) {
   const store = useStore.getState;
-  const [history, setHistory] = useState<HistoryEntry[]>([
-    { type: 'output', text: 'Desktop Layout OS — Terminal v1.0\nType "help" for available commands.\n' },
-  ]);
+  const { language } = useTranslation();
+  const tTerm = TERMINAL_LOCALE[language as keyof typeof TERMINAL_LOCALE] || TERMINAL_LOCALE.en;
+  void appId;
+
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+
+  useEffect(() => {
+    setHistory([
+      { type: 'output', text: tTerm.welcome }
+    ]);
+  }, [tTerm.welcome]);
+
   const [input, setInput] = useState('');
   const [cwd, setCwd] = useState('/Users/user');
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);

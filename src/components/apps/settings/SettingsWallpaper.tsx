@@ -5,6 +5,7 @@ import { useStore } from '@/store';
 import { WALLPAPERS } from '@/config/wallpapers.config';
 import { cn } from '@/lib/utils';
 import { AppSection, AppGrid } from '@/components/apps/ui';
+import { useTranslation } from '@/hooks/useTranslation';
 
 function ThumbnailImage({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false);
@@ -31,6 +32,7 @@ function ThumbnailImage({ src, alt }: { src: string; alt: string }) {
 export function SettingsWallpaper() {
   const wallpaperId = useStore((s) => s.wallpaperId);
   const setWallpaper = useStore((s) => s.setWallpaper);
+  const { t } = useTranslation();
 
   const statics = WALLPAPERS.filter((w) => !w.isLive);
   const lives   = WALLPAPERS.filter((w) => w.isLive);
@@ -58,7 +60,7 @@ export function SettingsWallpaper() {
   return (
     <div className="space-y-6">
       {statics.length > 0 && (
-        <AppSection title="Static Wallpapers" description="Select a high-quality static background image.">
+        <AppSection title={t.staticWallpapers} description={t.staticWallpapersDesc}>
           <AppGrid narrow={2} medium={3} wide={3} gap="16px">
             {statics.map(renderItem)}
           </AppGrid>
@@ -66,7 +68,7 @@ export function SettingsWallpaper() {
       )}
 
       {lives.length > 0 && (
-        <AppSection title="Live Wallpapers" description="Choose a loop-playing video wallpaper to make your desktop dynamic.">
+        <AppSection title={t.liveWallpapers} description={t.liveWallpapersDesc}>
           <AppGrid narrow={2} medium={3} wide={3} gap="16px">
             {lives.map(renderItem)}
           </AppGrid>
