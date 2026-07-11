@@ -30,3 +30,10 @@ export function DeviceLayout({ assetBaseUrl = '', apps }: DeviceLayoutProps) {
 export type { ThemeProviderProps } from '@/components/themes/ThemeProvider';
 export type { AppConfig, AppContentProps, AppInstance, MenuBarMenu, MenuBarItem, ContextMenuAction } from '@/types/app';
 export { useAssetBase, resolveAssetUrl } from '@/lib/asset-base';
+/**
+ * Exposed so a host app can tell which app is currently active/focused —
+ * e.g. to gate global keyboard listeners or a native OS menu so only the
+ * focused app's handlers run (see docs/guides/adding-an-app.md in sky-app
+ * for the R2-driven "1 app active at a time" contract this supports).
+ */
+export { useStore } from '@/store';
