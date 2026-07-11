@@ -13,6 +13,10 @@ import dts from 'vite-plugin-dts';
  * Run: `pnpm build:lib`. Does not affect `pnpm dev` / `pnpm build` (Next.js).
  */
 export default defineConfig({
+  // Don't copy public/ (wallpapers, icons, live-wallpaper mp4s — tens of MB)
+  // into the library build. The host app supplies its own assets and points
+  // <DeviceLayout assetBaseUrl="..."> at them (see src/lib/asset-base.ts).
+  publicDir: false,
   plugins: [
     react(),
     tailwindcss(),
