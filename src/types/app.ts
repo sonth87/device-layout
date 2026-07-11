@@ -1,5 +1,15 @@
+import type { ComponentType } from 'react';
 import type { WidgetDefinition } from './widget';
 import type { AppLocale } from './locale';
+
+/**
+ * Props passed to every app's root component — whether built-in
+ * (resolved via `component` key) or external (passed directly via `render`).
+ */
+export interface AppContentProps {
+  appId: string;
+  windowId: string;
+}
 
 export interface ContextMenuAction {
   key: string;
@@ -37,8 +47,15 @@ export interface AppConfig {
   iconColor?: [string, string];
   /** Text/icon color inside icon background (default white) */
   iconTextColor?: string;
-  /** Key matching a lazy import in AppRegistry */
-  component: string;
+  /** Key matching a lazy import in AppRegistry (built-in apps) */
+  component?: string;
+  /**
+   * External app component, passed directly instead of a registry key.
+   * Takes priority over `component` when both are set. Lets a host
+   * application (e.g. an Electron shell) register its own apps without
+   * touching AppRegistry's internal APP_COMPONENTS map.
+   */
+  render?: ComponentType<AppContentProps>;
   disabled?: boolean;
   defaultSize?: { width: number; height: number };
   defaultPosition?: { x: number; y: number };

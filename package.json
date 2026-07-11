@@ -1,10 +1,24 @@
 {
-  "name": "desktop-layout",
+  "name": "@sonth87/device-layout",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "main": "./dist-lib/index.js",
+  "types": "./dist-lib/lib.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist-lib/lib.d.ts",
+      "import": "./dist-lib/index.js"
+    },
+    "./style.css": "./dist-lib/style.css"
+  },
+  "files": [
+    "dist-lib"
+  ],
   "scripts": {
     "dev": "NODE_OPTIONS='--max-old-space-size=4096' next dev",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' next build",
+    "build:lib": "vite build",
     "start": "next start",
     "lint": "eslint"
   },
@@ -40,13 +54,17 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.4",
+    "@tailwindcss/vite": "^4.3.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.0.3",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "postcss": "^8.5.14",
     "tailwindcss": "^4.2.4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^8.1.4",
+    "vite-plugin-dts": "^5.0.3"
   }
 }

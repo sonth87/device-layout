@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useStore } from '@/store';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
+// Plain <img> instead of next/image: this file is imported by the library
+// build (src/lib.tsx), which has no Next.js image-optimization server.
 import { Search } from 'lucide-react';
 import { MenuBarClock } from '@/components/menubar/MenuBarClock';
 import { StartMenu } from '@/components/windows/StartMenu';
@@ -94,7 +95,8 @@ export function Taskbar({ onOpenApp }: TaskbarProps) {
                 title={displayName}
               >
                 {app.icon.startsWith('/') ? (
-                  <Image src={app.icon} alt={displayName} width={28} height={28} className="object-contain" />
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={app.icon} alt={displayName} width={28} height={28} className="object-contain" />
                 ) : (
                   <div className="w-7 h-7 rounded-md bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center">
                     <span className="text-white text-xs font-bold">{displayName.charAt(0)}</span>

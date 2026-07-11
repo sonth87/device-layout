@@ -6,6 +6,7 @@ import { useStore } from '@/store';
 import { WALLPAPERS } from '@/config/wallpapers.config';
 import { useImageReady } from '@/hooks/useImageReady';
 import { useStoreHydrated } from '@/hooks/useStoreHydrated';
+import { resolveAssetUrl, useAssetBase } from '@/lib/asset-base';
 
 function LockClock() {
   const [time, setTime] = useState('');
@@ -25,8 +26,9 @@ interface LockScreenProps {
 export function LockScreen({ onUnlock }: LockScreenProps) {
   const wallpaperId = useStore((s) => s.wallpaperId);
   const hydrated = useStoreHydrated();
+  const assetBase = useAssetBase();
   const wallpaper = WALLPAPERS.find((w) => w.id === wallpaperId);
-  const wallpaperUrl = wallpaper?.url ?? '/wallpapers/bg-1.jpg';
+  const wallpaperUrl = resolveAssetUrl(assetBase, wallpaper?.url ?? '/wallpapers/bg-1.jpg');
   const wallpaperReady = useImageReady(wallpaperUrl, hydrated);
   const backgroundImage = hydrated && wallpaperReady ? `url(${wallpaperUrl})` : 'none';
 

@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# library build (vite build:lib)
+/dist-lib/
+
 # production
 /build
 

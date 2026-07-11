@@ -23,6 +23,15 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { getThemeCssVars } from '@/lib/theme-layout';
 import type { AppConfig } from '@/types/app';
 
+export interface ThemeProviderProps {
+  /**
+   * Apps to register on mount. Defaults to the built-in APPS_CONFIG so
+   * existing (Next.js) callers are unaffected. A host embedding this as a
+   * library (see src/lib.tsx) passes its own app list here instead.
+   */
+  apps?: AppConfig[];
+}
+
 /**
  * ThemeProvider — single root component.
  *
@@ -31,7 +40,7 @@ import type { AppConfig } from '@/types/app';
  * Only the chrome overlays (MacOSChrome, WindowsChrome, etc.) swap.
  * This prevents useWindowUrlSync from re-running and creating duplicate windows.
  */
-export function ThemeProvider() {
+export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
   const osTheme = useStore((s) => s.osTheme);
   const colorScheme = useStore((s) => s.colorScheme);
   const resolvedColorScheme = useStore((s) => s.resolvedColorScheme);
@@ -50,8 +59,8 @@ export function ThemeProvider() {
   });
 
   useEffect(() => {
-    registerApps(APPS_CONFIG);
-  }, [registerApps]);
+    registerApps(apps);
+  }, [registerApps, apps]);
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');

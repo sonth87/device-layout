@@ -7,6 +7,7 @@ import { useStore } from '@/store';
 import { WALLPAPERS } from '@/config/wallpapers.config';
 import { useImageReady } from '@/hooks/useImageReady';
 import { useStoreHydrated } from '@/hooks/useStoreHydrated';
+import { resolveAssetUrl, useAssetBase } from '@/lib/asset-base';
 import { WallpaperPicker } from './WallpaperPicker';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { StackGroupBy } from '@/types/desktop';
@@ -41,8 +42,9 @@ export function Wallpaper({ children }: WallpaperProps) {
   const hydrated           = useStoreHydrated();
   const [pickerOpen, setPickerOpen] = useState(false);
 
+  const assetBase    = useAssetBase();
   const wallpaper    = WALLPAPERS.find((w) => w.id === wallpaperId);
-  const wallpaperUrl = wallpaper?.url ?? '/wallpapers/bg-1.jpg';
+  const wallpaperUrl = resolveAssetUrl(assetBase, wallpaper?.url ?? '/wallpapers/bg-1.jpg');
   const wallpaperReady  = useImageReady(wallpaperUrl, hydrated);
   const backgroundImage = hydrated && wallpaperReady ? `url(${wallpaperUrl})` : 'none';
 

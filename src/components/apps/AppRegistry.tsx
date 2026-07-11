@@ -3,6 +3,7 @@
 import { lazy, Suspense } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useStore } from '@/store';
+import type { AppContentProps } from '@/types/app';
 import { AppViewportProvider } from './AppViewport';
 
 // Each app is code-split — loaded only when its window opens
@@ -22,10 +23,7 @@ const APP_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   MdxApp: lazy(() => import('./MdxApp').then((m) => ({ default: m.MdxApp }))),
 };
 
-export interface AppContentProps {
-  appId: string;
-  windowId: string;
-}
+export type { AppContentProps };
 
 function AppLoadingSkeleton() {
   return (
@@ -46,11 +44,23 @@ export function AppContent({ appId, windowId }: AppContentProps) {
     );
   }
 
-  const Component = APP_COMPONENTS[appConfig.component];
+  // External apps (host-registered) take priority over the built-in registry.
+  if (appConfig.render) {
+    const ExternalComponent = appConfig.render;
+    return (
+      <Suspense fallback={<AppLoadingSkeleton />}>
+        <AppViewportProvider>
+          <ExternalComponent appId={appId} windowId={windowId} />
+        </AppViewportProvider>
+      </Suspense>
+    );
+  }
+
+  const Component = appConfig.component ? APP_COMPONENTS[appConfig.component] : undefined;
   if (!Component) {
     return (
       <div className="flex items-center justify-center h-full text-sm text-black/40 dark:text-white/40">
-        Component not registered: {appConfig.component}
+        Component not registered: {appConfig.component ?? '(none)'}
       </div>
     );
   }
