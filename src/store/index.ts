@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create, type Mutate, type StoreApi, type UseBoundStore } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { createWindowSlice, type WindowSlice } from './window-slice';
@@ -11,7 +11,20 @@ import { createWidgetSlice, type WidgetSlice } from './widget-slice';
 
 export type RootStore = WindowSlice & AppSlice & ThemeSlice & DesktopSlice & NotificationSlice & VFSSlice & WidgetSlice;
 
-export const useStore = create<RootStore>()(
+/**
+ * Explicit return type — without it, TypeScript's declaration emitter tries
+ * to name zustand/immer's internal `WritableNonArrayDraft` type (not
+ * publicly exported by immer) and fails with TS4023, which silently drops
+ * store/index.d.ts from the library build (see sky-app's device-layout port
+ * notes). Mutate<...> mirrors the middleware stack (immer(persist(...)) —
+ * outer-to-inner) so .persist.* stays typed instead of being annotated away.
+ */
+type StoreWithMiddlewares = Mutate<
+  StoreApi<RootStore>,
+  [['zustand/immer', never], ['zustand/persist', unknown]]
+>;
+
+export const useStore: UseBoundStore<StoreWithMiddlewares> = create<RootStore>()(
   immer(
     persist(
       // The set function passed by immer is typed as (fn: (state: RootStore) => void) => void
