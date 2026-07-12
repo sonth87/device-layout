@@ -16,6 +16,14 @@ export interface WindowState {
   zIndex: number;
   isMinimized: boolean;
   isMaximized: boolean;
+  /**
+   * True macOS fullscreen (green traffic light) — distinct from isMaximized
+   * (double-click title bar / "zoom"): fullscreen fills the ENTIRE viewport
+   * (over the menu bar + dock, which auto-hide), whereas maximized only
+   * fills the space between them. A window can't be both at once — entering
+   * one clears the other (see window-slice.ts's enterFullScreen/toggleMaximize).
+   */
+  isFullScreen: boolean;
   isFocused: boolean;
   title: string;
   hasMenuBar: boolean;

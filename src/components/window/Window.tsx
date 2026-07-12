@@ -21,8 +21,21 @@ export function Window({ windowId }: WindowProps) {
   const win = useStore((s) => s.windows[windowId]);
   const focusWindow = useStore((s) => s.focusWindow);
   const setActiveApp = useStore((s) => s.setActiveApp);
+  const exitFullScreen = useStore((s) => s.exitFullScreen);
   const apps = useStore((s) => s.apps);
   const { isFloating, isMobile } = useTheme();
+
+  // Fullscreen has no chrome (no title bar / green button to click again) —
+  // Escape is the only way out, matching real macOS. Only the focused
+  // window's fullscreen exits (Escape shouldn't affect a background window).
+  useEffect(() => {
+    if (!win?.isFullScreen || !win.isFocused) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') exitFullScreen(windowId);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [win?.isFullScreen, win?.isFocused, windowId, exitFullScreen]);
 
   const mx = useMotionValue(win?.rect.x ?? 100);
   const my = useMotionValue(win?.rect.y ?? 100);
@@ -49,7 +62,10 @@ export function Window({ windowId }: WindowProps) {
 
   if (!win) return null;
 
-  const isFullscreen = isMobile || win.isMaximized;
+  // isFullscreen (viewport-filling layout, no chrome) — true for mobile,
+  // maximized (fills between menu bar/dock), AND true macOS fullscreen
+  // (fills the ENTIRE viewport, over menu bar/dock — win.isFullScreen).
+  const isFullscreen = isMobile || win.isMaximized || win.isFullScreen;
   const isFloatingWindow = isFloating && !isMobile;
 
   return (
@@ -105,8 +121,8 @@ export function Window({ windowId }: WindowProps) {
       {/* Optional status bar */}
       {win.hasStatusBar && <WindowStatusBar windowId={windowId} />}
 
-      {/* Resize handles — only floating non-maximized */}
-      {isFloatingWindow && !win.isMaximized && (
+      {/* Resize handles — only floating, non-maximized, non-fullscreen */}
+      {isFloatingWindow && !win.isMaximized && !win.isFullScreen && (
         <ResizeHandles getResizeHandler={getResizeHandler} />
       )}
     </motion.div>

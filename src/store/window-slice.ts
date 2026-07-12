@@ -5,6 +5,7 @@ import { fitWindowRectToViewport } from '@/lib/window-math';
 
 export interface WindowOpenOptions extends Partial<WindowRect> {
   isMaximized?: boolean;
+  isFullScreen?: boolean;
   prevRect?: WindowRect | null;
 }
 
@@ -26,6 +27,9 @@ export interface WindowSlice {
   restoreWindow: (id: string) => void;
   maximizeWindow: (id: string, viewportRect: WindowRect) => void;
   toggleMaximize: (id: string, viewportRect: WindowRect) => void;
+  enterFullScreen: (id: string) => void;
+  exitFullScreen: (id: string) => void;
+  toggleFullScreen: (id: string) => void;
   focusWindow: (id: string) => void;
   moveWindow: (id: string, x: number, y: number) => void;
   resizeWindow: (id: string, rect: WindowRect) => void;
@@ -106,6 +110,7 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
           zIndex: state.zCounter,
           isMinimized: false,
           isMaximized: options?.isMaximized ?? false,
+          isFullScreen: options?.isFullScreen ?? false,
           isFocused: true,
           title: appConfig.name,
           hasMenuBar: appConfig.hasMenuBar ?? false,
@@ -185,6 +190,8 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
       set((state) => {
         if (!state.windows[id]) return;
         const win = state.windows[id];
+        // Zoom trong lúc đang fullscreen: thoát fullscreen trước (không giữ cả 2 cùng lúc).
+        win.isFullScreen = false;
         if (win.isMaximized && win.prevRect) {
           win.rect = { ...win.prevRect };
           win.prevRect = null;
@@ -195,6 +202,36 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
           win.rect = { ...viewportRect };
         }
       });
+    },
+
+    /**
+     * True fullscreen (green traffic light) — chiếm TOÀN viewport, đè lên cả
+     * menu bar/dock (chúng tự ẩn — xem MacOSChrome.tsx). Khác toggleMaximize:
+     * không đổi win.rect (không cần biết insets), chỉ set flag; Window.tsx tự
+     * quyết định style render dựa vào isFullScreen giống cách đã làm với
+     * isMaximized. Không giữ prevRect riêng vì rect gốc không hề bị ghi đè.
+     */
+    enterFullScreen(id) {
+      set((state) => {
+        const win = state.windows[id];
+        if (!win) return;
+        win.isMaximized = false;
+        win.isFullScreen = true;
+      });
+    },
+
+    exitFullScreen(id) {
+      set((state) => {
+        const win = state.windows[id];
+        if (win) win.isFullScreen = false;
+      });
+    },
+
+    toggleFullScreen(id) {
+      const win = get().windows[id];
+      if (!win) return;
+      if (win.isFullScreen) get().exitFullScreen(id);
+      else get().enterFullScreen(id);
     },
 
     focusWindow(id) {

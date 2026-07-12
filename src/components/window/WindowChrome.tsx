@@ -25,6 +25,7 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
   const closeWindow = useStore((s) => s.closeWindow);
   const minimizeWindow = useStore((s) => s.minimizeWindow);
   const toggleMaximize = useStore((s) => s.toggleMaximize);
+  const toggleFullScreen = useStore((s) => s.toggleFullScreen);
   const { config } = useTheme();
   const viewport = useViewportSize();
   const [hovering, setHovering] = useState(false);
@@ -84,12 +85,13 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
           )}
         </button>
 
-        {/* Maximize / Green */}
+        {/* Fullscreen / Green — true macOS fullscreen (fills over menu bar + dock),
+            distinct from double-click title bar's toggleMaximize (zoom) below. */}
         <button
-          onClick={() => toggleMaximize(windowId, viewportRect)}
+          onClick={() => toggleFullScreen(windowId)}
           className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75"
           style={{ backgroundColor: win.isFocused ? '#28c840' : '#d1d1d1' }}
-          title={win.isMaximized ? 'Restore' : 'Maximize'}
+          title={win.isFullScreen ? 'Exit Full Screen' : 'Enter Full Screen'}
         >
           {hovering && win.isFocused && (
             <Maximize2 className="w-1.5 h-1.5 text-green-900/80" strokeWidth={3} />

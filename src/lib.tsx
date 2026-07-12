@@ -31,6 +31,13 @@ export type { ThemeProviderProps } from '@/components/themes/ThemeProvider';
 export type { AppConfig, AppContentProps, AppInstance, MenuBarMenu, MenuBarItem, ContextMenuAction } from '@/types/app';
 export { useAssetBase, resolveAssetUrl } from '@/lib/asset-base';
 /**
+ * Built-in demo apps (Finder, Notes, Calendar, Photos, Music, Terminal,
+ * Settings, ...) — same list ThemeProvider defaults to when no `apps` prop
+ * is passed. A host that wants both its own apps AND these built-ins
+ * spreads both into the `apps` array: <DeviceLayout apps={[...APPS_CONFIG, ...myApps]} />.
+ */
+export { APPS_CONFIG } from '@/config/apps.config';
+/**
  * Exposed so a host app can tell which app is currently active/focused —
  * e.g. to gate global keyboard listeners or a native OS menu so only the
  * focused app's handlers run (see docs/guides/adding-an-app.md in sky-app

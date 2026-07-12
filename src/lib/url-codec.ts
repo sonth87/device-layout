@@ -2,7 +2,7 @@ import type { WindowState } from '@/types/window';
 
 /**
  * Wire format: "appId:x,y,width,height[:flagsBitmask[:px,py,pw,ph]]"
- * Flags: 1 = minimized, 2 = maximized
+ * Flags: 1 = minimized, 2 = maximized, 4 = fullscreen
  * prevRect (px,py,pw,ph) is appended only when flags > 0 and prevRect exists.
  *
  * Example: "finder:100,200,800,600"
@@ -10,7 +10,7 @@ import type { WindowState } from '@/types/window';
  */
 
 export function encodeWindowToParam(w: WindowState): string {
-  const flags = (w.isMinimized ? 1 : 0) | (w.isMaximized ? 2 : 0);
+  const flags = (w.isMinimized ? 1 : 0) | (w.isMaximized ? 2 : 0) | (w.isFullScreen ? 4 : 0);
   const rect = [
     Math.round(w.rect.x),
     Math.round(w.rect.y),
@@ -41,6 +41,7 @@ export function decodeWindowFromParam(
   prevRect: { x: number; y: number; width: number; height: number } | null;
   isMinimized: boolean;
   isMaximized: boolean;
+  isFullScreen: boolean;
 } | null {
   const parts = param.split(':');
   if (parts.length < 2) return null;
@@ -70,5 +71,6 @@ export function decodeWindowFromParam(
     prevRect,
     isMinimized: Boolean(flags & 1),
     isMaximized: Boolean(flags & 2),
+    isFullScreen: Boolean(flags & 4),
   };
 }

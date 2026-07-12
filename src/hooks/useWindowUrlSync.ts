@@ -33,6 +33,7 @@ export function useWindowUrlSync() {
       openWindow(appConfig, {
         ...decoded.rect,
         isMaximized: decoded.isMaximized,
+        isFullScreen: decoded.isFullScreen,
         prevRect: decoded.prevRect,
       });
     }
