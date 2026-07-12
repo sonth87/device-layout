@@ -12,6 +12,8 @@ interface LiquidGlassProps {
   className?: string;
   variant?: GlassVariant;
   forceGlass?: boolean;
+  /** Overrides the variant's default radius (e.g. Dock scaling `--radius-dock` down with dockSize). */
+  borderRadius?: string | number;
 }
 
 const VARIANT_RADIUS_VAR: Record<GlassVariant, string | null> = {
@@ -37,10 +39,11 @@ export function LiquidGlass({
   className,
   variant = 'panel',
   forceGlass,
+  borderRadius,
 }: LiquidGlassProps) {
   const { isGlass: themeGlass } = useTheme();
   const isGlass = forceGlass !== undefined ? forceGlass : themeGlass;
-  const radiusVar = VARIANT_RADIUS_VAR[variant];
+  const radiusVar = borderRadius ?? VARIANT_RADIUS_VAR[variant];
 
   const radiusStyle: React.CSSProperties = radiusVar ? { borderRadius: radiusVar } : {};
   const shadowCls = VARIANT_SHADOW_CLS[variant];

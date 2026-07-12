@@ -14,7 +14,7 @@
 /* ── Shared design tokens ───────────────────────────────── */
 :root {
   --dock-height: 72px;
-  --dock-offset-bottom: 16px;
+  --dock-offset-bottom: 6px;
   --menubar-height: 28px;
   --taskbar-height: 48px;
   --navbar-height: 56px;

@@ -52,11 +52,32 @@ export function Dock({ onOpenApp }: DockProps) {
        * LiquidGlass fills this wrapper absolutely.
        */}
       <div className="absolute inset-x-0 bottom-0" style={{ top: hoverOverflow }}>
-        <LiquidGlass variant="dock" className="absolute inset-0" />
+        <LiquidGlass
+          variant="dock"
+          className="absolute inset-0"
+          // Scale the pill's corner radius down with dockSize too — the
+          // default --radius-dock (22px) reads oversized/blocky once icons
+          // (and thus the whole pill) have shrunk via the Size slider.
+          borderRadius={Math.round(dockSize * 0.5)}
+        />
       </div>
 
-      {/* Icon row — on top of glass, overflow-visible so icons can escape upward */}
-      <div className="relative z-10 flex items-end gap-3 px-5 pt-3 pb-2 overflow-visible">
+      {/* Icon row — on top of glass, overflow-visible so icons can escape upward.
+          Gap AND padding scale with dockSize (fixed px-5/pt-3/pb-2/gap-3 read
+          as too spaced-out once the user shrinks icons via Settings > Desktop
+          & Dock's "Size" slider — fixed spacing around/between small icons
+          looks disproportionate). Ratios approximate macOS's own dock
+          spacing-to-icon-size relationship across the size range. */}
+      <div
+        className="relative z-10 flex items-end overflow-visible"
+        style={{
+          gap: Math.round(dockSize * 0.28),
+          paddingLeft: Math.round(dockSize * 0.47),
+          paddingRight: Math.round(dockSize * 0.47),
+          paddingTop: Math.round(dockSize * 0.28),
+          paddingBottom: Math.round(dockSize * 0.19),
+        }}
+      >
         {dockApps.map((app) => (
           <DockItem
             key={app.id}
