@@ -13,21 +13,23 @@ interface DockItemProps {
   hasMinimized?: boolean;
   mouseX: ReturnType<typeof useMotionValue<number>>;
   onOpen: (app: AppConfig) => void;
+  /** Icon size at rest — Settings > Desktop & Dock's "Size" slider (desktop-slice.ts's dockSize). */
+  baseSize: number;
+  /** Icon size when magnified (cursor directly over it) — baseSize * (1 + dockMagnification). Equals baseSize when magnification is "Off". */
+  maxSize: number;
 }
 
-export const BASE_SIZE = 54;
-export const MAX_SIZE = 80;
 const MAGNETIC_RADIUS = 120;
 
-// Total height of the dock item slot: icon area + dot indicator area.
-// This is the fixed height the dock uses — icons overflow UPWARD beyond this.
-export const DOCK_ITEM_HEIGHT = BASE_SIZE + 6;
-
-export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }: DockItemProps) {
+export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen, baseSize, maxSize }: DockItemProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [bouncing, setBouncing] = useState(false);
   const { getAppName } = useTranslation();
   const displayName = getAppName(appConfig.id, appConfig.name);
+
+  // Total height of the dock item slot: icon area + dot indicator area.
+  // This is the fixed height the dock uses — icons overflow UPWARD beyond this.
+  const itemHeight = baseSize + 6;
 
   // Magnification: map cursor distance → icon size
   const distance = useTransform(mouseX, (mx) => {
@@ -36,7 +38,7 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }:
     return Math.abs(mx - (rect.left + rect.width / 2));
   });
 
-  const rawSize = useTransform(distance, [0, MAGNETIC_RADIUS], [MAX_SIZE, BASE_SIZE], { clamp: true });
+  const rawSize = useTransform(distance, [0, MAGNETIC_RADIUS], [maxSize, baseSize], { clamp: true });
   const size = useSpring(rawSize, { stiffness: 350, damping: 22, mass: 0.5 });
 
   const handleClick = () => {
@@ -57,7 +59,7 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }:
         <motion.div
           ref={ref}
           className="relative flex flex-col justify-end items-center overflow-visible"
-          style={{ width: size, height: DOCK_ITEM_HEIGHT }}
+          style={{ width: size, height: itemHeight }}
         >
           {/*
            * Tooltip.Trigger wraps the button directly (not the outer container).
@@ -76,7 +78,7 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen }:
             >
               <AppIconImage
                 appConfig={appConfig}
-                size={MAX_SIZE}
+                size={maxSize}
                 fill
                 className="w-full h-full drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
               />

@@ -17,6 +17,15 @@ export interface WindowSlice {
   windows: Record<string, WindowState>;
   zCounter: number;
   focusedWindowId: string | null;
+  /**
+   * True while the menu bar + fullscreen window's title bar are peeking
+   * (hover near top edge, or the auto-hide grace period) — ephemeral UI
+   * state, NOT persisted. Lives here (not local state in MacOSTheme.tsx)
+   * so Window.tsx can read the same value and slide its title bar down in
+   * lockstep with the menu bar (see docs/dev/history.md's decision on this).
+   */
+  fullscreenChromeRevealed: boolean;
+  setFullscreenChromeRevealed: (revealed: boolean) => void;
 
   urlHydrated: boolean;
   setUrlHydrated: (hydrated: boolean) => void;
@@ -67,6 +76,10 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
     windows: {},
     zCounter: 10,
     focusedWindowId: null,
+    fullscreenChromeRevealed: false,
+    setFullscreenChromeRevealed(revealed) {
+      set((state) => { state.fullscreenChromeRevealed = revealed; });
+    },
     urlHydrated: false,
     setUrlHydrated(hydrated) {
       set((state) => { state.urlHydrated = hydrated; });

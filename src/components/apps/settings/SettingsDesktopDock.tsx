@@ -5,17 +5,65 @@ import { cn } from '@/lib/utils';
 import { AppIconImage } from '@/components/shared/AppIconImage';
 import { useTranslation } from '@/hooks/useTranslation';
 
+// macOS's Size slider spans roughly 16–64px icons; Magnification is a
+// multiplier on top of that (0 = "Off", up to ~1.4x at "Large").
+const DOCK_SIZE_MIN = 24;
+const DOCK_SIZE_MAX = 64;
+const DOCK_MAGNIFICATION_MAX = 1.4;
+
+const SLIDER_CLS = 'w-full h-1 accent-red-500';
+
 export function SettingsDesktopDock() {
   const dockAppIds  = useStore((s) => s.dockAppIds);
   const apps        = useStore((s) => s.apps);
   const pinToDock   = useStore((s) => s.pinToDock);
   const unpinFromDock = useStore((s) => s.unpinFromDock);
+  const dockSize = useStore((s) => s.dockSize);
+  const setDockSize = useStore((s) => s.setDockSize);
+  const dockMagnification = useStore((s) => s.dockMagnification);
+  const setDockMagnification = useStore((s) => s.setDockMagnification);
   const { t } = useTranslation();
 
   const allApps = Object.values(apps).filter((a) => !a.disabled);
 
   return (
     <div className="space-y-5">
+      <div>
+        <h3 className="text-sm font-semibold mb-3">{t.desktopDock}</h3>
+        <div className="rounded-card bg-white dark:bg-white/5 px-4 py-3 grid grid-cols-2 gap-6">
+          <div>
+            <div className="flex items-center justify-between text-xs text-black/50 dark:text-white/50 mb-1.5">
+              <span>{t.dockSize}</span>
+            </div>
+            <input
+              type="range"
+              min={DOCK_SIZE_MIN}
+              max={DOCK_SIZE_MAX}
+              value={dockSize}
+              onChange={(e) => setDockSize(+e.target.value)}
+              className={SLIDER_CLS}
+            />
+          </div>
+          <div>
+            <div className="flex items-center justify-between text-xs text-black/50 dark:text-white/50 mb-1.5">
+              <span>{t.dockMagnification}</span>
+              <span className="text-black/30 dark:text-white/30">
+                {dockMagnification === 0 ? t.dockMagnificationOff : ''}
+              </span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={DOCK_MAGNIFICATION_MAX}
+              step={0.05}
+              value={dockMagnification}
+              onChange={(e) => setDockMagnification(+e.target.value)}
+              className={SLIDER_CLS}
+            />
+          </div>
+        </div>
+      </div>
+
       <div>
         <h3 className="text-sm font-semibold mb-1">{t.dockApps}</h3>
         <p className="text-xs text-black/40 dark:text-white/40 mb-3">

@@ -13,7 +13,7 @@ const PEEK_ZONE = 20; // px from top/bottom edge to trigger menu bar / dock reve
 // Total slide distance: dock height (≈80px) + offset bottom (16px) + a little extra
 const DOCK_HIDE_Y = 120;
 const MENU_BAR_HEIGHT = 28; // matches --menubar-height; slide distance when hidden
-const AUTO_HIDE_DELAY_MS = 3000; // mouse leaves menu bar area → re-hide after this
+const AUTO_HIDE_DELAY_MS = 1500; // mouse leaves menu bar area → re-hide after this
 
 interface ChromeProps {
   onOpenApp: (app: AppConfig) => void;
@@ -52,10 +52,14 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
     return () => document.removeEventListener('mousemove', handleDockPeek);
   }, [dockAutoHide, handleDockPeek]);
 
-  // Menu bar only auto-hides in true fullscreen. Reveal on hover near the top
-  // edge; re-hide 3s after the pointer leaves the menu bar strip (not just
-  // the peek zone — once revealed, the bar itself extends past PEEK_ZONE).
-  const [menuBarRevealed, setMenuBarRevealed] = useState(false);
+  // Menu bar (+ the fullscreen window's own title bar, see Window.tsx) only
+  // auto-hides in true fullscreen. Reveal on hover near the top edge;
+  // re-hide 1.5s after the pointer leaves the menu bar strip (not just the
+  // peek zone — once revealed, the bar itself extends past PEEK_ZONE). Lives
+  // in the store (not local state) so Window.tsx's title bar can read the
+  // same value and slide in lockstep.
+  const menuBarRevealed = useStore((s) => s.fullscreenChromeRevealed);
+  const setMenuBarRevealed = useStore((s) => s.setFullscreenChromeRevealed);
   const menuBarVisible = !hasFullScreen || menuBarRevealed;
 
   useEffect(() => {
@@ -79,7 +83,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
       document.removeEventListener('mousemove', handlePeek);
       if (hideTimer) clearTimeout(hideTimer);
     };
-  }, [hasFullScreen]);
+  }, [hasFullScreen, setMenuBarRevealed]);
 
   return (
     <>

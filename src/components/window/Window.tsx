@@ -22,6 +22,7 @@ export function Window({ windowId }: WindowProps) {
   const focusWindow = useStore((s) => s.focusWindow);
   const setActiveApp = useStore((s) => s.setActiveApp);
   const exitFullScreen = useStore((s) => s.exitFullScreen);
+  const fullscreenChromeRevealed = useStore((s) => s.fullscreenChromeRevealed);
   const apps = useStore((s) => s.apps);
   const { isFloating, isMobile } = useTheme();
 
@@ -82,7 +83,18 @@ export function Window({ windowId }: WindowProps) {
       }}
       style={
         isFullscreen && !win.isMaximized
-          ? { position: 'absolute', inset: 0, zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: 'var(--radius-window)' }
+          ? {
+              // mw/mh are Framer Motion MotionValues — they're set on the DOM
+              // node imperatively and DON'T get cleared just because this
+              // style object stops referencing them (React's style diffing
+              // doesn't see them as "present" here, but the motion value
+              // subscription is still driving the underlying style until
+              // explicitly reset). Without resetting x/y/width/height to
+              // fixed values, the window keeps its last floating-mode size
+              // instead of filling the viewport via inset:0.
+              position: 'absolute', inset: 0, x: 0, y: 0, width: '100%', height: '100%',
+              zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: 'var(--radius-window)',
+            }
           : { position: 'absolute', x: mx, y: my, width: mw, height: mh, zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: 'var(--radius-window)' }
       }
       className={cn(
@@ -105,9 +117,24 @@ export function Window({ windowId }: WindowProps) {
         e.stopPropagation();
       }}
     >
-      {/* Chrome (title bar) — only for floating or maximized */}
-      {(isFloatingWindow || win.isMaximized) && (
+      {/* Chrome (title bar) — normal flex-column member when floating/maximized.
+          In true fullscreen it's hidden by default (macOS: no traffic
+          lights/title while fullscreen) but slides down as an absolute
+          overlay together with the system menu bar on hover-top — driven by
+          the same fullscreenChromeRevealed store flag MacOSTheme.tsx sets,
+          so both bars move in lockstep (see docs/dev/history.md). Overlay
+          (not a flex member) so it doesn't push window content down when revealed. */}
+      {(isFloatingWindow || win.isMaximized) && !win.isFullScreen && (
         <WindowChrome windowId={windowId} onPointerDown={onDragStart} />
+      )}
+      {win.isFullScreen && (
+        <motion.div
+          className="absolute top-0 inset-x-0 z-20"
+          animate={{ y: fullscreenChromeRevealed ? 0 : '-100%' }}
+          transition={{ type: 'spring', stiffness: 380, damping: 30, mass: 0.8 }}
+        >
+          <WindowChrome windowId={windowId} onPointerDown={onDragStart} />
+        </motion.div>
       )}
 
       {/* Optional per-window top menu bar */}

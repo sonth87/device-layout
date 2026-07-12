@@ -68,6 +68,8 @@ export const useStore: UseBoundStore<StoreWithMiddlewares> = create<RootStore>()
           wallpaperCycle: state.wallpaperCycle,
           iconLayout: state.iconLayout,
           dockAppIds: state.dockAppIds,
+          dockSize: state.dockSize,
+          dockMagnification: state.dockMagnification,
           useStacks: state.useStacks,
           stackGroupBy: state.stackGroupBy,
           notifications: state.notifications,

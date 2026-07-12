@@ -22,6 +22,14 @@ export interface DesktopSlice {
   wallpaperCycle: WallpaperCycleConfig;
   iconLayout: IconPosition[];
   dockAppIds: string[];
+  /** Base dock icon size in px (macOS's "Size" slider — Small↔Large). See dock/DockItem.tsx's BASE_SIZE. */
+  dockSize: number;
+  /**
+   * Magnification factor applied to the icon nearest the cursor — 0 = "Off"
+   * (macOS's leftmost slider position, no hover zoom). MAX_SIZE = dockSize *
+   * (1 + dockMagnification), e.g. dockSize=43, magnification=0.6 → 68.8px max.
+   */
+  dockMagnification: number;
   useStacks: boolean;
   stackGroupBy: StackGroupBy;
   language: 'en' | 'vi' | 'ja' | 'ko' | 'zh' | 'th';
@@ -36,6 +44,8 @@ export interface DesktopSlice {
   pinToDock: (appId: string) => void;
   unpinFromDock: (appId: string) => void;
   reorderDock: (appIds: string[]) => void;
+  setDockSize: (size: number) => void;
+  setDockMagnification: (magnification: number) => void;
   toggleStacks: () => void;
   setStackGroupBy: (by: StackGroupBy) => void;
   setLanguage: (lang: 'en' | 'vi' | 'ja' | 'ko' | 'zh' | 'th') => void;
@@ -57,6 +67,11 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
     },
     iconLayout: [],
     dockAppIds: DEFAULT_DOCK_APPS,
+    // 43px ≈ previous hardcoded 54px BASE_SIZE − 20%. Magnification 0.48
+    // preserves the old fixed MAX_SIZE=80 ratio ((80−54)/54) so hover-zoom
+    // feels the same as before, just starting from a smaller base.
+    dockSize: 43,
+    dockMagnification: 0.48,
     useStacks: false,
     stackGroupBy: 'kind',
     language: 'en',
@@ -123,6 +138,14 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
 
     reorderDock(appIds) {
       set((state) => { state.dockAppIds = appIds; });
+    },
+
+    setDockSize(size) {
+      set((state) => { state.dockSize = size; });
+    },
+
+    setDockMagnification(magnification) {
+      set((state) => { state.dockMagnification = magnification; });
     },
 
     toggleStacks() {

@@ -3,11 +3,8 @@
 import { useMotionValue } from 'motion/react';
 import { useStore } from '@/store';
 import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
-import { DockItem, BASE_SIZE, MAX_SIZE } from './DockItem';
+import { DockItem } from './DockItem';
 import type { AppConfig } from '@/types/app';
-
-// Extra space above the glass pill that captures mouse events for magnified icons
-const HOVER_OVERFLOW = MAX_SIZE - BASE_SIZE; // 26px
 
 interface DockProps {
   onOpenApp: (app: AppConfig) => void;
@@ -20,6 +17,12 @@ export function Dock({ onOpenApp }: DockProps) {
   const runningAppIds = useStore((s) => s.runningAppIds);
   const windows = useStore((s) => s.windows);
   const launchApp = useStore((s) => s.launchApp);
+  const dockSize = useStore((s) => s.dockSize);
+  const dockMagnification = useStore((s) => s.dockMagnification);
+
+  const maxSize = dockSize * (1 + dockMagnification);
+  // Extra space above the glass pill that captures mouse events for magnified icons
+  const hoverOverflow = maxSize - dockSize;
 
   const mouseX = useMotionValue(Infinity);
 
@@ -33,22 +36,22 @@ export function Dock({ onOpenApp }: DockProps) {
 
   return (
     /*
-     * Outer wrapper: extends HOVER_OVERFLOW px above the glass pill.
+     * Outer wrapper: extends hoverOverflow px above the glass pill.
      * This ensures onMouseMove fires even when the mouse is over the
      * magnified portion of icons that overflow above the dock glass.
      */
     <div
       className="relative overflow-visible"
-      style={{ paddingTop: HOVER_OVERFLOW }}
+      style={{ paddingTop: hoverOverflow }}
       onMouseMove={(e) => mouseX.set(e.clientX)}
       onMouseLeave={() => mouseX.set(Infinity)}
     >
       {/*
        * Wrapper positions the glass pill to cover only the icon row,
-       * leaving the HOVER_OVERFLOW padding-top area transparent (for mouse capture).
+       * leaving the hoverOverflow padding-top area transparent (for mouse capture).
        * LiquidGlass fills this wrapper absolutely.
        */}
-      <div className="absolute inset-x-0 bottom-0" style={{ top: HOVER_OVERFLOW }}>
+      <div className="absolute inset-x-0 bottom-0" style={{ top: hoverOverflow }}>
         <LiquidGlass variant="dock" className="absolute inset-0" />
       </div>
 
@@ -64,6 +67,8 @@ export function Dock({ onOpenApp }: DockProps) {
             )}
             mouseX={mouseX}
             onOpen={handleDockClick}
+            baseSize={dockSize}
+            maxSize={maxSize}
           />
         ))}
       </div>

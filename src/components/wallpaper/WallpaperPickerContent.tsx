@@ -9,14 +9,15 @@ import { WallpaperSection } from './WallpaperSection';
 import { WallpaperDetailPanel } from './WallpaperDetailPanel';
 
 /**
- * Full wallpaper picker content: Pictures / Colors / custom-folder sections
- * (each a WallpaperSection) plus the right-hand detail panel — mirrors
- * macOS System Settings > Wallpaper. Rendered by both WallpaperPicker
- * (desktop right-click modal) and SettingsWallpaper (Settings app page);
- * neither wraps it in anything picker-specific, so this stays layout-only.
+ * Full wallpaper picker content: the selected wallpaper's config panel on
+ * top (preview + Fit Mode + Shuffle — macOS puts this at the top of the
+ * right-hand pane, but with only one column here it reads better above the
+ * lists), then Pictures / Colors / custom-folder sections stacked below,
+ * each scrolling horizontally with "Show All" unrolling straight down in
+ * place (no separate full-screen view — matches the flow of a single-column
+ * settings panel). Rendered by both WallpaperPicker (desktop right-click
+ * modal) and SettingsWallpaper (Settings app page).
  */
-type SectionId = 'pictures' | 'colors' | 'custom';
-
 export function WallpaperPickerContent() {
   const wallpaperId = useStore((s) => s.wallpaperId);
   const setWallpaper = useStore((s) => s.setWallpaper);
@@ -27,7 +28,6 @@ export function WallpaperPickerContent() {
   const importWallpaper = useWallpaperImport();
   const catalog = useWallpaperCatalog();
   const [importing, setImporting] = useState(false);
-  const [expandedSection, setExpandedSection] = useState<SectionId | null>(null);
 
   const selected = catalog.all.find((w) => w.id === wallpaperId)
     ?? customWallpapers.find((w) => w.id === wallpaperId)
@@ -49,65 +49,45 @@ export function WallpaperPickerContent() {
     }
   }
 
-  function toggleSection(id: SectionId) {
-    setExpandedSection((current) => (current === id ? null : id));
-  }
-
   return (
-    <div className="flex gap-5">
-      <div className="flex-1 min-w-0 space-y-5">
-        {(expandedSection === null || expandedSection === 'pictures') && (
-          <WallpaperSection
-            title="Pictures"
-            items={catalog.pictures}
-            selectedId={wallpaperId}
-            cyclingGroup={wallpaperCycle.enabled && wallpaperCycle.group === 'builtin'}
-            onSelect={setWallpaper}
-            expanded={expandedSection === 'pictures'}
-            onToggleExpanded={() => toggleSection('pictures')}
-          />
-        )}
+    <div className="space-y-5">
+      <WallpaperDetailPanel wallpaper={selected} cycleGroup={selectedIsCustom ? 'custom' : 'builtin'} />
 
-        {(expandedSection === null || expandedSection === 'colors') && (
-          <WallpaperSection
-            title="Colors"
-            items={catalog.colors}
-            selectedId={wallpaperId}
-            onSelect={setWallpaper}
-            shape="circle"
-            expanded={expandedSection === 'colors'}
-            onToggleExpanded={() => toggleSection('colors')}
-          />
-        )}
+      <WallpaperSection
+        title="Pictures"
+        items={catalog.pictures}
+        selectedId={wallpaperId}
+        cyclingGroup={wallpaperCycle.enabled && wallpaperCycle.group === 'builtin'}
+        onSelect={setWallpaper}
+      />
 
-        {(expandedSection === null || expandedSection === 'custom') && (
-          <WallpaperSection
-            title="Your Photos"
-            items={customWallpapers}
-            selectedId={wallpaperId}
-            cyclingGroup={wallpaperCycle.enabled && wallpaperCycle.group === 'custom'}
-            onSelect={setWallpaper}
-            expanded={expandedSection === 'custom'}
-            onToggleExpanded={() => toggleSection('custom')}
-            leadingActions={
-              importWallpaper && (
-                <button
-                  onClick={handleImport}
-                  disabled={importing}
-                  title="Add a Photo"
-                  className="shrink-0 w-24 aspect-video rounded-(--radius-input) border-2 border-dashed border-black/15 dark:border-white/15 flex items-center justify-center hover:border-blue-500 hover:text-blue-500 transition-colors text-black/40 dark:text-white/40 disabled:opacity-50"
-                >
-                  <Plus className="w-5 h-5" />
-                </button>
-              )
-            }
-          />
-        )}
-      </div>
+      <WallpaperSection
+        title="Colors"
+        items={catalog.colors}
+        selectedId={wallpaperId}
+        onSelect={setWallpaper}
+        shape="circle"
+      />
 
-      {expandedSection === null && (
-        <WallpaperDetailPanel wallpaper={selected} cycleGroup={selectedIsCustom ? 'custom' : 'builtin'} />
-      )}
+      <WallpaperSection
+        title="Your Photos"
+        items={customWallpapers}
+        selectedId={wallpaperId}
+        cyclingGroup={wallpaperCycle.enabled && wallpaperCycle.group === 'custom'}
+        onSelect={setWallpaper}
+        leadingActions={
+          importWallpaper && (
+            <button
+              onClick={handleImport}
+              disabled={importing}
+              title="Add a Photo"
+              className="shrink-0 w-24 aspect-video rounded-(--radius-input) border-2 border-dashed border-black/15 dark:border-white/15 flex items-center justify-center hover:border-blue-500 hover:text-blue-500 transition-colors text-black/40 dark:text-white/40 disabled:opacity-50"
+            >
+              <Plus className="w-5 h-5" />
+            </button>
+          )
+        }
+      />
     </div>
   );
 }
@@ -125,7 +105,7 @@ export function WallpaperPickerModal({ onClose }: WallpaperPickerModalProps) {
       onClick={onClose}
     >
       <div
-        className="bg-white/90 dark:bg-[#151821]/95 backdrop-blur-xl rounded-(--radius-card) p-6 shadow-2xl w-[600px] max-w-[95vw] flex flex-col"
+        className="bg-white/90 dark:bg-[#151821]/95 backdrop-blur-xl rounded-(--radius-card) p-6 shadow-2xl w-105 max-w-[95vw] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4 shrink-0">
@@ -135,7 +115,7 @@ export function WallpaperPickerModal({ onClose }: WallpaperPickerModalProps) {
           </button>
         </div>
 
-        <div className="max-h-[62vh] overflow-y-auto pr-1.5">
+        <div className="max-h-[70vh] overflow-y-auto pr-1.5">
           <WallpaperPickerContent />
         </div>
       </div>
