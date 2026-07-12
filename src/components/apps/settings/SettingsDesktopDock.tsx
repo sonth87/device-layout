@@ -5,9 +5,10 @@ import { cn } from '@/lib/utils';
 import { AppIconImage } from '@/components/shared/AppIconImage';
 import { useTranslation } from '@/hooks/useTranslation';
 
-// macOS's Size slider spans roughly 16–64px icons; Magnification is a
-// multiplier on top of that (0 = "Off", up to ~1.4x at "Large").
-const DOCK_SIZE_MIN = 24;
+// Magnification is a multiplier on top of Size (0 = "Off", up to ~1.4x at
+// "Large"). DOCK_SIZE_MIN=12 goes below macOS's real range (~16px) — user
+// wants the option to shrink the dock to a thin strip.
+const DOCK_SIZE_MIN = 12;
 const DOCK_SIZE_MAX = 64;
 const DOCK_MAGNIFICATION_MAX = 1.4;
 

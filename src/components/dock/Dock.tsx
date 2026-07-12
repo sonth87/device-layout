@@ -56,7 +56,7 @@ export function Dock({ onOpenApp }: DockProps) {
       </div>
 
       {/* Icon row — on top of glass, overflow-visible so icons can escape upward */}
-      <div className="relative z-10 flex items-end gap-4 px-5 pt-3 pb-2 overflow-visible">
+      <div className="relative z-10 flex items-end gap-3 px-5 pt-3 pb-2 overflow-visible">
         {dockApps.map((app) => (
           <DockItem
             key={app.id}
