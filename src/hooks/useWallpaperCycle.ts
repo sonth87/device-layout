@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useStore } from '@/store';
-import { WALLPAPERS } from '@/config/wallpapers.config';
+import { useWallpaperCatalog } from '@/lib/wallpaper-catalog';
 import type { WallpaperCycleInterval } from '@/types/desktop';
 
 const INTERVAL_MS: Record<WallpaperCycleInterval, number> = {
@@ -28,12 +28,13 @@ export function useWallpaperCycle() {
   const customWallpapers = useStore((s) => s.customWallpapers);
   const wallpaperId = useStore((s) => s.wallpaperId);
   const setWallpaper = useStore((s) => s.setWallpaper);
+  const catalog = useWallpaperCatalog();
   const orderIndexRef = useRef(0);
 
   useEffect(() => {
     if (!cycle.enabled) return;
 
-    const pool = cycle.group === 'custom' ? customWallpapers : WALLPAPERS;
+    const pool = cycle.group === 'custom' ? customWallpapers : catalog.pictures;
     if (pool.length === 0) return;
 
     const advance = () => {
@@ -59,5 +60,5 @@ export function useWallpaperCycle() {
     // wallpaperId intentionally excluded — re-subscribing on every tick would
     // reset the interval timer each time advance() fires.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cycle.enabled, cycle.interval, cycle.randomOrder, cycle.group, customWallpapers, setWallpaper]);
+  }, [cycle.enabled, cycle.interval, cycle.randomOrder, cycle.group, customWallpapers, catalog.pictures, setWallpaper]);
 }

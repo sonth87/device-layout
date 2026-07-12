@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import { useStore } from '@/store';
-import { WALLPAPERS, WALLPAPER_COLORS, ALL_WALLPAPERS } from '@/config/wallpapers.config';
 import { useWallpaperImport } from '@/lib/wallpaper-import';
+import { useWallpaperCatalog } from '@/lib/wallpaper-catalog';
 import { WallpaperSection } from './WallpaperSection';
 import { WallpaperDetailPanel } from './WallpaperDetailPanel';
 
@@ -25,12 +25,13 @@ export function WallpaperPickerContent() {
   const wallpaperCycle = useStore((s) => s.wallpaperCycle);
 
   const importWallpaper = useWallpaperImport();
+  const catalog = useWallpaperCatalog();
   const [importing, setImporting] = useState(false);
   const [expandedSection, setExpandedSection] = useState<SectionId | null>(null);
 
-  const selected = ALL_WALLPAPERS.find((w) => w.id === wallpaperId)
+  const selected = catalog.all.find((w) => w.id === wallpaperId)
     ?? customWallpapers.find((w) => w.id === wallpaperId)
-    ?? WALLPAPERS[0];
+    ?? catalog.pictures[0];
 
   const selectedIsCustom = customWallpapers.some((w) => w.id === wallpaperId);
 
@@ -58,7 +59,7 @@ export function WallpaperPickerContent() {
         {(expandedSection === null || expandedSection === 'pictures') && (
           <WallpaperSection
             title="Pictures"
-            items={WALLPAPERS}
+            items={catalog.pictures}
             selectedId={wallpaperId}
             cyclingGroup={wallpaperCycle.enabled && wallpaperCycle.group === 'builtin'}
             onSelect={setWallpaper}
@@ -70,7 +71,7 @@ export function WallpaperPickerContent() {
         {(expandedSection === null || expandedSection === 'colors') && (
           <WallpaperSection
             title="Colors"
-            items={WALLPAPER_COLORS}
+            items={catalog.colors}
             selectedId={wallpaperId}
             onSelect={setWallpaper}
             shape="circle"

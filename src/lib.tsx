@@ -13,6 +13,8 @@
 import { ThemeProvider, type ThemeProviderProps } from '@/components/themes/ThemeProvider';
 import { AssetBaseProvider } from '@/lib/asset-base';
 import { WallpaperImportProvider, type ImportWallpaperFn } from '@/lib/wallpaper-import';
+import { WallpaperCatalogProvider, buildWallpaperCatalog } from '@/lib/wallpaper-catalog';
+import type { WallpaperConfig } from '@/types/desktop';
 import './app/globals.css';
 
 export interface DeviceLayoutProps extends ThemeProviderProps {
@@ -24,14 +26,24 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
    * button (e.g. a host with no file-system access yet).
    */
   onImportWallpaper?: ImportWallpaperFn;
+  /**
+   * Overrides the "Pictures" section's built-in wallpaper list. Omit to use
+   * device-layout's own full set (16 images) — a host that ships fewer
+   * (e.g. to keep its own repo smaller) passes its own subset here instead.
+   * Live wallpapers/colors are unaffected (device-layout still supplies those).
+   */
+  wallpapers?: WallpaperConfig[];
 }
 
-export function DeviceLayout({ assetBaseUrl = '', apps, onImportWallpaper }: DeviceLayoutProps) {
+export function DeviceLayout({ assetBaseUrl = '', apps, onImportWallpaper, wallpapers }: DeviceLayoutProps) {
+  const catalog = buildWallpaperCatalog(wallpapers);
   return (
     <AssetBaseProvider value={assetBaseUrl}>
-      <WallpaperImportProvider value={onImportWallpaper ?? null}>
-        <ThemeProvider apps={apps} />
-      </WallpaperImportProvider>
+      <WallpaperCatalogProvider value={catalog}>
+        <WallpaperImportProvider value={onImportWallpaper ?? null}>
+          <ThemeProvider apps={apps} />
+        </WallpaperImportProvider>
+      </WallpaperCatalogProvider>
     </AssetBaseProvider>
   );
 }
