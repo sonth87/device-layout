@@ -4,11 +4,12 @@ import { useState } from 'react';
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import { Check, ChevronRight } from 'lucide-react';
 import { useStore } from '@/store';
-import { WALLPAPERS } from '@/config/wallpapers.config';
 import { useImageReady } from '@/hooks/useImageReady';
 import { useStoreHydrated } from '@/hooks/useStoreHydrated';
+import { useResolvedWallpaper } from '@/hooks/useResolvedWallpaper';
 import { resolveAssetUrl, useAssetBase } from '@/lib/asset-base';
-import { WallpaperPicker } from './WallpaperPicker';
+import { wallpaperFitToCss } from '@/lib/wallpaper-fit';
+import { WallpaperPickerModal } from '@/components/wallpaper/WallpaperPickerContent';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { StackGroupBy } from '@/types/desktop';
 
@@ -33,20 +34,25 @@ const MENU_CLS =
 
 export function Wallpaper({ children }: WallpaperProps) {
   const { t } = useTranslation();
-  const wallpaperId        = useStore((s) => s.wallpaperId);
   const useStacks          = useStore((s) => s.useStacks);
   const stackGroupBy       = useStore((s) => s.stackGroupBy);
   const toggleStacks       = useStore((s) => s.toggleStacks);
   const setStackGroupBy    = useStore((s) => s.setStackGroupBy);
   const openWidgetGallery  = useStore((s) => s.openWidgetGallery);
+  const fitMode            = useStore((s) => s.wallpaperFitMode);
   const hydrated           = useStoreHydrated();
   const [pickerOpen, setPickerOpen] = useState(false);
 
-  const assetBase    = useAssetBase();
-  const wallpaper    = WALLPAPERS.find((w) => w.id === wallpaperId);
-  const wallpaperUrl = resolveAssetUrl(assetBase, wallpaper?.url ?? '/wallpapers/bg-1.jpg');
-  const wallpaperReady  = useImageReady(wallpaperUrl, hydrated);
-  const backgroundImage = hydrated && wallpaperReady ? `url(${wallpaperUrl})` : 'none';
+  const assetBase = useAssetBase();
+  const wallpaper = useResolvedWallpaper();
+  const wallpaperUrl = resolveAssetUrl(assetBase, wallpaper.url ?? '');
+  // Colors don't have an image to wait on — ready immediately.
+  const imageReady = useImageReady(wallpaperUrl, hydrated && wallpaper.kind !== 'color');
+  const wallpaperReady = wallpaper.kind === 'color' ? hydrated : imageReady;
+  // Falls back to the container's own bg-[#1e1e2e] (see below) when the
+  // image 404s or hasn't loaded yet — never points background-image at a
+  // broken URL (useImageReady.ts's onerror handling is what makes this safe).
+  const backgroundImage = hydrated && wallpaperReady && wallpaper.kind !== 'color' ? `url(${wallpaperUrl})` : 'none';
 
   const groupByOptions: { id: StackGroupBy; label: string }[] = [
     { id: 'kind',             label: t.kind },
@@ -64,10 +70,15 @@ export function Wallpaper({ children }: WallpaperProps) {
         {/* Trigger wraps ONLY the bare wallpaper background div */}
         <ContextMenu.Trigger asChild>
           <div className="absolute inset-0 overflow-hidden bg-[#1e1e2e]">
-            {hydrated && wallpaper?.isLive && wallpaper.videoUrl ? (
+            {wallpaper.kind === 'color' ? (
+              <div
+                className="absolute inset-0"
+                style={{ backgroundColor: wallpaper.colorHex, transition: 'background-color 120ms ease-out' }}
+              />
+            ) : hydrated && wallpaper.kind === 'live' && wallpaper.videoUrl ? (
               <video
                 key={wallpaper.videoUrl}
-                src={wallpaper.videoUrl}
+                src={resolveAssetUrl(assetBase, wallpaper.videoUrl)}
                 autoPlay
                 loop
                 muted
@@ -79,8 +90,7 @@ export function Wallpaper({ children }: WallpaperProps) {
                 className="absolute inset-0"
                 style={{
                   backgroundImage,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
+                  ...wallpaperFitToCss(fitMode),
                   transition: 'background-image 120ms ease-out',
                 }}
               />
@@ -163,7 +173,7 @@ export function Wallpaper({ children }: WallpaperProps) {
         {children}
       </div>
 
-      {pickerOpen && <WallpaperPicker onClose={() => setPickerOpen(false)} />}
+      {pickerOpen && <WallpaperPickerModal onClose={() => setPickerOpen(false)} />}
     </>
   );
 }

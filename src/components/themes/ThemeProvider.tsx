@@ -20,6 +20,7 @@ import { Spotlight } from '@/components/macOS/Spotlight';
 import { AppSwitcher } from '@/components/macOS/AppSwitcher';
 import { NotificationBanner } from '@/components/notifications/NotificationBanner';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { useWallpaperCycle } from '@/hooks/useWallpaperCycle';
 import { getThemeCssVars } from '@/lib/theme-layout';
 import type { AppConfig } from '@/types/app';
 
@@ -57,6 +58,8 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
     onSpotlight: () => setSpotlightOpen((v) => !v),
     onAppSwitcher: () => setAppSwitcherOpen((v) => !v),
   });
+
+  useWallpaperCycle();
 
   useEffect(() => {
     registerApps(apps);

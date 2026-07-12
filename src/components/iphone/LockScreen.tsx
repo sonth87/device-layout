@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { useStore } from '@/store';
-import { WALLPAPERS } from '@/config/wallpapers.config';
 import { useImageReady } from '@/hooks/useImageReady';
 import { useStoreHydrated } from '@/hooks/useStoreHydrated';
+import { useResolvedWallpaper } from '@/hooks/useResolvedWallpaper';
 import { resolveAssetUrl, useAssetBase } from '@/lib/asset-base';
 
 function LockClock() {
@@ -24,13 +23,14 @@ interface LockScreenProps {
 }
 
 export function LockScreen({ onUnlock }: LockScreenProps) {
-  const wallpaperId = useStore((s) => s.wallpaperId);
   const hydrated = useStoreHydrated();
   const assetBase = useAssetBase();
-  const wallpaper = WALLPAPERS.find((w) => w.id === wallpaperId);
-  const wallpaperUrl = resolveAssetUrl(assetBase, wallpaper?.url ?? '/wallpapers/bg-1.jpg');
-  const wallpaperReady = useImageReady(wallpaperUrl, hydrated);
-  const backgroundImage = hydrated && wallpaperReady ? `url(${wallpaperUrl})` : 'none';
+  const wallpaper = useResolvedWallpaper();
+  const wallpaperUrl = resolveAssetUrl(assetBase, wallpaper.url ?? '');
+  const imageReady = useImageReady(wallpaperUrl, hydrated && wallpaper.kind !== 'color');
+  const backgroundImage =
+    hydrated && imageReady && wallpaper.kind !== 'color' ? `url(${wallpaperUrl})` : 'none';
+  const backgroundColor = wallpaper.kind === 'color' ? wallpaper.colorHex : '#1e1e2e';
 
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
@@ -42,7 +42,7 @@ export function LockScreen({ onUnlock }: LockScreenProps) {
       exit={{ opacity: 0, y: -60, transition: { duration: 0.4, ease: 'easeIn' } }}
       className="absolute inset-0 z-9999 flex flex-col items-center select-none"
       style={{
-        backgroundColor: '#fff',
+        backgroundColor,
         backgroundImage,
         backgroundSize: 'cover',
         backgroundPosition: 'center',

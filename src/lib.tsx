@@ -12,23 +12,34 @@
  */
 import { ThemeProvider, type ThemeProviderProps } from '@/components/themes/ThemeProvider';
 import { AssetBaseProvider } from '@/lib/asset-base';
+import { WallpaperImportProvider, type ImportWallpaperFn } from '@/lib/wallpaper-import';
 import './app/globals.css';
 
 export interface DeviceLayoutProps extends ThemeProviderProps {
   /** Base URL prefix for static assets (wallpapers, icons). Default: '' (root-relative paths). */
   assetBaseUrl?: string;
+  /**
+   * Implements the Wallpaper picker's "Add a Photo" — open a native file
+   * picker and return the imported WallpaperConfig. Omit to hide that
+   * button (e.g. a host with no file-system access yet).
+   */
+  onImportWallpaper?: ImportWallpaperFn;
 }
 
-export function DeviceLayout({ assetBaseUrl = '', apps }: DeviceLayoutProps) {
+export function DeviceLayout({ assetBaseUrl = '', apps, onImportWallpaper }: DeviceLayoutProps) {
   return (
     <AssetBaseProvider value={assetBaseUrl}>
-      <ThemeProvider apps={apps} />
+      <WallpaperImportProvider value={onImportWallpaper ?? null}>
+        <ThemeProvider apps={apps} />
+      </WallpaperImportProvider>
     </AssetBaseProvider>
   );
 }
 
 export type { ThemeProviderProps } from '@/components/themes/ThemeProvider';
 export type { AppConfig, AppContentProps, AppInstance, MenuBarMenu, MenuBarItem, ContextMenuAction } from '@/types/app';
+export type { WallpaperConfig, WallpaperKind, WallpaperFitMode, WallpaperCycleInterval, WallpaperCycleConfig } from '@/types/desktop';
+export type { ImportWallpaperFn } from '@/lib/wallpaper-import';
 export { useAssetBase, resolveAssetUrl } from '@/lib/asset-base';
 /**
  * Built-in demo apps (Finder, Notes, Calendar, Photos, Music, Terminal,
