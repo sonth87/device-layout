@@ -246,7 +246,7 @@ function AgendaPanel({ selected, events, onAddEvent, locale, tCal }: {
           <div key={e.id} className="flex items-start gap-2 p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5">
             <div className={cn('w-2 h-2 rounded-full mt-1.5 shrink-0', e.color)} />
             <div>
-              <p className="text-xs font-medium">{e.title}</p>
+              <p className="text-xs font-medium text-black/90 dark:text-white/90">{e.title}</p>
               {e.time && <p className="text-[11px] text-black/40 dark:text-white/40">{e.time}</p>}
             </div>
           </div>

@@ -236,9 +236,9 @@ export function Finder({ windowId, appId }: AppContentProps) {
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-black/10 dark:border-white/10">
-                <th className="py-1 text-left font-medium">{t.name}</th>
-                {!isNarrow && <th className="py-1 text-left font-medium">{t.kind}</th>}
-                <th className="py-1 text-right font-medium">{t.size}</th>
+                <th className="py-1 text-left font-medium text-black/60 dark:text-white/60">{t.name}</th>
+                {!isNarrow && <th className="py-1 text-left font-medium text-black/60 dark:text-white/60">{t.kind}</th>}
+                <th className="py-1 text-right font-medium text-black/60 dark:text-white/60">{t.size}</th>
               </tr>
             </thead>
             <tbody>

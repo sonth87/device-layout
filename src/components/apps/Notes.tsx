@@ -124,7 +124,7 @@ export function Notes() {
                 : 'hover:bg-black/5 dark:hover:bg-white/5'
             )}
           >
-            <p className="text-sm font-medium truncate">{note.title || nt.untitled}</p>
+            <p className="text-sm font-medium text-black/90 dark:text-white/90 truncate">{note.title || nt.untitled}</p>
             <p className="text-[11px] text-black/40 dark:text-white/40 mt-0.5">
               {new Date(note.modifiedAt).toLocaleDateString()}
             </p>

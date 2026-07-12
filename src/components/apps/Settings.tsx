@@ -45,7 +45,7 @@ function SidebarItem({
       onClick={onClick}
       className={cn(
         'w-full flex items-center gap-3 px-3 py-2 rounded-(--radius-input) text-left transition-colors focus:outline-none text-sm',
-        active ? 'bg-red-500/90 text-white' : 'hover:bg-black/5 dark:hover:bg-white/8'
+        active ? 'bg-red-500/90 text-white' : 'text-black/80 dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/8'
       )}
     >
       {iconEl ?? (Icon ? (
@@ -231,7 +231,7 @@ function SettingsContent({
             </svg>
             <span className="text-[14px] font-medium">Settings</span>
           </button>
-          <h1 className="flex-1 text-[15px] font-semibold text-center truncate pr-16">{label}</h1>
+          <h1 className="flex-1 text-[15px] font-semibold text-black/90 dark:text-white/90 text-center truncate pr-16">{label}</h1>
         </div>
       )}
 

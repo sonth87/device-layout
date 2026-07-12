@@ -57,7 +57,7 @@ export function SettingsAppearance() {
                       : 'border-transparent bg-white hover:border-black/10 dark:bg-white/5 dark:hover:border-white/10'
                   )}
                 >
-                  <p className="text-sm font-semibold">{config.name}</p>
+                  <p className="text-sm font-semibold text-black/90 dark:text-white/90">{config.name}</p>
                   <p className="mt-1 text-xs text-black/50 dark:text-white/50 leading-5">{config.description}</p>
                 </button>
               );

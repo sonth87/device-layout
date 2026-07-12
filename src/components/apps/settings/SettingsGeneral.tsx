@@ -90,7 +90,7 @@ export function SettingsGeneral() {
                 expandable ? 'cursor-pointer hover:bg-black/[0.03] dark:hover:bg-white/8 transition-colors' : ''
               }`}
             >
-              <span className="text-sm font-medium">{label}</span>
+              <span className="text-sm font-medium text-black/90 dark:text-white/90">{label}</span>
               <span className="text-xs text-black/40 dark:text-white/40 flex items-center gap-1.5 min-w-0 max-w-[55%] justify-end">
                 <span className="truncate">{description}</span>
                 <svg

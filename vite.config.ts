@@ -26,6 +26,19 @@ export default defineConfig({
       exclude: ['src/app/**'],
       outDirs: ['dist-lib'],
       insertTypesEntry: true,
+      // store/index.ts's `import { immer } from 'zustand/middleware/immer'`
+      // carries a module augmentation zustand's own Mutate<...> type needs
+      // (the `'zustand/immer'` key on StoreMutators) — but the dts bundler
+      // only keeps imports it can see referenced from a public signature, so
+      // it silently drops this one, collapsing `useStore`'s exported type to
+      // `never` for every consumer of the built package. Re-insert the
+      // side-effect import into just that one emitted file (safe: it's a
+      // bare `import 'x'`, not a value import, so it can't collide with
+      // anything else already in the file).
+      beforeWriteFile: (filePath, content) => {
+        if (!filePath.endsWith('store/index.d.ts')) return;
+        return { content: `import 'zustand/middleware/immer';\n${content}` };
+      },
     }),
   ],
   resolve: {

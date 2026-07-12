@@ -258,7 +258,7 @@ export function Photos() {
                       {cover?.emoji}
                     </div>
                     <div className="px-2.5 py-2">
-                      <p className="text-sm font-medium truncate">{getAlbumLabel(album)}</p>
+                      <p className="text-sm font-medium text-black/90 dark:text-white/90 truncate">{getAlbumLabel(album)}</p>
                       <p className="text-xs text-black/40 dark:text-white/40">{albumCounts[album]} {t.photosCount}</p>
                     </div>
                   </button>

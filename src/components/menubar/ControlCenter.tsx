@@ -44,14 +44,14 @@ export function ControlCenter() {
                 <Wifi className="w-4 h-4 text-white" />
               </div>
               <div>
-                <p className="text-xs font-semibold">Wi-Fi</p>
+                <p className="text-xs font-semibold text-black/90 dark:text-white/90">Wi-Fi</p>
                 <p className="text-[10px] text-black/50 dark:text-white/50">Connected</p>
               </div>
             </div>
 
             {/* Color scheme */}
             <div className="bg-black/5 dark:bg-white/5 rounded-[var(--radius-input)] p-3">
-              <p className="text-xs font-semibold mb-2">Appearance</p>
+              <p className="text-xs font-semibold text-black/90 dark:text-white/90 mb-2">Appearance</p>
               <div className="flex gap-1">
                 {[
                   { id: 'light' as const, icon: <Sun className="w-3 h-3" /> },
@@ -78,7 +78,7 @@ export function ControlCenter() {
             <div className="col-span-2 bg-black/5 dark:bg-white/5 rounded-[var(--radius-input)] p-3">
               <div className="flex items-center gap-2 mb-2">
                 <Sun className="w-3 h-3" />
-                <p className="text-xs font-semibold">Brightness</p>
+                <p className="text-xs font-semibold text-black/90 dark:text-white/90">Brightness</p>
                 <span className="text-[10px] text-black/40 dark:text-white/40 ml-auto">{brightness}%</span>
               </div>
               <input
@@ -95,7 +95,7 @@ export function ControlCenter() {
             <div className="col-span-2 bg-black/5 dark:bg-white/5 rounded-[var(--radius-input)] p-3">
               <div className="flex items-center gap-2 mb-2">
                 <Volume2 className="w-3 h-3" />
-                <p className="text-xs font-semibold">Sound</p>
+                <p className="text-xs font-semibold text-black/90 dark:text-white/90">Sound</p>
                 <span className="text-[10px] text-black/40 dark:text-white/40 ml-auto">{volume}%</span>
               </div>
               <input
@@ -110,7 +110,7 @@ export function ControlCenter() {
 
             {/* Glass toggle */}
             <div className="col-span-2 bg-black/5 dark:bg-white/5 rounded-[var(--radius-input)] p-3 flex items-center justify-between">
-              <p className="text-xs font-semibold">Liquid Glass</p>
+              <p className="text-xs font-semibold text-black/90 dark:text-white/90">Liquid Glass</p>
               <button
                 onClick={() => setGlassEnabled(!glassEnabled)}
                 className={cn(

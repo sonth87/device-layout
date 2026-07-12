@@ -158,7 +158,7 @@ export function Messages() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold truncate">{c.name}</p>
+                <p className="text-sm font-semibold text-black/90 dark:text-white/90 truncate">{c.name}</p>
                 <p className="text-[11px] text-black/40 dark:text-white/40 shrink-0 ml-2">{fmtTime(c.messages[c.messages.length - 1]?.time ?? 0)}</p>
               </div>
               <div className="flex items-center gap-1">
@@ -250,7 +250,7 @@ function ChatHeader({ convo, onBack }: { convo: Conversation; onBack: () => void
       <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-white/10 flex items-center justify-center text-lg shrink-0">
         {convo.avatar}
       </div>
-      <p className="font-semibold flex-1 text-sm">{convo.name}</p>
+      <p className="font-semibold text-black/90 dark:text-white/90 flex-1 text-sm">{convo.name}</p>
       <button className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-blue-500"><Phone className="w-4 h-4" /></button>
       <button className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-blue-500"><Video className="w-4 h-4" /></button>
     </div>

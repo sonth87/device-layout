@@ -109,7 +109,7 @@ export function WallpaperPickerModal({ onClose }: WallpaperPickerModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4 shrink-0">
-          <h2 className="text-sm font-semibold">Wallpaper</h2>
+          <h2 className="text-sm font-semibold text-black/90 dark:text-white/90">Wallpaper</h2>
           <button onClick={onClose} className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10">
             <X className="w-4 h-4" />
           </button>

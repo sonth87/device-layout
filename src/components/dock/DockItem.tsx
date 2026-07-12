@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { AppIconImage } from '@/components/shared/AppIconImage';
@@ -40,6 +40,21 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen, b
 
   const rawSize = useTransform(distance, [0, MAGNETIC_RADIUS], [maxSize, baseSize], { clamp: true });
   const size = useSpring(rawSize, { stiffness: 350, damping: 22, mass: 0.5 });
+
+  // useTransform only recomputes `rawSize` when `distance` (its input motion
+  // value) changes — i.e. when the mouse moves over the dock. If the user
+  // changes dockSize/dockMagnification in Settings without touching the dock
+  // (the common case — Settings is a separate window), baseSize/maxSize
+  // change but rawSize/size stay stuck at whatever they last evaluated to,
+  // so icons visually don't resize until the next hover. `distance.jump()`
+  // to its own current value is a no-op (MotionValue only notifies on an
+  // actual change) — `dirty()` unconditionally re-notifies dependents
+  // (rawSize's transform) without moving the cursor, forcing it to
+  // recompute against the new baseSize/maxSize closed over by that
+  // transform.
+  useEffect(() => {
+    distance.dirty();
+  }, [baseSize, maxSize, distance]);
 
   const handleClick = () => {
     setBouncing(true);

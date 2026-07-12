@@ -30,7 +30,7 @@ export function SettingsDesktopDock() {
   return (
     <div className="space-y-5">
       <div>
-        <h3 className="text-sm font-semibold mb-3">{t.desktopDock}</h3>
+        <h3 className="text-sm font-semibold text-black/90 dark:text-white/90 mb-3">{t.desktopDock}</h3>
         <div className="rounded-card bg-white dark:bg-white/5 px-4 py-3 grid grid-cols-2 gap-6">
           <div>
             <div className="flex items-center justify-between text-xs text-black/50 dark:text-white/50 mb-1.5">
@@ -66,7 +66,7 @@ export function SettingsDesktopDock() {
       </div>
 
       <div>
-        <h3 className="text-sm font-semibold mb-1">{t.dockApps}</h3>
+        <h3 className="text-sm font-semibold text-black/90 dark:text-white/90 mb-1">{t.dockApps}</h3>
         <p className="text-xs text-black/40 dark:text-white/40 mb-3">
           {t.dockAppsDesc}
         </p>
@@ -80,7 +80,7 @@ export function SettingsDesktopDock() {
               >
                 <div className="flex items-center gap-3">
                   <AppIconImage appConfig={app} size={32} />
-                  <span className="text-sm font-medium">{app.name}</span>
+                  <span className="text-sm font-medium text-black/90 dark:text-white/90">{app.name}</span>
                 </div>
                 <button
                   onClick={() => pinned ? unpinFromDock(app.id) : pinToDock(app.id)}
