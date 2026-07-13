@@ -7,6 +7,7 @@ import { AndroidAppDrawer } from '@/components/android/AppDrawer';
 import { AndroidQuickSettings } from '@/components/android/QuickSettings';
 import { MobileAppViewer } from '@/components/mobile/MobileAppViewer';
 import { useSwipeGesture } from '@/hooks/useSwipeGesture';
+import { useStore } from '@/store';
 import type { AppConfig } from '@/types/app';
 
 function AndroidClock() {
@@ -21,7 +22,7 @@ function AndroidClock() {
 }
 
 const STATUS_H = 32;
-const NAVBAR_H = 56;
+const NAVBAR_H = 76;
 const HOME_IND = 0; // Android has no home indicator
 
 interface ChromeProps {
@@ -32,11 +33,17 @@ export function AndroidChrome({ onOpenApp }: ChromeProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [quickSettingsOpen, setQuickSettingsOpen] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
+  const windows = useStore((s) => s.windows);
+  const hasOpenWindow = Object.values(windows).some((w) => !w.isMinimized);
 
   useSwipeGesture(
     {
-      onSwipeUp: () => setDrawerOpen(true),
-      onSwipeDown: () => setQuickSettingsOpen(true),
+      onSwipeUp: () => {
+        if (!hasOpenWindow) setDrawerOpen(true);
+      },
+      onSwipeDown: () => {
+        if (!hasOpenWindow) setQuickSettingsOpen(true);
+      },
     },
     frameRef,
   );
@@ -63,10 +70,12 @@ export function AndroidChrome({ onOpenApp }: ChromeProps) {
         homeIndicatorHeight={HOME_IND}
       />
 
-      {/* Bottom nav */}
-      <div className="absolute bottom-0 inset-x-0 z-40">
-        <NavBar onOpenApp={onOpenApp} navBarHeight={NAVBAR_H} />
-      </div>
+      {/* Bottom nav (hidden when app is open) */}
+      {!hasOpenWindow && (
+        <div className="absolute bottom-0 inset-x-0 z-40">
+          <NavBar onOpenApp={onOpenApp} navBarHeight={NAVBAR_H} />
+        </div>
+      )}
 
       {/* App drawer */}
       <AndroidAppDrawer

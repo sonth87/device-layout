@@ -10,6 +10,7 @@ import { IPhoneHomeScreen } from '@/components/iphone/HomeScreen';
 import { IPhoneControlCenter } from '@/components/iphone/ControlCenter';
 import { MobileAppViewer } from '@/components/mobile/MobileAppViewer';
 import { useSwipeGesture } from '@/hooks/useSwipeGesture';
+import { useStore } from '@/store';
 import type { AppConfig } from '@/types/app';
 
 function IPhoneClock() {
@@ -35,11 +36,17 @@ export function IPhoneChrome({ onOpenApp }: ChromeProps) {
   const [locked, setLocked] = useState(false);
   const [controlCenterOpen, setControlCenterOpen] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
+  const windows = useStore((s) => s.windows);
+  const hasOpenWindow = Object.values(windows).some((w) => !w.isMinimized);
 
   useSwipeGesture(
     {
-      onSwipeUp: () => setLocked(false),
-      onSwipeDown: () => setControlCenterOpen(true),
+      onSwipeUp: () => {
+        if (!hasOpenWindow) setLocked(false);
+      },
+      onSwipeDown: () => {
+        if (!hasOpenWindow) setControlCenterOpen(true);
+      },
     },
     frameRef,
   );
@@ -90,17 +97,19 @@ export function IPhoneChrome({ onOpenApp }: ChromeProps) {
       {/* Control center */}
       <IPhoneControlCenter open={controlCenterOpen} onClose={() => setControlCenterOpen(false)} />
 
-      {/* Bottom dock + home indicator */}
-      <div className="absolute bottom-0 inset-x-0 z-40" style={{ height: NAVBAR_H + HOME_IND }}>
-        <NavBar onOpenApp={onOpenApp} navBarHeight={NAVBAR_H} />
-        {/* Home indicator pill */}
-        <div
-          className="flex items-center justify-center"
-          style={{ height: HOME_IND }}
-        >
-          <div className="w-32 h-1 bg-white/40 rounded-full" />
+      {/* Bottom dock + home indicator (hidden when app is open) */}
+      {!hasOpenWindow && (
+        <div className="absolute bottom-0 inset-x-0 z-40" style={{ height: NAVBAR_H + HOME_IND }}>
+          <NavBar onOpenApp={onOpenApp} navBarHeight={NAVBAR_H} />
+          {/* Home indicator pill */}
+          <div
+            className="flex items-center justify-center"
+            style={{ height: HOME_IND }}
+          >
+            <div className="w-32 h-1 bg-white/40 rounded-full" />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

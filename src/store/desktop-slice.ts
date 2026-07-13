@@ -42,6 +42,8 @@ export interface DesktopSlice {
   desktopLabelPosition: 'bottom' | 'right';
   desktopSortBy: 'none' | 'name' | 'kind';
   desktopViewOptionsOpen: boolean;
+  /** Luminance of the top strip of the current wallpaper (macOS only). */
+  wallpaperTextTheme: 'light' | 'dark';
 
   setWallpaper: (id: string) => void;
   setWallpaperFitMode: (mode: WallpaperFitMode) => void;
@@ -67,6 +69,7 @@ export interface DesktopSlice {
   setDesktopLabelPosition: (pos: 'bottom' | 'right') => void;
   setDesktopSortBy: (by: 'none' | 'name' | 'kind') => void;
   setDesktopViewOptionsOpen: (open: boolean) => void;
+  setWallpaperTextTheme: (theme: 'light' | 'dark') => void;
 }
 
 type S = DesktopSlice;
@@ -102,6 +105,7 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
     desktopLabelPosition: 'bottom',
     desktopSortBy: 'none',
     desktopViewOptionsOpen: false,
+    wallpaperTextTheme: 'dark',
 
     setWallpaper(id) {
       set((state) => { state.wallpaperId = id; });
@@ -221,6 +225,10 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
 
     setDesktopViewOptionsOpen(open) {
       set((state) => { state.desktopViewOptionsOpen = open; });
+    },
+
+    setWallpaperTextTheme(theme) {
+      set((state) => { state.wallpaperTextTheme = theme; });
     },
   };
 }

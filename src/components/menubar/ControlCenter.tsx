@@ -5,6 +5,7 @@ import * as Popover from '@radix-ui/react-popover';
 import { Wifi, Volume2, Sun, Moon, Monitor, Sliders } from 'lucide-react';
 import { useStore } from '@/store';
 import { cn } from '@/lib/utils';
+import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
 
 export function ControlCenter() {
   const [open, setOpen] = useState(false);
@@ -12,14 +13,19 @@ export function ControlCenter() {
   const setColorScheme = useStore((s) => s.setColorScheme);
   const glassEnabled = useStore((s) => s.glassEnabled);
   const setGlassEnabled = useStore((s) => s.setGlassEnabled);
+  const wallpaperTextTheme = useStore((s) => s.wallpaperTextTheme);
   const [volume, setVolume] = useState(75);
   const [brightness, setBrightness] = useState(80);
+
+  const triggerCls = wallpaperTextTheme === 'light'
+    ? 'text-black/70 hover:bg-black/10'
+    : 'text-white/80 hover:bg-white/10';
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen} modal={false}>
       <Popover.Trigger asChild>
         <button
-          className="p-1.5 rounded-md hover:bg-black/10 dark:hover:bg-white/10 transition-colors flex items-center gap-1"
+          className={`p-1.5 rounded-md transition-colors flex items-center gap-1 ${triggerCls}`}
           aria-label="Control Center"
         >
           <Sliders className="w-3.5 h-3.5" />
@@ -29,7 +35,7 @@ export function ControlCenter() {
         <Popover.Content
           align="end"
           sideOffset={6}
-          className="w-72 bg-white/85 dark:bg-[#151821]/90 backdrop-blur-2xl rounded-[var(--radius-card)] shadow-2xl border border-black/10 dark:border-white/8 p-4 z-9999"
+          className="w-72 z-[9999] outline-none"
           onInteractOutside={(e) => {
             // Don't close when clicking inside the popover's own children
             const target = e.target as Element;
@@ -37,7 +43,8 @@ export function ControlCenter() {
           }}
           onFocusOutside={(e) => e.preventDefault()}
         >
-          <div className="grid grid-cols-2 gap-3">
+          <LiquidGlass variant="panel" className="p-4 w-full">
+            <div className="grid grid-cols-2 gap-3">
             {/* WiFi */}
             <div className="bg-black/5 dark:bg-white/5 rounded-[var(--radius-input)] p-3 flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shrink-0">
@@ -124,7 +131,8 @@ export function ControlCenter() {
                 )} />
               </button>
             </div>
-          </div>
+            </div>
+          </LiquidGlass>
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>

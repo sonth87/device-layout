@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { MenuBar } from '@/components/menubar/MenuBar';
 import { Dock } from '@/components/dock/Dock';
 import { GlobalAboutDialog } from '@/components/shared/AboutDialog';
 import { useStore } from '@/store';
+import { useWallpaperLuminance } from '@/hooks/useWallpaperLuminance';
 import type { AppConfig } from '@/types/app';
 
 const PEEK_ZONE = 20; // px from top/bottom edge to trigger menu bar / dock reveal
@@ -23,6 +24,10 @@ interface ChromeProps {
 
 /** macOS chrome overlay — menubar fixed at top, dock floats at bottom center. */
 export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
+  // Detect top-strip luminance of the current wallpaper and keep
+  // wallpaperTextTheme in the store updated (with localStorage caching).
+  useWallpaperLuminance();
+
   const hasMaximized = useStore((s) =>
     Object.values(s.windows).some((w) => w.isMaximized && !w.isMinimized)
   );
@@ -39,6 +44,8 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
   const [dockRevealed, setDockRevealed] = useState(false);
   const [dockHovered, setDockHovered] = useState(false);
   const dockVisible = !dockAutoHide || dockRevealed || dockHovered;
+  // Ref to the dock element so we can read its horizontal bounds for the peek zone
+  const dockRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!dockAutoHide) {
@@ -48,7 +55,16 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
     let hideTimer: ReturnType<typeof setTimeout> | null = null;
     const handlePeek = (e: MouseEvent) => {
       const isNearBottom = e.clientY >= window.innerHeight - PEEK_ZONE;
-      if (isNearBottom || dockHovered) {
+
+      // Constrain X to the dock's actual horizontal footprint (± 24px padding)
+      let isOverDock = true;
+      if (isNearBottom && dockRef.current) {
+        const { left, right } = dockRef.current.getBoundingClientRect();
+        const H_PAD = 24;
+        isOverDock = e.clientX >= left - H_PAD && e.clientX <= right + H_PAD;
+      }
+
+      if ((isNearBottom && isOverDock) || dockHovered) {
         setDockRevealed(true);
         if (hideTimer) {
           clearTimeout(hideTimer);
@@ -132,7 +148,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
         onMouseEnter={() => setDockHovered(true)}
         onMouseLeave={() => setDockHovered(false)}
       >
-        <div className="pointer-events-auto">
+        <div ref={dockRef} className="pointer-events-auto">
           <Dock onOpenApp={onOpenApp} />
         </div>
       </motion.div>

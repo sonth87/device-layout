@@ -1,10 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useStore } from '@/store';
 
 export function MenuBarClock() {
   const [time, setTime] = useState('');
   const [date, setDate] = useState('');
+  const wallpaperTextTheme = useStore((s) => s.wallpaperTextTheme);
+  const cls = wallpaperTextTheme === 'light' ? 'text-black/80' : 'text-white/85';
 
   useEffect(() => {
     const update = () => {
@@ -18,7 +21,7 @@ export function MenuBarClock() {
   }, []);
 
   return (
-    <div className="flex items-center gap-1.5 text-[12px] font-medium text-black/80 dark:text-white/85 select-none tabular-nums">
+    <div className={`flex items-center gap-1.5 text-[12px] font-medium ${cls} select-none tabular-nums`}>
       <span>{date}</span>
       <span>{time}</span>
     </div>

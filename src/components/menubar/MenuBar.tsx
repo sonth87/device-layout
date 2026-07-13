@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, createContext, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import { Wifi, Battery, Search, X } from 'lucide-react';
 import { useStore } from '@/store';
@@ -10,6 +10,16 @@ import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
 import { DEFAULT_MENU_BAR_MENUS } from '@/config/apps.config';
 import { cn } from '@/lib/utils';
 import type { MenuBarMenu, MenuBarItem, AppConfig } from '@/types/app';
+
+// ─── MenuBar theme context (avoids prop-drilling to every button) ─────────────
+const MenuBarThemeCtx = createContext<'light' | 'dark'>('dark');
+/** Returns Tailwind classes for an inactive menu-bar button. */
+function useMenuBtnClass() {
+  const theme = useContext(MenuBarThemeCtx);
+  return theme === 'light'
+    ? 'text-black/80 hover:bg-black/10'
+    : 'text-white/85 hover:bg-white/10';
+}
 
 const menuBarButtonClass =
   'flex h-6 items-center rounded-md px-2.5 text-[13px] leading-none transition-colors';
@@ -163,6 +173,7 @@ function AppNameDropdown({
     setActiveId(nextOpen ? 'app-name' : null);
   }, [open, setActiveId]);
 
+  const btnClass = useMenuBtnClass();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const closeWindow = useStore((s) => s.closeWindow);
   const { t, getAppName } = useTranslation();
@@ -201,7 +212,7 @@ function AppNameDropdown({
           'font-semibold',
           open
             ? 'bg-blue-500 text-white'
-            : 'hover:bg-black/10 dark:hover:bg-white/10 text-black/85 dark:text-white/90'
+            : btnClass
         )}
       >
         <span className="text-[13px] font-semibold">{appName}</span>
@@ -247,6 +258,7 @@ function MenuDropdown({
     setActiveId(nextOpen ? label : null);
   }, [open, label, setActiveId]);
 
+  const btnClass = useMenuBtnClass();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { t } = useTranslation();
 
@@ -276,7 +288,7 @@ function MenuDropdown({
           menuBarButtonClass,
           open
             ? 'bg-blue-500 text-white'
-            : 'hover:bg-black/10 dark:hover:bg-white/10 text-black/80 dark:text-white/85'
+            : btnClass
         )}
       >
         {getMenuLabel(label, t)}
@@ -404,6 +416,7 @@ function AppleMenuDropdown({
     setActiveId(nextOpen ? 'apple' : null);
   }, [open, setActiveId]);
 
+  const btnClass = useMenuBtnClass();
   const [showAbout, setShowAbout] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const apps = useStore((s) => s.apps);
@@ -432,7 +445,7 @@ function AppleMenuDropdown({
           menuBarButtonClass,
           open
             ? 'bg-blue-500 text-white'
-            : 'hover:bg-black/10 dark:hover:bg-white/10 text-black/85 dark:text-white/90'
+            : btnClass
         )}
       >
         <span className="text-2xl leading-none">&#xf8ff;</span>
@@ -459,49 +472,60 @@ export function MenuBar({ onSpotlight }: { onSpotlight?: () => void } = {}) {
   const apps = useStore((s) => s.apps);
   const activeApp = activeAppId ? apps[activeAppId] : null;
   const menus: MenuBarMenu[] = activeApp?.menuBarMenus ?? DEFAULT_MENU_BAR_MENUS;
+  const wallpaperTextTheme = useStore((s) => s.wallpaperTextTheme);
+
+  // Build text / hover classes that adapt to wallpaper luminance rather than
+  // the system color scheme, so dark text is used on bright wallpapers and
+  // vice versa, regardless of Light/Dark Mode.
+  const iconClass = wallpaperTextTheme === 'light'
+    ? 'text-black/70 hover:bg-black/10'
+    : 'text-white/80 hover:bg-white/10';
+  const iconBtnClass = cn(menuBarButtonClass, 'px-2', iconClass);
 
   const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null);
 
   return (
-    <LiquidGlass variant="menubar">
-      <div data-menubar="true" className="flex h-(--menubar-height) w-full items-center px-2">
+    <MenuBarThemeCtx.Provider value={wallpaperTextTheme}>
+      <LiquidGlass variant="menubar">
+        <div data-menubar="true" className="flex h-(--menubar-height) w-full items-center px-2">
 
-        {/* Left: Apple + app menus */}
-        <div className="flex shrink-0 items-center gap-0.5">
-          {/* Apple menu */}
-          <AppleMenuDropdown activeId={activeDropdownId} setActiveId={setActiveDropdownId} />
-          {/* Active app name dropdown */}
-          <AppNameDropdown appConfig={activeApp} appId={activeAppId} activeId={activeDropdownId} setActiveId={setActiveDropdownId} />
-          {/* App menu dropdowns */}
-          {menus.map((menu) => (
-            <MenuDropdown key={menu.label} label={menu.label} items={menu.items} appId={activeAppId} activeId={activeDropdownId} setActiveId={setActiveDropdownId} />
-          ))}
-        </div>
+          {/* Left: Apple + app menus */}
+          <div className="flex shrink-0 items-center gap-0.5">
+            {/* Apple menu */}
+            <AppleMenuDropdown activeId={activeDropdownId} setActiveId={setActiveDropdownId} />
+            {/* Active app name dropdown */}
+            <AppNameDropdown appConfig={activeApp} appId={activeAppId} activeId={activeDropdownId} setActiveId={setActiveDropdownId} />
+            {/* App menu dropdowns */}
+            {menus.map((menu) => (
+              <MenuDropdown key={menu.label} label={menu.label} items={menu.items} appId={activeAppId} activeId={activeDropdownId} setActiveId={setActiveDropdownId} />
+            ))}
+          </div>
 
-        {/* Spacer */}
-        <div className="flex-1" />
+          {/* Spacer */}
+          <div className="flex-1" />
 
-        {/* Right: system icons */}
-        <div className="flex shrink-0 items-center gap-0.5">
-          <button
-            onClick={onSpotlight}
-            className={cn(menuBarButtonClass, 'px-2 text-black/70 hover:bg-black/10 dark:text-white/75 dark:hover:bg-white/10')}
-            title="Spotlight Search (⌘Space)"
-          >
-            <Search className="w-3.5 h-3.5" />
-          </button>
-          <button className={cn(menuBarButtonClass, 'px-2 text-black/70 hover:bg-black/10 dark:text-white/75 dark:hover:bg-white/10')}>
-            <Wifi className="w-3.5 h-3.5" />
-          </button>
-          <button className={cn(menuBarButtonClass, 'px-2 text-black/70 hover:bg-black/10 dark:text-white/75 dark:hover:bg-white/10')}>
-            <Battery className="w-3.5 h-3.5" />
-          </button>
-          <ControlCenter />
-          <div className="flex h-6 items-center rounded-md px-2">
-            <MenuBarClock />
+          {/* Right: system icons */}
+          <div className="flex shrink-0 items-center gap-0.5">
+            <button
+              onClick={onSpotlight}
+              className={iconBtnClass}
+              title="Spotlight Search (⌘Space)"
+            >
+              <Search className="w-3.5 h-3.5" />
+            </button>
+            <button className={iconBtnClass}>
+              <Wifi className="w-3.5 h-3.5" />
+            </button>
+            <button className={iconBtnClass}>
+              <Battery className="w-3.5 h-3.5" />
+            </button>
+            <ControlCenter />
+            <div className="flex h-6 items-center rounded-md px-2">
+              <MenuBarClock />
+            </div>
           </div>
         </div>
-      </div>
-    </LiquidGlass>
+      </LiquidGlass>
+    </MenuBarThemeCtx.Provider>
   );
 }

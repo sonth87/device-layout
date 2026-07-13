@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useMotionValue, useTransform, animate, useDragControls } from 'motion/react';
 import { useStore } from '@/store';
 import { AppContent } from '@/components/apps/AppRegistry';
 
@@ -23,6 +23,7 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
   const windows = useStore((s) => s.windows);
   const apps = useStore((s) => s.apps);
   const closeWindow = useStore((s) => s.closeWindow);
+  const minimizeWindow = useStore((s) => s.minimizeWindow);
   const setRunning = useStore((s) => s.setRunning);
 
   const [headerHidden, setHeaderHidden] = useState(false);
@@ -41,6 +42,11 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
 
   const appConfig = topWindow ? apps[topWindow.appId] : null;
 
+  const dragControls = useDragControls();
+  const dragY = useMotionValue(0);
+  const scale = useTransform(dragY, [0, -220], [1, 0.75]);
+  const borderRadius = useTransform(dragY, [0, -220], [0, 48]);
+
   return (
     <AnimatePresence>
       {topWindow && appConfig && (
@@ -50,8 +56,26 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.88, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-          className="absolute inset-0 z-[500] bg-white dark:bg-neutral-900 flex flex-col"
-          style={{ paddingTop: statusBarHeight, transformOrigin: 'center center' }}
+          className="absolute inset-0 z-[500] bg-white dark:bg-neutral-900 flex flex-col overflow-hidden"
+          style={{
+            paddingTop: statusBarHeight,
+            scale,
+            y: dragY,
+            borderRadius,
+            transformOrigin: 'center bottom',
+          }}
+          drag="y"
+          dragControls={dragControls}
+          dragListener={false}
+          dragConstraints={{ top: -220, bottom: 0 }}
+          dragElastic={{ top: 0.15, bottom: 0 }}
+          onDragEnd={(_, info) => {
+            if (info.offset.y < -85) {
+              minimizeWindow(topWindow.id);
+              setRunning(topWindow.appId, false);
+            }
+            animate(dragY, 0, { type: 'spring', stiffness: 300, damping: 30 });
+          }}
         >
           {/* App-level nav bar — hidden when detail panel takes over */}
           <AnimatePresence initial={false}>
@@ -87,6 +111,12 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
           </div>
 
           <div style={{ height: navBarHeight + homeIndicatorHeight }} />
+
+          {/* Static Home Indicator Gesture Bar acting as Drag Handle */}
+          <div
+            onPointerDown={(e) => dragControls.start(e)}
+            className="absolute bottom-2.5 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black/30 dark:bg-white/35 hover:bg-black/50 dark:hover:bg-white/50 rounded-full cursor-grab active:cursor-grabbing z-[1000] pointer-events-auto"
+          />
         </motion.div>
       )}
     </AnimatePresence>
