@@ -32,6 +32,7 @@ export interface DesktopSlice {
   dockMagnification: number;
   dockAutoHide: boolean;
   showOpenAppIndicators: boolean;
+  glassMode: 'clear' | 'tinted';
   useStacks: boolean;
   stackGroupBy: StackGroupBy;
   language: 'en' | 'vi' | 'ja' | 'ko' | 'zh' | 'th';
@@ -56,6 +57,7 @@ export interface DesktopSlice {
   setDockMagnification: (magnification: number) => void;
   setDockAutoHide: (hide: boolean) => void;
   setShowOpenAppIndicators: (show: boolean) => void;
+  setGlassMode: (mode: 'clear' | 'tinted') => void;
   toggleStacks: () => void;
   setStackGroupBy: (by: StackGroupBy) => void;
   setLanguage: (lang: 'en' | 'vi' | 'ja' | 'ko' | 'zh' | 'th') => void;
@@ -90,6 +92,7 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
     dockMagnification: 0.48,
     dockAutoHide: false,
     showOpenAppIndicators: true,
+    glassMode: 'tinted',
     useStacks: false,
     stackGroupBy: 'kind',
     language: 'en',
@@ -178,6 +181,10 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
 
     setShowOpenAppIndicators(show) {
       set((state) => { state.showOpenAppIndicators = show; });
+    },
+
+    setGlassMode(mode) {
+      set((state) => { state.glassMode = mode; });
     },
 
     toggleStacks() {

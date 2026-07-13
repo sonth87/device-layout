@@ -72,6 +72,7 @@ export const useStore: UseBoundStore<StoreWithMiddlewares> = create<RootStore>()
           dockMagnification: state.dockMagnification,
           dockAutoHide: state.dockAutoHide,
           showOpenAppIndicators: state.showOpenAppIndicators,
+          glassMode: state.glassMode,
           useStacks: state.useStacks,
           stackGroupBy: state.stackGroupBy,
           notifications: state.notifications,

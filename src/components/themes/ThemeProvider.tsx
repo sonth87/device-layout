@@ -22,6 +22,7 @@ import { NotificationBanner } from '@/components/notifications/NotificationBanne
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useWallpaperCycle } from '@/hooks/useWallpaperCycle';
 import { getThemeCssVars } from '@/lib/theme-layout';
+import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
 
 export interface ThemeProviderProps {
@@ -101,7 +102,10 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
 
   return (
     <div
-      className="w-full h-full overflow-hidden relative select-none"
+      className={cn(
+        "w-full h-full overflow-hidden relative select-none",
+        resolvedColorScheme === 'dark' && 'dark'
+      )}
       data-os-theme={osTheme}
       data-glass={glassEnabled ? 'true' : 'false'}
       style={getThemeCssVars(themeConfig)}

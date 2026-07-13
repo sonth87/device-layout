@@ -51,6 +51,7 @@
   --win-accent: #0067c0;
   --android-primary: #6750a4;
   --taskbar-bg: rgba(32 32 32 / 0.85);
+  --taskbar-border: rgba(255 255 255 / 0.08);
   --navbar-bg: rgba(255 255 255 / 0.8);
 }
 
@@ -107,8 +108,9 @@
 
 /* ── Windows 11 ─────────────────────────────────────────── */
 [data-os-theme="windows"] {
-  --taskbar-bg: rgba(32 32 32 / 0.85);
-  --window-chrome-bg: rgba(243 243 243 / 0.98);
+  --taskbar-bg: rgba(243, 243, 243, 0.85);
+  --taskbar-border: rgba(0, 0, 0, 0.08);
+  --window-chrome-bg: rgba(243, 243, 243, 0.98);
   --window-body-bg: #ffffff;
   --radius-window: 8px;
   --radius-card: 8px;
@@ -118,8 +120,9 @@
   --win-accent: #0067c0;
 }
 [data-os-theme="windows"].dark {
-  --taskbar-bg: rgba(15 17 21 / 0.97);
-  --window-chrome-bg: rgba(21 24 33 / 0.98);
+  --taskbar-bg: rgba(15, 17, 21, 0.97);
+  --taskbar-border: rgba(255, 255, 255, 0.08);
+  --window-chrome-bg: rgba(21, 24, 33, 0.98);
   --window-body-bg: #111318;
 }
 

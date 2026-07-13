@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/hooks/useTheme';
+import { useStore } from '@/store';
 import { GlassShimmer } from './GlassShimmer';
 import { useLiquidGlass } from './useLiquidGlass';
 
@@ -43,6 +44,7 @@ export function LiquidGlass({
 }: LiquidGlassProps) {
   const { isGlass: themeGlass } = useTheme();
   const isGlass = forceGlass !== undefined ? forceGlass : themeGlass;
+  const glassMode = useStore((s) => s.glassMode);
   const radiusVar = borderRadius ?? VARIANT_RADIUS_VAR[variant];
 
   const radiusStyle: React.CSSProperties = radiusVar ? { borderRadius: radiusVar } : {};
@@ -56,6 +58,71 @@ export function LiquidGlass({
     : isGlass
     ? 'url(#lg-distort) blur(24px)'
     : 'blur(20px)';
+
+  if (!isGlass) {
+    return (
+      <div
+        ref={elementRef}
+        className={cn(
+          'relative overflow-hidden',
+          'bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10',
+          shadowCls,
+          'border',
+          className
+        )}
+        style={radiusStyle}
+      >
+        <div className="relative z-20 min-w-0 w-full h-full">
+          {children}
+        </div>
+      </div>
+    );
+  }
+
+  if (glassMode === 'clear') {
+    return (
+      <div
+        ref={elementRef}
+        className={cn(
+          'relative overflow-hidden border border-white/25 dark:border-white/10',
+          shadowCls,
+          className
+        )}
+        style={radiusStyle}
+      >
+        {/* Glass background layer with distortion */}
+        <div
+          className="absolute inset-0 z-0 overflow-hidden"
+          style={{
+            ...radiusStyle,
+            backdropFilter: 'blur(3px)',
+            filter: 'url(#glass-distortion)',
+            isolation: 'isolate',
+          }}
+        />
+        {/* Clean border / backdrop opacity */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{
+            ...radiusStyle,
+            background: 'rgba(255, 255, 255, 0.08)',
+          }}
+        />
+        <div
+          className="absolute inset-0 z-20 pointer-events-none"
+          style={{
+            ...radiusStyle,
+            boxShadow: 'inset 1px 1px 1px 0 rgba(255, 255, 255, 0.25), inset -0.5px -0.5px 1px 1px rgba(255, 255, 255, 0.15)',
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative z-20 min-w-0 w-full h-full">
+          {children}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
