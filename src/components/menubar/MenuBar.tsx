@@ -43,8 +43,8 @@ function DropdownPanel({ anchorRef, open, onClose, minWidth = 192, children }: D
       if (panelRef.current?.contains(target)) return;
       onClose();
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener('mousedown', handler, true);
+    return () => document.removeEventListener('mousedown', handler, true);
   }, [open, onClose, anchorRef]);
 
   if (!open || !pos || typeof document === 'undefined') return null;
@@ -52,6 +52,7 @@ function DropdownPanel({ anchorRef, open, onClose, minWidth = 192, children }: D
   return createPortal(
     <div
       ref={panelRef}
+      data-menu-portal="true"
       className="fixed bg-white/92 dark:bg-[#1e2030]/98 backdrop-blur-2xl rounded-menu shadow-2xl border border-black/10 dark:border-white/10 py-1 px-1"
       style={{ top: pos.top, left: pos.left, minWidth, zIndex: 99999 }}
     >
@@ -148,17 +149,26 @@ function getMenuItemLabel(label: string, t: any) {
 function AppNameDropdown({
   appConfig,
   appId,
+  activeId,
+  setActiveId,
 }: {
   appConfig: AppConfig | null;
   appId: string | null;
+  activeId: string | null;
+  setActiveId: (id: string | null) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const open = activeId === 'app-name';
+  const setOpen = useCallback((o: boolean | ((prev: boolean) => boolean)) => {
+    const nextOpen = typeof o === 'function' ? o(open) : o;
+    setActiveId(nextOpen ? 'app-name' : null);
+  }, [open, setActiveId]);
+
   const buttonRef = useRef<HTMLButtonElement>(null);
   const closeWindow = useStore((s) => s.closeWindow);
   const { t, getAppName } = useTranslation();
 
   const appName = appConfig ? getAppName(appConfig.id, appConfig.name) : t.appNameFinder;
-  const handleClose = useCallback(() => setOpen(false), []);
+  const handleClose = useCallback(() => setOpen(false), [setOpen]);
 
   const dispatchAction = (action: string) => {
     if (!appId) return;
@@ -182,6 +192,9 @@ function AppNameDropdown({
         onMouseDown={(e) => {
           if (e.button !== 0) return;
           setOpen((o) => !o);
+        }}
+        onMouseEnter={() => {
+          if (activeId !== null) setActiveId('app-name');
         }}
         className={cn(
           menuBarButtonClass,
@@ -219,16 +232,25 @@ function MenuDropdown({
   label,
   items,
   appId,
+  activeId,
+  setActiveId,
 }: {
   label: string;
   items: MenuBarItem[];
   appId: string | null;
+  activeId: string | null;
+  setActiveId: (id: string | null) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const open = activeId === label;
+  const setOpen = useCallback((o: boolean | ((prev: boolean) => boolean)) => {
+    const nextOpen = typeof o === 'function' ? o(open) : o;
+    setActiveId(nextOpen ? label : null);
+  }, [open, label, setActiveId]);
+
   const buttonRef = useRef<HTMLButtonElement>(null);
   const { t } = useTranslation();
 
-  const handleClose = useCallback(() => setOpen(false), []);
+  const handleClose = useCallback(() => setOpen(false), [setOpen]);
 
   const handleItemClick = (item: MenuBarItem) => {
     setOpen(false);
@@ -246,6 +268,9 @@ function MenuDropdown({
         onMouseDown={(e) => {
           if (e.button !== 0) return;
           setOpen((o) => !o);
+        }}
+        onMouseEnter={() => {
+          if (activeId !== null) setActiveId(label);
         }}
         className={cn(
           menuBarButtonClass,
@@ -366,14 +391,25 @@ function PersonalAboutDialog({ onClose }: { onClose: () => void }) {
   );
 }
 
-function AppleMenuDropdown() {
-  const [open, setOpen] = useState(false);
+function AppleMenuDropdown({
+  activeId,
+  setActiveId,
+}: {
+  activeId: string | null;
+  setActiveId: (id: string | null) => void;
+}) {
+  const open = activeId === 'apple';
+  const setOpen = useCallback((o: boolean | ((prev: boolean) => boolean)) => {
+    const nextOpen = typeof o === 'function' ? o(open) : o;
+    setActiveId(nextOpen ? 'apple' : null);
+  }, [open, setActiveId]);
+
   const [showAbout, setShowAbout] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const apps = useStore((s) => s.apps);
   const launchApp = useStore((s) => s.launchApp);
   const { t } = useTranslation();
-  const handleClose = useCallback(() => setOpen(false), []);
+  const handleClose = useCallback(() => setOpen(false), [setOpen]);
 
   const handleSystemSettings = () => {
     setOpen(false);
@@ -388,6 +424,9 @@ function AppleMenuDropdown() {
         onMouseDown={(e) => {
           if (e.button !== 0) return;
           setOpen((o) => !o);
+        }}
+        onMouseEnter={() => {
+          if (activeId !== null) setActiveId('apple');
         }}
         className={cn(
           menuBarButtonClass,
@@ -421,19 +460,21 @@ export function MenuBar({ onSpotlight }: { onSpotlight?: () => void } = {}) {
   const activeApp = activeAppId ? apps[activeAppId] : null;
   const menus: MenuBarMenu[] = activeApp?.menuBarMenus ?? DEFAULT_MENU_BAR_MENUS;
 
+  const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null);
+
   return (
     <LiquidGlass variant="menubar">
-      <div className="flex h-(--menubar-height) w-full items-center px-2">
+      <div data-menubar="true" className="flex h-(--menubar-height) w-full items-center px-2">
 
         {/* Left: Apple + app menus */}
         <div className="flex shrink-0 items-center gap-0.5">
           {/* Apple menu */}
-          <AppleMenuDropdown />
+          <AppleMenuDropdown activeId={activeDropdownId} setActiveId={setActiveDropdownId} />
           {/* Active app name dropdown */}
-          <AppNameDropdown appConfig={activeApp} appId={activeAppId} />
+          <AppNameDropdown appConfig={activeApp} appId={activeAppId} activeId={activeDropdownId} setActiveId={setActiveDropdownId} />
           {/* App menu dropdowns */}
           {menus.map((menu) => (
-            <MenuDropdown key={menu.label} label={menu.label} items={menu.items} appId={activeAppId} />
+            <MenuDropdown key={menu.label} label={menu.label} items={menu.items} appId={activeAppId} activeId={activeDropdownId} setActiveId={setActiveDropdownId} />
           ))}
         </div>
 

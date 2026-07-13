@@ -9,8 +9,6 @@ import { AppIconImage } from '@/components/shared/AppIconImage';
 import type { AppConfig } from '@/types/app';
 import { useTranslation } from '@/hooks/useTranslation';
 
-export const CELL_W = 108;
-export const CELL_H = 124;
 export const PAD = 20;
 
 /** Calculate dynamic resolved icon positions resolving collisions with an active drag placeholder */
@@ -20,12 +18,18 @@ function resolveIconPositions({
   activeDrag,
   maxRows,
   maxCols,
+  cellW,
+  cellH,
+  desktopSortBy = 'none',
 }: {
   appList: AppConfig[];
   posMap: Record<string, { x: number; y: number }>;
   activeDrag: { appId: string; x: number; y: number } | null;
   maxRows: number;
   maxCols: number;
+  cellW: number;
+  cellH: number;
+  desktopSortBy?: string;
 }) {
   // 1. Calculate preferred indices for all apps
   const appItems = appList.map((app, index) => {
@@ -33,9 +37,9 @@ function resolveIconPositions({
     let preferredIndex = index;
     let hasStored = false;
 
-    if (stored) {
-      const col = Math.max(0, Math.round((stored.x - PAD) / CELL_W));
-      const row = Math.max(0, Math.min(maxRows - 1, Math.round((stored.y - PAD) / CELL_H)));
+    if (stored && desktopSortBy === 'none') {
+      const col = Math.max(0, Math.round((stored.x - PAD) / 108));
+      const row = Math.max(0, Math.min(maxRows - 1, Math.round((stored.y - PAD) / 124)));
       preferredIndex = col * maxRows + row;
       hasStored = true;
     }
@@ -51,8 +55,8 @@ function resolveIconPositions({
   // 2. Identify the reserved hovered slot for the dragged icon
   let hoveredIndex = -1;
   if (activeDrag) {
-    const hCol = Math.max(0, Math.min(maxCols - 1, Math.round((activeDrag.x - PAD) / CELL_W)));
-    const hRow = Math.max(0, Math.min(maxRows - 1, Math.round((activeDrag.y - PAD) / CELL_H)));
+    const hCol = Math.max(0, Math.min(maxCols - 1, Math.round((activeDrag.x - PAD) / cellW)));
+    const hRow = Math.max(0, Math.min(maxRows - 1, Math.round((activeDrag.y - PAD) / cellH)));
     hoveredIndex = hCol * maxRows + hRow;
   }
 
@@ -99,8 +103,8 @@ function resolveIconPositions({
     const col = Math.floor(idx / maxRows);
     const row = idx % maxRows;
     coords[appId] = {
-      x: col * CELL_W + PAD,
-      y: row * CELL_H + PAD,
+      x: col * cellW + PAD,
+      y: row * cellH + PAD,
     };
   }
 
@@ -117,10 +121,33 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
   const apps = useStore((s) => s.apps);
   const iconLayout = useStore((s) => s.iconLayout);
   const setIconLayout = useStore((s) => s.setIconLayout);
+
+  const iconSize = useStore((s) => s.desktopIconSize);
+  const gridSpacing = useStore((s) => s.desktopGridSpacing);
+  const labelPosition = useStore((s) => s.desktopLabelPosition);
+  const desktopSortBy = useStore((s) => s.desktopSortBy);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { getAppName } = useTranslation();
 
   const [activeDrag, setActiveDrag] = useState<{ appId: string; x: number; y: number } | null>(null);
+
+  // Dynamic cellW and cellH calculations
+  let cellW = 108;
+  let cellH = 124;
+
+  if (labelPosition === 'bottom') {
+    const horizontalGap = 44 + (gridSpacing - 50) * 0.8;
+    const verticalGap = 32 + (gridSpacing - 50) * 0.8;
+    cellW = iconSize + horizontalGap;
+    cellH = iconSize + 28 + verticalGap;
+  } else {
+    const horizontalGap = 32 + (gridSpacing - 50) * 0.8;
+    const verticalGap = 20 + (gridSpacing - 50) * 0.8;
+    const labelWidth = 80;
+    cellW = iconSize + labelWidth + horizontalGap;
+    cellH = iconSize + verticalGap;
+  }
 
   const containerHeight = Math.max(
     0,
@@ -131,10 +158,28 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
     viewport.width - config.layout.desktopInsets.left - config.layout.desktopInsets.right
   );
 
-  const maxRows = Math.max(1, Math.floor((containerHeight - PAD * 2) / CELL_H));
-  const maxCols = Math.max(1, Math.floor((containerWidth - PAD * 2) / CELL_W));
+  const maxRows = Math.max(1, Math.floor((containerHeight - PAD * 2) / cellH));
+  const maxCols = Math.max(1, Math.floor((containerWidth - PAD * 2) / cellW));
 
   const appList = Object.values(apps).filter((a) => !a.disabled);
+
+  // Sort appList if sortBy is active
+  const sortedAppList = [...appList];
+  if (desktopSortBy === 'name') {
+    sortedAppList.sort((a, b) => {
+      const nameA = getAppName(a.id, a.name);
+      const nameB = getAppName(b.id, b.name);
+      return nameA.localeCompare(nameB);
+    });
+  } else if (desktopSortBy === 'kind') {
+    sortedAppList.sort((a, b) => {
+      const catA = a.category ?? 'Other';
+      const catB = b.category ?? 'Other';
+      const catComp = catA.localeCompare(catB);
+      if (catComp !== 0) return catComp;
+      return getAppName(a.id, a.name).localeCompare(getAppName(b.id, b.name));
+    });
+  }
 
   // Build position map from persisted layout
   const posMap: Record<string, { x: number; y: number }> = {};
@@ -144,29 +189,40 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
 
   // Resolve current layout coordinates (handles dynamic pushes)
   const { coords: resolvedCoords, hoveredIndex } = resolveIconPositions({
-    appList,
+    appList: sortedAppList,
     posMap,
     activeDrag,
     maxRows,
     maxCols,
+    cellW,
+    cellH,
+    desktopSortBy,
   });
 
   const handleDrop = (appId: string, x: number, y: number) => {
     // Resolve full positions at final drag release coordinates
     const { coords } = resolveIconPositions({
-      appList,
+      appList: sortedAppList,
       posMap,
       activeDrag: { appId, x, y },
       maxRows,
       maxCols,
+      cellW,
+      cellH,
+      desktopSortBy,
     });
 
     // Commit snapshot of all resolved app positions to the store layout
-    const newLayout = appList.map((app) => ({
-      appId: app.id,
-      x: coords[app.id].x,
-      y: coords[app.id].y,
-    }));
+    // Convert current visual positions back to the original 108x124 grid coordinate mapping to maintain consistency
+    const newLayout = sortedAppList.map((app) => {
+      const col = Math.round((coords[app.id].x - PAD) / cellW);
+      const row = Math.round((coords[app.id].y - PAD) / cellH);
+      return {
+        appId: app.id,
+        x: col * 108 + PAD,
+        y: row * 124 + PAD,
+      };
+    });
 
     setIconLayout(newLayout);
     setActiveDrag(null);
@@ -190,23 +246,26 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
 
         const hCol = Math.floor(hoveredIndex / maxRows);
         const hRow = hoveredIndex % maxRows;
-        const placeholderX = hCol * CELL_W + PAD;
-        const placeholderY = hRow * CELL_H + PAD;
+        const placeholderX = hCol * cellW + PAD;
+        const placeholderY = hRow * cellH + PAD;
         const draggedAppName = getAppName(draggedApp.id, draggedApp.name);
+
+        const width = labelPosition === 'bottom' ? iconSize + 24 : iconSize + 104;
+        const height = labelPosition === 'bottom' ? iconSize + 40 : iconSize + 24;
 
         return (
           <div
             className="absolute rounded-xl border-2 border-dashed border-white/20 bg-white/5 backdrop-blur-[2px] pointer-events-none flex flex-col items-center justify-center p-2.5"
             style={{
-              left: placeholderX + 10,
-              top: placeholderY + 10,
-              width: 88,
-              height: 104,
+              left: placeholderX + (cellW - width) / 2,
+              top: placeholderY + (cellH - height) / 2,
+              width,
+              height,
               transition: 'left 0.12s cubic-bezier(0.25, 0.8, 0.25, 1), top 0.12s cubic-bezier(0.25, 0.8, 0.25, 1)',
             }}
           >
             <div className="opacity-20 scale-75 select-none pointer-events-none">
-              <AppIconImage appConfig={draggedApp} size={64} />
+              <AppIconImage appConfig={draggedApp} size={iconSize} />
             </div>
             <span
               className="block w-full max-w-19 text-white text-[11px] font-medium text-center leading-tight truncate opacity-20 mt-2 select-none pointer-events-none"
@@ -218,7 +277,7 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
         );
       })()}
 
-      {appList.map((app, index) => {
+      {sortedAppList.map((app, index) => {
         const { x, y } = resolvedCoords[app.id] || { x: 0, y: 0 };
         return (
           <AppIcon

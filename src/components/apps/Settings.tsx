@@ -7,6 +7,7 @@ import {
   Image,
   LayoutGrid,
   Bell,
+  RefreshCw,
   type LucideIcon,
 } from 'lucide-react';
 import { useStore } from '@/store';
@@ -17,13 +18,16 @@ import { SettingsAppearance } from './settings/SettingsAppearance';
 import { SettingsWallpaper } from './settings/SettingsWallpaper';
 import { SettingsDesktopDock } from './settings/SettingsDesktopDock';
 import { SettingsNotifications } from './settings/SettingsNotifications';
+import { SettingsUpdate } from './settings/SettingsUpdate';
 import { AppSettingsPanel } from './settings/AppSettingsRegistry';
 import { MobileSplitView, useMobileSplitBack } from './MobileSplitView';
 import type { AppContentProps } from './AppRegistry';
 import type { AppConfig } from '@/types/app';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUpdateStatusStore, hasAvailableUpdate } from '@/lib/update-status-store';
+import { useUpdateActions } from '@/lib/update-actions';
 
-type SystemSectionId = 'general' | 'appearance' | 'wallpaper' | 'desktop-dock' | 'notifications';
+type SystemSectionId = 'general' | 'appearance' | 'wallpaper' | 'desktop-dock' | 'notifications' | 'update';
 
 function SidebarItem({
   lucideIcon: Icon,
@@ -32,6 +36,7 @@ function SidebarItem({
   active,
   onClick,
   iconEl,
+  hasBadge,
 }: {
   lucideIcon?: LucideIcon;
   iconColor?: [string, string];
@@ -39,6 +44,7 @@ function SidebarItem({
   active: boolean;
   onClick: () => void;
   iconEl?: React.ReactNode;
+  hasBadge?: boolean;
 }) {
   return (
     <button
@@ -50,10 +56,13 @@ function SidebarItem({
     >
       {iconEl ?? (Icon ? (
         <span
-          className="w-7 h-7 rounded-(--radius-input) flex items-center justify-center shrink-0"
+          className="relative w-7 h-7 rounded-(--radius-input) flex items-center justify-center shrink-0"
           style={{ background: `linear-gradient(135deg, ${iconColor?.[0] ?? '#636366'}, ${iconColor?.[1] ?? '#48484a'})` }}
         >
           <Icon className="w-4 h-4 text-white" strokeWidth={1.8} />
+          {hasBadge && (
+            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-[#11141B]" />
+          )}
         </span>
       ) : null)}
       <span className="truncate font-medium">{label}</span>
@@ -64,6 +73,8 @@ function SidebarItem({
 export function Settings({ windowId }: AppContentProps) {
   const { t } = useTranslation();
   const apps = useStore((s) => s.apps);
+  const updateStatus = useUpdateStatusStore((s) => s.status);
+  const updateActions = useUpdateActions();
   void windowId;
 
   const appSettingsList = Object.values(apps).filter((a) => !a.disabled && a.appSettings);
@@ -71,7 +82,7 @@ export function Settings({ windowId }: AppContentProps) {
   type ActiveId = SystemSectionId | `app:${string}`;
   const [activeId, setActiveId] = useState<ActiveId | null>('general');
 
-  const systemSections = [
+  const systemSectionsBase = [
     {
       id: 'general',
       label: t.general,
@@ -79,6 +90,14 @@ export function Settings({ windowId }: AppContentProps) {
       lucideIcon: SettingsIcon,
       color: ['#636366', '#48484a'] as [string, string],
       component: SettingsGeneral,
+    },
+    {
+      id: 'update',
+      label: t.softwareUpdate,
+      description: t.softwareUpdateDesc,
+      lucideIcon: RefreshCw,
+      color: ['#ff9500', '#c93400'] as [string, string],
+      component: SettingsUpdate,
     },
     {
       id: 'appearance',
@@ -113,6 +132,15 @@ export function Settings({ windowId }: AppContentProps) {
       component: SettingsNotifications,
     },
   ] as const;
+
+  // "Update" section chỉ hiện khi host cung cấp updateActions (Electron) —
+  // web tự động luôn ở bản mới nhất khi user load trang, không cần khái
+  // niệm "kiểm tra cập nhật" thủ công. useUpdateActions() trả null nếu host
+  // không truyền prop updateActions (xem lib.tsx) — cơ chế có sẵn, không
+  // cần prop/context mới.
+  const systemSections = updateActions
+    ? systemSectionsBase
+    : systemSectionsBase.filter((s) => s.id !== 'update');
 
   const select = useCallback((id: ActiveId) => setActiveId(id), []);
 
@@ -154,7 +182,8 @@ export function Settings({ windowId }: AppContentProps) {
       <p className="px-3 mb-1 text-[11px] font-semibold uppercase tracking-wider text-black/35 dark:text-white/35">{t.system}</p>
       {systemSections.map((section) => (
         <SidebarItem key={section.id} lucideIcon={section.lucideIcon} iconColor={section.color}
-          label={section.label} active={activeId === section.id} onClick={() => select(section.id)} />
+          label={section.label} active={activeId === section.id} onClick={() => select(section.id)}
+          hasBadge={section.id === 'update' && hasAvailableUpdate(updateStatus)} />
       ))}
 
       {appSettingsList.length > 0 && (

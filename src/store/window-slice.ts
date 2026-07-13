@@ -152,6 +152,14 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
       if (appId && !Object.values(get().windows).some((win) => win.appId === appId)) {
         get().setRunning(appId, false);
       }
+      // Update active app based on new focused window
+      const newFocusedId = get().focusedWindowId;
+      if (newFocusedId) {
+        const nextAppId = get().windows[newFocusedId]?.appId ?? null;
+        get().setActiveApp(nextAppId);
+      } else {
+        get().setActiveApp(null);
+      }
     },
 
     minimizeWindow(id) {
@@ -168,8 +176,12 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
           if (state.focusedWindowId) state.windows[state.focusedWindowId].isFocused = true;
         }
       });
-      const appId = get().windows[id]?.appId;
-      if (appId && !Object.values(get().windows).some((win) => win.appId === appId && !win.isMinimized)) {
+      // Update active app based on new focused window
+      const newFocusedId = get().focusedWindowId;
+      if (newFocusedId) {
+        const nextAppId = get().windows[newFocusedId]?.appId ?? null;
+        get().setActiveApp(nextAppId);
+      } else {
         get().setActiveApp(null);
       }
     },

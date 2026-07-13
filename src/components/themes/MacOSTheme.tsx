@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { MenuBar } from '@/components/menubar/MenuBar';
 import { Dock } from '@/components/dock/Dock';
-import { SnapAssist } from '@/components/window/SnapAssist';
 import { GlobalAboutDialog } from '@/components/shared/AboutDialog';
 import { useStore } from '@/store';
 import type { AppConfig } from '@/types/app';
@@ -13,6 +12,7 @@ const PEEK_ZONE = 20; // px from top/bottom edge to trigger menu bar / dock reve
 // Total slide distance: dock height (≈80px) + offset bottom (16px) + a little extra
 const DOCK_HIDE_Y = 120;
 const MENU_BAR_HEIGHT = 28; // matches --menubar-height; slide distance when hidden
+const WINDOW_CHROME_HEIGHT = 44; // matches --window-chrome-height
 const AUTO_HIDE_DELAY_MS = 1500; // mouse leaves menu bar area → re-hide after this
 
 interface ChromeProps {
@@ -33,24 +33,39 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
     Object.values(s.windows).some((w) => w.isFullScreen && !w.isMinimized)
   );
 
-  // Dock auto-hides in both maximize and fullscreen (unchanged from before).
-  const [dockPeeking, setDockPeeking] = useState(false);
-  const [dockHovered, setDockHovered] = useState(false);
-  const dockAutoHide = hasMaximized || hasFullScreen;
-  const dockVisible = !dockAutoHide || dockPeeking || dockHovered;
+  const storeDockAutoHide = useStore((s) => s.dockAutoHide);
+  const dockAutoHide = hasMaximized || hasFullScreen || storeDockAutoHide;
 
-  const handleDockPeek = useCallback((e: MouseEvent) => {
-    setDockPeeking(e.clientY >= window.innerHeight - PEEK_ZONE);
-  }, []);
+  const [dockRevealed, setDockRevealed] = useState(false);
+  const [dockHovered, setDockHovered] = useState(false);
+  const dockVisible = !dockAutoHide || dockRevealed || dockHovered;
 
   useEffect(() => {
     if (!dockAutoHide) {
-      setDockPeeking(false);
+      setDockRevealed(false);
       return;
     }
-    document.addEventListener('mousemove', handleDockPeek);
-    return () => document.removeEventListener('mousemove', handleDockPeek);
-  }, [dockAutoHide, handleDockPeek]);
+    let hideTimer: ReturnType<typeof setTimeout> | null = null;
+    const handlePeek = (e: MouseEvent) => {
+      const isNearBottom = e.clientY >= window.innerHeight - PEEK_ZONE;
+      if (isNearBottom || dockHovered) {
+        setDockRevealed(true);
+        if (hideTimer) {
+          clearTimeout(hideTimer);
+          hideTimer = null;
+        }
+      } else {
+        if (!hideTimer) {
+          hideTimer = setTimeout(() => setDockRevealed(false), AUTO_HIDE_DELAY_MS);
+        }
+      }
+    };
+    document.addEventListener('mousemove', handlePeek);
+    return () => {
+      document.removeEventListener('mousemove', handlePeek);
+      if (hideTimer) clearTimeout(hideTimer);
+    };
+  }, [dockAutoHide, dockHovered]);
 
   // Menu bar (+ the fullscreen window's own title bar, see Window.tsx) only
   // auto-hides in true fullscreen. Reveal on hover near the top edge;
@@ -69,10 +84,17 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
     }
     let hideTimer: ReturnType<typeof setTimeout> | null = null;
     const handlePeek = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      const isInsideMenuBar = target?.closest('[data-menubar="true"]');
+      const isInsideWindowChrome = target?.closest('[data-windowchrome="true"]');
+      const isInsideDropdown = target?.closest('[data-menu-portal="true"]') || target?.closest('[data-radix-popper-content-wrapper]');
+
       if (e.clientY <= PEEK_ZONE) {
         setMenuBarRevealed(true);
         if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-      } else if (e.clientY > MENU_BAR_HEIGHT) {
+      } else if (isInsideMenuBar || isInsideWindowChrome || isInsideDropdown) {
+        if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+      } else {
         if (!hideTimer) {
           hideTimer = setTimeout(() => setMenuBarRevealed(false), AUTO_HIDE_DELAY_MS);
         }
@@ -87,9 +109,6 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
 
   return (
     <>
-      {/* Snap assist overlay */}
-      <SnapAssist />
-
       {/* About dialog — listens globally for action:about events */}
       <GlobalAboutDialog />
 
@@ -111,7 +130,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
         animate={{ y: dockVisible ? 0 : DOCK_HIDE_Y }}
         transition={{ type: 'spring', stiffness: 380, damping: 30, mass: 0.8 }}
         onMouseEnter={() => setDockHovered(true)}
-        onMouseLeave={() => { setDockHovered(false); setDockPeeking(false); }}
+        onMouseLeave={() => setDockHovered(false)}
       >
         <div className="pointer-events-auto">
           <Dock onOpenApp={onOpenApp} />

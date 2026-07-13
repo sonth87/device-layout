@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { AppIconImage } from "@/components/shared/AppIconImage";
 import type { AppConfig, ContextMenuAction } from "@/types/app";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useStore } from "@/store";
 
 const DRAG_THRESHOLD = 6; // px before we consider it a drag, not a click
 const LONG_PRESS_MS = 700; // ms hold before mobile context menu fires
@@ -144,6 +145,10 @@ export function AppIcon({
   onDragStart,
   onDrag,
 }: AppIconProps) {
+  const iconSize = useStore((s) => s.desktopIconSize);
+  const labelPosition = useStore((s) => s.desktopLabelPosition);
+  const textSize = useStore((s) => s.desktopTextSize);
+
   const [dragging, setDragging] = useState(false);
   const { getAppName } = useTranslation();
   const displayName = getAppName(appConfig.id, appConfig.name);
@@ -300,7 +305,7 @@ export function AppIcon({
             style={{
               left: pos.x,
               top: pos.y,
-              width: 88,
+              width: labelPosition === 'bottom' ? iconSize + 24 : iconSize + 104,
               zIndex: dragging ? 1000 : 1,
               transition: dragging
                 ? "none"
@@ -309,7 +314,8 @@ export function AppIcon({
           >
             <button
               className={cn(
-                "flex w-full flex-col items-center gap-2 p-2.5 rounded-xl select-none",
+                "flex w-full items-center select-none",
+                labelPosition === 'bottom' ? "flex-col text-center gap-2 p-2.5" : "flex-row text-left gap-3 p-2",
                 "hover:bg-white/15 focus:outline-none",
                 "transition-transform duration-75",
                 pressed && !dragging && "scale-90 opacity-80",
@@ -318,10 +324,10 @@ export function AppIcon({
               onPointerDown={handlePointerDown}
               aria-label={`Open ${displayName}`}
             >
-              <div className="relative">
+              <div className="relative shrink-0">
                 <AppIconImage
                   appConfig={appConfig}
-                  size={64}
+                  size={iconSize}
                   className="drop-shadow-xl"
                 />
                 {appConfig.badge !== undefined && (
@@ -331,8 +337,13 @@ export function AppIcon({
                 )}
               </div>
               <span
-                className="block w-full max-w-19 text-white text-[11px] font-medium text-center leading-tight truncate"
+                className={cn(
+                  "block w-full text-white font-medium leading-tight truncate",
+                  labelPosition === 'bottom' ? "text-center" : "text-left"
+                )}
                 style={{
+                  fontSize: `${textSize}px`,
+                  maxWidth: labelPosition === 'bottom' ? `${iconSize + 12}px` : '100px',
                   textShadow:
                     "0 1px 0px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6)",
                 }}

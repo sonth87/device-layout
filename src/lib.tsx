@@ -10,10 +10,13 @@
  * The Next.js app (src/app/desktop/page.tsx) continues to render
  * <ThemeProvider apps={APPS_CONFIG} /> unaffected by this file.
  */
+import { useEffect } from 'react';
 import { ThemeProvider, type ThemeProviderProps } from '@/components/themes/ThemeProvider';
 import { AssetBaseProvider } from '@/lib/asset-base';
 import { WallpaperImportProvider, type ImportWallpaperFn } from '@/lib/wallpaper-import';
 import { WallpaperCatalogProvider, buildWallpaperCatalog } from '@/lib/wallpaper-catalog';
+import { UpdateActionsProvider, useUpdateActions, type UpdateActions } from '@/lib/update-actions';
+import { useUpdateStatusStore } from '@/lib/update-status-store';
 import type { WallpaperConfig } from '@/types/desktop';
 import './app/globals.css';
 
@@ -33,15 +36,37 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
    * Live wallpapers/colors are unaffected (device-layout still supplies those).
    */
   wallpapers?: WallpaperConfig[];
+  /**
+   * Implements OTA-update status + native "pick an update file" (offline
+   * install via .zip/.dmg/.exe chosen manually — see apps/shell-electron/
+   * src/updates.ts). Omit to hide the Update Settings section's status/
+   * action rows (e.g. a host with no updater, like a web build).
+   */
+  updateActions?: UpdateActions;
 }
 
-export function DeviceLayout({ assetBaseUrl = '', apps, onImportWallpaper, wallpapers }: DeviceLayoutProps) {
+/** Fetches update status once on mount so SidebarItem's badge (Settings.tsx)
+ * can show it even before the user ever opens Settings — not tied to
+ * SettingsUpdate.tsx's own lifecycle. */
+function UpdateStatusInitializer() {
+  const actions = useUpdateActions();
+  useEffect(() => {
+    if (!actions) return;
+    actions.checkUpdate().then(useUpdateStatusStore.getState().setStatus).catch(() => {});
+  }, [actions]);
+  return null;
+}
+
+export function DeviceLayout({ assetBaseUrl = '', apps, onImportWallpaper, wallpapers, updateActions }: DeviceLayoutProps) {
   const catalog = buildWallpaperCatalog(wallpapers);
   return (
     <AssetBaseProvider value={assetBaseUrl}>
       <WallpaperCatalogProvider value={catalog}>
         <WallpaperImportProvider value={onImportWallpaper ?? null}>
-          <ThemeProvider apps={apps} />
+          <UpdateActionsProvider value={updateActions ?? null}>
+            <UpdateStatusInitializer />
+            <ThemeProvider apps={apps} />
+          </UpdateActionsProvider>
         </WallpaperImportProvider>
       </WallpaperCatalogProvider>
     </AssetBaseProvider>
@@ -52,6 +77,8 @@ export type { ThemeProviderProps } from '@/components/themes/ThemeProvider';
 export type { AppConfig, AppContentProps, AppInstance, MenuBarMenu, MenuBarItem, ContextMenuAction } from '@/types/app';
 export type { WallpaperConfig, WallpaperKind, WallpaperFitMode, WallpaperCycleInterval, WallpaperCycleConfig } from '@/types/desktop';
 export type { ImportWallpaperFn } from '@/lib/wallpaper-import';
+export type { UpdateActions, UpdateStatus, PickUpdateFileResult, CheckUpdateFn, PickUpdateFileFn, UpdateProgress, UpdateProgressPhase, OnProgressFn } from '@/lib/update-actions';
+export { useUpdateStatusStore, hasAvailableUpdate } from '@/lib/update-status-store';
 export { useAssetBase, resolveAssetUrl } from '@/lib/asset-base';
 /**
  * Built-in demo apps (Finder, Notes, Calendar, Photos, Music, Terminal,

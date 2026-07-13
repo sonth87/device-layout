@@ -3,5 +3,5 @@
 import { WallpaperPickerContent } from '@/components/wallpaper/WallpaperPickerContent';
 
 export function SettingsWallpaper() {
-  return <WallpaperPickerContent />;
+  return <WallpaperPickerContent variant="horizontal" />;
 }

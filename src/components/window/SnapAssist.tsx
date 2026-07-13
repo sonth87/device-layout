@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { onSnapZoneChange, getSnapRect, type SnapZone } from '@/lib/snap-events';
 import { useTheme } from '@/hooks/useTheme';
+import { useStore } from '@/store';
 
 const ZONE_LABELS: Record<NonNullable<SnapZone>, string> = {
   left: 'Snap Left',
@@ -94,6 +95,11 @@ export function SnapAssist() {
   const { osTheme } = useTheme();
   const zoneStyle = getZoneStyle(osTheme);
 
+  const focusedWindowId = useStore((s) => s.focusedWindowId);
+  const windows = useStore((s) => s.windows);
+  const focusedWindow = focusedWindowId ? windows[focusedWindowId] : null;
+  const zIndex = focusedWindow?.zIndex ?? 10;
+
   useEffect(() => {
     return onSnapZoneChange((zone, dragging, inset, bInset) => {
       setActiveZone(zone);
@@ -106,7 +112,7 @@ export function SnapAssist() {
   if (!isDragging) return null;
 
   return (
-    <div className="absolute inset-0 pointer-events-none z-9990">
+    <div className="absolute inset-0 pointer-events-none" style={{ zIndex }}>
       <AnimatePresence>
         {activeZone && (
           <ZoneOverlay

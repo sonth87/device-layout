@@ -43,6 +43,7 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
 
   return (
     <div
+      data-windowchrome="true"
       className={cn(
         'flex items-center gap-0 h-(--window-chrome-height) px-4 shrink-0',
         'select-none cursor-move',
@@ -136,6 +137,7 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
 
   return (
     <div
+      data-windowchrome="true"
       className={cn(
         'flex items-center h-(--window-chrome-height) shrink-0',
         'bg-neutral-100/98 dark:bg-[#151821]/98',

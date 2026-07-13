@@ -10,6 +10,7 @@ import { useResolvedWallpaper } from '@/hooks/useResolvedWallpaper';
 import { resolveAssetUrl, useAssetBase } from '@/lib/asset-base';
 import { wallpaperFitToCss } from '@/lib/wallpaper-fit';
 import { WallpaperPickerModal } from '@/components/wallpaper/WallpaperPickerContent';
+import { ViewOptionsDialog } from './ViewOptionsDialog';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { StackGroupBy } from '@/types/desktop';
 
@@ -34,13 +35,15 @@ const MENU_CLS =
 
 export function Wallpaper({ children }: WallpaperProps) {
   const { t } = useTranslation();
-  const useStacks          = useStore((s) => s.useStacks);
-  const stackGroupBy       = useStore((s) => s.stackGroupBy);
-  const toggleStacks       = useStore((s) => s.toggleStacks);
-  const setStackGroupBy    = useStore((s) => s.setStackGroupBy);
-  const openWidgetGallery  = useStore((s) => s.openWidgetGallery);
-  const fitMode            = useStore((s) => s.wallpaperFitMode);
-  const hydrated           = useStoreHydrated();
+  const useStacks               = useStore((s) => s.useStacks);
+  const stackGroupBy           = useStore((s) => s.stackGroupBy);
+  const toggleStacks           = useStore((s) => s.toggleStacks);
+  const setStackGroupBy        = useStore((s) => s.setStackGroupBy);
+  const openWidgetGallery      = useStore((s) => s.openWidgetGallery);
+  const fitMode                = useStore((s) => s.wallpaperFitMode);
+  const desktopViewOptionsOpen = useStore((s) => s.desktopViewOptionsOpen);
+  const setDesktopViewOptionsOpen = useStore((s) => s.setDesktopViewOptionsOpen);
+  const hydrated               = useStoreHydrated();
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const assetBase = useAssetBase();
@@ -164,6 +167,17 @@ export function Wallpaper({ children }: WallpaperProps) {
               </ContextMenu.Portal>
             </ContextMenu.Sub>
 
+            <ContextMenu.Separator className={SEPARATOR_CLS} />
+
+            {/* Show View Options */}
+            <ContextMenu.Item
+              className={ITEM_CLS}
+              onSelect={() => setDesktopViewOptionsOpen(true)}
+            >
+              <span className="w-3.5 shrink-0" />
+              {t.showViewOptions}
+            </ContextMenu.Item>
+
           </ContextMenu.Content>
         </ContextMenu.Portal>
       </ContextMenu.Root>
@@ -174,6 +188,9 @@ export function Wallpaper({ children }: WallpaperProps) {
       </div>
 
       {pickerOpen && <WallpaperPickerModal onClose={() => setPickerOpen(false)} />}
+
+      {/* View Options Dialog */}
+      <ViewOptionsDialog />
     </>
   );
 }

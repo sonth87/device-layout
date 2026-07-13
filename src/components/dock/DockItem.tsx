@@ -6,6 +6,8 @@ import * as Tooltip from '@radix-ui/react-tooltip';
 import { AppIconImage } from '@/components/shared/AppIconImage';
 import type { AppConfig } from '@/types/app';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUpdateStatusStore, hasAvailableUpdate } from '@/lib/update-status-store';
+import { useStore } from '@/store';
 
 interface DockItemProps {
   appConfig: AppConfig;
@@ -26,10 +28,16 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen, b
   const [bouncing, setBouncing] = useState(false);
   const { getAppName } = useTranslation();
   const displayName = getAppName(appConfig.id, appConfig.name);
+  const showOpenAppIndicators = useStore((s) => s.showOpenAppIndicators);
+
+  // Update badge — chỉ cho icon Settings, phạm vi hẹp (không đổi AppConfig.badge
+  // field chung/pipeline Dock khác). Xem docs/dev/versioning.md's mục OTA Update.
+  const updateStatus = useUpdateStatusStore((s) => s.status);
+  const showUpdateBadge = appConfig.id === 'settings' && hasAvailableUpdate(updateStatus);
 
   // Total height of the dock item slot: icon area + dot indicator area.
   // This is the fixed height the dock uses — icons overflow UPWARD beyond this.
-  const itemHeight = baseSize + 6;
+  const itemHeight = baseSize + 10;
 
   // Magnification: map cursor distance → icon size
   const distance = useTransform(mouseX, (mx) => {
@@ -97,16 +105,19 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen, b
                 fill
                 className="w-full h-full drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
               />
+              {showUpdateBadge && (
+                <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-[#11141B]" />
+              )}
             </motion.button>
           </Tooltip.Trigger>
 
           {/* Running / minimized indicator dot — always 6 px, below icon */}
-          <div className="shrink-0 h-1.5 flex items-center gap-1">
-            {isRunning && !hasMinimized && (
-              <span className="w-1 h-1 rounded-full bg-white/80 shadow" />
+          <div className="shrink-0 h-2.5 flex items-center justify-center gap-1">
+            {showOpenAppIndicators && isRunning && !hasMinimized && (
+              <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.4)]" />
             )}
-            {hasMinimized && (
-              <span className="w-1 h-1 rounded-full bg-white/40 shadow" />
+            {showOpenAppIndicators && hasMinimized && (
+              <span className="w-1.5 h-1.5 rounded-full bg-white/60 shadow-[0_1px_2px_rgba(0,0,0,0.3)] border border-white/20" />
             )}
           </div>
         </motion.div>

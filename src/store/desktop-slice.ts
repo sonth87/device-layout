@@ -30,9 +30,17 @@ export interface DesktopSlice {
    * (1 + dockMagnification), e.g. dockSize=43, magnification=0.6 → 68.8px max.
    */
   dockMagnification: number;
+  dockAutoHide: boolean;
+  showOpenAppIndicators: boolean;
   useStacks: boolean;
   stackGroupBy: StackGroupBy;
   language: 'en' | 'vi' | 'ja' | 'ko' | 'zh' | 'th';
+  desktopIconSize: number;
+  desktopGridSpacing: number;
+  desktopTextSize: number;
+  desktopLabelPosition: 'bottom' | 'right';
+  desktopSortBy: 'none' | 'name' | 'kind';
+  desktopViewOptionsOpen: boolean;
 
   setWallpaper: (id: string) => void;
   setWallpaperFitMode: (mode: WallpaperFitMode) => void;
@@ -46,9 +54,17 @@ export interface DesktopSlice {
   reorderDock: (appIds: string[]) => void;
   setDockSize: (size: number) => void;
   setDockMagnification: (magnification: number) => void;
+  setDockAutoHide: (hide: boolean) => void;
+  setShowOpenAppIndicators: (show: boolean) => void;
   toggleStacks: () => void;
   setStackGroupBy: (by: StackGroupBy) => void;
   setLanguage: (lang: 'en' | 'vi' | 'ja' | 'ko' | 'zh' | 'th') => void;
+  setDesktopIconSize: (size: number) => void;
+  setDesktopGridSpacing: (spacing: number) => void;
+  setDesktopTextSize: (size: number) => void;
+  setDesktopLabelPosition: (pos: 'bottom' | 'right') => void;
+  setDesktopSortBy: (by: 'none' | 'name' | 'kind') => void;
+  setDesktopViewOptionsOpen: (open: boolean) => void;
 }
 
 type S = DesktopSlice;
@@ -72,9 +88,17 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
     // feels the same as before, just starting from a smaller base.
     dockSize: 43,
     dockMagnification: 0.48,
+    dockAutoHide: false,
+    showOpenAppIndicators: true,
     useStacks: false,
     stackGroupBy: 'kind',
     language: 'en',
+    desktopIconSize: 64,
+    desktopGridSpacing: 50,
+    desktopTextSize: 12,
+    desktopLabelPosition: 'bottom',
+    desktopSortBy: 'none',
+    desktopViewOptionsOpen: false,
 
     setWallpaper(id) {
       set((state) => { state.wallpaperId = id; });
@@ -148,6 +172,14 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
       set((state) => { state.dockMagnification = magnification; });
     },
 
+    setDockAutoHide(hide) {
+      set((state) => { state.dockAutoHide = hide; });
+    },
+
+    setShowOpenAppIndicators(show) {
+      set((state) => { state.showOpenAppIndicators = show; });
+    },
+
     toggleStacks() {
       set((state) => { state.useStacks = !state.useStacks; });
     },
@@ -158,6 +190,30 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
 
     setLanguage(lang) {
       set((state) => { state.language = lang; });
+    },
+
+    setDesktopIconSize(size) {
+      set((state) => { state.desktopIconSize = size; });
+    },
+
+    setDesktopGridSpacing(spacing) {
+      set((state) => { state.desktopGridSpacing = spacing; });
+    },
+
+    setDesktopTextSize(size) {
+      set((state) => { state.desktopTextSize = size; });
+    },
+
+    setDesktopLabelPosition(pos) {
+      set((state) => { state.desktopLabelPosition = pos; });
+    },
+
+    setDesktopSortBy(by) {
+      set((state) => { state.desktopSortBy = by; });
+    },
+
+    setDesktopViewOptionsOpen(open) {
+      set((state) => { state.desktopViewOptionsOpen = open; });
     },
   };
 }

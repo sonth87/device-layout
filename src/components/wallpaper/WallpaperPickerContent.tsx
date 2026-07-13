@@ -18,7 +18,7 @@ import { WallpaperDetailPanel } from './WallpaperDetailPanel';
  * settings panel). Rendered by both WallpaperPicker (desktop right-click
  * modal) and SettingsWallpaper (Settings app page).
  */
-export function WallpaperPickerContent() {
+export function WallpaperPickerContent({ variant = 'vertical' }: { variant?: 'vertical' | 'horizontal' } = {}) {
   const wallpaperId = useStore((s) => s.wallpaperId);
   const setWallpaper = useStore((s) => s.setWallpaper);
   const customWallpapers = useStore((s) => s.customWallpapers);
@@ -51,7 +51,7 @@ export function WallpaperPickerContent() {
 
   return (
     <div className="space-y-5">
-      <WallpaperDetailPanel wallpaper={selected} cycleGroup={selectedIsCustom ? 'custom' : 'builtin'} />
+      <WallpaperDetailPanel wallpaper={selected} cycleGroup={selectedIsCustom ? 'custom' : 'builtin'} variant={variant} />
 
       <WallpaperSection
         title="Pictures"

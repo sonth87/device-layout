@@ -23,6 +23,10 @@ export function SettingsDesktopDock() {
   const setDockSize = useStore((s) => s.setDockSize);
   const dockMagnification = useStore((s) => s.dockMagnification);
   const setDockMagnification = useStore((s) => s.setDockMagnification);
+  const dockAutoHide = useStore((s) => s.dockAutoHide);
+  const showOpenAppIndicators = useStore((s) => s.showOpenAppIndicators);
+  const setDockAutoHide = useStore((s) => s.setDockAutoHide);
+  const setShowOpenAppIndicators = useStore((s) => s.setShowOpenAppIndicators);
   const { t } = useTranslation();
 
   const allApps = Object.values(apps).filter((a) => !a.disabled);
@@ -31,36 +35,76 @@ export function SettingsDesktopDock() {
     <div className="space-y-5">
       <div>
         <h3 className="text-sm font-semibold text-black/90 dark:text-white/90 mb-3">{t.desktopDock}</h3>
-        <div className="rounded-card bg-white dark:bg-white/5 px-4 py-3 grid grid-cols-2 gap-6">
-          <div>
-            <div className="flex items-center justify-between text-xs text-black/50 dark:text-white/50 mb-1.5">
-              <span>{t.dockSize}</span>
+        <div className="rounded-card bg-white dark:bg-white/5 px-4 py-3 space-y-4">
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <div className="flex items-center justify-between text-xs text-black/50 dark:text-white/50 mb-1.5">
+                <span>{t.dockSize}</span>
+              </div>
+              <input
+                type="range"
+                min={DOCK_SIZE_MIN}
+                max={DOCK_SIZE_MAX}
+                value={dockSize}
+                onChange={(e) => setDockSize(+e.target.value)}
+                className={SLIDER_CLS}
+              />
             </div>
-            <input
-              type="range"
-              min={DOCK_SIZE_MIN}
-              max={DOCK_SIZE_MAX}
-              value={dockSize}
-              onChange={(e) => setDockSize(+e.target.value)}
-              className={SLIDER_CLS}
-            />
+            <div>
+              <div className="flex items-center justify-between text-xs text-black/50 dark:text-white/50 mb-1.5">
+                <span>{t.dockMagnification}</span>
+                <span className="text-black/30 dark:text-white/30">
+                  {dockMagnification === 0 ? t.dockMagnificationOff : ''}
+                </span>
+              </div>
+              <input
+                type="range"
+                min={0}
+                max={DOCK_MAGNIFICATION_MAX}
+                step={0.05}
+                value={dockMagnification}
+                onChange={(e) => setDockMagnification(+e.target.value)}
+                className={SLIDER_CLS}
+              />
+            </div>
           </div>
-          <div>
-            <div className="flex items-center justify-between text-xs text-black/50 dark:text-white/50 mb-1.5">
-              <span>{t.dockMagnification}</span>
-              <span className="text-black/30 dark:text-white/30">
-                {dockMagnification === 0 ? t.dockMagnificationOff : ''}
-              </span>
-            </div>
-            <input
-              type="range"
-              min={0}
-              max={DOCK_MAGNIFICATION_MAX}
-              step={0.05}
-              value={dockMagnification}
-              onChange={(e) => setDockMagnification(+e.target.value)}
-              className={SLIDER_CLS}
-            />
+
+          <div className="h-px bg-black/5 dark:bg-white/5 -mx-4" />
+
+          {/* Switch 1: Auto Hide */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-black/80 dark:text-white/80">Automatically hide and show the Dock</span>
+            <button
+              onClick={() => setDockAutoHide(!dockAutoHide)}
+              className={cn(
+                'relative h-5 w-9 shrink-0 rounded-full transition-colors',
+                dockAutoHide ? 'bg-blue-500' : 'bg-neutral-300 dark:bg-white/15'
+              )}
+            >
+              <span className={cn(
+                'absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all',
+                dockAutoHide ? 'left-4.5' : 'left-0.5'
+              )} />
+            </button>
+          </div>
+
+          <div className="h-px bg-black/5 dark:bg-white/5 -mx-4" />
+
+          {/* Switch 2: Show Indicators */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-black/80 dark:text-white/80">Show indicators for open applications</span>
+            <button
+              onClick={() => setShowOpenAppIndicators(!showOpenAppIndicators)}
+              className={cn(
+                'relative h-5 w-9 shrink-0 rounded-full transition-colors',
+                showOpenAppIndicators ? 'bg-blue-500' : 'bg-neutral-300 dark:bg-white/15'
+              )}
+            >
+              <span className={cn(
+                'absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all',
+                showOpenAppIndicators ? 'left-4.5' : 'left-0.5'
+              )} />
+            </button>
           </div>
         </div>
       </div>

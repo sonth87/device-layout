@@ -52,7 +52,7 @@ export function WallpaperSection({
       <div
         className={cn(
           shape === 'circle' ? 'items-start' : 'items-center',
-          expanded ? 'flex flex-wrap gap-2' : 'flex gap-3 overflow-x-auto pb-1'
+          expanded ? 'flex flex-wrap gap-2 p-1.5' : 'flex gap-3 overflow-x-auto p-1.5'
         )}
       >
         {leadingActions}
@@ -62,7 +62,7 @@ export function WallpaperSection({
             className={
               expanded
                 ? shape === 'circle' ? 'w-12' : 'w-24'
-                : 'shrink-0 w-24'
+                : shape === 'circle' ? 'shrink-0 w-12' : 'shrink-0 w-24'
             }
           >
             <WallpaperThumb

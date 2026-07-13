@@ -23,12 +23,6 @@ export function SettingsGeneral() {
       expandable: true,
     },
     {
-      id: 'update',
-      label: t.softwareUpdate,
-      description: t.softwareUpdateDesc,
-      expandable: false,
-    },
-    {
       id: 'lang',
       label: t.languageRegion,
       description: `${LANG_FLAGS[language as SupportedLang]} ${LANG_LABELS[language as SupportedLang]}`,

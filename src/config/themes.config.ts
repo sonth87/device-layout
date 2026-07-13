@@ -13,11 +13,11 @@ export const THEMES_CONFIG: Record<OSTheme, ThemeConfig> = {
     hasNavBar: false,
     defaultWallpaper: 'macos-default',
     layout: {
-      desktopInsets: { top: 36, right: 0, bottom: 100, left: 0 },
+      desktopInsets: { top: 36, right: 0, bottom: 60, left: 0 },
       chrome: {
         menuBarHeight: 28,
         dockHeight: 72,
-        dockOffsetBottom: 16,
+        dockOffsetBottom: 8,
         taskbarHeight: 0,
         navBarHeight: 0,
         statusBarHeight: 0,
@@ -42,11 +42,11 @@ export const THEMES_CONFIG: Record<OSTheme, ThemeConfig> = {
     hasNavBar: false,
     defaultWallpaper: 'macos-default',
     layout: {
-      desktopInsets: { top: 36, right: 0, bottom: 112, left: 0 },
+      desktopInsets: { top: 36, right: 0, bottom: 64, left: 0 },
       chrome: {
         menuBarHeight: 28,
         dockHeight: 80,
-        dockOffsetBottom: 16,
+        dockOffsetBottom: 8,
         taskbarHeight: 0,
         navBarHeight: 0,
         statusBarHeight: 28,

@@ -7,6 +7,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { useViewportSize } from '@/hooks/useResizeObserver';
 import { fitWindowRectToViewport } from '@/lib/window-math';
 import { Window } from './Window';
+import { SnapAssist } from './SnapAssist';
 import { useWindowUrlSync } from '@/hooks/useWindowUrlSync';
 
 export function WindowManager() {
@@ -65,6 +66,7 @@ export function WindowManager() {
     // Full-screen layer — pointer-events-none so clicks pass through to desktop
     // Individual Window components handle their own pointer events
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <SnapAssist />
       <AnimatePresence>
         {windowIds.map((id) => (
           <Window key={id} windowId={id} />

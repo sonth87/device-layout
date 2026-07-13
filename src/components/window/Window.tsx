@@ -93,9 +93,9 @@ export function Window({ windowId }: WindowProps) {
               // fixed values, the window keeps its last floating-mode size
               // instead of filling the viewport via inset:0.
               position: 'absolute', inset: 0, x: 0, y: 0, width: '100%', height: '100%',
-              zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: 'var(--radius-window)',
+              zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: win.isFullScreen ? 0 : 'var(--radius-window)',
             }
-          : { position: 'absolute', x: mx, y: my, width: mw, height: mh, zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: 'var(--radius-window)' }
+          : { position: 'absolute', x: mx, y: my, width: mw, height: mh, zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: win.isFullScreen ? 0 : 'var(--radius-window)' }
       }
       className={cn(
         'flex flex-col overflow-hidden',
@@ -130,7 +130,7 @@ export function Window({ windowId }: WindowProps) {
       {win.isFullScreen && (
         <motion.div
           className="absolute top-0 inset-x-0 z-20"
-          animate={{ y: fullscreenChromeRevealed ? 0 : '-100%' }}
+          animate={{ y: fullscreenChromeRevealed ? 28 : '-100%' }}
           transition={{ type: 'spring', stiffness: 380, damping: 30, mass: 0.8 }}
         >
           <WindowChrome windowId={windowId} onPointerDown={onDragStart} />

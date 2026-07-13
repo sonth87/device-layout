@@ -20,7 +20,7 @@ export function Dock({ onOpenApp }: DockProps) {
   const dockSize = useStore((s) => s.dockSize);
   const dockMagnification = useStore((s) => s.dockMagnification);
 
-  const maxSize = dockSize * (1 + dockMagnification);
+  const maxSize = Math.max(dockSize * (1 + dockMagnification), dockSize + dockMagnification * 54);
   // Extra space above the glass pill that captures mouse events for magnified icons
   const hoverOverflow = maxSize - dockSize;
 
