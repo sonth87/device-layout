@@ -48,7 +48,27 @@ export function SettingsUpdate() {
     setChecking(true);
     setLastResult(null);
     try {
-      setStatus(await actions.checkUpdate());
+      const prevPendingRenderer = status?.pendingRendererVersion ?? null;
+      const prevNativeDownloaded = status?.nativeUpdateDownloaded ?? false;
+      // IPC round-trip trả về gần như tức thời (vài ms) — không có delay tối
+      // thiểu thì "Đang kiểm tra…" chớp qua quá nhanh để nhận thấy, và trước
+      // đây không có thông báo nào khi check xong mà không có bản mới, khiến
+      // việc bấm nút trông như không phản ứng gì. Cả 2 chạy song song, chờ
+      // cái chậm hơn.
+      const [next] = await Promise.all([
+        actions.checkUpdate(),
+        new Promise((resolve) => setTimeout(resolve, 500)),
+      ]);
+      setStatus(next);
+      const foundNewRenderer = !!next.pendingRendererVersion && next.pendingRendererVersion !== prevPendingRenderer;
+      const foundNewNative = next.nativeUpdateDownloaded && !prevNativeDownloaded;
+      if (foundNewRenderer || foundNewNative) {
+        setLastResult({ ok: true, message: 'Đã tìm thấy bản cập nhật mới.' });
+      } else {
+        setLastResult({ ok: true, message: 'Đang dùng phiên bản mới nhất.' });
+      }
+    } catch (err) {
+      setLastResult({ ok: false, message: err instanceof Error ? err.message : 'Kiểm tra cập nhật thất bại.' });
     } finally {
       setChecking(false);
     }

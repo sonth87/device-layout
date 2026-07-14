@@ -116,23 +116,55 @@ export const WALLPAPERS: WallpaperConfig[] = [
   },
 ];
 
-/** "Live Wallpapers" — separate from WALLPAPERS so the picker can render them as their own section if needed; also included via ALL_WALLPAPERS for lookup-by-id. */
+/** "Live Wallpapers" — each entry maps to a video in /wallpapers/live/. */
 export const LIVE_WALLPAPERS: WallpaperConfig[] = [
   {
-    id: "live-sky",
-    name: "Abstract Sky (Live)",
+    id: "live-1",
+    name: "Live 1",
     kind: "live",
-    url: "/wallpapers/bg-3.jpg",
-    thumbnail: "/wallpapers/bg-3.jpg",
+    url: "/wallpapers/live/live-1.jpg",
+    thumbnail: "/wallpapers/live/live-1.jpg",
     videoUrl: "/wallpapers/live/live-1.mp4",
   },
   {
-    id: "live-kitten",
-    name: "Adorable Kitten (Live)",
+    id: "live-2",
+    name: "Live 2",
     kind: "live",
-    url: "/wallpapers/bg-1.jpg",
-    thumbnail: "/wallpapers/bg-1.jpg",
+    url: "/wallpapers/live/live-2.jpg",
+    thumbnail: "/wallpapers/live/live-2.jpg",
     videoUrl: "/wallpapers/live/live-2.mp4",
+  },
+  {
+    id: "live-3",
+    name: "Live 3",
+    kind: "live",
+    url: "/wallpapers/live/live-3.jpg",
+    thumbnail: "/wallpapers/live/live-3.jpg",
+    videoUrl: "/wallpapers/live/live-3.mp4",
+  },
+  {
+    id: "live-4",
+    name: "Live 4",
+    kind: "live",
+    url: "/wallpapers/live/live-4.jpg",
+    thumbnail: "/wallpapers/live/live-4.jpg",
+    videoUrl: "/wallpapers/live/live-4.mp4",
+  },
+  {
+    id: "live-5",
+    name: "Live 5",
+    kind: "live",
+    url: "/wallpapers/live/live-5.jpg",
+    thumbnail: "/wallpapers/live/live-5.jpg",
+    videoUrl: "/wallpapers/live/live-5.mp4",
+  },
+  {
+    id: "live-6",
+    name: "Live 6",
+    kind: "live",
+    url: "/wallpapers/live/live-6.jpg",
+    thumbnail: "/wallpapers/live/live-6.jpg",
+    videoUrl: "/wallpapers/live/live-6.mp4",
   },
 ];
 

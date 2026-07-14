@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { useAssetBase, resolveAssetUrl } from '@/lib/asset-base';
 import type { WallpaperConfig } from '@/types/desktop';
@@ -34,6 +34,51 @@ function PictureThumbImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
+/** Live wallpaper thumbnail — shows poster image at rest, plays video silently on hover. */
+function LiveThumbPreview({ posterSrc, videoSrc, alt }: { posterSrc: string; videoSrc: string; alt: string }) {
+  const [hovered, setHovered] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleMouseEnter = () => {
+    setHovered(true);
+    videoRef.current?.play();
+  };
+  const handleMouseLeave = () => {
+    setHovered(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
+
+  return (
+    <div
+      className="relative w-full h-full bg-zinc-900"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* Poster image — fades out when video is playing */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={posterSrc}
+        alt={alt}
+        className={cn('absolute inset-0 w-full h-full object-cover transition-opacity duration-300', hovered ? 'opacity-0' : 'opacity-100')}
+      />
+      {/* Video — preloaded but paused until hover */}
+      <video
+        ref={videoRef}
+        src={videoSrc}
+        muted
+        loop
+        playsInline
+        preload="none"
+        className={cn('absolute inset-0 w-full h-full object-cover transition-opacity duration-300', hovered ? 'opacity-100' : 'opacity-0')}
+      />
+    </div>
+  );
+}
+
+
 export function WallpaperThumb({ wallpaper, selected, cycling, onClick, shape = 'card', size = 'md' }: WallpaperThumbProps) {
   const assetBase = useAssetBase();
 
@@ -55,6 +100,7 @@ export function WallpaperThumb({ wallpaper, selected, cycling, onClick, shape = 
 
   const thumbSrc = resolveAssetUrl(assetBase, wallpaper.thumbnail ?? wallpaper.url ?? '');
   const isCircleCard = shape === 'circle';
+  const videoSrc = wallpaper.videoUrl ? resolveAssetUrl(assetBase, wallpaper.videoUrl) : null;
 
   return (
     <button
@@ -67,7 +113,7 @@ export function WallpaperThumb({ wallpaper, selected, cycling, onClick, shape = 
       )}
     >
       {wallpaper.kind === 'live' && (
-        <span className="absolute top-1.5 right-1.5 px-1 py-0.5 bg-black/60 text-white text-[8px] font-bold tracking-wider rounded uppercase z-10 select-none">
+        <span className="absolute top-1.5 right-1.5 px-1 py-0.5 bg-black/60 text-white text-[8px] font-bold tracking-wider rounded uppercase z-10 select-none pointer-events-none">
           LIVE
         </span>
       )}
@@ -76,7 +122,11 @@ export function WallpaperThumb({ wallpaper, selected, cycling, onClick, shape = 
           <RefreshCw className="w-2.5 h-2.5 text-white" />
         </span>
       )}
-      <PictureThumbImage src={thumbSrc} alt={wallpaper.name} />
+      {wallpaper.kind === 'live' && videoSrc ? (
+        <LiveThumbPreview posterSrc={thumbSrc} videoSrc={videoSrc} alt={wallpaper.name} />
+      ) : (
+        <PictureThumbImage src={thumbSrc} alt={wallpaper.name} />
+      )}
     </button>
   );
 }

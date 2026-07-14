@@ -16,8 +16,8 @@
     "dist-lib"
   ],
   "scripts": {
-    "dev": "NODE_OPTIONS='--max-old-space-size=4096' next dev",
-    "build": "NODE_OPTIONS='--max-old-space-size=4096' next build",
+    "dev": "node scripts/generate-live-thumbnails.js && NODE_OPTIONS='--max-old-space-size=4096' next dev",
+    "build": "node scripts/generate-live-thumbnails.js && NODE_OPTIONS='--max-old-space-size=4096' next build",
     "build:lib": "vite build",
     "start": "next start",
     "lint": "eslint"

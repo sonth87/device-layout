@@ -30,9 +30,20 @@ export function Dock({ onOpenApp }: DockProps) {
     .map((id) => apps[id])
     .filter(Boolean) as AppConfig[];
 
+  // Apps that are running (or have minimized windows) but NOT pinned to the dock
+  const runningNotPinned = runningAppIds
+    .filter((id) => !dockAppIds.includes(id))
+    .map((id) => apps[id])
+    .filter(Boolean) as AppConfig[];
+
   const handleDockClick = (app: AppConfig) => {
     launchApp(app);
   };
+
+  const gap = Math.round(dockSize * 0.28);
+  const px = Math.round(dockSize * 0.47);
+  const pt = Math.round(dockSize * 0.28);
+  const pb = Math.round(dockSize * 0.19);
 
   return (
     /*
@@ -63,27 +74,41 @@ export function Dock({ onOpenApp }: DockProps) {
         />
       </div>
 
-      {/* Icon row — on top of glass, overflow-visible so icons can escape upward.
-          Gap AND padding scale with dockSize (fixed px-5/pt-3/pb-2/gap-3 read
-          as too spaced-out once the user shrinks icons via Settings > Desktop
-          & Dock's "Size" slider — fixed spacing around/between small icons
-          looks disproportionate). Ratios approximate macOS's own dock
-          spacing-to-icon-size relationship across the size range. */}
+      {/* Icon row — on top of glass, overflow-visible so icons can escape upward. */}
       <div
         className="relative z-10 flex items-end overflow-visible"
-        style={{
-          gap: Math.round(dockSize * 0.28),
-          paddingLeft: Math.round(dockSize * 0.47),
-          paddingRight: Math.round(dockSize * 0.47),
-          paddingTop: Math.round(dockSize * 0.28),
-          paddingBottom: Math.round(dockSize * 0.19),
-        }}
+        style={{ gap, paddingLeft: px, paddingRight: px, paddingTop: pt, paddingBottom: pb }}
       >
+        {/* Section 1: pinned dock apps */}
         {dockApps.map((app) => (
           <DockItem
             key={app.id}
             appConfig={app}
             isRunning={runningAppIds.includes(app.id)}
+            hasMinimized={Object.values(windows).some(
+              (w) => w.appId === app.id && w.isMinimized
+            )}
+            mouseX={mouseX}
+            onOpen={handleDockClick}
+            baseSize={dockSize}
+            maxSize={maxSize}
+          />
+        ))}
+
+        {/* Divider — only visible when there are running-but-not-pinned apps */}
+        {runningNotPinned.length > 0 && (
+          <div
+            className="shrink-0 self-stretch my-1 rounded-full bg-white/30 dark:bg-white/20"
+            style={{ width: 1, marginLeft: Math.round(gap * 0.5), marginRight: Math.round(gap * 0.5) }}
+          />
+        )}
+
+        {/* Section 2: running apps not pinned to dock */}
+        {runningNotPinned.map((app) => (
+          <DockItem
+            key={app.id}
+            appConfig={app}
+            isRunning={true}
             hasMinimized={Object.values(windows).some(
               (w) => w.appId === app.id && w.isMinimized
             )}

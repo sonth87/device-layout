@@ -14,6 +14,7 @@ export function useWindowUrlSync() {
   const windows = useStore((s) => s.windows);
   const apps = useStore((s) => s.apps);
   const openWindow = useStore((s) => s.openWindow);
+  const focusWindow = useStore((s) => s.focusWindow);
   const urlHydrated = useStore((s) => s.urlHydrated);
   const setUrlHydrated = useStore((s) => s.setUrlHydrated);
 
@@ -25,21 +26,28 @@ export function useWindowUrlSync() {
     const params = new URLSearchParams(window.location.search);
     const wParams = params.getAll('w');
 
+    let focusedWindowId: string | null = null;
+
     for (const param of wParams) {
       const decoded = decodeWindowFromParam(param);
       if (!decoded) continue;
       const appConfig = apps[decoded.appId];
       if (!appConfig) continue;
-      openWindow(appConfig, {
+      const windowId = openWindow(appConfig, {
         ...decoded.rect,
         isMaximized: decoded.isMaximized,
         isFullScreen: decoded.isFullScreen,
         prevRect: decoded.prevRect,
       });
+      // Track which window was focused when the URL was saved
+      if (decoded.isFocused) focusedWindowId = windowId;
     }
 
+    // Restore the focused window after all windows are opened
+    if (focusedWindowId) focusWindow(focusedWindowId);
+
     setUrlHydrated(true);
-  }, [apps, openWindow, urlHydrated, setUrlHydrated]);
+  }, [apps, openWindow, focusWindow, urlHydrated, setUrlHydrated]);
 
   // Encode windows → URL
   useEffect(() => {

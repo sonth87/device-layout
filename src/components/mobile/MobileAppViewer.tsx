@@ -25,8 +25,6 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
   const windows = useStore((s) => s.windows);
   const apps = useStore((s) => s.apps);
   const closeWindow = useStore((s) => s.closeWindow);
-  const minimizeWindow = useStore((s) => s.minimizeWindow);
-  const setRunning = useStore((s) => s.setRunning);
 
   const [headerHidden, setHeaderHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -40,8 +38,7 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
   const handleBack = useCallback(() => {
     if (!topWindow) return;
     closeWindow(topWindow.id);
-    if (openWindows.length <= 1) setRunning(topWindow.appId, false);
-  }, [topWindow, openWindows, closeWindow, setRunning]);
+  }, [topWindow, closeWindow]);
 
   const appConfig = topWindow ? apps[topWindow.appId] : null;
 
@@ -74,8 +71,9 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
           dragElastic={{ top: 0.15, bottom: 0 }}
           onDragEnd={(_, info) => {
             if (info.offset.y < -85) {
-              minimizeWindow(topWindow.id);
-              setRunning(topWindow.appId, false);
+              // Close the window entirely — on mobile there's no dock to restore
+              // from, so minimize is a dead-end. closeWindow also updates the URL.
+              closeWindow(topWindow.id);
             }
             animate(dragY, 0, { type: 'spring', stiffness: 300, damping: 30 });
           }}
