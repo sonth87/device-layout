@@ -14,13 +14,26 @@ Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, Zustand, and Motio
 
 ## Documentation
 
+### Core
 - [Architecture](docs/architecture.md) — folder structure, store slices, data flow
 - [Agent Guidelines](docs/agent-guidelines.md) — conventions and rules for AI agents
-- [Theme System](docs/content/themes.md) — OS themes, config, adding themes
-- [Window Management](docs/content/windows.md) — drag, resize, snap, fullscreen
-- [App System](docs/content/apps.md) — AppConfig, adding apps, iframe/MDX apps
-- [Liquid Glass](docs/content/liquid-glass.md) — glass effect layers and implementation
+
+### Building Apps
+- [App System](docs/content/apps.md) — AppConfig reference, adding apps, layouts, menu bar, context menu, settings panels
+- [External App Integration](docs/content/external-apps.md) — using the `render` prop to register apps from outside the repo; isolation notes
+- [Window Management](docs/content/windows.md) — drag, resize, snap, fullscreen, z-index
+
+### OS Theming
+- [Theme System](docs/content/themes.md) — OS themes, config, adding new themes, CSS custom properties
+
+### Features
+- [Widget System](docs/content/widgets.md) — declaring, registering, and placing desktop widgets
+- [Notifications](docs/content/notifications.md) — pushing banners, badges, store actions
 - [URL State](docs/content/url-state.md) — window state encoding and hydration
+- [Virtual Filesystem](docs/content/vfs.md) — in-memory VFS used by Terminal and Finder
+- [Liquid Glass](docs/content/liquid-glass.md) — glass effect layers and implementation
+- [Internationalization](docs/content/i18n.md) — per-app locale dictionaries, language switching
+- [Store & Persistence](docs/content/store.md) — Zustand slices, what is persisted, store API reference
 
 ---
 

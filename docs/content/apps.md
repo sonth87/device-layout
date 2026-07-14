@@ -15,7 +15,8 @@ interface AppConfig {
   icon: string                   // 'lucide:IconName' | '/path/to/icon.svg' | emoji string
   iconColor?: [string, string]   // gradient [from, to] for lucide/emoji icon background
   iconTextColor?: string         // icon foreground color (default: white)
-  component: string              // key in AppRegistry, or 'IframeApp' | 'MdxApp'
+  component?: string             // key in AppRegistry (built-in apps)
+  render?: ComponentType<AppContentProps>  // external component — takes priority over 'component'
   disabled?: boolean             // hide from dock, desktop, and spotlight
 
   defaultSize?: { width: number; height: number }   // initial window size
@@ -36,6 +37,9 @@ interface AppConfig {
   contextMenu?: ContextMenuAction[]   // right-click / long-press menu on dock/desktop icons
   menuBarMenus?: MenuBarMenu[]        // macOS top menu bar menus when this app is active
   appSettings?: string                // key in AppSettingsRegistry — panel inside System Settings
+
+  widgets?: WidgetDefinition[]        // desktop widgets this app provides (appId auto-filled)
+  locale?: AppLocale                  // per-app i18n strings (en is required, others optional)
 }
 ```
 
