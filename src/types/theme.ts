@@ -1,5 +1,7 @@
 export type OSTheme = 'macos' | 'ipad' | 'iphone' | 'windows' | 'android';
 export type ColorScheme = 'light' | 'dark' | 'auto';
+export type AccentColor = 'multicolor' | 'blue' | 'purple' | 'pink' | 'red' | 'orange' | 'yellow' | 'green' | 'graphite';
+export type HighlightColor = 'automatic' | 'blue' | 'purple' | 'pink' | 'red' | 'orange' | 'yellow' | 'green' | 'graphite';
 
 export interface ThemeInsets {
   top: number;

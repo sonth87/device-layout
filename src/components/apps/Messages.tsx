@@ -31,42 +31,16 @@ interface Conversation {
   messages: Message[];
 }
 
-const INITIAL_CONVOS: Conversation[] = [
-  {
-    id: '1',
-    name: 'Alice Chen',
-    avatar: '👩‍💻',
-    preview: 'Sounds great! See you then',
-    unread: 0,
-    messages: [
-      { id: '1', text: 'Hey! Are you free tomorrow for coffee?', from: 'them', time: Date.now() - 3600000 },
-      { id: '2', text: 'Yes! Around 10am works for me 😊', from: 'me', time: Date.now() - 3500000 },
-      { id: '3', text: 'Sounds great! See you then', from: 'them', time: Date.now() - 3400000 },
-    ],
-  },
-  {
-    id: '2',
-    name: 'Bob Martin',
-    avatar: '👨‍🎨',
-    preview: 'The design looks amazing!',
-    unread: 2,
-    messages: [
-      { id: '1', text: 'Just pushed the new designs to Figma', from: 'them', time: Date.now() - 7200000 },
-      { id: '2', text: 'The design looks amazing!', from: 'them', time: Date.now() - 7100000 },
-    ],
-  },
-  {
-    id: '3',
-    name: 'Team Dev 🚀',
-    avatar: '👥',
-    preview: 'Deploy scheduled for Friday',
-    unread: 5,
-    messages: [
-      { id: '1', text: 'Sprint review went well!', from: 'them', time: Date.now() - 86400000 },
-      { id: '2', text: 'Deploy scheduled for Friday', from: 'them', time: Date.now() - 82800000 },
-    ],
-  },
-];
+import messagesData from '@/data/messages-data.json';
+
+const INITIAL_CONVOS: Conversation[] = messagesData.map((c) => ({
+  ...c,
+  messages: c.messages.map((m) => ({
+    ...m,
+    from: m.from as 'me' | 'them',
+    time: Date.now() + m.timeOffset,
+  })),
+}));
 
 export function Messages() {
   const { language } = useTranslation();
@@ -150,8 +124,9 @@ export function Messages() {
             onClick={() => { setSelectedId(c.id); setConvos((prev) => prev.map((x) => x.id === c.id ? { ...x, unread: 0 } : x)); }}
             className={cn(
               'w-full text-left flex items-center gap-3 px-3 py-3 border-b border-black/5 dark:border-white/5 transition-colors',
-              c.id === selectedId ? 'bg-blue-500/10' : 'hover:bg-black/5 dark:hover:bg-white/5',
+              c.id !== selectedId && 'hover:bg-black/5 dark:hover:bg-white/5',
             )}
+            style={c.id === selectedId ? { backgroundColor: 'var(--highlight-color)' } : undefined}
           >
             <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-white/10 flex items-center justify-center text-xl shrink-0">
               {c.avatar}
@@ -164,7 +139,10 @@ export function Messages() {
               <div className="flex items-center gap-1">
                 <p className="text-xs text-black/50 dark:text-white/50 truncate flex-1">{c.preview}</p>
                 {c.unread > 0 && (
-                  <span className="shrink-0 w-4 h-4 rounded-full bg-blue-500 text-white text-[10px] flex items-center justify-center font-bold">
+                  <span 
+                    className="shrink-0 w-4 h-4 rounded-full text-white text-[10px] flex items-center justify-center font-bold"
+                    style={{ backgroundColor: 'var(--accent-color)' }}
+                  >
                     {c.unread}
                   </span>
                 )}
@@ -184,12 +162,15 @@ export function Messages() {
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
         {selected.messages.map((msg) => (
           <div key={msg.id} className={cn('flex', msg.from === 'me' ? 'justify-end' : 'justify-start')}>
-            <div className={cn(
-              'max-w-[70%] px-3 py-2 rounded-2xl text-sm',
-              msg.from === 'me'
-                ? 'bg-blue-500 text-white rounded-br-sm'
-                : 'bg-gray-100 dark:bg-white/10 text-black dark:text-white rounded-bl-sm',
-            )}>
+            <div 
+              className={cn(
+                'max-w-[70%] px-3 py-2 rounded-2xl text-sm',
+                msg.from === 'me'
+                  ? 'text-white rounded-br-sm'
+                  : 'bg-gray-100 dark:bg-white/10 text-black dark:text-white rounded-bl-sm',
+              )}
+              style={msg.from === 'me' ? { backgroundColor: 'var(--accent-color)' } : undefined}
+            >
               {msg.text}
             </div>
           </div>
@@ -198,7 +179,7 @@ export function Messages() {
       </div>
       {/* Input */}
       <div className="px-3 py-3 border-t border-black/10 dark:border-white/10 flex items-center gap-2 shrink-0">
-        <button className="p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-blue-500">
+        <button className="p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-accent-active">
           <Plus className="w-4 h-4" />
         </button>
         <input
@@ -206,14 +187,15 @@ export function Messages() {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && send()}
           placeholder={tMsg.imessage}
-          className="flex-1 px-3 py-1.5 rounded-full border border-black/15 dark:border-white/15 bg-transparent text-sm outline-none focus:ring-1 focus:ring-blue-500"
+          className="flex-1 px-3 py-1.5 rounded-full border border-black/15 dark:border-white/15 bg-transparent text-sm outline-none focus:ring-1 focus:ring-accent-active"
         />
         <button
           onClick={send}
           disabled={!input.trim()}
-          className="w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center hover:opacity-80 transition-opacity disabled:opacity-30"
+          className="w-7 h-7 rounded-full flex items-center justify-center hover:opacity-80 transition-opacity disabled:opacity-30 text-white"
+          style={{ backgroundColor: input.trim() ? 'var(--accent-color)' : '#d1d1d6' }}
         >
-          <Send className="w-3.5 h-3.5 text-white" />
+          <Send className="w-3.5 h-3.5" />
         </button>
       </div>
     </div>
@@ -239,7 +221,7 @@ function ChatHeader({ convo, onBack }: { convo: Conversation; onBack: () => void
       {mobileBack && (
         <button
           onClick={mobileBack}
-          className="flex items-center gap-0.5 text-blue-500 active:opacity-60 transition-opacity mr-1"
+          className="flex items-center gap-0.5 text-accent-active active:opacity-60 transition-opacity mr-1"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -251,8 +233,8 @@ function ChatHeader({ convo, onBack }: { convo: Conversation; onBack: () => void
         {convo.avatar}
       </div>
       <p className="font-semibold text-black/90 dark:text-white/90 flex-1 text-sm">{convo.name}</p>
-      <button className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-blue-500"><Phone className="w-4 h-4" /></button>
-      <button className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-blue-500"><Video className="w-4 h-4" /></button>
+      <button className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-accent-active"><Phone className="w-4 h-4" /></button>
+      <button className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-accent-active"><Video className="w-4 h-4" /></button>
     </div>
   );
 }

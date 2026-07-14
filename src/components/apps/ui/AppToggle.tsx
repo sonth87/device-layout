@@ -26,9 +26,12 @@ export function AppToggle({ checked, onChange, disabled }: AppToggleProps) {
       onClick={(e) => { e.stopPropagation(); onChange(!checked); }}
       className={cn(
         'relative h-[31px] w-[51px] shrink-0 rounded-full transition-colors duration-200',
-        checked ? 'bg-[#34c759]' : 'bg-black/15 dark:bg-white/20',
+        !checked && 'bg-black/15 dark:bg-white/20',
         disabled && 'opacity-40 pointer-events-none',
       )}
+      style={{
+        backgroundColor: checked ? 'var(--accent-color)' : undefined
+      }}
     >
       <span className={cn(
         'absolute top-[2px] h-[27px] w-[27px] rounded-full bg-white shadow-md transition-all duration-200',

@@ -119,10 +119,9 @@ export function Notes() {
             onClick={() => setSelectedId(note.id)}
             className={cn(
               'w-full text-left px-3 py-2.5 border-b border-black/5 dark:border-white/5 transition-colors',
-              note.id === selectedId
-                ? 'bg-yellow-400/30 dark:bg-yellow-500/20'
-                : 'hover:bg-black/5 dark:hover:bg-white/5'
+              note.id !== selectedId && 'hover:bg-black/5 dark:hover:bg-white/5'
             )}
+            style={note.id === selectedId ? { backgroundColor: 'var(--highlight-color)' } : undefined}
           >
             <p className="text-sm font-medium text-black/90 dark:text-white/90 truncate">{note.title || nt.untitled}</p>
             <p className="text-[11px] text-black/40 dark:text-white/40 mt-0.5">
@@ -136,9 +135,10 @@ export function Notes() {
       <div className="p-2 border-t border-black/10 dark:border-white/10 flex justify-end">
         <button
           onClick={createNote}
-          className="w-8 h-8 rounded-lg bg-yellow-400 dark:bg-yellow-500 flex items-center justify-center hover:opacity-80 transition-opacity"
+          className="w-8 h-8 rounded-lg flex items-center justify-center hover:opacity-80 transition-opacity text-white"
+          style={{ backgroundColor: 'var(--accent-color)' }}
         >
-          <Plus className="w-4 h-4 text-black" />
+          <Plus className="w-4 h-4 text-white" />
         </button>
       </div>
     </div>
@@ -183,7 +183,7 @@ function NoteEditor({ note, bodyRef, onUpdate, onDelete, t }: NoteEditorProps) {
         {mobileBack && (
           <button
             onClick={mobileBack}
-            className="flex items-center gap-0.5 text-blue-500 active:opacity-60 transition-opacity shrink-0"
+            className="flex items-center gap-0.5 text-accent-active active:opacity-60 transition-opacity shrink-0"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />

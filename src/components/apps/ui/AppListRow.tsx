@@ -60,11 +60,14 @@ export function AppListRow({
 
       {/* Center: label + subtitle */}
       <div className="flex-1 min-w-0">
-        <span className={cn(
-          'text-[15px] leading-tight',
-          active ? 'text-blue-500 font-medium' : 'text-black dark:text-white',
-          disabled && 'opacity-40',
-        )}>
+        <span 
+          className={cn(
+            'text-[15px] leading-tight',
+            active ? 'font-medium' : 'text-black dark:text-white',
+            disabled && 'opacity-40',
+          )}
+          style={{ color: active ? 'var(--accent-color)' : undefined }}
+        >
           {label}
         </span>
         {subtitle && (
@@ -78,7 +81,7 @@ export function AppListRow({
       ) : value !== undefined ? (
         <span className="shrink-0 ml-3 text-[15px] text-black/40 dark:text-white/40">{value}</span>
       ) : active && !onPress ? (
-        <svg className="w-4 h-4 text-blue-500 shrink-0 ml-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <svg className="w-4 h-4 shrink-0 ml-3" style={{ color: 'var(--accent-color)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
         </svg>
       ) : null}

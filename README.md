@@ -1,8 +1,12 @@
 # Device Layout
 
-A browser-based desktop OS simulator. Renders a fully interactive multi-window desktop environment switchable between macOS, Windows 11, iPad OS, iPhone OS, and Android themes.
+**Device Layout** is a browser-based desktop OS simulator designed to replicate the look and feel of popular operating systems (macOS, Windows 11, iPadOS, iOS, Android). 
 
-Built with Next.js 15, React 19, TypeScript, Tailwind CSS v4, Zustand, and Motion.
+The core goal of this project is to provide a multi-window simulation environment where any added feature or module can be defined as an individual, isolated app running inside its own window. This architecture makes it highly suitable for deploying multi-functional applications (such as composite web dashboards or mock workspaces), or simply for fun! :D
+
+![Device Layout Screenshot](docs/image.png)
+
+Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, Zustand, and Motion.
 
 **Live preview:** [device-layout.vercel.app](https://device-layout.vercel.app) · **Source:** [github.com/sonth87/device-layout](https://github.com/sonth87/device-layout)
 
@@ -74,7 +78,7 @@ Dock, menubar, tooltips, and panel overlays use a composited glass effect built 
 ## Stack
 
 ```
-next@15              react@19             typescript@5
+next@16              react@19             typescript@5
 tailwindcss@4        tailwind-merge       clsx
 motion               zustand@5 + immer    @tanstack/react-query@5
 @radix-ui/*          lucide-react         nanoid

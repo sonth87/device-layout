@@ -59,6 +59,7 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
       focusWindow: s.focusWindow,
     }))
   );
+  const allowDragOutOfBounds = useStore((s) => s.allowDragOutOfBounds);
   const { config } = useTheme();
   const startRef = useRef<{
     mouseX: number;
@@ -132,10 +133,17 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
         const minTitleVisibleHeight = config.layout.window.minTitleVisibleHeight;
 
         // Absolute limits — ensure a portion of the window always stays reachable
-        const hardMinX = -(winW - 120);
-        const hardMaxX = vpW - 120;
+        const minOverlap = 200;
+        const hardMinX = allowDragOutOfBounds 
+          ? -(winW - Math.min(minOverlap, winW)) 
+          : 0;
+        const hardMaxX = allowDragOutOfBounds 
+          ? vpW - Math.min(minOverlap, winW) 
+          : vpW - winW;
         const hardMinY = dragTopInset;
-        const hardMaxY = vpH - minTitleVisibleHeight;
+        const hardMaxY = allowDragOutOfBounds 
+          ? vpH - Math.min(minOverlap, winH) 
+          : vpH - bottomInset - winH;
 
         // Viewport-edge snap points
         const leftEdge = 0;

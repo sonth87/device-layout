@@ -51,7 +51,7 @@ function SidebarItem({
       onClick={onClick}
       className={cn(
         'w-full flex items-center gap-3 px-3 py-2 rounded-(--radius-input) text-left transition-colors focus:outline-none text-sm',
-        active ? 'bg-red-500/90 text-white' : 'text-black/80 dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/8'
+        active ? 'bg-accent-active text-white' : 'text-black/80 dark:text-white/80 hover:bg-black/5 dark:hover:bg-white/8'
       )}
     >
       {iconEl ?? (Icon ? (

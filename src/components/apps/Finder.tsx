@@ -203,10 +203,18 @@ export function Finder({ windowId, appId }: AppContentProps) {
 
         {/* View toggle */}
         <div className="flex shrink-0">
-          <button onClick={() => setView('icon')} className={cn('rounded-l border border-black/15 dark:border-white/15 px-2 py-0.5 text-xs', view === 'icon' ? 'bg-blue-500 border-blue-500 text-white' : 'hover:bg-black/5 dark:hover:bg-white/10')}>
+          <button 
+            onClick={() => setView('icon')} 
+            className={cn('rounded-l border border-black/15 dark:border-white/15 px-2 py-0.5 text-xs transition-colors', view === 'icon' ? 'text-white border-transparent' : 'hover:bg-black/5 dark:hover:bg-white/10')}
+            style={view === 'icon' ? { backgroundColor: 'var(--accent-color)', borderColor: 'var(--accent-color)' } : undefined}
+          >
             <Grid3X3 className="h-3.5 w-3.5" />
           </button>
-          <button onClick={() => setView('list')} className={cn('rounded-r border border-l-0 border-black/15 dark:border-white/15 px-2 py-0.5 text-xs', view === 'list' ? 'bg-blue-500 border-blue-500 text-white' : 'hover:bg-black/5 dark:hover:bg-white/10')}>
+          <button 
+            onClick={() => setView('list')} 
+            className={cn('rounded-r border border-l-0 border-black/15 dark:border-white/15 px-2 py-0.5 text-xs transition-colors', view === 'list' ? 'text-white border-transparent' : 'hover:bg-black/5 dark:hover:bg-white/10')}
+            style={view === 'list' ? { backgroundColor: 'var(--accent-color)', borderColor: 'var(--accent-color)' } : undefined}
+          >
             <List className="h-3.5 w-3.5" />
           </button>
         </div>
@@ -225,7 +233,8 @@ export function Finder({ windowId, appId }: AppContentProps) {
               <button
                 key={entry.path}
                 onClick={() => { if (entry.type === 'dir') navigate(entry.path); else setSelected(entry.path); }}
-                className={cn('flex flex-col items-center gap-1.5 rounded-lg p-2 text-center transition-colors', selected === entry.path ? 'bg-blue-500/20' : 'hover:bg-black/5 dark:hover:bg-white/5')}
+                className={cn('flex flex-col items-center gap-1.5 rounded-lg p-2 text-center transition-colors', selected !== entry.path && 'hover:bg-black/5 dark:hover:bg-white/5')}
+                style={selected === entry.path ? { backgroundColor: 'var(--highlight-color)' } : undefined}
               >
                 {getFileIcon(entry)}
                 <span className="w-full truncate text-xs">{entry.name}</span>
@@ -246,7 +255,8 @@ export function Finder({ windowId, appId }: AppContentProps) {
                 <tr
                   key={entry.path}
                   onClick={() => { if (entry.type === 'dir') navigate(entry.path); else setSelected(entry.path); }}
-                  className={cn('cursor-pointer hover:bg-black/5 dark:hover:bg-white/5', selected === entry.path && 'bg-blue-500/10')}
+                  className={cn('cursor-pointer hover:bg-black/5 dark:hover:bg-white/5')}
+                  style={selected === entry.path ? { backgroundColor: 'var(--highlight-color)' } : undefined}
                 >
                   <td className="flex items-center gap-2 py-1.5">
                     <span>{getFileIcon(entry, 4)}</span>
@@ -285,11 +295,12 @@ export function Finder({ windowId, appId }: AppContentProps) {
             onClick={() => navigate(s.path)}
             className={cn(
               'flex w-full items-center gap-2 rounded-md px-2 py-1 text-left text-xs transition-colors',
-              path === s.path ? 'bg-blue-500/20 text-blue-600 dark:text-blue-400' : 'hover:bg-black/10 dark:hover:bg-white/10'
+              path !== s.path && 'hover:bg-black/10 dark:hover:bg-white/10'
             )}
+            style={path === s.path ? { backgroundColor: 'var(--highlight-color)' } : undefined}
           >
-            <span className="text-blue-500">{s.icon}</span>
-            {s.name}
+            <span className="text-accent-active">{s.icon}</span>
+            <span style={path === s.path ? { color: 'var(--accent-color)', fontWeight: 500 } : undefined}>{s.name}</span>
           </button>
         ))}
       </aside>

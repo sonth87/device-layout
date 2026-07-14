@@ -1,0 +1,14 @@
+{
+  "calendars": [
+    { "id": "personal", "name": "Personal", "group": "iCloud", "color": "#007afe" },
+    { "id": "work", "name": "Calendar", "group": "iCloud", "color": "#007afe" },
+    { "id": "reminders", "name": "Scheduled Reminders", "group": "Other", "color": "#f353a7" },
+    { "id": "birthdays", "name": "Birthdays", "group": "Other", "color": "#8e8e93" },
+    { "id": "holidays", "name": "Ngày lễ Việt Nam", "group": "Other", "color": "#9d3fc6", "hasFeed": true },
+    { "id": "siri", "name": "Siri Suggestions", "group": "Other", "color": "#f5c400" }
+  ],
+  "events": [
+    { "id": "3", "title": "Scheduled Reminders", "date": "2026-07-14", "timeStart": "10:00", "timeEnd": "11:00", "calendarId": "reminders" },
+    { "id": "4", "title": "Ngày lễ Việt Nam", "date": "2026-07-14", "timeStart": "00:00", "timeEnd": "23:59", "calendarId": "holidays" }
+  ]
+}

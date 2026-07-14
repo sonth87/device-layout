@@ -8,6 +8,7 @@ import { AppIconImage } from "@/components/shared/AppIconImage";
 import type { AppConfig, ContextMenuAction } from "@/types/app";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useStore } from "@/store";
+import { LiquidGlass } from "@/components/liquid-glass/LiquidGlass";
 
 const DRAG_THRESHOLD = 6; // px before we consider it a drag, not a click
 const LONG_PRESS_MS = 700; // ms hold before mobile context menu fires
@@ -333,7 +334,7 @@ export function AppIcon({
                 labelPosition === 'bottom' ? "flex-col text-center gap-2 p-2.5" : "flex-row text-left gap-3 p-2",
                 "focus:outline-none transition-transform duration-75",
                 isSelected
-                  ? "bg-blue-500/20 ring-1 ring-blue-500/35"
+                  ? "bg-white/8 dark:bg-white/5"
                   : "hover:bg-white/15",
                 pressed && !dragging && "scale-90 opacity-80",
                 dragging && "scale-105 opacity-90 drop-shadow-2xl",
@@ -355,14 +356,17 @@ export function AppIcon({
               </div>
               <span
                 className={cn(
-                  "block w-full text-white font-medium leading-tight truncate",
-                  labelPosition === 'bottom' ? "text-center" : "text-left"
+                  "block w-full text-white font-medium leading-tight truncate px-1.5 py-0.5 rounded-[4px] border border-transparent",
+                  labelPosition === 'bottom' ? "text-center mx-auto" : "text-left"
                 )}
                 style={{
                   fontSize: `${textSize}px`,
-                  maxWidth: labelPosition === 'bottom' ? `${iconSize + 12}px` : '100px',
-                  textShadow:
-                    "0 1px 0px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6)",
+                  maxWidth: labelPosition === 'bottom' ? `${iconSize + 16}px` : '100px',
+                  backgroundColor: isSelected ? 'var(--accent-color)' : undefined,
+                  borderColor: isSelected ? 'rgba(255,255,255,0.1)' : 'transparent',
+                  textShadow: isSelected
+                    ? 'none'
+                    : "0 1px 0px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6)",
                 }}
               >
                 {displayName}
@@ -373,14 +377,18 @@ export function AppIcon({
 
         {appConfig.contextMenu && appConfig.contextMenu.length > 0 && (
           <ContextMenu.Portal>
-            <ContextMenu.Content className="min-w-48 bg-white/85 dark:bg-[#151821]/92 backdrop-blur-2xl rounded-menu shadow-2xl border border-black/10 dark:border-white/8 p-1 text-xs overflow-hidden z-9999">
-              <ContextMenuItems
-                items={appConfig.contextMenu}
-                appId={appConfig.id}
-                onClose={() => {
-                  /* Radix handles close */
-                }}
-              />
+            <ContextMenu.Content asChild className="min-w-48 outline-none z-[99999]">
+              <LiquidGlass variant="panel" className="p-1 text-xs">
+                <div>
+                  <ContextMenuItems
+                    items={appConfig.contextMenu}
+                    appId={appConfig.id}
+                    onClose={() => {
+                      /* Radix handles close */
+                    }}
+                  />
+                </div>
+              </LiquidGlass>
             </ContextMenu.Content>
           </ContextMenu.Portal>
         )}

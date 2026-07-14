@@ -1,28 +1,35 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect, useCallback, createContext, useContext } from 'react';
-import { createPortal } from 'react-dom';
-import { Wifi, Battery, Search, X } from 'lucide-react';
-import { useStore } from '@/store';
-import { MenuBarClock } from './MenuBarClock';
-import { ControlCenter } from './ControlCenter';
-import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
-import { DEFAULT_MENU_BAR_MENUS } from '@/config/apps.config';
-import { cn } from '@/lib/utils';
-import type { MenuBarMenu, MenuBarItem, AppConfig } from '@/types/app';
+import {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  createContext,
+  useContext,
+} from "react";
+import { createPortal } from "react-dom";
+import { Wifi, Battery, Search, X } from "lucide-react";
+import { useStore } from "@/store";
+import { MenuBarClock } from "./MenuBarClock";
+import { ControlCenter } from "./ControlCenter";
+import { LiquidGlass } from "@/components/liquid-glass/LiquidGlass";
+import { DEFAULT_MENU_BAR_MENUS } from "@/config/apps.config";
+import { cn } from "@/lib/utils";
+import type { MenuBarMenu, MenuBarItem, AppConfig } from "@/types/app";
 
 // ─── MenuBar theme context (avoids prop-drilling to every button) ─────────────
-const MenuBarThemeCtx = createContext<'light' | 'dark'>('dark');
+const MenuBarThemeCtx = createContext<"light" | "dark">("dark");
 /** Returns Tailwind classes for an inactive menu-bar button. */
 function useMenuBtnClass() {
   const theme = useContext(MenuBarThemeCtx);
-  return theme === 'light'
-    ? 'text-black/80 hover:bg-black/10'
-    : 'text-white/85 hover:bg-white/10';
+  return theme === "light"
+    ? "text-black/80 hover:bg-black/10"
+    : "text-white/85 hover:bg-white/10";
 }
 
 const menuBarButtonClass =
-  'flex h-6 items-center rounded-md px-2.5 text-[13px] leading-none transition-colors';
+  "flex h-6 items-center rounded-md px-2.5 text-[13px] leading-none transition-colors";
 
 // ─── Dropdown panel (portaled to body to escape overflow-hidden) ─────────────
 
@@ -34,14 +41,20 @@ interface DropdownPanelProps {
   children: React.ReactNode;
 }
 
-function DropdownPanel({ anchorRef, open, onClose, minWidth = 192, children }: DropdownPanelProps) {
+function DropdownPanel({
+  anchorRef,
+  open,
+  onClose,
+  minWidth = 192,
+  children,
+}: DropdownPanelProps) {
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open || !anchorRef.current) return;
     const rect = anchorRef.current.getBoundingClientRect();
-    setPos({ top: rect.bottom + 4, left: rect.left });
+    setPos({ top: rect.bottom + 6, left: rect.left });
   }, [open, anchorRef]);
 
   useEffect(() => {
@@ -53,22 +66,24 @@ function DropdownPanel({ anchorRef, open, onClose, minWidth = 192, children }: D
       if (panelRef.current?.contains(target)) return;
       onClose();
     };
-    document.addEventListener('mousedown', handler, true);
-    return () => document.removeEventListener('mousedown', handler, true);
+    document.addEventListener("mousedown", handler, true);
+    return () => document.removeEventListener("mousedown", handler, true);
   }, [open, onClose, anchorRef]);
 
-  if (!open || !pos || typeof document === 'undefined') return null;
+  if (!open || !pos || typeof document === "undefined") return null;
 
   return createPortal(
     <div
       ref={panelRef}
       data-menu-portal="true"
-      className="fixed bg-white/92 dark:bg-[#1e2030]/98 backdrop-blur-2xl rounded-menu shadow-2xl border border-black/10 dark:border-white/10 py-1 px-1"
-      style={{ top: pos.top, left: pos.left, minWidth, zIndex: 99999 }}
+      className="fixed z-[99999] outline-none"
+      style={{ top: pos.top, left: pos.left, minWidth }}
     >
-      {children}
+      <LiquidGlass variant="panel" className="py-1 px-1 w-full">
+        {children}
+      </LiquidGlass>
     </div>,
-    document.body
+    document.body,
   );
 }
 
@@ -89,10 +104,10 @@ function MenuItem({
     <button
       disabled={disabled}
       className={cn(
-        'w-full flex items-center justify-between px-3 py-1.5 text-[13px] transition-colors cursor-default rounded-[5px]',
+        "w-full flex items-center justify-between px-3 py-1.5 text-[13px] transition-colors cursor-default rounded-lg",
         disabled
-          ? 'text-black/30 dark:text-white/30'
-          : 'hover:bg-blue-500 hover:text-white'
+          ? "text-black/30 dark:text-white/30"
+          : "hover:bg-accent-active hover:text-white",
       )}
       onClick={onClick}
     >
@@ -108,19 +123,19 @@ function MenuSeparator() {
   return <div className="my-1 mx-2 h-px bg-black/10 dark:bg-white/10" />;
 }
 
-import { useTranslation, TranslationKey } from '@/hooks/useTranslation';
+import { useTranslation, TranslationKey } from "@/hooks/useTranslation";
 
 function getMenuLabel(label: string, t: any) {
   const map: Record<string, TranslationKey> = {
-    'File': 'menuFile',
-    'Edit': 'menuEdit',
-    'View': 'menuView',
-    'Window': 'menuWindow',
-    'Help': 'menuHelp',
-    'History': 'menuHistory',
-    'Format': 'menuFormat',
-    'Shell': 'menuShell',
-    'Go': 'menuGo',
+    File: "menuFile",
+    Edit: "menuEdit",
+    View: "menuView",
+    Window: "menuWindow",
+    Help: "menuHelp",
+    History: "menuHistory",
+    Format: "menuFormat",
+    Shell: "menuShell",
+    Go: "menuGo",
   };
   const key = map[label];
   return key ? t[key] : label;
@@ -128,27 +143,27 @@ function getMenuLabel(label: string, t: any) {
 
 function getMenuItemLabel(label: string, t: any) {
   const map: Record<string, TranslationKey> = {
-    'New Window': 'menuNewWindow',
-    'New Tab': 'menuNewTab',
-    'Close': 'menuClose',
-    'Close All Windows': 'menuCloseAll',
-    'Close Window': 'menuClose',
-    'Undo': 'menuUndo',
-    'Redo': 'menuRedo',
-    'Cut': 'menuCut',
-    'Copy': 'menuCopy',
-    'Paste': 'menuPaste',
-    'Select All': 'menuSelectAll',
-    'Find': 'menuFind',
-    'Minimize': 'menuMinimize',
-    'Zoom': 'menuZoom',
-    'Bring All to Front': 'menuBringAllToFront',
-    'Zoom In': 'menuZoomIn',
-    'Zoom Out': 'menuZoomOut',
-    'Enter Full Screen': 'menuFullscreen',
-    'Desktop Layout Help': 'menuHelp2',
-    'New Finder Window': 'menuNewWindow',
-    'New Folder': 'menuNewWindow',
+    "New Window": "menuNewWindow",
+    "New Tab": "menuNewTab",
+    Close: "menuClose",
+    "Close All Windows": "menuCloseAll",
+    "Close Window": "menuClose",
+    Undo: "menuUndo",
+    Redo: "menuRedo",
+    Cut: "menuCut",
+    Copy: "menuCopy",
+    Paste: "menuPaste",
+    "Select All": "menuSelectAll",
+    Find: "menuFind",
+    Minimize: "menuMinimize",
+    Zoom: "menuZoom",
+    "Bring All to Front": "menuBringAllToFront",
+    "Zoom In": "menuZoomIn",
+    "Zoom Out": "menuZoomOut",
+    "Enter Full Screen": "menuFullscreen",
+    "Desktop Layout Help": "menuHelp2",
+    "New Finder Window": "menuNewWindow",
+    "New Folder": "menuNewWindow",
   };
   const key = map[label];
   return key ? t[key] : label;
@@ -167,24 +182,29 @@ function AppNameDropdown({
   activeId: string | null;
   setActiveId: (id: string | null) => void;
 }) {
-  const open = activeId === 'app-name';
-  const setOpen = useCallback((o: boolean | ((prev: boolean) => boolean)) => {
-    const nextOpen = typeof o === 'function' ? o(open) : o;
-    setActiveId(nextOpen ? 'app-name' : null);
-  }, [open, setActiveId]);
+  const open = activeId === "app-name";
+  const setOpen = useCallback(
+    (o: boolean | ((prev: boolean) => boolean)) => {
+      const nextOpen = typeof o === "function" ? o(open) : o;
+      setActiveId(nextOpen ? "app-name" : null);
+    },
+    [open, setActiveId],
+  );
 
   const btnClass = useMenuBtnClass();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const closeWindow = useStore((s) => s.closeWindow);
   const { t, getAppName } = useTranslation();
 
-  const appName = appConfig ? getAppName(appConfig.id, appConfig.name) : t.appNameFinder;
+  const appName = appConfig
+    ? getAppName(appConfig.id, appConfig.name)
+    : t.appNameFinder;
   const handleClose = useCallback(() => setOpen(false), [setOpen]);
 
   const dispatchAction = (action: string) => {
     if (!appId) return;
     window.dispatchEvent(
-      new CustomEvent('app:menu:action', { detail: { appId, action } })
+      new CustomEvent("app:menu:action", { detail: { appId, action } }),
     );
   };
 
@@ -205,23 +225,29 @@ function AppNameDropdown({
           setOpen((o) => !o);
         }}
         onMouseEnter={() => {
-          if (activeId !== null) setActiveId('app-name');
+          if (activeId !== null) setActiveId("app-name");
         }}
         className={cn(
           menuBarButtonClass,
-          'font-semibold',
-          open
-            ? 'bg-blue-500 text-white'
-            : btnClass
+          "font-semibold",
+          open ? "bg-accent-active text-white" : btnClass,
         )}
       >
         <span className="text-[13px] font-semibold">{appName}</span>
       </button>
 
-      <DropdownPanel anchorRef={buttonRef} open={open} onClose={handleClose} minWidth={208}>
+      <DropdownPanel
+        anchorRef={buttonRef}
+        open={open}
+        onClose={handleClose}
+        minWidth={208}
+      >
         <MenuItem
           label={`${t.aboutApp} ${appName}`}
-          onClick={() => { setOpen(false); dispatchAction('about'); }}
+          onClick={() => {
+            setOpen(false);
+            dispatchAction("about");
+          }}
           disabled={!appId}
         />
         <MenuSeparator />
@@ -231,7 +257,11 @@ function AppNameDropdown({
         <MenuItem label={t.hideOthers} shortcut="⌥⌘H" disabled />
         <MenuItem label={t.showAll} disabled />
         <MenuSeparator />
-        <MenuItem label={`${t.quit} ${appName}`} shortcut="⌘Q" onClick={handleQuit} />
+        <MenuItem
+          label={`${t.quit} ${appName}`}
+          shortcut="⌘Q"
+          onClick={handleQuit}
+        />
       </DropdownPanel>
     </>
   );
@@ -253,10 +283,13 @@ function MenuDropdown({
   setActiveId: (id: string | null) => void;
 }) {
   const open = activeId === label;
-  const setOpen = useCallback((o: boolean | ((prev: boolean) => boolean)) => {
-    const nextOpen = typeof o === 'function' ? o(open) : o;
-    setActiveId(nextOpen ? label : null);
-  }, [open, label, setActiveId]);
+  const setOpen = useCallback(
+    (o: boolean | ((prev: boolean) => boolean)) => {
+      const nextOpen = typeof o === "function" ? o(open) : o;
+      setActiveId(nextOpen ? label : null);
+    },
+    [open, label, setActiveId],
+  );
 
   const btnClass = useMenuBtnClass();
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -268,7 +301,9 @@ function MenuDropdown({
     setOpen(false);
     if (item.action && appId) {
       window.dispatchEvent(
-        new CustomEvent('app:menu:action', { detail: { appId, action: item.action } })
+        new CustomEvent("app:menu:action", {
+          detail: { appId, action: item.action },
+        }),
       );
     }
   };
@@ -286,15 +321,18 @@ function MenuDropdown({
         }}
         className={cn(
           menuBarButtonClass,
-          open
-            ? 'bg-blue-500 text-white'
-            : btnClass
+          open ? "bg-accent-active text-white" : btnClass,
         )}
       >
         {getMenuLabel(label, t)}
       </button>
 
-      <DropdownPanel anchorRef={buttonRef} open={open} onClose={handleClose} minWidth={192}>
+      <DropdownPanel
+        anchorRef={buttonRef}
+        open={open}
+        onClose={handleClose}
+        minWidth={192}
+      >
         {items.map((item, i) =>
           item.separator ? (
             <MenuSeparator key={`sep-${i}`} />
@@ -306,7 +344,7 @@ function MenuDropdown({
               disabled={item.disabled}
               onClick={() => handleItemClick(item)}
             />
-          )
+          ),
         )}
       </DropdownPanel>
     </>
@@ -318,14 +356,27 @@ function MenuDropdown({
 function PersonalAboutDialog({ onClose }: { onClose: () => void }) {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [hovering, setHovering] = useState(false);
-  const dragStart = useRef<{ mx: number; my: number; ox: number; oy: number } | null>(null);
+  const dragStart = useRef<{
+    mx: number;
+    my: number;
+    ox: number;
+    oy: number;
+  } | null>(null);
 
-  const onTitleBarPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).closest('button')) return;
-    e.preventDefault();
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-    dragStart.current = { mx: e.clientX, my: e.clientY, ox: offset.x, oy: offset.y };
-  }, [offset]);
+  const onTitleBarPointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if ((e.target as HTMLElement).closest("button")) return;
+      e.preventDefault();
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+      dragStart.current = {
+        mx: e.clientX,
+        my: e.clientY,
+        ox: offset.x,
+        oy: offset.y,
+      };
+    },
+    [offset],
+  );
 
   const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragStart.current) return;
@@ -335,12 +386,17 @@ function PersonalAboutDialog({ onClose }: { onClose: () => void }) {
     });
   }, []);
 
-  const onPointerUp = useCallback(() => { dragStart.current = null; }, []);
+  const onPointerUp = useCallback(() => {
+    dragStart.current = null;
+  }, []);
 
-  if (typeof document === 'undefined') return null;
+  if (typeof document === "undefined") return null;
 
   return createPortal(
-    <div className="fixed inset-0 flex items-center justify-center" style={{ zIndex: 99999 }}>
+    <div
+      className="fixed inset-0 flex items-center justify-center"
+      style={{ zIndex: 99999 }}
+    >
       <div className="absolute inset-0" onClick={onClose} />
       <div
         className="relative flex flex-col items-center bg-neutral-100/97 dark:bg-[#1c1c1e]/97 backdrop-blur-2xl rounded-(--radius-window) shadow-2xl border border-black/10 dark:border-white/8 w-80 overflow-hidden"
@@ -356,16 +412,27 @@ function PersonalAboutDialog({ onClose }: { onClose: () => void }) {
           onMouseEnter={() => setHovering(true)}
           onMouseLeave={() => setHovering(false)}
         >
-          <div className="flex items-center gap-2" onPointerDown={(e) => e.stopPropagation()}>
+          <div
+            className="flex items-center gap-2"
+            onPointerDown={(e) => e.stopPropagation()}
+          >
             <button
               onClick={onClose}
               className="w-3.5 h-3.5 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: '#ff5f57' }}
+              style={{ backgroundColor: "#ff5f57" }}
             >
-              {hovering && <X className="w-2 h-2 text-red-900/80" strokeWidth={3} />}
+              {hovering && (
+                <X className="w-2 h-2 text-red-900/80" strokeWidth={3} />
+              )}
             </button>
-            <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: '#d1d1d1' }} />
-            <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: '#d1d1d1' }} />
+            <div
+              className="w-3.5 h-3.5 rounded-full"
+              style={{ backgroundColor: "#d1d1d1" }}
+            />
+            <div
+              className="w-3.5 h-3.5 rounded-full"
+              style={{ backgroundColor: "#d1d1d1" }}
+            />
           </div>
         </div>
 
@@ -374,8 +441,12 @@ function PersonalAboutDialog({ onClose }: { onClose: () => void }) {
           <div className="w-20 h-20 mb-1 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-4xl font-bold text-white shadow-lg">
             S
           </div>
-          <div className="text-[17px] font-bold text-black/90 dark:text-white/90">Skyline</div>
-          <div className="text-[13px] text-black/55 dark:text-white/55">sonth87@gmail.com</div>
+          <div className="text-[17px] font-bold text-black/90 dark:text-white/90">
+            Skyline
+          </div>
+          <div className="text-[13px] text-black/55 dark:text-white/55">
+            sonth87@gmail.com
+          </div>
           <div className="w-full h-px bg-black/10 dark:bg-white/10 my-2" />
           <div className="text-[12px] text-black/45 dark:text-white/45 text-center leading-relaxed">
             macOS Desktop Layout
@@ -388,7 +459,11 @@ function PersonalAboutDialog({ onClose }: { onClose: () => void }) {
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-[12px] text-black/50 dark:text-white/50 hover:text-black/80 dark:hover:text-white/80 transition-colors mt-1"
           >
-            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 fill-current" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              className="w-3.5 h-3.5 fill-current"
+              aria-hidden="true"
+            >
               <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
             </svg>
             sonth87/device-layout
@@ -399,7 +474,7 @@ function PersonalAboutDialog({ onClose }: { onClose: () => void }) {
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }
 
@@ -410,11 +485,14 @@ function AppleMenuDropdown({
   activeId: string | null;
   setActiveId: (id: string | null) => void;
 }) {
-  const open = activeId === 'apple';
-  const setOpen = useCallback((o: boolean | ((prev: boolean) => boolean)) => {
-    const nextOpen = typeof o === 'function' ? o(open) : o;
-    setActiveId(nextOpen ? 'apple' : null);
-  }, [open, setActiveId]);
+  const open = activeId === "apple";
+  const setOpen = useCallback(
+    (o: boolean | ((prev: boolean) => boolean)) => {
+      const nextOpen = typeof o === "function" ? o(open) : o;
+      setActiveId(nextOpen ? "apple" : null);
+    },
+    [open, setActiveId],
+  );
 
   const btnClass = useMenuBtnClass();
   const [showAbout, setShowAbout] = useState(false);
@@ -426,7 +504,7 @@ function AppleMenuDropdown({
 
   const handleSystemSettings = () => {
     setOpen(false);
-    const settingsApp = apps['settings'];
+    const settingsApp = apps["settings"];
     if (settingsApp) launchApp(settingsApp);
   };
 
@@ -439,22 +517,28 @@ function AppleMenuDropdown({
           setOpen((o) => !o);
         }}
         onMouseEnter={() => {
-          if (activeId !== null) setActiveId('apple');
+          if (activeId !== null) setActiveId("apple");
         }}
         className={cn(
           menuBarButtonClass,
-          open
-            ? 'bg-blue-500 text-white'
-            : btnClass
+          open ? "bg-accent-active text-white" : btnClass,
         )}
       >
         <span className="text-2xl leading-none">&#xf8ff;</span>
       </button>
 
-      <DropdownPanel anchorRef={buttonRef} open={open} onClose={handleClose} minWidth={220}>
+      <DropdownPanel
+        anchorRef={buttonRef}
+        open={open}
+        onClose={handleClose}
+        minWidth={220}
+      >
         <MenuItem
           label={t.aboutThisMac}
-          onClick={() => { setOpen(false); setShowAbout(true); }}
+          onClick={() => {
+            setOpen(false);
+            setShowAbout(true);
+          }}
         />
         <MenuSeparator />
         <MenuItem label={t.systemSettings} onClick={handleSystemSettings} />
@@ -471,33 +555,52 @@ export function MenuBar({ onSpotlight }: { onSpotlight?: () => void } = {}) {
   const activeAppId = useStore((s) => s.activeAppId);
   const apps = useStore((s) => s.apps);
   const activeApp = activeAppId ? apps[activeAppId] : null;
-  const menus: MenuBarMenu[] = activeApp?.menuBarMenus ?? DEFAULT_MENU_BAR_MENUS;
+  const menus: MenuBarMenu[] =
+    activeApp?.menuBarMenus ?? DEFAULT_MENU_BAR_MENUS;
   const wallpaperTextTheme = useStore((s) => s.wallpaperTextTheme);
 
   // Build text / hover classes that adapt to wallpaper luminance rather than
   // the system color scheme, so dark text is used on bright wallpapers and
   // vice versa, regardless of Light/Dark Mode.
-  const iconClass = wallpaperTextTheme === 'light'
-    ? 'text-black/70 hover:bg-black/10'
-    : 'text-white/80 hover:bg-white/10';
-  const iconBtnClass = cn(menuBarButtonClass, 'px-2', iconClass);
+  const iconClass =
+    wallpaperTextTheme === "light"
+      ? "text-black/70 hover:bg-black/10"
+      : "text-white/80 hover:bg-white/10";
+  const iconBtnClass = cn(menuBarButtonClass, "px-2", iconClass);
 
   const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null);
 
   return (
     <MenuBarThemeCtx.Provider value={wallpaperTextTheme}>
       <LiquidGlass variant="menubar">
-        <div data-menubar="true" className="flex h-(--menubar-height) w-full items-center px-2">
-
+        <div
+          data-menubar="true"
+          className="flex h-(--menubar-height) w-full items-center px-2"
+        >
           {/* Left: Apple + app menus */}
           <div className="flex shrink-0 items-center gap-0.5">
             {/* Apple menu */}
-            <AppleMenuDropdown activeId={activeDropdownId} setActiveId={setActiveDropdownId} />
+            <AppleMenuDropdown
+              activeId={activeDropdownId}
+              setActiveId={setActiveDropdownId}
+            />
             {/* Active app name dropdown */}
-            <AppNameDropdown appConfig={activeApp} appId={activeAppId} activeId={activeDropdownId} setActiveId={setActiveDropdownId} />
+            <AppNameDropdown
+              appConfig={activeApp}
+              appId={activeAppId}
+              activeId={activeDropdownId}
+              setActiveId={setActiveDropdownId}
+            />
             {/* App menu dropdowns */}
             {menus.map((menu) => (
-              <MenuDropdown key={menu.label} label={menu.label} items={menu.items} appId={activeAppId} activeId={activeDropdownId} setActiveId={setActiveDropdownId} />
+              <MenuDropdown
+                key={menu.label}
+                label={menu.label}
+                items={menu.items}
+                appId={activeAppId}
+                activeId={activeDropdownId}
+                setActiveId={setActiveDropdownId}
+              />
             ))}
           </div>
 

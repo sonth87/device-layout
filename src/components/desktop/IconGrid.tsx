@@ -483,12 +483,15 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
       {/* Marquee Selection Rectangle rendering */}
       {selectionBox && (
         <div
-          className="absolute border border-blue-500/60 bg-blue-500/15 rounded-sm pointer-events-none z-[999]"
+          className="absolute rounded-sm pointer-events-none"
           style={{
             left: Math.min(selectionBox.startX, selectionBox.currentX),
             top: Math.min(selectionBox.startY, selectionBox.currentY),
             width: Math.abs(selectionBox.startX - selectionBox.currentX),
             height: Math.abs(selectionBox.startY - selectionBox.currentY),
+            border: '0.75px solid rgba(255, 255, 255, 0.28)',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            boxShadow: '0 0 4px rgba(0, 0, 0, 0.05)',
           }}
         />
       )}

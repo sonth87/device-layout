@@ -1,0 +1,36 @@
+[
+  {
+    "id": "1",
+    "name": "Alice Chen",
+    "avatar": "👩‍💻",
+    "preview": "Sounds great! See you then",
+    "unread": 0,
+    "messages": [
+      { "id": "1", "text": "Hey! Are you free tomorrow for coffee?", "from": "them", "timeOffset": -3600000 },
+      { "id": "2", "text": "Yes! Around 10am works for me 😊", "from": "me", "timeOffset": -3500000 },
+      { "id": "3", "text": "Sounds great! See you then", "from": "them", "timeOffset": -3400000 }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Bob Martin",
+    "avatar": "👨‍🎨",
+    "preview": "The design looks amazing!",
+    "unread": 2,
+    "messages": [
+      { "id": "1", "text": "Just pushed the new designs to Figma", "from": "them", "timeOffset": -7200000 },
+      { "id": "2", "text": "The design looks amazing!", "from": "them", "timeOffset": -7100000 }
+    ]
+  },
+  {
+    "id": "3",
+    "name": "Team Dev 🚀",
+    "avatar": "👥",
+    "preview": "Deploy scheduled for Friday",
+    "unread": 5,
+    "messages": [
+      { "id": "1", "text": "Sprint review went well!", "from": "them", "timeOffset": -86400000 },
+      { "id": "2", "text": "Deploy scheduled for Friday", "from": "them", "timeOffset": -82800000 }
+    ]
+  }
+]

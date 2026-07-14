@@ -48,7 +48,7 @@ export function LiquidGlass({
   forceGlass,
   borderRadius,
 }: LiquidGlassProps) {
-  const { isGlass: themeGlass } = useTheme();
+  const { isGlass: themeGlass, colorScheme } = useTheme();
   const isGlass = forceGlass !== undefined ? forceGlass : themeGlass;
   const glassMode = useStore((s) => s.glassMode);
   const radiusVar = borderRadius ?? VARIANT_RADIUS_VAR[variant];
@@ -112,7 +112,12 @@ export function LiquidGlass({
           className="absolute inset-0 z-10 pointer-events-none"
           style={{
             ...radiusStyle,
-            background: "rgba(255, 255, 255, 0.08)",
+            background:
+              variant === "panel"
+                ? colorScheme === "dark"
+                  ? "rgba(26, 28, 40, 0.66)"
+                  : "rgba(246, 246, 246, 0.62)"
+                : "rgba(255, 255, 255, 0.08)",
           }}
         />
         <div
@@ -136,15 +141,25 @@ export function LiquidGlass({
       className={cn(
         "relative overflow-hidden",
         isGlass
-          ? cn(
-              "bg-white/12 dark:bg-white/5 border-white/30 dark:border-white/15",
-              shadowCls,
-              "inset_0_1px_0_rgba(255,255,255,0.4)",
-            )
-          : cn(
-              "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10",
-              shadowCls,
-            ),
+          ? variant === "panel"
+            ? cn(
+                "bg-white/60 dark:bg-[#1a1c26]/64 border-white/40 dark:border-white/15",
+                shadowCls,
+              )
+            : cn(
+                "bg-white/12 dark:bg-white/5 border-white/30 dark:border-white/15",
+                shadowCls,
+                "inset_0_1px_0_rgba(255,255,255,0.4)",
+              )
+          : variant === "panel"
+            ? cn(
+                "bg-white/95 dark:bg-[#1a1c26]/95 border-white/20 dark:border-white/10",
+                shadowCls,
+              )
+            : cn(
+                "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10",
+                shadowCls,
+              ),
         "border",
         className,
       )}

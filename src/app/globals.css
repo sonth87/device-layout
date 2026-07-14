@@ -199,3 +199,86 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(128 128 128 / 0.6);
 }
+
+/* ── Theme Custom Accent & Highlight Colors ── */
+:root {
+  --accent-color: #007afe;
+  --win-accent: #007afe;
+  --highlight-color: rgba(0, 122, 254, 0.25);
+}
+
+/* Text Selection Override */
+::selection {
+  background-color: var(--highlight-color) !important;
+  color: inherit !important;
+}
+
+/* Range input styling override */
+input[type="range"] {
+  accent-color: var(--accent-color) !important;
+}
+
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+  accent-color: var(--accent-color) !important;
+}
+
+/* Utility accent active classes */
+.text-accent-active {
+  color: var(--accent-color) !important;
+}
+.bg-accent-active {
+  background-color: var(--accent-color) !important;
+}
+.border-accent-active {
+  border-color: var(--accent-color) !important;
+}
+
+/* Compile support for hover modifiers on custom accent classes */
+.hover\:bg-accent-active:hover {
+  background-color: var(--accent-color) !important;
+}
+.hover\:text-accent-active:hover {
+  color: var(--accent-color) !important;
+}
+
+/* Radix UI state highlights and dropdown item overrides */
+.data-\[highlighted\]\:bg-accent-active[data-highlighted] {
+  background-color: var(--accent-color) !important;
+}
+.data-\[state\=open\]\:bg-accent-active[data-state="open"] {
+  background-color: var(--accent-color) !important;
+}
+
+/* ── Dynamic system-wide blue-to-accent class override ── */
+.ring-blue-500,
+.focus\:ring-blue-500:focus,
+.focus-within\:ring-blue-500:focus-within {
+  --tw-ring-color: var(--accent-color) !important;
+}
+
+.border-blue-500,
+.focus\:border-blue-500:focus {
+  border-color: var(--accent-color) !important;
+}
+
+.bg-blue-500,
+.hover\:bg-blue-500:hover,
+.data-\[highlighted\]\:bg-blue-500[data-highlighted],
+.data-\[state\=open\]\:bg-blue-500[data-state="open"] {
+  background-color: var(--accent-color) !important;
+}
+
+.text-blue-500,
+.hover\:text-blue-500:hover {
+  color: var(--accent-color) !important;
+}
+
+/* Semi-transparent active background shades */
+.bg-blue-900\/20 {
+  background-color: color-mix(in srgb, var(--accent-color) 20%, transparent) !important;
+}
+.bg-blue-50 {
+  background-color: color-mix(in srgb, var(--accent-color) 8%, transparent) !important;
+}
+

@@ -16,6 +16,7 @@ export function WindowManager() {
   const windows = useStore((s) => s.windows);
   const apps = useStore((s) => s.apps);
   const resizeWindow = useStore((s) => s.resizeWindow);
+  const allowDragOutOfBounds = useStore((s) => s.allowDragOutOfBounds);
   const viewport = useViewportSize();
   const { config } = useTheme();
 
@@ -31,12 +32,38 @@ export function WindowManager() {
       const appConfig = apps[win.appId];
       if (!appConfig) continue;
 
-      const nextRect = win.isMaximized
-        ? viewportRect
-        : fitWindowRectToViewport(win.rect, viewportRect, {
-            minWidth: appConfig.minSize?.width ?? 320,
-            minHeight: appConfig.minSize?.height ?? 240,
+      let nextRect;
+      if (win.isMaximized) {
+        nextRect = viewportRect;
+      } else {
+        const minW = appConfig.minSize?.width ?? 320;
+        const minH = appConfig.minSize?.height ?? 240;
+        const nextWidth = Math.min(Math.max(win.rect.width, minW), viewport.width);
+        const nextHeight = Math.min(Math.max(win.rect.height, minH), viewport.height);
+
+        if (allowDragOutOfBounds) {
+          const minOverlap = 200;
+          const minOverlapX = Math.min(minOverlap, nextWidth);
+          const minOverlapY = Math.min(minOverlap, nextHeight);
+
+          const hardMinX = viewportRect.x - (nextWidth - minOverlapX);
+          const hardMaxX = viewportRect.x + viewportRect.width - minOverlapX;
+          const hardMinY = viewportRect.y; // Keep under menubar
+          const hardMaxY = viewportRect.y + viewportRect.height - minOverlapY;
+
+          nextRect = {
+            x: Math.min(Math.max(win.rect.x, hardMinX), hardMaxX),
+            y: Math.min(Math.max(win.rect.y, hardMinY), hardMaxY),
+            width: nextWidth,
+            height: nextHeight,
+          };
+        } else {
+          nextRect = fitWindowRectToViewport(win.rect, viewportRect, {
+            minWidth: minW,
+            minHeight: minH,
           });
+        }
+      }
 
       if (
         nextRect.x !== win.rect.x ||
@@ -51,6 +78,7 @@ export function WindowManager() {
     apps,
     windows,
     resizeWindow,
+    allowDragOutOfBounds,
     viewport.width,
     viewport.height,
     config.layout.window.maximizeInsets.top,

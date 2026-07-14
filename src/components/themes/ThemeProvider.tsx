@@ -51,6 +51,8 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
   const launchApp = useStore((s) => s.launchApp);
   const glassEnabled = useStore((s) => s.glassEnabled);
   const isEditingWidgets = useStore((s) => s.isEditingWidgets);
+  const accentColor = useStore((s) => s.accentColor);
+  const highlightColor = useStore((s) => s.highlightColor);
 
   const [spotlightOpen, setSpotlightOpen] = useState(false);
   const [appSwitcherOpen, setAppSwitcherOpen] = useState(false);
@@ -84,7 +86,44 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
     html.setAttribute('data-os-theme', osTheme);
     html.setAttribute('data-glass', glassEnabled ? 'true' : 'false');
     html.classList.toggle('dark', resolvedColorScheme === 'dark');
-  }, [osTheme, resolvedColorScheme, glassEnabled]);
+
+    // Sync accent color
+    const ACCENT_COLOR_MAP: Record<string, string> = {
+      multicolor: '#007afe',
+      blue: '#007afe',
+      purple: '#9d3fc6',
+      pink: '#f353a7',
+      red: '#e03b30',
+      orange: '#f38218',
+      yellow: '#f5c400',
+      green: '#63be44',
+      graphite: '#8e8e93',
+    };
+    const accentHex = ACCENT_COLOR_MAP[accentColor] || '#007afe';
+    html.style.setProperty('--accent-color', accentHex);
+    html.style.setProperty('--win-accent', accentHex);
+
+    // Sync highlight color
+    const HIGHLIGHT_COLOR_MAP: Record<string, string> = {
+      blue: 'rgba(0, 122, 254, 0.25)',
+      purple: 'rgba(157, 63, 198, 0.25)',
+      pink: 'rgba(243, 83, 167, 0.25)',
+      red: 'rgba(224, 59, 48, 0.25)',
+      orange: 'rgba(243, 130, 24, 0.25)',
+      yellow: 'rgba(245, 196, 0, 0.3)',
+      green: 'rgba(99, 190, 68, 0.25)',
+      graphite: 'rgba(142, 142, 147, 0.3)',
+    };
+
+    let highlightVal = '';
+    if (highlightColor === 'automatic') {
+      const mappedAccent = accentColor === 'multicolor' ? 'blue' : accentColor;
+      highlightVal = HIGHLIGHT_COLOR_MAP[mappedAccent] || 'rgba(0, 122, 254, 0.25)';
+    } else {
+      highlightVal = HIGHLIGHT_COLOR_MAP[highlightColor] || 'rgba(0, 122, 254, 0.25)';
+    }
+    html.style.setProperty('--highlight-color', highlightVal);
+  }, [osTheme, resolvedColorScheme, glassEnabled, accentColor, highlightColor]);
 
   const handleOpenApp = useCallback((appConfig: AppConfig) => {
     launchApp(appConfig);
