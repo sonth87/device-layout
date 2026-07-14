@@ -324,7 +324,13 @@ Only events where `detail.appId === appId` reach the callback.
 
 ## Declaring Menu Bar Menus
 
-Set `menuBarMenus` in `AppConfig`. The macOS `MenuBar` reads `apps[activeAppId]?.menuBarMenus` and falls back to `DEFAULT_MENU_BAR_MENUS` when no app is focused.
+Set `menuBarMenus` in `AppConfig`. The same data renders differently depending on the active `osTheme` — no per-platform code needed:
+
+- **macOS** — global top `MenuBar` reads `apps[activeAppId]?.menuBarMenus` (falls back to `DEFAULT_MENU_BAR_MENUS` when no app is focused).
+- **Windows, iPad** — `WindowMenuBar` renders a strip under each window's own title bar, scoped to that window's app regardless of focus (every open window keeps its own menu bar visible, matching real Windows behavior).
+- **iPhone, Android** — a hamburger button in the mobile app viewer's header opens a bottom sheet (`MobileMenuSheet`) built from the same data.
+
+See [integration.md](../integration.md#menu-system-across-platform-modes) for the full cross-platform behavior and the `app:menu:action` event contract (including the optional `windowId` field the Windows/iPad renderer includes).
 
 ```ts
 {
@@ -334,6 +340,9 @@ Set `menuBarMenus` in `AppConfig`. The macOS `MenuBar` reads `apps[activeAppId]?
       label: 'File',
       items: [
         { key: 'new',   label: 'New',   shortcut: '⌘N', action: 'new' },
+        { key: 'open-recent', label: 'Open Recent', children: [
+          { key: 'r1', label: 'report.docx', action: 'openRecent:report.docx' },
+        ]},
         { key: 'sep1',  label: '',      separator: true },
         { key: 'close', label: 'Close', shortcut: '⌘W', action: 'close' },
       ],
@@ -357,9 +366,10 @@ Set `menuBarMenus` in `AppConfig`. The macOS `MenuBar` reads `apps[activeAppId]?
 | `key` | `string` | Unique key within the menu |
 | `label` | `string` | Display text |
 | `action` | `string` | Dispatched via `app:menu:action` event |
-| `shortcut` | `string` | Display-only hint (e.g. `'⌘N'`) |
+| `shortcut` | `string` | Display-only hint (e.g. `'⌘N'`) — not shown on the mobile sheet |
 | `separator` | `boolean` | Renders a horizontal rule; other fields ignored |
 | `disabled` | `boolean` | Grays out and prevents click |
+| `children` | `MenuBarItem[]` | Nested submenu — flyout on macOS/Windows/iPad, inline accordion on iPhone/Android |
 
 ---
 

@@ -2,8 +2,10 @@
 
 import { createContext, useCallback, useContext, useState } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate, useDragControls } from 'motion/react';
+import { Menu } from 'lucide-react';
 import { useStore } from '@/store';
 import { AppContent } from '@/components/apps/AppRegistry';
+import { MobileMenuSheet } from './MobileMenuSheet';
 
 // Apps call this to hide the viewer's own header bar (e.g. when MobileSplitView
 // takes over and shows its own navigation inside the detail panel).
@@ -27,6 +29,7 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
   const setRunning = useStore((s) => s.setRunning);
 
   const [headerHidden, setHeaderHidden] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const openWindows = Object.values(windows)
     .filter((w) => !w.isMinimized)
@@ -99,7 +102,16 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
                 <span className="flex-1 text-center text-[15px] font-semibold text-black dark:text-white truncate">
                   {appConfig.name}
                 </span>
-                <div className="w-5" />
+                {appConfig.menuBarMenus && appConfig.menuBarMenus.length > 0 ? (
+                  <button
+                    onClick={() => setMenuOpen(true)}
+                    className="w-5 h-5 flex items-center justify-center text-blue-500 active:opacity-60 transition-opacity"
+                  >
+                    <Menu className="w-5 h-5" />
+                  </button>
+                ) : (
+                  <div className="w-5" />
+                )}
               </motion.div>
             )}
           </AnimatePresence>
@@ -109,6 +121,15 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
               <AppContent appId={topWindow.appId} windowId={topWindow.id} />
             </HideAppHeaderCtx.Provider>
           </div>
+
+          {appConfig.menuBarMenus && appConfig.menuBarMenus.length > 0 && (
+            <MobileMenuSheet
+              menus={appConfig.menuBarMenus}
+              appId={topWindow.appId}
+              open={menuOpen}
+              onClose={() => setMenuOpen(false)}
+            />
+          )}
 
           <div style={{ height: navBarHeight + homeIndicatorHeight }} />
 

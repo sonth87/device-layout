@@ -24,7 +24,7 @@ export function Window({ windowId }: WindowProps) {
   const exitFullScreen = useStore((s) => s.exitFullScreen);
   const fullscreenChromeRevealed = useStore((s) => s.fullscreenChromeRevealed);
   const apps = useStore((s) => s.apps);
-  const { isFloating, isMobile } = useTheme();
+  const { isFloating, isMobile, config } = useTheme();
 
   // Fullscreen has no chrome (no title bar / green button to click again) —
   // Escape is the only way out, matching real macOS. Only the focused
@@ -137,8 +137,12 @@ export function Window({ windowId }: WindowProps) {
         </motion.div>
       )}
 
-      {/* Optional per-window top menu bar */}
-      {win.hasMenuBar && <WindowMenuBar windowId={windowId} />}
+      {/* Optional per-window top menu bar — only for themes WITHOUT a global
+          MenuBar (Windows, iPad): macOS already renders app menus in its
+          top-level MenuBar (see MacOSTheme.tsx), so WindowMenuBar must stay
+          hidden there even if the app declares hasMenuBar, or the same
+          menuBarMenus would render twice. */}
+      {win.hasMenuBar && !config.hasMenuBar && <WindowMenuBar windowId={windowId} />}
 
       {/* App content */}
       <div className="flex-1 overflow-auto min-h-0 window-body">

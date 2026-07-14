@@ -81,6 +81,11 @@ export type { UpdateActions, UpdateStatus, PickUpdateFileResult, CheckUpdateFn, 
 export { useUpdateStatusStore, hasAvailableUpdate } from '@/lib/update-status-store';
 export { useAssetBase, resolveAssetUrl } from '@/lib/asset-base';
 /**
+ * Subscribe to menu-bar / context-menu action CustomEvents dispatched for a
+ * given appId — see docs/integration.md's "Action events reference".
+ */
+export { useMenuAction, useContextAction } from '@/hooks/useMenuAction';
+/**
  * Built-in demo apps (Finder, Notes, Calendar, Photos, Music, Terminal,
  * Settings, ...) — same list ThemeProvider defaults to when no `apps` prop
  * is passed. A host that wants both its own apps AND these built-ins

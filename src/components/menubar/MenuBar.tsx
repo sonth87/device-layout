@@ -9,7 +9,7 @@ import {
   useContext,
 } from "react";
 import { createPortal } from "react-dom";
-import { Wifi, Battery, Search, X } from "lucide-react";
+import { Wifi, Battery, Search, X, ChevronRight } from "lucide-react";
 import { useStore } from "@/store";
 import { MenuBarClock } from "./MenuBarClock";
 import { ControlCenter } from "./ControlCenter";
@@ -19,19 +19,21 @@ import { cn } from "@/lib/utils";
 import type { MenuBarMenu, MenuBarItem, AppConfig } from "@/types/app";
 
 // ─── MenuBar theme context (avoids prop-drilling to every button) ─────────────
-const MenuBarThemeCtx = createContext<"light" | "dark">("dark");
+export const MenuBarThemeCtx = createContext<"light" | "dark">("dark");
 /** Returns Tailwind classes for an inactive menu-bar button. */
-function useMenuBtnClass() {
+export function useMenuBtnClass() {
   const theme = useContext(MenuBarThemeCtx);
   return theme === "light"
     ? "text-black/80 hover:bg-black/10"
     : "text-white/85 hover:bg-white/10";
 }
 
-const menuBarButtonClass =
+export const menuBarButtonClass =
   "flex h-6 items-center rounded-md px-2.5 text-[13px] leading-none transition-colors";
 
 // ─── Dropdown panel (portaled to body to escape overflow-hidden) ─────────────
+// Exported — WindowMenuBar.tsx (Windows/iPad per-window menu) và mobile menu
+// tái dùng thay vì duplicate logic portal/positioning/click-outside.
 
 interface DropdownPanelProps {
   anchorRef: React.RefObject<HTMLElement | null>;
@@ -41,7 +43,7 @@ interface DropdownPanelProps {
   children: React.ReactNode;
 }
 
-function DropdownPanel({
+export function DropdownPanel({
   anchorRef,
   open,
   onClose,
@@ -89,7 +91,7 @@ function DropdownPanel({
 
 // ─── Shared item components ──────────────────────────────────────────────────
 
-function MenuItem({
+export function MenuItem({
   label,
   shortcut,
   disabled,
@@ -119,13 +121,109 @@ function MenuItem({
   );
 }
 
-function MenuSeparator() {
+export function MenuSeparator() {
   return <div className="my-1 mx-2 h-px bg-black/10 dark:bg-white/10" />;
+}
+
+// ─── Recursive menu item — handles items with nested `children` (submenu flyout) ─
+//
+// Tự viết thay vì Radix DropdownMenu.Sub: đã thử Radix trong 1 prototype
+// (branch feat/menubar-radix-submenu, rollback) — Root/Trigger's controlled
+// `open` (cần thiết để giữ hover-chain giữa các menu top-level qua
+// activeDropdownId dùng chung) xung đột với focus-scope nội bộ của Radix,
+// khiến cả pointer lẫn keyboard nav bên trong Content không hoạt động. Tự
+// viết flyout neo theo getBoundingClientRect() của item cha, cùng cơ chế
+// click-outside/portal như DropdownPanel.
+export function MenuItemRow({
+  item,
+  t,
+  onSelect,
+}: {
+  item: MenuBarItem;
+  t: any;
+  onSelect: (item: MenuBarItem) => void;
+}) {
+  const [subOpen, setSubOpen] = useState(false);
+  const [subPos, setSubPos] = useState<{ top: number; left: number } | null>(null);
+  const rowRef = useRef<HTMLButtonElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const hasChildren = !!item.children && item.children.length > 0;
+
+  const openSub = useCallback(() => {
+    if (closeTimer.current) { clearTimeout(closeTimer.current); closeTimer.current = null; }
+    if (!rowRef.current) return;
+    const rect = rowRef.current.getBoundingClientRect();
+    setSubPos({ top: rect.top - 4, left: rect.right + 2 });
+    setSubOpen(true);
+  }, []);
+
+  const closeSubDelayed = useCallback(() => {
+    closeTimer.current = setTimeout(() => setSubOpen(false), 150);
+  }, []);
+
+  useEffect(() => () => { if (closeTimer.current) clearTimeout(closeTimer.current); }, []);
+
+  if (!hasChildren) {
+    return (
+      <MenuItem
+        label={getMenuItemLabel(item.label, t)}
+        shortcut={item.shortcut}
+        disabled={item.disabled}
+        onClick={() => onSelect(item)}
+      />
+    );
+  }
+
+  return (
+    <div
+      onMouseEnter={openSub}
+      onMouseLeave={closeSubDelayed}
+    >
+      <button
+        ref={rowRef}
+        disabled={item.disabled}
+        className={cn(
+          "w-full flex items-center justify-between px-3 py-1.5 text-[13px] transition-colors cursor-default rounded-lg",
+          item.disabled
+            ? "text-black/30 dark:text-white/30"
+            : subOpen
+              ? "bg-accent-active text-white"
+              : "hover:bg-accent-active hover:text-white",
+        )}
+      >
+        <span>{getMenuItemLabel(item.label, t)}</span>
+        <ChevronRight className="w-3 h-3 ml-6 opacity-60" />
+      </button>
+
+      {subOpen && subPos && typeof document !== "undefined" &&
+        createPortal(
+          <div
+            data-menu-portal="true"
+            className="fixed z-[99999] outline-none"
+            style={{ top: subPos.top, left: subPos.left, minWidth: 192 }}
+            onMouseEnter={openSub}
+            onMouseLeave={closeSubDelayed}
+          >
+            <LiquidGlass variant="panel" className="py-1 px-1 w-full">
+              {item.children!.map((child, i) =>
+                child.separator ? (
+                  <MenuSeparator key={`sep-${i}`} />
+                ) : (
+                  <MenuItemRow key={child.key} item={child} t={t} onSelect={onSelect} />
+                ),
+              )}
+            </LiquidGlass>
+          </div>,
+          document.body,
+        )}
+    </div>
+  );
 }
 
 import { useTranslation, TranslationKey } from "@/hooks/useTranslation";
 
-function getMenuLabel(label: string, t: any) {
+export function getMenuLabel(label: string, t: any) {
   const map: Record<string, TranslationKey> = {
     File: "menuFile",
     Edit: "menuEdit",
@@ -141,7 +239,7 @@ function getMenuLabel(label: string, t: any) {
   return key ? t[key] : label;
 }
 
-function getMenuItemLabel(label: string, t: any) {
+export function getMenuItemLabel(label: string, t: any) {
   const map: Record<string, TranslationKey> = {
     "New Window": "menuNewWindow",
     "New Tab": "menuNewTab",
@@ -269,16 +367,19 @@ function AppNameDropdown({
 
 // ─── Generic Menu Dropdown ───────────────────────────────────────────────────
 
-function MenuDropdown({
+export function MenuDropdown({
   label,
   items,
   appId,
+  windowId,
   activeId,
   setActiveId,
 }: {
   label: string;
   items: MenuBarItem[];
   appId: string | null;
+  /** Included in the dispatched CustomEvent when set — see WindowMenuBar.tsx (Windows/iPad per-window menu). Omit for the global macOS menu bar. */
+  windowId?: string;
   activeId: string | null;
   setActiveId: (id: string | null) => void;
 }) {
@@ -302,7 +403,7 @@ function MenuDropdown({
     if (item.action && appId) {
       window.dispatchEvent(
         new CustomEvent("app:menu:action", {
-          detail: { appId, action: item.action },
+          detail: { appId, action: item.action, windowId },
         }),
       );
     }
@@ -337,13 +438,7 @@ function MenuDropdown({
           item.separator ? (
             <MenuSeparator key={`sep-${i}`} />
           ) : (
-            <MenuItem
-              key={item.key}
-              label={getMenuItemLabel(item.label, t)}
-              shortcut={item.shortcut}
-              disabled={item.disabled}
-              onClick={() => handleItemClick(item)}
-            />
+            <MenuItemRow key={item.key} item={item} t={t} onSelect={handleItemClick} />
           ),
         )}
       </DropdownPanel>
