@@ -190,13 +190,8 @@ export function Calendar({ appId }: AppContentProps) {
       {isSidebarOpen && (
         <aside className="w-56 shrink-0 border-r border-black/10 dark:border-white/10 bg-[#f3f3f3]/95 dark:bg-[#1f2023]/95 p-3 flex flex-col justify-between select-none">
           <div>
-            {/* Traffic Lights Spacer */}
-            <div className="h-6 flex items-center justify-between mb-4">
-              <div className="flex gap-1.5 pl-1">
-                <div className="w-3.5 h-3.5 rounded-full bg-[#ff5f56]" />
-                <div className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e]" />
-                <div className="w-3.5 h-3.5 rounded-full bg-[#27c93f]" />
-              </div>
+            {/* Top Toolbar Spacer & Action Icons */}
+            <div className="h-6 flex items-center justify-end mb-4">
               {/* Top Toolbar Action Icons */}
               <div className="flex items-center gap-2 pr-1">
                 <button
@@ -415,76 +410,23 @@ export function Calendar({ appId }: AppContentProps) {
               </button>
 
               {showAddPopover && (
-                <div className="absolute top-9 left-0 z-50 w-72 bg-white/95 dark:bg-[#2c2d30]/95 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-2xl p-4 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 text-black dark:text-white">
-                  {/* Notch */}
-                  <div className="absolute -top-1.5 left-2.5 w-3 h-3 bg-white dark:bg-[#2c2d30] rotate-45 border-t border-l border-black/10 dark:border-white/10" />
+                <>
+                  <div
+                    className="fixed inset-0 z-40 bg-transparent"
+                    onClick={() => setShowAddPopover(false)}
+                  />
+                  <div className="absolute top-9 left-0 z-50 w-72 bg-white/95 dark:bg-[#2c2d30]/95 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-2xl p-4 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 text-black dark:text-white">
+                    {/* Notch */}
+                    <div className="absolute -top-1.5 left-2.5 w-3 h-3 bg-white dark:bg-[#2c2d30] rotate-45 border-t border-l border-black/10 dark:border-white/10" />
 
-                  {/* Buttons: New Event, New Reminder */}
-                  <div className="grid grid-cols-2 gap-4 mb-4 relative z-10">
-                    <button
-                      onClick={() => {
-                        const title = quickTitle.trim() || "New Event";
-                        const newEv: CalEvent = {
-                          id: crypto.randomUUID(),
-                          title,
-                          date: dateKey(selectedDate),
-                          timeStart: "12:00",
-                          timeEnd: "13:00",
-                          calendarId: "personal",
-                        };
-                        setEvents((prev) => [...prev, newEv]);
-                        setQuickTitle("");
-                        setShowAddPopover(false);
-                      }}
-                      className="flex flex-col items-center gap-1.5 p-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all focus:outline-none cursor-pointer"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center">
-                        <CalendarDays className="w-5 h-5 text-black/70 dark:text-white/70" />
-                      </div>
-                      <span className="text-xs font-semibold">New Event</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        const title = quickTitle.trim() || "New Reminder";
-                        const newEv: CalEvent = {
-                          id: crypto.randomUUID(),
-                          title,
-                          date: dateKey(selectedDate),
-                          timeStart: "12:00",
-                          timeEnd: "13:00",
-                          calendarId: "reminders",
-                        };
-                        setEvents((prev) => [...prev, newEv]);
-                        setQuickTitle("");
-                        setShowAddPopover(false);
-                      }}
-                      className="flex flex-col items-center gap-1.5 p-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all focus:outline-none cursor-pointer"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center">
-                        <ListTodo className="w-5 h-5 text-black/70 dark:text-white/70" />
-                      </div>
-                      <span className="text-xs font-semibold">New Reminder</span>
-                    </button>
-                  </div>
-
-                  {/* Divider */}
-                  <div className="border-t border-black/10 dark:border-white/10 my-3" />
-
-                  {/* Create Quick Event Input */}
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] font-semibold text-black/40 dark:text-white/40 uppercase tracking-wider pl-1">
-                      Create Quick Event
-                    </label>
-                    <input
-                      type="text"
-                      value={quickTitle}
-                      onChange={(e) => setQuickTitle(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && quickTitle.trim()) {
+                    {/* Buttons: New Event, New Reminder */}
+                    <div className="grid grid-cols-2 gap-4 mb-4 relative z-10">
+                      <button
+                        onClick={() => {
+                          const title = quickTitle.trim() || "New Event";
                           const newEv: CalEvent = {
                             id: crypto.randomUUID(),
-                            title: quickTitle.trim(),
+                            title,
                             date: dateKey(selectedDate),
                             timeStart: "12:00",
                             timeEnd: "13:00",
@@ -493,14 +435,73 @@ export function Calendar({ appId }: AppContentProps) {
                           setEvents((prev) => [...prev, newEv]);
                           setQuickTitle("");
                           setShowAddPopover(false);
-                        }
-                      }}
-                      placeholder="Movie at 7pm on Friday"
-                      className="w-full px-3 py-1.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg text-xs focus:outline-none caret-[#ff3b30] text-black dark:text-white"
-                      autoFocus
-                    />
+                        }}
+                        className="flex flex-col items-center gap-1.5 p-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all focus:outline-none cursor-pointer"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center">
+                          <CalendarDays className="w-5 h-5 text-black/70 dark:text-white/70" />
+                        </div>
+                        <span className="text-xs font-semibold">New Event</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          const title = quickTitle.trim() || "New Reminder";
+                          const newEv: CalEvent = {
+                            id: crypto.randomUUID(),
+                            title,
+                            date: dateKey(selectedDate),
+                            timeStart: "12:00",
+                            timeEnd: "13:00",
+                            calendarId: "reminders",
+                          };
+                          setEvents((prev) => [...prev, newEv]);
+                          setQuickTitle("");
+                          setShowAddPopover(false);
+                        }}
+                        className="flex flex-col items-center gap-1.5 p-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all focus:outline-none cursor-pointer"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center">
+                          <ListTodo className="w-5 h-5 text-black/70 dark:text-white/70" />
+                        </div>
+                        <span className="text-xs font-semibold">New Reminder</span>
+                      </button>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-t border-black/10 dark:border-white/10 my-3" />
+
+                    {/* Create Quick Event Input */}
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-semibold text-black/40 dark:text-white/40 uppercase tracking-wider pl-1">
+                        Create Quick Event
+                      </label>
+                      <input
+                        type="text"
+                        value={quickTitle}
+                        onChange={(e) => setQuickTitle(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && quickTitle.trim()) {
+                            const newEv: CalEvent = {
+                              id: crypto.randomUUID(),
+                              title: quickTitle.trim(),
+                              date: dateKey(selectedDate),
+                              timeStart: "12:00",
+                              timeEnd: "13:00",
+                              calendarId: "personal",
+                            };
+                            setEvents((prev) => [...prev, newEv]);
+                            setQuickTitle("");
+                            setShowAddPopover(false);
+                          }
+                        }}
+                        placeholder="Movie at 7pm on Friday"
+                        className="w-full px-3 py-1.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg text-xs focus:outline-none caret-[#ff3b30] text-black dark:text-white"
+                        autoFocus
+                      />
+                    </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
           </div>
