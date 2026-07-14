@@ -21,6 +21,14 @@ export function ControlCenter() {
     ? 'text-black/70 hover:bg-black/10'
     : 'text-white/80 hover:bg-white/10';
 
+  const textPrimary = wallpaperTextTheme === 'light' ? 'text-black/90' : 'text-white/90';
+  const textSecondary = wallpaperTextTheme === 'light' ? 'text-black/55' : 'text-white/55';
+  const textTertiary = wallpaperTextTheme === 'light' ? 'text-black/45' : 'text-white/45';
+  const subBg = wallpaperTextTheme === 'light' ? 'bg-black/5' : 'bg-white/5';
+  const appearanceBtnCls = wallpaperTextTheme === 'light'
+    ? 'hover:bg-black/10 text-black/70'
+    : 'hover:bg-white/10 text-white/80';
+
   return (
     <Popover.Root open={open} onOpenChange={setOpen} modal={false}>
       <Popover.Trigger asChild>
@@ -46,19 +54,19 @@ export function ControlCenter() {
           <LiquidGlass variant="panel" className="p-4 w-full">
             <div className="grid grid-cols-2 gap-3">
             {/* WiFi */}
-            <div className="bg-black/5 dark:bg-white/5 rounded-[var(--radius-input)] p-3 flex items-center gap-2">
+            <div className={cn("rounded-[var(--radius-input)] p-3 flex items-center gap-2", subBg)}>
               <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shrink-0">
                 <Wifi className="w-4 h-4 text-white" />
               </div>
               <div>
-                <p className="text-xs font-semibold text-black/90 dark:text-white/90">Wi-Fi</p>
-                <p className="text-[10px] text-black/50 dark:text-white/50">Connected</p>
+                <p className={cn("text-xs font-semibold", textPrimary)}>Wi-Fi</p>
+                <p className={cn("text-[10px]", textSecondary)}>Connected</p>
               </div>
             </div>
 
             {/* Color scheme */}
-            <div className="bg-black/5 dark:bg-white/5 rounded-[var(--radius-input)] p-3">
-              <p className="text-xs font-semibold text-black/90 dark:text-white/90 mb-2">Appearance</p>
+            <div className={cn("rounded-[var(--radius-input)] p-3", subBg)}>
+              <p className={cn("text-xs font-semibold mb-2", textPrimary)}>Appearance</p>
               <div className="flex gap-1">
                 {[
                   { id: 'light' as const, icon: <Sun className="w-3 h-3" /> },
@@ -72,7 +80,7 @@ export function ControlCenter() {
                       'flex-1 flex items-center justify-center py-1 rounded-md text-[10px] transition-colors',
                       colorScheme === id
                         ? 'bg-blue-500 text-white'
-                        : 'hover:bg-black/10 dark:hover:bg-white/10'
+                        : appearanceBtnCls
                     )}
                   >
                     {icon}
@@ -82,11 +90,11 @@ export function ControlCenter() {
             </div>
 
             {/* Brightness */}
-            <div className="col-span-2 bg-black/5 dark:bg-white/5 rounded-[var(--radius-input)] p-3">
+            <div className={cn("col-span-2 rounded-[var(--radius-input)] p-3", subBg)}>
               <div className="flex items-center gap-2 mb-2">
-                <Sun className="w-3 h-3" />
-                <p className="text-xs font-semibold text-black/90 dark:text-white/90">Brightness</p>
-                <span className="text-[10px] text-black/40 dark:text-white/40 ml-auto">{brightness}%</span>
+                <Sun className={cn("w-3 h-3", textPrimary)} />
+                <p className={cn("text-xs font-semibold", textPrimary)}>Brightness</p>
+                <span className={cn("text-[10px] ml-auto", textTertiary)}>{brightness}%</span>
               </div>
               <input
                 type="range"
@@ -99,11 +107,11 @@ export function ControlCenter() {
             </div>
 
             {/* Volume */}
-            <div className="col-span-2 bg-black/5 dark:bg-white/5 rounded-[var(--radius-input)] p-3">
+            <div className={cn("col-span-2 rounded-[var(--radius-input)] p-3", subBg)}>
               <div className="flex items-center gap-2 mb-2">
-                <Volume2 className="w-3 h-3" />
-                <p className="text-xs font-semibold text-black/90 dark:text-white/90">Sound</p>
-                <span className="text-[10px] text-black/40 dark:text-white/40 ml-auto">{volume}%</span>
+                <Volume2 className={cn("w-3 h-3", textPrimary)} />
+                <p className={cn("text-xs font-semibold", textPrimary)}>Sound</p>
+                <span className={cn("text-[10px] ml-auto", textTertiary)}>{volume}%</span>
               </div>
               <input
                 type="range"
@@ -116,8 +124,8 @@ export function ControlCenter() {
             </div>
 
             {/* Glass toggle */}
-            <div className="col-span-2 bg-black/5 dark:bg-white/5 rounded-[var(--radius-input)] p-3 flex items-center justify-between">
-              <p className="text-xs font-semibold text-black/90 dark:text-white/90">Liquid Glass</p>
+            <div className={cn("col-span-2 rounded-[var(--radius-input)] p-3 flex items-center justify-between", subBg)}>
+              <p className={cn("text-xs font-semibold", textPrimary)}>Liquid Glass</p>
               <button
                 onClick={() => setGlassEnabled(!glassEnabled)}
                 className={cn(
@@ -138,3 +146,4 @@ export function ControlCenter() {
     </Popover.Root>
   );
 }
+

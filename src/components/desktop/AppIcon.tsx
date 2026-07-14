@@ -20,6 +20,9 @@ interface AppIconProps {
   onDrop: (x: number, y: number) => void;
   onDragStart?: () => void;
   onDrag?: (x: number, y: number) => void;
+  isSelected?: boolean;
+  onSelect?: (appId: string, e: React.PointerEvent) => void;
+  onUpAfterClick?: (appId: string) => void;
 }
 
 /** Tiny context menu list, shared between desktop (Radix) and mobile (portal overlay). */
@@ -144,6 +147,9 @@ export function AppIcon({
   onDrop,
   onDragStart,
   onDrag,
+  isSelected = false,
+  onSelect,
+  onUpAfterClick,
 }: AppIconProps) {
   const iconSize = useStore((s) => s.desktopIconSize);
   const labelPosition = useStore((s) => s.desktopLabelPosition);
@@ -184,6 +190,10 @@ export function AppIcon({
     e.stopPropagation();
     setPressed(true);
     isTouchRef.current = e.pointerType === "touch";
+
+    if (onSelect) {
+      onSelect(appConfig.id, e);
+    }
 
     dragRef.current = {
       startMouseX: e.clientX,
@@ -264,6 +274,9 @@ export function AppIcon({
         // Commit drag position
         onDrop(x + dx, y + dy);
       } else {
+        if (onUpAfterClick) {
+          onUpAfterClick(appConfig.id);
+        }
         // It's a click — handle double-click-to-open
         clickCountRef.current += 1;
         if (clickCountRef.current === 2) {
@@ -298,6 +311,8 @@ export function AppIcon({
       <ContextMenu.Root>
         <ContextMenu.Trigger asChild>
           <div
+            data-app-icon="true"
+            data-app-id={appConfig.id}
             className={cn(
               "absolute pointer-events-auto",
               appConfig.disabled && "opacity-40 pointer-events-none",
@@ -314,10 +329,12 @@ export function AppIcon({
           >
             <button
               className={cn(
-                "flex w-full items-center select-none",
+                "flex w-full items-center select-none rounded-lg",
                 labelPosition === 'bottom' ? "flex-col text-center gap-2 p-2.5" : "flex-row text-left gap-3 p-2",
-                "hover:bg-white/15 focus:outline-none",
-                "transition-transform duration-75",
+                "focus:outline-none transition-transform duration-75",
+                isSelected
+                  ? "bg-blue-500/20 ring-1 ring-blue-500/35"
+                  : "hover:bg-white/15",
                 pressed && !dragging && "scale-90 opacity-80",
                 dragging && "scale-105 opacity-90 drop-shadow-2xl",
               )}

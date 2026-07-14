@@ -41,6 +41,7 @@ export function Dock({ onOpenApp }: DockProps) {
      * magnified portion of icons that overflow above the dock glass.
      */
     <div
+      data-dock="true"
       className="relative overflow-visible"
       style={{ paddingTop: hoverOverflow }}
       onMouseMove={(e) => mouseX.set(e.clientX)}

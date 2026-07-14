@@ -65,7 +65,7 @@ export function WindowManager() {
   return (
     // Full-screen layer — pointer-events-none so clicks pass through to desktop
     // Individual Window components handle their own pointer events
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
       <SnapAssist />
       <AnimatePresence>
         {windowIds.map((id) => (

@@ -72,6 +72,7 @@ export function WidgetCard({ instance }: Props) {
 
   return (
     <motion.div
+      data-widget="true"
       className="absolute"
       style={{ left: pos.x, top: pos.y, width: w, height: h, zIndex: isEditing ? 1001 : 5 }}
       animate={isEditing ? { rotate: [-0.8, 0.8, -0.8] } : { rotate: 0 }}
