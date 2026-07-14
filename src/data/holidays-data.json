@@ -1,0 +1,40 @@
+{
+  "solar": [
+    { "month": 1, "day": 1, "name": "Tết Dương lịch", "isRed": true },
+    { "month": 2, "day": 3, "name": "Ngày thành lập Đảng Cộng sản Việt Nam" },
+    { "month": 2, "day": 14, "name": "Lễ tình nhân (Valentine's Day)" },
+    { "month": 2, "day": 27, "name": "Ngày Thầy thuốc Việt Nam" },
+    { "month": 3, "day": 8, "name": "Ngày Quốc tế Phụ nữ (8/3)" },
+    { "month": 3, "day": 26, "name": "Ngày thành lập Đoàn TNCS Hồ Chí Minh" },
+    { "month": 4, "day": 30, "name": "Ngày Chiến thắng (30/4)", "isRed": true },
+    { "month": 5, "day": 1, "name": "Ngày Quốc tế Lao động (1/5)", "isRed": true },
+    { "month": 5, "day": 7, "name": "Ngày Chiến thắng Điện Biên Phủ" },
+    { "month": 5, "day": 19, "name": "Ngày sinh Chủ tịch Hồ Chí Minh" },
+    { "month": 6, "day": 1, "name": "Ngày Quốc tế Thiếu nhi (1/6)" },
+    { "month": 6, "day": 28, "name": "Ngày Gia đình Việt Nam" },
+    { "month": 7, "day": 27, "name": "Ngày Thương binh Liệt sĩ" },
+    { "month": 8, "day": 19, "name": "Ngày Cách mạng tháng Tám thành công" },
+    { "month": 9, "day": 2, "name": "Ngày Quốc khánh (2/9)", "isRed": true },
+    { "month": 9, "day": 3, "name": "Ngày Quốc khánh (cộng thêm)", "isRed": true },
+    { "month": 10, "day": 10, "name": "Ngày Giải phóng Thủ đô" },
+    { "month": 10, "day": 20, "name": "Ngày Phụ nữ Việt Nam (20/10)" },
+    { "month": 11, "day": 20, "name": "Ngày Nhà giáo Việt Nam (20/11)" },
+    { "month": 12, "day": 22, "name": "Ngày thành lập Quân đội Nhân dân Việt Nam" },
+    { "month": 12, "day": 24, "name": "Lễ Giáng sinh (Christmas Eve)" },
+    { "month": 12, "day": 25, "name": "Lễ Giáng sinh (Christmas Day)" }
+  ],
+  "lunar": [
+    { "month": 1, "day": 1, "name": "Tết Nguyên Đán (Mùng 1)", "isRed": true },
+    { "month": 1, "day": 2, "name": "Tết Nguyên Đán (Mùng 2)", "isRed": true },
+    { "month": 1, "day": 3, "name": "Tết Nguyên Đán (Mùng 3)", "isRed": true },
+    { "month": 1, "day": 4, "name": "Tết Nguyên Đán (Mùng 4)", "isRed": true },
+    { "month": 1, "day": 5, "name": "Tết Nguyên Đán (Mùng 5)", "isRed": true },
+    { "month": 1, "day": 15, "name": "Tết Thượng Nguyên (Rằm tháng Giêng)" },
+    { "month": 3, "day": 3, "name": "Tết Hàn Thực (3/3)" },
+    { "month": 3, "day": 10, "name": "Giỗ tổ Hùng Vương (10/3)", "isRed": true },
+    { "month": 5, "day": 5, "name": "Tết Đoan Ngọ (5/5)" },
+    { "month": 7, "day": 15, "name": "Lễ Vu Lan (Rằm tháng Bảy)" },
+    { "month": 8, "day": 15, "name": "Tết Trung Thu (Rằm tháng Tám)" },
+    { "month": 12, "day": 23, "name": "Tiễn Táo Quân chầu trời (23/12)" }
+  ]
+}
