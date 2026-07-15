@@ -17,8 +17,10 @@
 /.next/
 /out/
 
-# library build (vite build:lib)
-/dist-lib/
+# library build (vite build:lib) — COMMITTED intentionally so sky-app can
+# consume this package as a git dependency (github:sonth87/device-layout#<tag>)
+# without a prepare/build step. Rebuild + commit before tagging a release.
+# /dist-lib/
 
 # production
 /build
