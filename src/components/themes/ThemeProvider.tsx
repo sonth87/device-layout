@@ -56,6 +56,21 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
 
   const [spotlightOpen, setSpotlightOpen] = useState(false);
   const [appSwitcherOpen, setAppSwitcherOpen] = useState(false);
+  const [isRealMobile, setIsRealMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+      const isNarrow = window.innerWidth <= 768;
+      setIsRealMobile(isMobileUA || isNarrow);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useKeyboardShortcuts({
     onSpotlight: () => setSpotlightOpen((v) => !v),
@@ -137,7 +152,6 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
   // Phone frame: fill available height (up to 926px), derive width from 393:852 ratio
   const PHONE_RATIO = 393 / 852;
   const PHONE_MAX_H = 926;
-  const PHONE_MAX_W = Math.round(PHONE_MAX_H * PHONE_RATIO); // 427px
 
   return (
     <div
@@ -172,16 +186,22 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
 
       {isMobile ? (
         /* ── Phone frame: fills viewport on small screens, capped on large ── */
-        <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+        <div className={cn(
+          "absolute inset-0 flex items-center justify-center",
+          isRealMobile ? "bg-transparent" : "bg-black/60"
+        )}>
           <div
-            className="relative overflow-hidden shadow-2xl ring-1 ring-white/10"
+            className={cn(
+              "relative overflow-hidden",
+              !isRealMobile && "shadow-2xl ring-1 ring-white/10"
+            )}
             style={{
-              // Height: fill 100dvh with small padding, capped at PHONE_MAX_H
-              height: `min(calc(100dvh - 32px), ${PHONE_MAX_H}px)`,
-              // Width: derived from ratio, capped at PHONE_MAX_W; never exceeds 100vw
-              width: `min(calc((min(calc(100dvh - 32px), ${PHONE_MAX_H}px)) * ${PHONE_RATIO}), 100vw)`,
-              // Border-radius scales with height: 44px at max, smaller on small screens
-              borderRadius: `min(44px, calc(min(calc(100dvh - 32px), ${PHONE_MAX_H}px) * 0.047))`,
+              // Height: fill 100dvh with small padding, capped at PHONE_MAX_H (stretches to 100% on real mobile)
+              height: isRealMobile ? "100%" : `min(calc(100dvh - 32px), ${PHONE_MAX_H}px)`,
+              // Width: derived from ratio, capped at PHONE_MAX_W (stretches to 100% on real mobile)
+              width: isRealMobile ? "100%" : `min(calc((min(calc(100dvh - 32px), ${PHONE_MAX_H}px)) * ${PHONE_RATIO}), 100vw)`,
+              // Border-radius scales with height: 44px at max (flat 0px on real mobile)
+              borderRadius: isRealMobile ? "0px" : `min(44px, calc(min(calc(100dvh - 32px), ${PHONE_MAX_H}px) * 0.047))`,
             }}
           >
             {/* Wallpaper fills the phone frame */}
