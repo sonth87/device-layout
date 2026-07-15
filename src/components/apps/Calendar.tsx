@@ -11,7 +11,8 @@ import { DayView } from "./calendar/DayView";
 import { WeekView } from "./calendar/WeekView";
 import { MonthView } from "./calendar/MonthView";
 import { YearView } from "./calendar/YearView";
-import { dateKey, getLunarDateFullString, getHolidayEventsForYear, type CalEvent } from "./calendar/types";
+import { dateKey, getLunarDateFullString, type CalEvent } from "./calendar/types";
+import { useHolidays } from "@/hooks/useHolidays";
 
 import calendarData from "@/data/calendar-data.json";
 
@@ -19,7 +20,7 @@ const CALENDARS = calendarData.calendars;
 const INITIAL_EVENTS: CalEvent[] = calendarData.events;
 
 export function Calendar({ appId }: AppContentProps) {
-  const { language } = useTranslation();
+  const { t, language } = useTranslation();
   void appId;
 
   // Set default starting date exactly to July 14, 2026 as in user request screenshots
@@ -140,15 +141,21 @@ export function Calendar({ appId }: AppContentProps) {
     );
   };
 
-  // Dynamically compute holiday events for current, previous, and next year
+  // Load holiday events via hook (country-aware, fetches Apple ICS + JSON base)
+  const y = currentDate.getFullYear();
+  const holidayYears = useMemo(() => [y - 1, y, y + 1], [y]);
+  const { holidays: mergedHolidays, isRedHoliday } = useHolidays(holidayYears);
+
   const holidayEvents = useMemo(() => {
-    const y = currentDate.getFullYear();
-    return [
-      ...getHolidayEventsForYear(y - 1),
-      ...getHolidayEventsForYear(y),
-      ...getHolidayEventsForYear(y + 1),
-    ];
-  }, [currentDate]);
+    return mergedHolidays.map((h) => ({
+      id: `holiday-${h.date}`,
+      title: h.name,
+      date: h.date,
+      timeStart: "00:00",
+      timeEnd: "23:59",
+      calendarId: "holidays",
+    }));
+  }, [mergedHolidays]);
 
   const allEvents = useMemo(() => {
     return [...events, ...holidayEvents];
@@ -340,6 +347,7 @@ export function Calendar({ appId }: AppContentProps) {
             <MiniCalendar
               targetDate={currentDate}
               selectedDate={selectedDate}
+              isRedHoliday={isRedHoliday}
               onDaySelect={(d) => {
                 setSelectedDate(d);
                 setCurrentDate(d);
@@ -441,9 +449,9 @@ export function Calendar({ appId }: AppContentProps) {
                         <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center">
                           <CalendarDays className="w-5 h-5 text-black/70 dark:text-white/70" />
                         </div>
-                        <span className="text-xs font-semibold">New Event</span>
+                        <span className="text-xs font-semibold">{t.calNewEvent}</span>
                       </button>
-
+ 
                       <button
                         onClick={() => {
                           const title = quickTitle.trim() || "New Reminder";
@@ -464,7 +472,7 @@ export function Calendar({ appId }: AppContentProps) {
                         <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center">
                           <ListTodo className="w-5 h-5 text-black/70 dark:text-white/70" />
                         </div>
-                        <span className="text-xs font-semibold">New Reminder</span>
+                        <span className="text-xs font-semibold">{t.calNewReminder}</span>
                       </button>
                     </div>
 
@@ -474,7 +482,7 @@ export function Calendar({ appId }: AppContentProps) {
                     {/* Create Quick Event Input */}
                     <div className="space-y-1.5">
                       <label className="text-[11px] font-semibold text-black/40 dark:text-white/40 uppercase tracking-wider pl-1">
-                        Create Quick Event
+                        {t.calCreateQuickEvent}
                       </label>
                       <input
                         type="text"
@@ -495,7 +503,7 @@ export function Calendar({ appId }: AppContentProps) {
                             setShowAddPopover(false);
                           }
                         }}
-                        placeholder="Movie at 7pm on Friday"
+                        placeholder={t.calQuickEventPlaceholder}
                         className="w-full px-3 py-1.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg text-xs focus:outline-none caret-[#ff3b30] text-black dark:text-white"
                         autoFocus
                       />
@@ -519,13 +527,13 @@ export function Calendar({ appId }: AppContentProps) {
                   }
                 }}
                 className={cn(
-                  "px-4 py-1 text-xs font-semibold rounded-full transition-all focus:outline-none capitalize cursor-pointer",
+                  "px-4 py-1 text-xs font-semibold rounded-full transition-all focus:outline-none cursor-pointer",
                   currentView === view
                     ? "bg-white dark:bg-neutral-800 text-black dark:text-white shadow-sm"
                     : "text-black/50 dark:text-white/50 hover:text-black dark:hover:text-white",
                 )}
               >
-                {view}
+                {view === "day" ? t.calDay : view === "week" ? t.calWeek : view === "month" ? t.calMonth : t.calYear}
               </button>
             ))}
           </div>
@@ -575,7 +583,7 @@ export function Calendar({ appId }: AppContentProps) {
                       </span>
                       <span className="flex items-center gap-1.5">
                         <span className="w-3 h-0.5 bg-red-500 rounded animate-pulse" />
-                        <span className="text-black/50 dark:text-white/50 font-sans">Ngày đầu tiên của tháng âm lịch</span>
+                        <span className="text-black/50 dark:text-white/50 font-sans">{t.calLunarFirstDay}</span>
                       </span>
                     </div>
                   )}
@@ -620,7 +628,7 @@ export function Calendar({ appId }: AppContentProps) {
                   onClick={jumpToToday}
                   className="px-3 py-0.5 text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 rounded text-black/85 dark:text-white/85 cursor-pointer"
                 >
-                  Today
+                  {t.calToday}
                 </button>
                 <button
                   onClick={() => navigate("next")}
@@ -664,6 +672,7 @@ export function Calendar({ appId }: AppContentProps) {
                   setSelectedDate={setSelectedDate}
                   setCurrentView={setCurrentView}
                   filteredEvents={filteredEvents}
+                  isRedHoliday={isRedHoliday}
                   onEventClick={handleEventClick}
                 />
               )}
@@ -674,6 +683,7 @@ export function Calendar({ appId }: AppContentProps) {
                   setSelectedDate={setSelectedDate}
                   setCurrentView={setCurrentView}
                   filteredEvents={filteredEvents}
+                  isRedHoliday={isRedHoliday}
                   onEventClick={handleEventClick}
                 />
               )}
@@ -730,10 +740,10 @@ export function Calendar({ appId }: AppContentProps) {
             <div className="bg-black/[0.03] dark:bg-white/5 rounded-xl p-3 space-y-1 text-xs text-black/80 dark:text-white/90 border border-black/5 dark:border-white/5">
               <p className="font-semibold text-black/90 dark:text-white/95">{popoverFormattedDate}</p>
               <div className="flex items-center justify-between text-[11px] text-black/50 dark:text-white/60">
-                <span>{activePopoverEvent.calendarId === "holidays" ? "Repeats yearly" : "Does not repeat"}</span>
-                {activePopoverEvent.calendarId === "holidays" && (
-                  <span className="text-[10px]">🔄</span>
-                )}
+              <span>{activePopoverEvent.calendarId === "holidays" ? t.calRepeatsYearly : t.calDoesNotRepeat}</span>
+              {activePopoverEvent.calendarId === "holidays" && (
+                <span className="text-[10px]">🔄</span>
+              )}
               </div>
             </div>
 
@@ -743,7 +753,7 @@ export function Calendar({ appId }: AppContentProps) {
                 onClick={handleUnsubscribeOrDelete}
                 className="bg-black/[0.04] hover:bg-black/[0.08] dark:bg-white/10 dark:hover:bg-white/20 active:scale-95 px-4 py-1.5 rounded-lg text-xs font-semibold text-black/80 dark:text-white/90 transition-all cursor-pointer border border-black/10 dark:border-white/10"
               >
-                {activePopoverEvent.calendarId === "holidays" ? "Unsubscribe" : "Delete"}
+                {activePopoverEvent.calendarId === "holidays" ? t.calUnsubscribe : t.calDelete}
               </button>
             </div>
           </div>

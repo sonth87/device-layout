@@ -321,7 +321,7 @@ export function AppIcon({
             style={{
               left: pos.x,
               top: pos.y,
-              width: labelPosition === 'bottom' ? iconSize + 24 : iconSize + 104,
+              width: labelPosition === 'bottom' ? iconSize + 56 : iconSize + 104,
               zIndex: dragging ? 1000 : 1,
               transition: dragging
                 ? "none"
@@ -331,7 +331,7 @@ export function AppIcon({
             <button
               className={cn(
                 "flex w-full items-center select-none rounded-lg",
-                labelPosition === 'bottom' ? "flex-col text-center gap-2 p-2.5" : "flex-row text-left gap-3 p-2",
+                labelPosition === 'bottom' ? "flex-col text-center gap-2 p-2" : "flex-row text-left gap-3 p-2",
                 "focus:outline-none transition-transform duration-75",
                 isSelected
                   ? "bg-white/8 dark:bg-white/5"
@@ -356,12 +356,17 @@ export function AppIcon({
               </div>
               <span
                 className={cn(
-                  "block w-full text-white font-medium leading-tight truncate px-1.5 py-0.5 rounded-[4px] border border-transparent",
+                  "block w-full text-white font-medium leading-tight px-1.5 py-0.5 rounded-[4px] border border-transparent",
                   labelPosition === 'bottom' ? "text-center mx-auto" : "text-left"
                 )}
                 style={{
                   fontSize: `${textSize}px`,
-                  maxWidth: labelPosition === 'bottom' ? `${iconSize + 16}px` : '100px',
+                  maxWidth: labelPosition === 'bottom' ? `${iconSize + 48}px` : '100px',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  wordBreak: 'break-word',
                   backgroundColor: isSelected ? 'var(--accent-color)' : undefined,
                   borderColor: isSelected ? 'rgba(255,255,255,0.1)' : 'transparent',
                   textShadow: isSelected

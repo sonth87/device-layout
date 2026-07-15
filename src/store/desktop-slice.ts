@@ -36,6 +36,7 @@ export interface DesktopSlice {
   useStacks: boolean;
   stackGroupBy: StackGroupBy;
   language: 'en' | 'vi' | 'ja' | 'ko' | 'zh' | 'th';
+  country: string;
   desktopIconSize: number;
   desktopGridSpacing: number;
   desktopTextSize: number;
@@ -63,6 +64,7 @@ export interface DesktopSlice {
   toggleStacks: () => void;
   setStackGroupBy: (by: StackGroupBy) => void;
   setLanguage: (lang: 'en' | 'vi' | 'ja' | 'ko' | 'zh' | 'th') => void;
+  setCountry: (country: string) => void;
   setDesktopIconSize: (size: number) => void;
   setDesktopGridSpacing: (spacing: number) => void;
   setDesktopTextSize: (size: number) => void;
@@ -99,6 +101,7 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
     useStacks: false,
     stackGroupBy: 'kind',
     language: 'en',
+    country: 'vn',
     desktopIconSize: 64,
     desktopGridSpacing: 50,
     desktopTextSize: 12,
@@ -201,6 +204,10 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
 
     setLanguage(lang) {
       set((state) => { state.language = lang; });
+    },
+
+    setCountry(country) {
+      set((state) => { state.country = country; });
     },
 
     setDesktopIconSize(size) {

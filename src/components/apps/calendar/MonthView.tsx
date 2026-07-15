@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { dateKey, getLunarDateString, isRedHoliday, type CalEvent } from "./types";
+import { dateKey, getLunarDateString, isRedHoliday as isRedHolidayStatic, type CalEvent } from "./types";
 import calendarData from "@/data/calendar-data.json";
 
 const CALENDARS = calendarData.calendars;
@@ -13,6 +13,7 @@ interface MonthViewProps {
   setCurrentView: (v: "day" | "week" | "month" | "year") => void;
   filteredEvents: CalEvent[];
   onEventClick: (ev: CalEvent, el: HTMLElement) => void;
+  isRedHoliday?: (d: Date) => boolean;
 }
 
 export function MonthView({
@@ -22,6 +23,7 @@ export function MonthView({
   setCurrentView,
   filteredEvents,
   onEventClick,
+  isRedHoliday = isRedHolidayStatic,
 }: MonthViewProps) {
   const yr = currentDate.getFullYear();
   const mth = currentDate.getMonth();

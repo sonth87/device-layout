@@ -5,12 +5,16 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useStore } from '@/store';
 import { LANG_LABELS, LANG_FLAGS } from '@/types/locale';
 import type { SupportedLang } from '@/types/locale';
+import { COUNTRY_LABELS, COUNTRY_ICS_MAP } from '@/services/holidays-service';
 
 const LANGUAGES: SupportedLang[] = ['en', 'vi', 'ja', 'ko', 'zh', 'th'];
+const COUNTRIES = Object.keys(COUNTRY_ICS_MAP);
 
 export function SettingsGeneral() {
   const { t, language } = useTranslation();
   const setLanguage = useStore((s) => s.setLanguage);
+  const country = useStore((s) => s.country) ?? 'vn';
+  const setCountry = useStore((s) => s.setCountry);
 
   const [aboutExpanded, setAboutExpanded] = useState(false);
   const [langExpanded, setLangExpanded] = useState(false);
@@ -148,7 +152,7 @@ export function SettingsGeneral() {
             {isLang && (
               <div
                 className={`transition-all duration-300 ease-in-out overflow-hidden border-t border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.01] ${
-                  langExpanded ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
+                  langExpanded ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
                 }`}
               >
                 <div className="py-3.5 px-4 space-y-3.5">
@@ -165,6 +169,32 @@ export function SettingsGeneral() {
                         {LANGUAGES.map((lang) => (
                           <option key={lang} value={lang} className="bg-white dark:bg-[#151821] text-black dark:text-white">
                             {LANG_FLAGS[lang]} {LANG_LABELS[lang]}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none opacity-40">
+                        <svg className="w-3.5 h-3.5 text-black dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Country selector — controls holiday data source */}
+                  <div>
+                    <span className="text-xs text-black/50 dark:text-white/50 font-medium block mb-2">
+                      Region / Country
+                      <span className="ml-1.5 text-[10px] text-black/30 dark:text-white/30 font-normal">(affects holidays)</span>
+                    </span>
+                    <div className="relative">
+                      <select
+                        value={country}
+                        onChange={(e) => setCountry(e.target.value)}
+                        className="w-full bg-neutral-100 dark:bg-white/5 border border-black/10 dark:border-white/10 text-black/80 dark:text-white/80 rounded-lg px-3 py-2 text-sm focus:outline-none appearance-none cursor-pointer pr-8"
+                      >
+                        {COUNTRIES.map((c) => (
+                          <option key={c} value={c} className="bg-white dark:bg-[#151821] text-black dark:text-white">
+                            {COUNTRY_LABELS[c]?.flag} {COUNTRY_LABELS[c]?.name ?? c.toUpperCase()}
                           </option>
                         ))}
                       </select>

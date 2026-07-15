@@ -82,6 +82,7 @@ export const useStore: UseBoundStore<StoreWithMiddlewares> = create<RootStore>()
           vfs: state.vfs,
           widgetInstances: state.widgetInstances,
           language: state.language,
+          country: state.country,
           desktopIconSize: state.desktopIconSize,
           desktopGridSpacing: state.desktopGridSpacing,
           desktopTextSize: state.desktopTextSize,

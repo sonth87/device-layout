@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { dateKey, getLunarDateString, isRedHoliday, type CalEvent } from "./types";
+import { dateKey, getLunarDateString, isRedHoliday as isRedHolidayStatic, type CalEvent } from "./types";
 import calendarData from "@/data/calendar-data.json";
 
 const CALENDARS = calendarData.calendars;
@@ -12,9 +12,10 @@ interface WeekViewProps {
   setCurrentView: (v: "day" | "week" | "month" | "year") => void;
   filteredEvents: CalEvent[];
   onEventClick: (ev: CalEvent, el: HTMLElement) => void;
+  isRedHoliday?: (d: Date) => boolean;
 }
 
-export function WeekView({ currentDate, setSelectedDate, setCurrentView, filteredEvents, onEventClick }: WeekViewProps) {
+export function WeekView({ currentDate, setSelectedDate, setCurrentView, filteredEvents, onEventClick, isRedHoliday = isRedHolidayStatic }: WeekViewProps) {
   // Find start of week (Monday)
   const startOfWeek = new Date(currentDate);
   const day = startOfWeek.getDay();

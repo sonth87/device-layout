@@ -1,15 +1,17 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { isFirstDayOfLunarMonth, isRedHoliday } from "./types";
+import { isFirstDayOfLunarMonth, isRedHoliday as isRedHolidayStatic } from "./types";
 
 interface MiniCalendarProps {
   targetDate: Date;
   selectedDate: Date;
   onDaySelect?: (d: Date) => void;
+  /** Dynamic isRedHoliday from useHolidays hook. Falls back to static JSON-only check. */
+  isRedHoliday?: (d: Date) => boolean;
 }
 
-export function MiniCalendar({ targetDate, selectedDate, onDaySelect }: MiniCalendarProps) {
+export function MiniCalendar({ targetDate, selectedDate, onDaySelect, isRedHoliday = isRedHolidayStatic }: MiniCalendarProps) {
   const yr = targetDate.getFullYear();
   const mth = targetDate.getMonth();
 
