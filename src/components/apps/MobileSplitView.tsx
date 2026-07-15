@@ -1,7 +1,8 @@
 'use client';
 
-import { createContext, useContext, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, useRef, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useStore } from '@/store';
 import { useAppViewport } from './AppViewport';
 import { useHideMobileAppHeader } from '@/components/mobile/MobileAppViewer';
 
@@ -10,6 +11,36 @@ const MobileSplitBackContext = createContext<(() => void) | null>(null);
 
 export function useMobileSplitBack() {
   return useContext(MobileSplitBackContext);
+}
+
+/**
+ * Reusable hook for master-detail split views.
+ * Automatically clears the selection on mobile/mockup screens (so it shows the list menu)
+ * and defaults to defaultValue on desktop/large screens.
+ */
+export function useSplitViewSelection<T>(defaultValue: T) {
+  const osTheme = useStore((s) => s.osTheme);
+  const isMobileOS = osTheme === 'iphone' || osTheme === 'android';
+
+  const [selectedId, setSelectedId] = useState<T | null>(() => {
+    return isMobileOS ? null : defaultValue;
+  });
+  const { width } = useAppViewport();
+  const isMobile = width > 0 && width < 480;
+  const lastIsMobile = useRef<boolean | null>(isMobileOS);
+
+  useEffect(() => {
+    if (width === 0) return;
+    if (lastIsMobile.current !== isMobile) {
+      const targetId = isMobile ? null : defaultValue;
+      requestAnimationFrame(() => {
+        setSelectedId(targetId);
+      });
+      lastIsMobile.current = isMobile;
+    }
+  }, [width, isMobile, defaultValue]);
+
+  return [selectedId, setSelectedId] as const;
 }
 
 interface MobileSplitViewProps {
@@ -39,8 +70,11 @@ export function MobileSplitView({
   detailClassName = '',
   sidebarWidth = 'w-60',
 }: MobileSplitViewProps) {
+  const osTheme = useStore((s) => s.osTheme);
+  const isMobileOS = osTheme === 'iphone' || osTheme === 'android';
+
   const { width } = useAppViewport();
-  const isMobile = width > 0 && width < 480;
+  const isMobile = (width > 0 && width < 480) || (width === 0 && isMobileOS);
   const hideAppHeader = useHideMobileAppHeader();
 
   // Tell MobileAppViewer to hide its own header bar when we're showing detail

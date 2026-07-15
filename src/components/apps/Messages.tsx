@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Search, Phone, Video, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { MobileSplitView, useMobileSplitBack } from './MobileSplitView';
+import { MobileSplitView, useMobileSplitBack, useSplitViewSelection } from './MobileSplitView';
 import { useTranslation } from '@/hooks/useTranslation';
 
 const MESSAGES_LOCALE = {
@@ -46,7 +46,7 @@ export function Messages() {
   const { language } = useTranslation();
   const tMsg = MESSAGES_LOCALE[language as keyof typeof MESSAGES_LOCALE] || MESSAGES_LOCALE.en;
   const [convos, setConvos] = useState<Conversation[]>(INITIAL_CONVOS);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useSplitViewSelection<string>(convos[0]?.id ?? null);
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -156,7 +156,7 @@ export function Messages() {
 
   const chatPanel = selected ? (
     <div className="flex flex-col h-full bg-white dark:bg-[#0F1115] text-black dark:text-white">
-      <ChatHeader convo={selected} onBack={() => setSelectedId(null)} />
+      <ChatHeader convo={selected} />
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
@@ -212,7 +212,7 @@ export function Messages() {
   );
 }
 
-function ChatHeader({ convo, onBack }: { convo: Conversation; onBack: () => void }) {
+function ChatHeader({ convo }: { convo: Conversation }) {
   const mobileBack = useMobileSplitBack();
   const { language } = useTranslation();
   const tMsg = MESSAGES_LOCALE[language as keyof typeof MESSAGES_LOCALE] || MESSAGES_LOCALE.en;

@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import { Plus, Trash2, Search } from 'lucide-react';
 import { useStore } from '@/store';
 import { cn } from '@/lib/utils';
-import { MobileSplitView, useMobileSplitBack } from './MobileSplitView';
+import { MobileSplitView, useMobileSplitBack, useSplitViewSelection } from './MobileSplitView';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 
 interface Note {
@@ -56,7 +56,7 @@ export function Notes() {
     return [welcome];
   });
 
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useSplitViewSelection<string>(notes[0]?.id ?? null);
   const [search, setSearch] = useState('');
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 

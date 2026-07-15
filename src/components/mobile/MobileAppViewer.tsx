@@ -131,11 +131,13 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
 
           <div style={{ height: navBarHeight + homeIndicatorHeight }} />
 
-          {/* Static Home Indicator Gesture Bar acting as Drag Handle */}
+          {/* Home Indicator Gesture Bar acting as Drag Handle */}
           <div
             onPointerDown={(e) => dragControls.start(e)}
-            className="absolute bottom-2.5 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black/30 dark:bg-white/35 hover:bg-black/50 dark:hover:bg-white/50 rounded-full cursor-grab active:cursor-grabbing z-[1000] pointer-events-auto"
-          />
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-10 flex items-center justify-center z-[1000] pointer-events-auto cursor-grab active:cursor-grabbing"
+          >
+            <div className="w-32 h-1.5 bg-black/30 dark:bg-white/35 hover:bg-black/50 dark:hover:bg-white/50 rounded-full" />
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

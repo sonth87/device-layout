@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import {
   Settings as SettingsIcon,
   Paintbrush,
@@ -20,7 +20,7 @@ import { SettingsDesktopDock } from './settings/SettingsDesktopDock';
 import { SettingsNotifications } from './settings/SettingsNotifications';
 import { SettingsUpdate } from './settings/SettingsUpdate';
 import { AppSettingsPanel } from './settings/AppSettingsRegistry';
-import { MobileSplitView, useMobileSplitBack } from './MobileSplitView';
+import { MobileSplitView, useMobileSplitBack, useSplitViewSelection } from './MobileSplitView';
 import type { AppContentProps } from './AppRegistry';
 import type { AppConfig } from '@/types/app';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -80,7 +80,7 @@ export function Settings({ windowId }: AppContentProps) {
   const appSettingsList = Object.values(apps).filter((a) => !a.disabled && a.appSettings);
 
   type ActiveId = SystemSectionId | `app:${string}`;
-  const [activeId, setActiveId] = useState<ActiveId | null>('general');
+  const [activeId, setActiveId] = useSplitViewSelection<ActiveId>('general');
 
   const systemSectionsBase = [
     {
@@ -142,7 +142,7 @@ export function Settings({ windowId }: AppContentProps) {
     ? systemSectionsBase
     : systemSectionsBase.filter((s) => s.id !== 'update');
 
-  const select = useCallback((id: ActiveId) => setActiveId(id), []);
+  const select = useCallback((id: ActiveId) => setActiveId(id), [setActiveId]);
 
   /** Active section metadata (icon, label, description) */
   const activeSection = (() => {
