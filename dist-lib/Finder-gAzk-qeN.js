@@ -1,13 +1,14 @@
-import { t as e } from "./store-429-ivOo.js";
+import { t as e } from "./store-Cj2celzj.js";
 import { t } from "./utils-B6YmNDS2.js";
 import { t as n } from "./createLucideIcon--WjuKCts.js";
 import { t as r } from "./chevron-left-DtSiqYaQ.js";
 import { t as i } from "./chevron-right-BcSxNxws.js";
-import { i as a, n as o, r as s, t as c } from "./music-ByFpMQPn.js";
-import { t as l } from "./grid-3x3-CZiMuCC6.js";
+import { n as a, t as o } from "./folder-C9z1AA3T.js";
+import { t as s } from "./grid-3x3-CZiMuCC6.js";
+import { n as c, t as l } from "./music-D8WdwHqS.js";
 import { t as u } from "./list-Dn-fquzI.js";
 import { t as d } from "./monitor-CDDW7biH.js";
-import { t as f } from "./useTranslation-BYwV1Fyx.js";
+import { t as f } from "./useTranslation-cANnzTeW.js";
 import { t as p } from "./useAppLayout-DfaXs-1a.js";
 import { useState as m } from "react";
 import { jsx as h, jsxs as g } from "react/jsx-runtime";
@@ -183,7 +184,7 @@ var _ = n("download", [
 	}
 };
 function S(e, t = 10) {
-	if (e.type === "dir") return /* @__PURE__ */ h(s, { className: `w-${t} h-${t} text-blue-400` });
+	if (e.type === "dir") return /* @__PURE__ */ h(o, { className: `w-${t} h-${t} text-blue-400` });
 	let n = e.name.split(".").pop()?.toLowerCase() ?? "";
 	return [
 		"jpg",
@@ -192,13 +193,13 @@ function S(e, t = 10) {
 		"gif",
 		"webp",
 		"svg"
-	].includes(n) ? /* @__PURE__ */ h(o, { className: `w-${t} h-${t} text-green-400` }) : [
+	].includes(n) ? /* @__PURE__ */ h(c, { className: `w-${t} h-${t} text-green-400` }) : [
 		"mp3",
 		"flac",
 		"aac",
 		"wav",
 		"m4a"
-	].includes(n) ? /* @__PURE__ */ h(c, { className: `w-${t} h-${t} text-orange-400` }) : [
+	].includes(n) ? /* @__PURE__ */ h(l, { className: `w-${t} h-${t} text-orange-400` }) : [
 		"mp4",
 		"mov",
 		"avi",
@@ -238,12 +239,12 @@ function w({ windowId: n, appId: v }) {
 		{
 			name: T.music,
 			path: "/Users/user/Music",
-			icon: /* @__PURE__ */ h(c, { className: "w-3.5 h-3.5" })
+			icon: /* @__PURE__ */ h(l, { className: "w-3.5 h-3.5" })
 		},
 		{
 			name: T.pictures,
 			path: "/Users/user/Pictures",
-			icon: /* @__PURE__ */ h(o, { className: "w-3.5 h-3.5" })
+			icon: /* @__PURE__ */ h(c, { className: "w-3.5 h-3.5" })
 		},
 		{
 			name: T.root,
@@ -288,7 +289,7 @@ function w({ windowId: n, appId: v }) {
 							backgroundColor: "var(--accent-color)",
 							borderColor: "var(--accent-color)"
 						} : void 0,
-						children: /* @__PURE__ */ h(l, { className: "h-3.5 w-3.5" })
+						children: /* @__PURE__ */ h(s, { className: "h-3.5 w-3.5" })
 					}), /* @__PURE__ */ h("button", {
 						onClick: () => P("list"),
 						className: t("rounded-r border border-l-0 border-black/15 dark:border-white/15 px-2 py-0.5 text-xs transition-colors", N === "list" ? "text-white border-transparent" : "hover:bg-black/5 dark:hover:bg-white/10"),
@@ -304,7 +305,7 @@ function w({ windowId: n, appId: v }) {
 			className: "flex-1 overflow-auto p-3",
 			children: I.length === 0 ? /* @__PURE__ */ g("div", {
 				className: "flex h-full flex-col items-center justify-center gap-2 text-sm text-black/30 dark:text-white/30",
-				children: [/* @__PURE__ */ h(s, { className: "h-12 w-12 opacity-20" }), /* @__PURE__ */ h("p", { children: T.emptyFolder })]
+				children: [/* @__PURE__ */ h(o, { className: "h-12 w-12 opacity-20" }), /* @__PURE__ */ h("p", { children: T.emptyFolder })]
 			}) : N === "icon" ? /* @__PURE__ */ h("div", {
 				className: "grid gap-3",
 				style: { gridTemplateColumns: "repeat(auto-fill, minmax(64px, 1fr))" },

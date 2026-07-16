@@ -1,13 +1,13 @@
-import { t as e } from "./utils-B6YmNDS2.js";
-import { t } from "./createLucideIcon--WjuKCts.js";
-import { n, t as r } from "./video-vPvbuZw7.js";
+import { d as e, l as t } from "./MobileAppViewer-B--69CGh.js";
+import { t as n } from "./utils-B6YmNDS2.js";
+import { t as r } from "./createLucideIcon--WjuKCts.js";
 import { t as i } from "./plus-Dx6tdmvY.js";
 import { t as a } from "./search-BKG97C0x.js";
-import { t as o } from "./useTranslation-BYwV1Fyx.js";
-import { n as s, r as c, t as l } from "./MobileSplitView-DTPWqV5X.js";
+import { t as o } from "./useTranslation-cANnzTeW.js";
+import { n as s, r as c, t as l } from "./MobileSplitView-wof2XXo0.js";
 import { useEffect as u, useRef as d, useState as f } from "react";
 import { jsx as p, jsxs as m } from "react/jsx-runtime";
-var h = t("send", [["path", {
+var h = r("send", [["path", {
 	d: "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z",
 	key: "1ffxy3"
 }], ["path", {
@@ -117,7 +117,7 @@ var h = t("send", [["path", {
 	}))
 }));
 function y() {
-	let { language: t } = o(), n = _[t] || _.en, [r, s] = f(v), [g, y] = c(r[0]?.id ?? null), [x, S] = f(""), [C, w] = f(""), T = d(null), E = r.find((e) => e.id === g);
+	let { language: e } = o(), t = _[e] || _.en, [r, s] = f(v), [g, y] = c(r[0]?.id ?? null), [x, S] = f(""), [C, w] = f(""), T = d(null), E = r.find((e) => e.id === g);
 	u(() => {
 		T.current?.scrollIntoView({ behavior: "smooth" });
 	}, [E?.messages.length]);
@@ -173,48 +173,48 @@ function y() {
 					children: [/* @__PURE__ */ p(a, { className: "w-3.5 h-3.5 text-black/40 dark:text-white/40" }), /* @__PURE__ */ p("input", {
 						value: C,
 						onChange: (e) => w(e.target.value),
-						placeholder: n.search,
+						placeholder: t.search,
 						className: "flex-1 bg-transparent text-sm outline-none placeholder:text-black/30 dark:placeholder:text-white/30"
 					})]
 				})
 			}), /* @__PURE__ */ p("div", {
 				className: "flex-1 overflow-y-auto",
-				children: O.map((t) => /* @__PURE__ */ m("button", {
+				children: O.map((e) => /* @__PURE__ */ m("button", {
 					onClick: () => {
-						y(t.id), s((e) => e.map((e) => e.id === t.id ? {
-							...e,
+						y(e.id), s((t) => t.map((t) => t.id === e.id ? {
+							...t,
 							unread: 0
-						} : e));
+						} : t));
 					},
-					className: e("w-full text-left flex items-center gap-3 px-3 py-3 border-b border-black/5 dark:border-white/5 transition-colors", t.id !== g && "hover:bg-black/5 dark:hover:bg-white/5"),
-					style: t.id === g ? { backgroundColor: "var(--highlight-color)" } : void 0,
+					className: n("w-full text-left flex items-center gap-3 px-3 py-3 border-b border-black/5 dark:border-white/5 transition-colors", e.id !== g && "hover:bg-black/5 dark:hover:bg-white/5"),
+					style: e.id === g ? { backgroundColor: "var(--highlight-color)" } : void 0,
 					children: [/* @__PURE__ */ p("div", {
 						className: "w-10 h-10 rounded-full bg-gray-200 dark:bg-white/10 flex items-center justify-center text-xl shrink-0",
-						children: t.avatar
+						children: e.avatar
 					}), /* @__PURE__ */ m("div", {
 						className: "flex-1 min-w-0",
 						children: [/* @__PURE__ */ m("div", {
 							className: "flex items-center justify-between",
 							children: [/* @__PURE__ */ p("p", {
 								className: "text-sm font-semibold text-black/90 dark:text-white/90 truncate",
-								children: t.name
+								children: e.name
 							}), /* @__PURE__ */ p("p", {
 								className: "text-[11px] text-black/40 dark:text-white/40 shrink-0 ml-2",
-								children: k(t.messages[t.messages.length - 1]?.time ?? 0)
+								children: k(e.messages[e.messages.length - 1]?.time ?? 0)
 							})]
 						}), /* @__PURE__ */ m("div", {
 							className: "flex items-center gap-1",
 							children: [/* @__PURE__ */ p("p", {
 								className: "text-xs text-black/50 dark:text-white/50 truncate flex-1",
-								children: t.preview
-							}), t.unread > 0 && /* @__PURE__ */ p("span", {
+								children: e.preview
+							}), e.unread > 0 && /* @__PURE__ */ p("span", {
 								className: "shrink-0 w-4 h-4 rounded-full text-white text-[10px] flex items-center justify-center font-bold",
 								style: { backgroundColor: "var(--accent-color)" },
-								children: t.unread
+								children: e.unread
 							})]
 						})]
 					})]
-				}, t.id))
+				}, e.id))
 			})]
 		}),
 		detail: E ? /* @__PURE__ */ m("div", {
@@ -223,14 +223,14 @@ function y() {
 				/* @__PURE__ */ p(b, { convo: E }),
 				/* @__PURE__ */ m("div", {
 					className: "flex-1 overflow-y-auto p-4 space-y-2",
-					children: [E.messages.map((t) => /* @__PURE__ */ p("div", {
-						className: e("flex", t.from === "me" ? "justify-end" : "justify-start"),
+					children: [E.messages.map((e) => /* @__PURE__ */ p("div", {
+						className: n("flex", e.from === "me" ? "justify-end" : "justify-start"),
 						children: /* @__PURE__ */ p("div", {
-							className: e("max-w-[70%] px-3 py-2 rounded-2xl text-sm", t.from === "me" ? "text-white rounded-br-sm" : "bg-gray-100 dark:bg-white/10 text-black dark:text-white rounded-bl-sm"),
-							style: t.from === "me" ? { backgroundColor: "var(--accent-color)" } : void 0,
-							children: t.text
+							className: n("max-w-[70%] px-3 py-2 rounded-2xl text-sm", e.from === "me" ? "text-white rounded-br-sm" : "bg-gray-100 dark:bg-white/10 text-black dark:text-white rounded-bl-sm"),
+							style: e.from === "me" ? { backgroundColor: "var(--accent-color)" } : void 0,
+							children: e.text
 						})
-					}, t.id)), /* @__PURE__ */ p("div", { ref: T })]
+					}, e.id)), /* @__PURE__ */ p("div", { ref: T })]
 				}),
 				/* @__PURE__ */ m("div", {
 					className: "px-3 py-3 border-t border-black/10 dark:border-white/10 flex items-center gap-2 shrink-0",
@@ -243,7 +243,7 @@ function y() {
 							value: x,
 							onChange: (e) => S(e.target.value),
 							onKeyDown: (e) => e.key === "Enter" && !e.shiftKey && D(),
-							placeholder: n.imessage,
+							placeholder: t.imessage,
 							className: "flex-1 px-3 py-1.5 rounded-full border border-black/15 dark:border-white/15 bg-transparent text-sm outline-none focus:ring-1 focus:ring-accent-active"
 						}),
 						/* @__PURE__ */ p("button", {
@@ -262,13 +262,13 @@ function y() {
 		className: "bg-white dark:bg-[#0F1115]"
 	});
 }
-function b({ convo: e }) {
-	let t = s(), { language: i } = o(), a = _[i] || _.en;
+function b({ convo: n }) {
+	let r = s(), { language: i } = o(), a = _[i] || _.en;
 	return /* @__PURE__ */ m("div", {
 		className: "flex items-center gap-2 px-3 py-2.5 border-b border-black/10 dark:border-white/10 shrink-0",
 		children: [
-			t && /* @__PURE__ */ m("button", {
-				onClick: t,
+			r && /* @__PURE__ */ m("button", {
+				onClick: r,
 				className: "flex items-center gap-0.5 text-accent-active active:opacity-60 transition-opacity mr-1",
 				children: [/* @__PURE__ */ p("svg", {
 					className: "w-5 h-5",
@@ -288,19 +288,19 @@ function b({ convo: e }) {
 			}),
 			/* @__PURE__ */ p("div", {
 				className: "w-8 h-8 rounded-full bg-gray-200 dark:bg-white/10 flex items-center justify-center text-lg shrink-0",
-				children: e.avatar
+				children: n.avatar
 			}),
 			/* @__PURE__ */ p("p", {
 				className: "font-semibold text-black/90 dark:text-white/90 flex-1 text-sm",
-				children: e.name
+				children: n.name
 			}),
 			/* @__PURE__ */ p("button", {
 				className: "p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-accent-active",
-				children: /* @__PURE__ */ p(n, { className: "w-4 h-4" })
+				children: /* @__PURE__ */ p(e, { className: "w-4 h-4" })
 			}),
 			/* @__PURE__ */ p("button", {
 				className: "p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-accent-active",
-				children: /* @__PURE__ */ p(r, { className: "w-4 h-4" })
+				children: /* @__PURE__ */ p(t, { className: "w-4 h-4" })
 			})
 		]
 	});

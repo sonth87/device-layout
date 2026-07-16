@@ -1,5 +1,5 @@
 import e from "react";
-//#region node_modules/.pnpm/zustand@5.0.13_@types+react@19.2.14_immer@11.1.8_react@19.2.4/node_modules/zustand/esm/vanilla.mjs
+//#region node_modules/.pnpm/zustand@5.0.13_@types+react@19.2.14_immer@11.1.8_react@19.2.4_use-sync-external-store@1.6.0_react@19.2.4_/node_modules/zustand/esm/vanilla.mjs
 var t = (e) => {
 	let t, n = /* @__PURE__ */ new Set(), r = (e, r) => {
 		let i = typeof e == "function" ? e(t) : e;
@@ -466,7 +466,7 @@ function Ae(e) {
 }
 var je = new Oe().produce, Me = (e) => (t, n, r) => (r.setState = (e, n, ...r) => t(typeof e == "function" ? je(e) : e, n, ...r), e(r.setState, n, r));
 //#endregion
-//#region node_modules/.pnpm/zustand@5.0.13_@types+react@19.2.14_immer@11.1.8_react@19.2.4/node_modules/zustand/esm/middleware.mjs
+//#region node_modules/.pnpm/zustand@5.0.13_@types+react@19.2.14_immer@11.1.8_react@19.2.4_use-sync-external-store@1.6.0_react@19.2.4_/node_modules/zustand/esm/middleware.mjs
 function Ne(e, t) {
 	let n;
 	try {
@@ -2384,6 +2384,7 @@ function Qe(e) {
 		desktopSortBy: "none",
 		desktopViewOptionsOpen: !1,
 		wallpaperTextTheme: "dark",
+		settingsActiveTab: "general",
 		setWallpaper(t) {
 			e((e) => {
 				e.wallpaperId = t;
@@ -2520,6 +2521,11 @@ function Qe(e) {
 		setWallpaperTextTheme(t) {
 			e((e) => {
 				e.wallpaperTextTheme = t;
+			});
+		},
+		setSettingsActiveTab(t) {
+			e((e) => {
+				e.settingsActiveTab = t;
 			});
 		}
 	};

@@ -11,9 +11,3 @@
 export declare function WallpaperPickerContent({ variant }?: {
     variant?: 'vertical' | 'horizontal';
 }): import("react/jsx-runtime").JSX.Element;
-interface WallpaperPickerModalProps {
-    onClose: () => void;
-}
-/** Modal wrapper — used from the desktop right-click context menu (Wallpaper.tsx). */
-export declare function WallpaperPickerModal({ onClose }: WallpaperPickerModalProps): import("react/jsx-runtime").JSX.Element;
-export {};

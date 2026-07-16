@@ -1,4 +1,4 @@
-import { t as e } from "./store-429-ivOo.js";
+import { t as e } from "./store-Cj2celzj.js";
 //#region src/hooks/useTranslation.ts
 var t = {
 	en: {

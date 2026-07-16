@@ -114,7 +114,7 @@ export function NotesEditor({
   return (
     <div className="flex flex-col h-full bg-[#fdf9ef] dark:bg-[#11141b] text-neutral-900 dark:text-neutral-100 relative">
       {/* Local Styles for TipTap ProseMirror content */}
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .ProseMirror {
           outline: none;
           min-height: 200px;
@@ -184,7 +184,7 @@ export function NotesEditor({
           list-style-type: decimal;
           padding-left: 1.25rem;
         }
-      `}</style>
+      ` }} />
 
       {/* Toolbar / Header */}
       <div className="flex items-center justify-between px-4 py-2 bg-neutral-100/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-neutral-200/50 dark:border-neutral-800/50 select-none shrink-0 z-10">
