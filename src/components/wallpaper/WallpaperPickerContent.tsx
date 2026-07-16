@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, X } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useStore } from '@/store';
 import { useWallpaperImport } from '@/lib/wallpaper-import';
 import { useWallpaperCatalog } from '@/lib/wallpaper-catalog';
@@ -99,33 +99,4 @@ export function WallpaperPickerContent({ variant = 'vertical' }: { variant?: 've
   );
 }
 
-interface WallpaperPickerModalProps {
-  onClose: () => void;
-}
 
-/** Modal wrapper — used from the desktop right-click context menu (Wallpaper.tsx). */
-export function WallpaperPickerModal({ onClose }: WallpaperPickerModalProps) {
-  return (
-    <div
-      className="fixed inset-0 z-9999 flex items-center justify-center"
-      style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)' }}
-      onClick={onClose}
-    >
-      <div
-        className="bg-white/90 dark:bg-[#151821]/95 backdrop-blur-xl rounded-(--radius-card) p-6 shadow-2xl w-105 max-w-[95vw] flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-4 shrink-0">
-          <h2 className="text-sm font-semibold text-black/90 dark:text-white/90">Wallpaper</h2>
-          <button onClick={onClose} className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10">
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        <div className="max-h-[70vh] overflow-y-auto pr-1.5">
-          <WallpaperPickerContent />
-        </div>
-      </div>
-    </div>
-  );
-}

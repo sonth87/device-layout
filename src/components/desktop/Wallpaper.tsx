@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import { Check, ChevronRight } from 'lucide-react';
 import { useStore } from '@/store';
@@ -9,7 +8,6 @@ import { useStoreHydrated } from '@/hooks/useStoreHydrated';
 import { useResolvedWallpaper } from '@/hooks/useResolvedWallpaper';
 import { resolveAssetUrl, useAssetBase } from '@/lib/asset-base';
 import { wallpaperFitToCss } from '@/lib/wallpaper-fit';
-import { WallpaperPickerModal } from '@/components/wallpaper/WallpaperPickerContent';
 import { ViewOptionsDialog } from './ViewOptionsDialog';
 import { useTranslation } from '@/hooks/useTranslation';
 import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
@@ -41,8 +39,10 @@ export function Wallpaper({ children }: WallpaperProps) {
   const fitMode                = useStore((s) => s.wallpaperFitMode);
   const desktopViewOptionsOpen = useStore((s) => s.desktopViewOptionsOpen);
   const setDesktopViewOptionsOpen = useStore((s) => s.setDesktopViewOptionsOpen);
+  const apps                    = useStore((s) => s.apps);
+  const launchApp               = useStore((s) => s.launchApp);
+  const setSettingsActiveTab    = useStore((s) => s.setSettingsActiveTab);
   const hydrated               = useStoreHydrated();
-  const [pickerOpen, setPickerOpen] = useState(false);
 
   const assetBase = useAssetBase();
   const wallpaper = useResolvedWallpaper();
@@ -106,7 +106,13 @@ export function Wallpaper({ children }: WallpaperProps) {
                 {/* Change Wallpaper */}
                 <ContextMenu.Item
                   className={ITEM_CLS}
-                  onSelect={() => setPickerOpen(true)}
+                  onSelect={() => {
+                    const settingsApp = Object.values(apps).find((a) => a.id === 'settings');
+                    if (settingsApp) {
+                      setSettingsActiveTab('wallpaper');
+                      launchApp(settingsApp);
+                    }
+                  }}
                 >
                   {t.changeWallpaper}
                 </ContextMenu.Item>
@@ -191,8 +197,6 @@ export function Wallpaper({ children }: WallpaperProps) {
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {children}
       </div>
-
-      {pickerOpen && <WallpaperPickerModal onClose={() => setPickerOpen(false)} />}
 
       {/* View Options Dialog */}
       <ViewOptionsDialog />

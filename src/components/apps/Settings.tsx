@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import {
   Settings as SettingsIcon,
   Paintbrush,
@@ -79,8 +79,15 @@ export function Settings({ windowId }: AppContentProps) {
 
   const appSettingsList = Object.values(apps).filter((a) => !a.disabled && a.appSettings);
 
+  const storeActiveTab = useStore((s) => s.settingsActiveTab) as ActiveId;
+  const setStoreActiveTab = useStore((s) => s.setSettingsActiveTab);
+
   type ActiveId = SystemSectionId | `app:${string}`;
-  const [activeId, setActiveId] = useSplitViewSelection<ActiveId>('general');
+  const [activeId, setActiveId] = useSplitViewSelection<ActiveId>(storeActiveTab);
+
+  useEffect(() => {
+    setActiveId(storeActiveTab);
+  }, [storeActiveTab, setActiveId]);
 
   const systemSectionsBase = [
     {
@@ -142,7 +149,12 @@ export function Settings({ windowId }: AppContentProps) {
     ? systemSectionsBase
     : systemSectionsBase.filter((s) => s.id !== 'update');
 
-  const select = useCallback((id: ActiveId) => setActiveId(id), [setActiveId]);
+  const select = useCallback((id: ActiveId) => {
+    setActiveId(id);
+    if (id) {
+      setStoreActiveTab(id);
+    }
+  }, [setActiveId, setStoreActiveTab]);
 
   /** Active section metadata (icon, label, description) */
   const activeSection = (() => {
