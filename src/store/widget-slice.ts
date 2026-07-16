@@ -32,15 +32,20 @@ export function createWidgetSlice(set: Setter, get: Getter): WidgetSlice {
     openWidgetGallery() {
       // Collect all non-minimized window IDs to restore later
       const openWindowIds = Object.values(get().windows)
-        .filter((w) => !w.isMinimized)
-        .map((w) => w.id);
+        .filter((w: any) => !w.isMinimized)
+        .map((w: any) => w.id);
 
-      // Minimize all open windows
-      for (const id of openWindowIds) {
-        get().minimizeWindow(id);
-      }
+      (set as any)((state: any) => {
+        // Minimize all open windows in one batch
+        for (const id of openWindowIds) {
+          if (state.windows[id]) {
+            state.windows[id].isMinimized = true;
+            state.windows[id].isFocused = false;
+          }
+        }
+        state.focusedWindowId = null;
+        state.activeAppId = null;
 
-      set((state) => {
         state.isEditingWidgets = true;
         state._galleryMinimizedWindowIds = openWindowIds;
       });
@@ -49,18 +54,31 @@ export function createWidgetSlice(set: Setter, get: Getter): WidgetSlice {
     closeWidgetGallery() {
       const idsToRestore = get()._galleryMinimizedWindowIds;
 
-      set((state) => {
+      (set as any)((state: any) => {
         state.isEditingWidgets = false;
         state._galleryMinimizedWindowIds = [];
-      });
 
-      // Restore windows that were minimized by the gallery
-      for (const id of idsToRestore) {
-        // Only restore if still exists
-        if (get().windows[id]) {
-          get().restoreWindow(id);
+        // Restore windows that were minimized by the gallery
+        let highestZIndex = -1;
+        let lastIdToFocus = null;
+
+        for (const id of idsToRestore) {
+          if (state.windows[id]) {
+            state.windows[id].isMinimized = false;
+            state.windows[id].isFocused = false;
+            if (state.windows[id].zIndex > highestZIndex) {
+              highestZIndex = state.windows[id].zIndex;
+              lastIdToFocus = id;
+            }
+          }
         }
-      }
+
+        if (lastIdToFocus) {
+          state.focusedWindowId = lastIdToFocus;
+          state.windows[lastIdToFocus].isFocused = true;
+          state.activeAppId = state.windows[lastIdToFocus].appId;
+        }
+      });
     },
 
     addWidget(def, size, x, y) {

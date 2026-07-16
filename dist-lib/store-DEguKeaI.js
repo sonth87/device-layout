@@ -2696,17 +2696,19 @@ function at(e, t) {
 		_galleryMinimizedWindowIds: [],
 		openWidgetGallery() {
 			let n = Object.values(t().windows).filter((e) => !e.isMinimized).map((e) => e.id);
-			for (let e of n) t().minimizeWindow(e);
 			e((e) => {
-				e.isEditingWidgets = !0, e._galleryMinimizedWindowIds = n;
+				for (let t of n) e.windows[t] && (e.windows[t].isMinimized = !0, e.windows[t].isFocused = !1);
+				e.focusedWindowId = null, e.activeAppId = null, e.isEditingWidgets = !0, e._galleryMinimizedWindowIds = n;
 			});
 		},
 		closeWidgetGallery() {
 			let n = t()._galleryMinimizedWindowIds;
 			e((e) => {
 				e.isEditingWidgets = !1, e._galleryMinimizedWindowIds = [];
+				let t = -1, r = null;
+				for (let i of n) e.windows[i] && (e.windows[i].isMinimized = !1, e.windows[i].isFocused = !1, e.windows[i].zIndex > t && (t = e.windows[i].zIndex, r = i));
+				r && (e.focusedWindowId = r, e.windows[r].isFocused = !0, e.activeAppId = e.windows[r].appId);
 			});
-			for (let e of n) t().windows[e] && t().restoreWindow(e);
 		},
 		addWidget(t, n, r, i) {
 			let a = {

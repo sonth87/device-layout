@@ -47,20 +47,33 @@ function WidgetPreviewCard({
   def,
   size,
   onDragStart,
+  cardIndex,
 }: {
   def: WidgetDefinition;
   size: WidgetSize;
   onDragStart: (def: WidgetDefinition, size: WidgetSize, startX: number, startY: number) => void;
+  cardIndex: number;
 }) {
   const { w, h } = WIDGET_SIZE_PX[size];
   const scale = Math.min(140 / w, 110 / h);
   const displayW = Math.round(w * scale);
   const displayH = Math.round(h * scale);
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Stagger loading: first items load immediately after transition, following items load progressively
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 150 + cardIndex * 50);
+    return () => clearTimeout(timer);
+  }, [cardIndex]);
+
   return (
     <div
       className="flex flex-col items-center gap-1.5 cursor-grab active:cursor-grabbing select-none"
       onPointerDown={(e) => {
+        if (!isLoaded) return;
         e.preventDefault();
         onDragStart(def, size, e.clientX, e.clientY);
       }}
@@ -71,7 +84,11 @@ function WidgetPreviewCard({
       >
         <div style={{ width: w, height: h, transform: `scale(${scale})`, transformOrigin: 'top left', pointerEvents: 'none' }}>
           <LiquidGlass variant="widget" className="w-full h-full">
-            <WidgetRenderer componentKey={def.componentKey} size={size} />
+            {isLoaded ? (
+              <WidgetRenderer componentKey={def.componentKey} size={size} />
+            ) : (
+              <div className="w-full h-full bg-black/5 dark:bg-white/5 animate-pulse" />
+            )}
           </LiquidGlass>
         </div>
       </div>
@@ -125,8 +142,17 @@ export function WidgetGalleryPanel() {
   const [search, setSearch]       = useState('');
   const [selectedApp, setSelectedApp] = useState<string>('__all__');
   const [ghost, setGhost]         = useState<GhostState | null>(null);
+  const [renderList, setRenderList] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef<{ def: WidgetDefinition; size: WidgetSize } | null>(null);
+
+  useEffect(() => {
+    // Delay rendering the widget list elements until panel animates up
+    const timer = setTimeout(() => {
+      setRenderList(true);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, []);
 
   // All unique app IDs that have widgets (includes '__built-in__')
   const appIds = [...new Set(WIDGET_REGISTRY.map((w) => w.appId))];
@@ -262,39 +288,58 @@ export function WidgetGalleryPanel() {
 
               {/* ── Right content area ── */}
               <div className="flex-1 overflow-y-auto p-4">
-                {Object.keys(byApp).length === 0 ? (
+                {!renderList ? (
+                  <div className="flex flex-col gap-6">
+                    {[1, 2].map((i) => (
+                      <div key={i} className="mb-4 animate-pulse">
+                        <div className="h-4 w-24 bg-black/10 dark:bg-white/10 rounded mb-4" />
+                        <div className="flex gap-4">
+                          <div className="h-[110px] w-[110px] bg-black/10 dark:bg-white/10 rounded-[14px]" />
+                          <div className="h-[110px] w-[140px] bg-black/10 dark:bg-white/10 rounded-[14px]" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : Object.keys(byApp).length === 0 ? (
                   <div className="flex items-center justify-center h-full text-black/30 dark:text-white/30 text-sm">
                     {t.noWidgetsFound}
                   </div>
                 ) : (
-                  Object.entries(byApp).map(([appId, defs]) => {
-                    const appLabel = appId === '__built-in__' ? t.builtIn : getAppName(appId, apps[appId]?.name ?? appId);
-                    return (
-                      <div key={appId} className="mb-8">
-                        <div className="flex items-center justify-between mb-3">
-                          <p className="text-black dark:text-white text-[13px] font-semibold">{appLabel}</p>
-                          {appId !== '__built-in__' && (
-                            <p className="text-black/30 dark:text-white/30 text-[11px]">{t.fromApp} {appLabel}</p>
-                          )}
-                        </div>
-                        {defs.map((def) => (
-                          <div key={def.id} className="mb-4">
-                            <p className="text-black/50 dark:text-white/50 text-[11px] mb-2 font-medium">{getWidgetName(def.id, def.name)}</p>
-                            <div className="flex flex-wrap gap-4">
-                              {def.sizes.map((sz) => (
-                                <WidgetPreviewCard
-                                  key={sz}
-                                  def={def}
-                                  size={sz}
-                                  onDragStart={startDrag}
-                                />
-                              ))}
-                            </div>
+                  (() => {
+                    let cardIndex = 0;
+                    return Object.entries(byApp).map(([appId, defs]) => {
+                      const appLabel = appId === '__built-in__' ? t.builtIn : getAppName(appId, apps[appId]?.name ?? appId);
+                      return (
+                        <div key={appId} className="mb-8">
+                          <div className="flex items-center justify-between mb-3">
+                            <p className="text-black dark:text-white text-[13px] font-semibold">{appLabel}</p>
+                            {appId !== '__built-in__' && (
+                              <p className="text-black/30 dark:text-white/30 text-[11px]">{t.fromApp} {appLabel}</p>
+                            )}
                           </div>
-                        ))}
-                      </div>
-                    );
-                  })
+                          {defs.map((def) => (
+                            <div key={def.id} className="mb-4">
+                              <p className="text-black/50 dark:text-white/50 text-[11px] mb-2 font-medium">{getWidgetName(def.id, def.name)}</p>
+                              <div className="flex flex-wrap gap-4">
+                                {def.sizes.map((sz) => {
+                                  const currentIdx = cardIndex++;
+                                  return (
+                                    <WidgetPreviewCard
+                                      key={sz}
+                                      def={def}
+                                      size={sz}
+                                      onDragStart={startDrag}
+                                      cardIndex={currentIdx}
+                                    />
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    });
+                  })()
                 )}
               </div>
             </div>

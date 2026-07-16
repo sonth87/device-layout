@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { C as g, S as _, T as v, _ as y, a as b, b as x, c as S, f as C, g as w, h as T, i as E, m as D, o as O, p as k, r as A, s as j, t as M, u as N, v as ee, w as te, x as P, y as ne } from "./MobileAppViewer-B--69CGh.js";
-import { d as re, i as ie, l as ae, n as oe, r as se, t as F, u as ce } from "./store-Cj2celzj.js";
+import { C as g, S as _, T as v, _ as y, a as b, b as x, c as S, f as C, g as w, h as T, i as E, m as D, o as O, p as k, r as A, s as j, t as M, u as N, v as ee, w as te, x as P, y as ne } from "./MobileAppViewer-COrXRL69.js";
+import { d as re, i as ie, l as ae, n as oe, r as se, t as F, u as ce } from "./store-DEguKeaI.js";
 import { t as I } from "./utils-B6YmNDS2.js";
 import { t as L } from "./createLucideIcon--WjuKCts.js";
-import { a as le, c as ue, d as de, f as fe, h as pe, l as me, m as he, n as ge, o as _e, p as R, r as ve, s as ye, t as be, u as xe } from "./update-actions-DiZrnVw-.js";
+import { a as le, c as ue, d as de, f as fe, h as pe, l as me, m as he, n as ge, o as _e, p as R, r as ve, s as ye, t as be, u as xe } from "./update-actions-B53_AC3T.js";
 import { t as Se } from "./check-DoT5IS9-.js";
 import { t as Ce } from "./chevron-right-BcSxNxws.js";
 import { t as we } from "./grid-3x3-CZiMuCC6.js";
@@ -14,7 +14,7 @@ import { t as We } from "./search-BKG97C0x.js";
 import { t as Ge } from "./sun-DdSv2tyc.js";
 import { t as Ke } from "./volume-2-DAfADR-a.js";
 import { t as z } from "./x-BYw6fhgP.js";
-import { t as B } from "./useTranslation-cANnzTeW.js";
+import { t as B } from "./useTranslation-DqodD730.js";
 import * as V from "react";
 import qe, { Suspense as Je, lazy as H, startTransition as Ye, useCallback as U, useContext as Xe, useEffect as W, useInsertionEffect as Ze, useRef as G, useState as K } from "react";
 import { Fragment as q, jsx as J, jsxs as Y } from "react/jsx-runtime";
@@ -1743,7 +1743,7 @@ function qn({ appConfig: e, onClose: t }) {
 					/* @__PURE__ */ Y("div", {
 						className: "text-[11px] text-black/40 dark:text-white/40 text-center leading-relaxed",
 						children: [
-							"Copyright © 2002–2024 Apple Inc.",
+							"Copyright © 2026 Skyline",
 							/* @__PURE__ */ J("br", {}),
 							"All rights reserved."
 						]
@@ -5027,13 +5027,13 @@ function ra(e) {
 //#endregion
 //#region src/components/widgets/WidgetRenderer.tsx
 var ia = {
-	ClockWidget: H(() => import("./ClockWidget-0e-uk4P-.js").then((e) => ({ default: e.ClockWidget }))),
-	ClockDarkWidget: H(() => import("./ClockWidget-0e-uk4P-.js").then((e) => ({ default: e.ClockDarkWidget }))),
-	ClockWorldWidget: H(() => import("./ClockWidget-0e-uk4P-.js").then((e) => ({ default: e.ClockWorldWidget }))),
-	ClockDigitalWidget: H(() => import("./ClockWidget-0e-uk4P-.js").then((e) => ({ default: e.ClockDigitalWidget }))),
-	ClockFlipWidget: H(() => import("./ClockWidget-0e-uk4P-.js").then((e) => ({ default: e.ClockFlipWidget }))),
-	CalendarWidget: H(() => import("./CalendarWidget-mpv_KQiz.js").then((e) => ({ default: e.CalendarWidget }))),
-	CalendarTodayWidget: H(() => import("./CalendarWidget-mpv_KQiz.js").then((e) => ({ default: e.CalendarTodayWidget }))),
+	ClockWidget: H(() => import("./ClockWidget-CZWLrdpA.js").then((e) => ({ default: e.ClockWidget }))),
+	ClockDarkWidget: H(() => import("./ClockWidget-CZWLrdpA.js").then((e) => ({ default: e.ClockDarkWidget }))),
+	ClockWorldWidget: H(() => import("./ClockWidget-CZWLrdpA.js").then((e) => ({ default: e.ClockWorldWidget }))),
+	ClockDigitalWidget: H(() => import("./ClockWidget-CZWLrdpA.js").then((e) => ({ default: e.ClockDigitalWidget }))),
+	ClockFlipWidget: H(() => import("./ClockWidget-CZWLrdpA.js").then((e) => ({ default: e.ClockFlipWidget }))),
+	CalendarWidget: H(() => import("./CalendarWidget-D2LgM5nI.js").then((e) => ({ default: e.CalendarWidget }))),
+	CalendarTodayWidget: H(() => import("./CalendarWidget-D2LgM5nI.js").then((e) => ({ default: e.CalendarTodayWidget }))),
 	WeatherWidget: H(() => import("./WeatherWidget-D4EQ_pKf.js").then((e) => ({ default: e.WeatherWidget }))),
 	NotesWidget: H(() => import("./NotesWidget-CWxNXfe-.js").then((e) => ({ default: e.NotesWidget })))
 };
@@ -5177,34 +5177,39 @@ function la({ ghost: e }) {
 		})
 	}), document.body);
 }
-function ua({ def: e, size: t, onDragStart: n }) {
-	let { w: r, h: i } = ea[t], a = Math.min(140 / r, 110 / i);
-	return /* @__PURE__ */ Y("div", {
+function ua({ def: e, size: t, onDragStart: n, cardIndex: r }) {
+	let { w: i, h: a } = ea[t], o = Math.min(140 / i, 110 / a), s = Math.round(i * o), c = Math.round(a * o), [l, u] = K(!1);
+	return W(() => {
+		let e = setTimeout(() => {
+			u(!0);
+		}, 150 + r * 50);
+		return () => clearTimeout(e);
+	}, [r]), /* @__PURE__ */ Y("div", {
 		className: "flex flex-col items-center gap-1.5 cursor-grab active:cursor-grabbing select-none",
 		onPointerDown: (r) => {
-			r.preventDefault(), n(e, t, r.clientX, r.clientY);
+			l && (r.preventDefault(), n(e, t, r.clientX, r.clientY));
 		},
 		children: [/* @__PURE__ */ J("div", {
 			className: "rounded-[14px] overflow-hidden bg-white/5 border border-white/10",
 			style: {
-				width: Math.round(r * a),
-				height: Math.round(i * a)
+				width: s,
+				height: c
 			},
 			children: /* @__PURE__ */ J("div", {
 				style: {
-					width: r,
-					height: i,
-					transform: `scale(${a})`,
+					width: i,
+					height: a,
+					transform: `scale(${o})`,
 					transformOrigin: "top left",
 					pointerEvents: "none"
 				},
 				children: /* @__PURE__ */ J(O, {
 					variant: "widget",
 					className: "w-full h-full",
-					children: /* @__PURE__ */ J(aa, {
+					children: l ? /* @__PURE__ */ J(aa, {
 						componentKey: e.componentKey,
 						size: t
-					})
+					}) : /* @__PURE__ */ J("div", { className: "w-full h-full bg-black/5 dark:bg-white/5 animate-pulse" })
 				})
 			})
 		}), /* @__PURE__ */ J("p", {
@@ -5229,13 +5234,20 @@ function da({ appId: e, selected: t, onClick: n }) {
 	});
 }
 function fa() {
-	let e = F((e) => e.closeWidgetGallery), t = F((e) => e.addWidget), n = F((e) => e.apps), { t: r, getAppName: i, getWidgetName: a, getWidgetDescription: o } = B(), [s, c] = K(""), [l, u] = K("__all__"), [d, f] = K(null), p = G(null), m = G(null), h = [...new Set(na.map((e) => e.appId))], g = na.filter((e) => {
+	let e = F((e) => e.closeWidgetGallery), t = F((e) => e.addWidget), n = F((e) => e.apps), { t: r, getAppName: i, getWidgetName: a, getWidgetDescription: o } = B(), [s, c] = K(""), [l, u] = K("__all__"), [d, f] = K(null), [p, m] = K(!1), h = G(null), g = G(null);
+	W(() => {
+		let e = setTimeout(() => {
+			m(!0);
+		}, 200);
+		return () => clearTimeout(e);
+	}, []);
+	let _ = [...new Set(na.map((e) => e.appId))], v = na.filter((e) => {
 		let t = l === "__all__" || e.appId === l, r = s.toLowerCase(), c = !r || a(e.id, e.name).toLowerCase().includes(r) || o(e.id, e.description ?? "").toLowerCase().includes(r) || i(e.appId, n[e.appId]?.name ?? "").toLowerCase().includes(r);
 		return t && c;
-	}), _ = {};
-	for (let e of g) _[e.appId] || (_[e.appId] = []), _[e.appId].push(e);
-	let v = U((e, n, r, i) => {
-		m.current = {
+	}), y = {};
+	for (let e of v) y[e.appId] || (y[e.appId] = []), y[e.appId].push(e);
+	let b = U((e, n, r, i) => {
+		g.current = {
 			def: e,
 			size: n
 		}, f({
@@ -5252,12 +5264,12 @@ function fa() {
 			} : null);
 		}, o = (e) => {
 			window.removeEventListener("pointermove", a), window.removeEventListener("pointerup", o);
-			let n = p.current;
-			if ((!n || !n.contains(e.target)) && m.current) {
-				let { def: n, size: r } = m.current, { w: i, h: a } = ea[r];
+			let n = h.current;
+			if ((!n || !n.contains(e.target)) && g.current) {
+				let { def: n, size: r } = g.current, { w: i, h: a } = ea[r];
 				t(n, r, e.clientX - i / 2, e.clientY - a / 2);
 			}
-			m.current = null, f(null);
+			g.current = null, f(null);
 		};
 		window.addEventListener("pointermove", a), window.addEventListener("pointerup", o);
 	}, [t]);
@@ -5267,17 +5279,17 @@ function fa() {
 		};
 		return window.addEventListener("keydown", t), () => window.removeEventListener("keydown", t);
 	}, [e]);
-	let y = d !== null;
+	let S = d !== null;
 	return /* @__PURE__ */ Y(q, { children: [
 		/* @__PURE__ */ J(x.div, {
 			className: "fixed inset-0 z-[1000] bg-black/20 dark:bg-black/50",
 			initial: { opacity: 0 },
-			animate: { opacity: +!y },
+			animate: { opacity: +!S },
 			exit: { opacity: 0 },
 			onClick: e
 		}),
 		/* @__PURE__ */ J(x.div, {
-			ref: p,
+			ref: h,
 			className: "fixed bottom-0 left-1/2 z-[1002] flex flex-col w-full max-w-[960px]",
 			style: { height: "58vh" },
 			initial: {
@@ -5285,7 +5297,7 @@ function fa() {
 				x: "-50%"
 			},
 			animate: {
-				y: y ? "110%" : 0,
+				y: S ? "110%" : 0,
 				x: "-50%"
 			},
 			exit: {
@@ -5334,7 +5346,7 @@ function fa() {
 										children: r.allWidgets
 									})]
 								}),
-								h.map((e) => /* @__PURE__ */ J(da, {
+								_.map((e) => /* @__PURE__ */ J(da, {
 									appId: e,
 									selected: l === e,
 									onClick: () => u(e)
@@ -5342,41 +5354,57 @@ function fa() {
 							]
 						}), /* @__PURE__ */ J("div", {
 							className: "flex-1 overflow-y-auto p-4",
-							children: Object.keys(_).length === 0 ? /* @__PURE__ */ J("div", {
+							children: p ? Object.keys(y).length === 0 ? /* @__PURE__ */ J("div", {
 								className: "flex items-center justify-center h-full text-black/30 dark:text-white/30 text-sm",
 								children: r.noWidgetsFound
-							}) : Object.entries(_).map(([e, t]) => {
-								let o = e === "__built-in__" ? r.builtIn : i(e, n[e]?.name ?? e);
-								return /* @__PURE__ */ Y("div", {
-									className: "mb-8",
-									children: [/* @__PURE__ */ Y("div", {
-										className: "flex items-center justify-between mb-3",
-										children: [/* @__PURE__ */ J("p", {
-											className: "text-black dark:text-white text-[13px] font-semibold",
-											children: o
-										}), e !== "__built-in__" && /* @__PURE__ */ Y("p", {
-											className: "text-black/30 dark:text-white/30 text-[11px]",
-											children: [
-												r.fromApp,
-												" ",
-												o
-											]
-										})]
-									}), t.map((e) => /* @__PURE__ */ Y("div", {
-										className: "mb-4",
-										children: [/* @__PURE__ */ J("p", {
-											className: "text-black/50 dark:text-white/50 text-[11px] mb-2 font-medium",
-											children: a(e.id, e.name)
-										}), /* @__PURE__ */ J("div", {
-											className: "flex flex-wrap gap-4",
-											children: e.sizes.map((t) => /* @__PURE__ */ J(ua, {
-												def: e,
-												size: t,
-												onDragStart: v
-											}, t))
-										})]
-									}, e.id))]
-								}, e);
+							}) : (() => {
+								let e = 0;
+								return Object.entries(y).map(([t, o]) => {
+									let s = t === "__built-in__" ? r.builtIn : i(t, n[t]?.name ?? t);
+									return /* @__PURE__ */ Y("div", {
+										className: "mb-8",
+										children: [/* @__PURE__ */ Y("div", {
+											className: "flex items-center justify-between mb-3",
+											children: [/* @__PURE__ */ J("p", {
+												className: "text-black dark:text-white text-[13px] font-semibold",
+												children: s
+											}), t !== "__built-in__" && /* @__PURE__ */ Y("p", {
+												className: "text-black/30 dark:text-white/30 text-[11px]",
+												children: [
+													r.fromApp,
+													" ",
+													s
+												]
+											})]
+										}), o.map((t) => /* @__PURE__ */ Y("div", {
+											className: "mb-4",
+											children: [/* @__PURE__ */ J("p", {
+												className: "text-black/50 dark:text-white/50 text-[11px] mb-2 font-medium",
+												children: a(t.id, t.name)
+											}), /* @__PURE__ */ J("div", {
+												className: "flex flex-wrap gap-4",
+												children: t.sizes.map((n) => {
+													let r = e++;
+													return /* @__PURE__ */ J(ua, {
+														def: t,
+														size: n,
+														onDragStart: b,
+														cardIndex: r
+													}, n);
+												})
+											})]
+										}, t.id))]
+									}, t);
+								});
+							})() : /* @__PURE__ */ J("div", {
+								className: "flex flex-col gap-6",
+								children: [1, 2].map((e) => /* @__PURE__ */ Y("div", {
+									className: "mb-4 animate-pulse",
+									children: [/* @__PURE__ */ J("div", { className: "h-4 w-24 bg-black/10 dark:bg-white/10 rounded mb-4" }), /* @__PURE__ */ Y("div", {
+										className: "flex gap-4",
+										children: [/* @__PURE__ */ J("div", { className: "h-[110px] w-[110px] bg-black/10 dark:bg-white/10 rounded-[14px]" }), /* @__PURE__ */ J("div", { className: "h-[110px] w-[140px] bg-black/10 dark:bg-white/10 rounded-[14px]" })]
+									})]
+								}, e))
 							})
 						})]
 					}), /* @__PURE__ */ Y("div", {

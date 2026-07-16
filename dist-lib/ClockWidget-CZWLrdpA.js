@@ -1,4 +1,4 @@
-import { t as e } from "./useTranslation-cANnzTeW.js";
+import { t as e } from "./useTranslation-DqodD730.js";
 import { useEffect as t, useState as n } from "react";
 import { jsx as r, jsxs as i } from "react/jsx-runtime";
 //#region src/components/widgets/built-in/ClockWidget.tsx

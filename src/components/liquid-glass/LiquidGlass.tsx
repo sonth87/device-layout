@@ -77,7 +77,7 @@ export function LiquidGlass({
         }
       }
     },
-    [ref, elementRef]
+    [ref, elementRef],
   );
 
   const filterStr =
@@ -199,7 +199,7 @@ export function LiquidGlass({
           className="absolute inset-x-0 top-0 h-px pointer-events-none z-10"
           style={{
             background:
-              "linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.85) 30%, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0.85) 70%, transparent 95%)",
+              "linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.5) 30%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.5) 70%, transparent 95%)",
           }}
         />
       )}
