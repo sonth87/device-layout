@@ -35,7 +35,7 @@ export interface WindowSlice {
     toggleFullScreen: (id: string) => void;
     focusWindow: (id: string) => void;
     moveWindow: (id: string, x: number, y: number) => void;
-    resizeWindow: (id: string, rect: WindowRect) => void;
+    resizeWindow: (id: string, rect: WindowRect, savePrev?: boolean) => void;
     setWindowTitle: (id: string, title: string) => void;
     hydrateWindows: (windows: WindowState[]) => void;
 }

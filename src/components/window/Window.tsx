@@ -125,7 +125,9 @@ export function Window({ windowId }: WindowProps) {
           so both bars move in lockstep (see docs/dev/history.md). Overlay
           (not a flex member) so it doesn't push window content down when revealed. */}
       {(isFloatingWindow || win.isMaximized) && !win.isFullScreen && (
-        <WindowChrome windowId={windowId} onPointerDown={onDragStart} />
+        <div className={cn(appConfig?.titleBarMode === 'transparent' ? 'absolute top-0 inset-x-0 z-20' : 'relative')}>
+          <WindowChrome windowId={windowId} onPointerDown={onDragStart} />
+        </div>
       )}
       {win.isFullScreen && (
         <motion.div

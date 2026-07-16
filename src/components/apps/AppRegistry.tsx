@@ -14,6 +14,7 @@ const APP_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   Browser: lazy(() => import('./Browser').then((m) => ({ default: m.Browser }))),
   TextEditor: lazy(() => import('./TextEditor').then((m) => ({ default: m.TextEditor }))),
   Clock: lazy(() => import('./Clock').then((m) => ({ default: m.Clock }))),
+  Calculator: lazy(() => import('./Calculator').then((m) => ({ default: m.Calculator }))),
   Notes: lazy(() => import('./Notes').then((m) => ({ default: m.Notes }))),
   Photos: lazy(() => import('./Photos').then((m) => ({ default: m.Photos }))),
   Music: lazy(() => import('./Music').then((m) => ({ default: m.Music }))),

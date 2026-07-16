@@ -805,10 +805,10 @@ function Ve(e, t) {
 				e.windows[t] && (e.windows[t].rect.x = n, e.windows[t].rect.y = r);
 			});
 		},
-		resizeWindow(t, n) {
+		resizeWindow(t, n, r = !0) {
 			e((e) => {
-				let r = e.windows[t];
-				r && (r.prevRect ||= { ...r.rect }, r.rect = n);
+				let i = e.windows[t];
+				i && (r ? i.prevRect ||= { ...i.rect } : i.prevRect = null, i.rect = n);
 			});
 		},
 		setWindowTitle(t, n) {
@@ -2254,6 +2254,25 @@ var We = [
 		}]
 	},
 	{
+		id: "calculator",
+		name: "Calculator",
+		icon: "lucide:Calculator",
+		iconColor: ["#ff9500", "#ff5e00"],
+		component: "Calculator",
+		defaultSize: {
+			width: 320,
+			height: 460
+		},
+		minSize: {
+			width: 280,
+			height: 400
+		},
+		hasMenuBar: !1,
+		titleBarMode: "transparent",
+		category: "productivity",
+		mobileFullscreen: !1
+	},
+	{
 		id: "photos",
 		name: "Photos",
 		icon: "lucide:Image",
@@ -2343,6 +2362,7 @@ var We = [
 ], Ze = [
 	"finder",
 	"browser",
+	"calculator",
 	"notes",
 	"music",
 	"messages",

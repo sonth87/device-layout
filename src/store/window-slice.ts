@@ -41,7 +41,7 @@ export interface WindowSlice {
   toggleFullScreen: (id: string) => void;
   focusWindow: (id: string) => void;
   moveWindow: (id: string, x: number, y: number) => void;
-  resizeWindow: (id: string, rect: WindowRect) => void;
+  resizeWindow: (id: string, rect: WindowRect, savePrev?: boolean) => void;
   setWindowTitle: (id: string, title: string) => void;
   hydrateWindows: (windows: WindowState[]) => void;
 }
@@ -298,12 +298,16 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
       });
     },
 
-    resizeWindow(id, rect) {
+    resizeWindow(id, rect, savePrev = true) {
       set((state) => {
         const win = state.windows[id];
         if (win) {
-          if (!win.prevRect) {
-            win.prevRect = { ...win.rect };
+          if (savePrev) {
+            if (!win.prevRect) {
+              win.prevRect = { ...win.rect };
+            }
+          } else {
+            win.prevRect = null;
           }
           win.rect = rect;
         }

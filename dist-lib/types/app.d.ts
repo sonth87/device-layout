@@ -81,6 +81,8 @@ export interface AppConfig {
     launchMode?: 'single' | 'multi';
     /** Top menu bar declarations for macOS MenuBar (replaces hardcoded APP_MENUS) */
     menuBarMenus?: MenuBarMenu[];
+    /** Styling mode for the window's titlebar */
+    titleBarMode?: 'normal' | 'transparent';
     /** Key in AppSettingsRegistry — renders this app's panel inside System Settings */
     appSettings?: string;
     /**

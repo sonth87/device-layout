@@ -371,6 +371,19 @@ export const APPS_CONFIG: AppConfig[] = [
     ],
   },
   {
+    id: 'calculator',
+    name: 'Calculator',
+    icon: 'lucide:Calculator',
+    iconColor: ['#ff9500', '#ff5e00'],
+    component: 'Calculator',
+    defaultSize: { width: 320, height: 460 },
+    minSize: { width: 280, height: 400 },
+    hasMenuBar: false,
+    titleBarMode: 'transparent',
+    category: 'productivity',
+    mobileFullscreen: false,
+  },
+  {
     id: 'photos',
     name: 'Photos',
     icon: 'lucide:Image',
@@ -435,4 +448,4 @@ export const APPS_CONFIG: AppConfig[] = [
 ];
 
 /** Default dock order (app IDs) */
-export const DEFAULT_DOCK_APPS = ['finder', 'browser', 'notes', 'music', 'messages', 'calendar', 'photos', 'terminal', 'textedit', 'clock', 'settings'];
+export const DEFAULT_DOCK_APPS = ['finder', 'browser', 'calculator', 'notes', 'music', 'messages', 'calendar', 'photos', 'terminal', 'textedit', 'clock', 'settings'];
