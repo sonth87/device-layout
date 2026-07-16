@@ -1,13 +1,13 @@
-import { t as e } from "./store-DU55EtUQ.js";
+import { t as e } from "./store-429-ivOo.js";
 import { t } from "./utils-B6YmNDS2.js";
 import { t as n } from "./createLucideIcon--WjuKCts.js";
 import { t as r } from "./plus-Dx6tdmvY.js";
 import { t as i } from "./search-BKG97C0x.js";
-import { t as a } from "./useAppTranslation-6c6n7ofM.js";
-import { n as o, t as s } from "./MobileSplitView-U5mifaLx.js";
-import { useRef as c, useState as l } from "react";
-import { jsx as u, jsxs as d } from "react/jsx-runtime";
-var f = n("trash-2", [
+import { t as a } from "./useAppTranslation-Chj9ex4L.js";
+import { n as o, r as s, t as c } from "./MobileSplitView-DTPWqV5X.js";
+import { useRef as l, useState as u } from "react";
+import { jsx as d, jsxs as f } from "react/jsx-runtime";
+var p = n("trash-2", [
 	["path", {
 		d: "M10 11v6",
 		key: "nco0om"
@@ -28,9 +28,9 @@ var f = n("trash-2", [
 		d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2",
 		key: "e791ji"
 	}]
-]), p = "/Users/user/Documents/Notes/";
-function m(e) {
-	return Object.values(e).filter((e) => e.type === "file" && e.path.startsWith(p) && e.path.endsWith(".note")).map((e) => {
+]), m = "/Users/user/Documents/Notes/";
+function h(e) {
+	return Object.values(e).filter((e) => e.type === "file" && e.path.startsWith(m) && e.path.endsWith(".note")).map((e) => {
 		if (e.type !== "file") return null;
 		try {
 			return JSON.parse(e.content);
@@ -39,7 +39,7 @@ function m(e) {
 		}
 	}).filter(Boolean);
 }
-var h = {
+var g = {
 	en: {
 		search: "Search",
 		newNote: "New Note",
@@ -101,10 +101,10 @@ var h = {
 		welcomeBody: "เริ่มเขียนความคิดของคุณที่นี่\n\nคุณสามารถสร้างบันทึกใหม่ด้วยปุ่ม + และลบด้วยไอคอนถังขยะ"
 	}
 };
-function g() {
-	let { t: n } = a("notes", h), o = e((e) => e.vfsWriteFile), f = e((e) => e.vfsMkdir), g = e((e) => e.vfsRm), [v, y] = l(() => {
-		f(p.slice(0, -1));
-		let t = m(e.getState().vfs);
+function _() {
+	let { t: n } = a("notes", g), o = e((e) => e.vfsWriteFile), p = e((e) => e.vfsMkdir), _ = e((e) => e.vfsRm), [y, b] = u(() => {
+		p(m.slice(0, -1));
+		let t = h(e.getState().vfs);
 		if (t.length > 0) return t.sort((e, t) => t.modifiedAt - e.modifiedAt);
 		let r = {
 			id: "welcome",
@@ -112,127 +112,127 @@ function g() {
 			body: n.welcomeBody,
 			modifiedAt: Date.now()
 		};
-		return o(`${p}${r.id}.note`, JSON.stringify(r), "application/json"), [r];
-	}), [b, x] = l(null), [S, C] = l(""), w = c(null), T = (e) => {
-		o(`${p}${e.id}.note`, JSON.stringify(e), "application/json");
-	}, E = () => {
+		return o(`${m}${r.id}.note`, JSON.stringify(r), "application/json"), [r];
+	}), [x, S] = s(y[0]?.id ?? null), [C, w] = u(""), T = l(null), E = (e) => {
+		o(`${m}${e.id}.note`, JSON.stringify(e), "application/json");
+	}, D = () => {
 		let e = {
 			id: crypto.randomUUID(),
 			title: n.newNote,
 			body: "",
 			modifiedAt: Date.now()
 		};
-		T(e), y((t) => [e, ...t]), x(e.id), setTimeout(() => w.current?.focus(), 50);
-	}, D = (e) => {
-		g(`${p}${e}.note`), y((t) => {
+		E(e), b((t) => [e, ...t]), S(e.id), setTimeout(() => T.current?.focus(), 50);
+	}, O = (e) => {
+		_(`${m}${e}.note`), b((t) => {
 			let n = t.filter((t) => t.id !== e);
-			return b === e && x(n[0]?.id ?? null), n;
+			return x === e && S(n[0]?.id ?? null), n;
 		});
-	}, O = (e, t) => {
-		y((n) => n.map((n) => {
+	}, k = (e, t) => {
+		b((n) => n.map((n) => {
 			if (n.id !== e) return n;
 			let r = {
 				...n,
 				...t,
 				modifiedAt: Date.now()
 			};
-			return T(r), r;
+			return E(r), r;
 		}));
-	}, k = v.find((e) => e.id === b) ?? null, A = v.filter((e) => e.title.toLowerCase().includes(S.toLowerCase()) || e.body.toLowerCase().includes(S.toLowerCase()));
-	return /* @__PURE__ */ u(s, {
-		list: /* @__PURE__ */ d("div", {
+	}, A = y.find((e) => e.id === x) ?? null, j = y.filter((e) => e.title.toLowerCase().includes(C.toLowerCase()) || e.body.toLowerCase().includes(C.toLowerCase()));
+	return /* @__PURE__ */ d(c, {
+		list: /* @__PURE__ */ f("div", {
 			className: "flex flex-col h-full bg-[#fdf9ef] dark:bg-[#0F1115] text-black dark:text-white",
 			children: [
-				/* @__PURE__ */ u("div", {
+				/* @__PURE__ */ d("div", {
 					className: "p-2 border-b border-black/10 dark:border-white/10",
-					children: /* @__PURE__ */ d("div", {
+					children: /* @__PURE__ */ f("div", {
 						className: "flex items-center gap-1.5 px-2 py-1.5 bg-black/5 dark:bg-white/10 rounded-lg",
-						children: [/* @__PURE__ */ u(i, { className: "w-3 h-3 text-black/40 dark:text-white/40 shrink-0" }), /* @__PURE__ */ u("input", {
-							value: S,
-							onChange: (e) => C(e.target.value),
+						children: [/* @__PURE__ */ d(i, { className: "w-3 h-3 text-black/40 dark:text-white/40 shrink-0" }), /* @__PURE__ */ d("input", {
+							value: C,
+							onChange: (e) => w(e.target.value),
 							placeholder: n.search,
 							className: "flex-1 bg-transparent text-xs outline-none placeholder:text-black/30 dark:placeholder:text-white/30"
 						})]
 					})
 				}),
-				/* @__PURE__ */ u("div", {
+				/* @__PURE__ */ d("div", {
 					className: "flex-1 overflow-y-auto",
-					children: A.map((e) => /* @__PURE__ */ d("button", {
-						onClick: () => x(e.id),
-						className: t("w-full text-left px-3 py-2.5 border-b border-black/5 dark:border-white/5 transition-colors", e.id !== b && "hover:bg-black/5 dark:hover:bg-white/5"),
-						style: e.id === b ? { backgroundColor: "var(--highlight-color)" } : void 0,
-						children: [/* @__PURE__ */ u("p", {
+					children: j.map((e) => /* @__PURE__ */ f("button", {
+						onClick: () => S(e.id),
+						className: t("w-full text-left px-3 py-2.5 border-b border-black/5 dark:border-white/5 transition-colors", e.id !== x && "hover:bg-black/5 dark:hover:bg-white/5"),
+						style: e.id === x ? { backgroundColor: "var(--highlight-color)" } : void 0,
+						children: [/* @__PURE__ */ d("p", {
 							className: "text-sm font-medium text-black/90 dark:text-white/90 truncate",
 							children: e.title || n.untitled
-						}), /* @__PURE__ */ u("p", {
+						}), /* @__PURE__ */ d("p", {
 							className: "text-[11px] text-black/40 dark:text-white/40 mt-0.5",
 							children: new Date(e.modifiedAt).toLocaleDateString()
 						})]
 					}, e.id))
 				}),
-				/* @__PURE__ */ u("div", {
+				/* @__PURE__ */ d("div", {
 					className: "p-2 border-t border-black/10 dark:border-white/10 flex justify-end",
-					children: /* @__PURE__ */ u("button", {
-						onClick: E,
+					children: /* @__PURE__ */ d("button", {
+						onClick: D,
 						className: "w-8 h-8 rounded-lg flex items-center justify-center hover:opacity-80 transition-opacity text-white",
 						style: { backgroundColor: "var(--accent-color)" },
-						children: /* @__PURE__ */ u(r, { className: "w-4 h-4 text-white" })
+						children: /* @__PURE__ */ d(r, { className: "w-4 h-4 text-white" })
 					})
 				})
 			]
 		}),
-		detail: k ? /* @__PURE__ */ u(_, {
-			note: k,
-			bodyRef: w,
-			onUpdate: O,
-			onDelete: D,
+		detail: A ? /* @__PURE__ */ d(v, {
+			note: A,
+			bodyRef: T,
+			onUpdate: k,
+			onDelete: O,
 			t: n
 		}) : null,
-		onBack: () => x(null),
-		detailTitle: k?.title,
+		onBack: () => S(null),
+		detailTitle: A?.title,
 		className: "bg-[#fdf9ef] dark:bg-[#0F1115]",
 		sidebarWidth: "w-56"
 	});
 }
-function _({ note: e, bodyRef: t, onUpdate: n, onDelete: r, t: i }) {
+function v({ note: e, bodyRef: t, onUpdate: n, onDelete: r, t: i }) {
 	let a = o();
-	return /* @__PURE__ */ d("div", {
+	return /* @__PURE__ */ f("div", {
 		className: "flex flex-col h-full bg-[#fdf9ef] dark:bg-[#0F1115] text-black dark:text-white",
-		children: [/* @__PURE__ */ d("div", {
+		children: [/* @__PURE__ */ f("div", {
 			className: "flex items-center gap-2 px-3 py-2 border-b border-black/10 dark:border-white/10 shrink-0",
 			children: [
-				a && /* @__PURE__ */ d("button", {
+				a && /* @__PURE__ */ f("button", {
 					onClick: a,
 					className: "flex items-center gap-0.5 text-accent-active active:opacity-60 transition-opacity shrink-0",
-					children: [/* @__PURE__ */ u("svg", {
+					children: [/* @__PURE__ */ d("svg", {
 						className: "w-5 h-5",
 						fill: "none",
 						viewBox: "0 0 24 24",
 						stroke: "currentColor",
 						strokeWidth: 2.5,
-						children: /* @__PURE__ */ u("path", {
+						children: /* @__PURE__ */ d("path", {
 							strokeLinecap: "round",
 							strokeLinejoin: "round",
 							d: "M15 19l-7-7 7-7"
 						})
-					}), /* @__PURE__ */ u("span", {
+					}), /* @__PURE__ */ d("span", {
 						className: "text-[14px] font-medium",
 						children: i.backLabel
 					})]
 				}),
-				/* @__PURE__ */ u("input", {
+				/* @__PURE__ */ d("input", {
 					value: e.title,
 					onChange: (t) => n(e.id, { title: t.target.value }),
 					className: "flex-1 bg-transparent font-semibold text-base outline-none min-w-0",
 					placeholder: i.noteTitlePlaceholder
 				}),
-				/* @__PURE__ */ u("button", {
+				/* @__PURE__ */ d("button", {
 					onClick: () => r(e.id),
 					className: "w-7 h-7 rounded-md flex items-center justify-center hover:bg-red-500/10 text-black/40 dark:text-white/40 hover:text-red-500 transition-colors shrink-0",
-					children: /* @__PURE__ */ u(f, { className: "w-3.5 h-3.5" })
+					children: /* @__PURE__ */ d(p, { className: "w-3.5 h-3.5" })
 				})
 			]
-		}), /* @__PURE__ */ u("textarea", {
+		}), /* @__PURE__ */ d("textarea", {
 			ref: t,
 			value: e.body,
 			onChange: (t) => n(e.id, { body: t.target.value }),
@@ -242,4 +242,4 @@ function _({ note: e, bodyRef: t, onUpdate: n, onDelete: r, t: i }) {
 	});
 }
 //#endregion
-export { g as Notes };
+export { _ as Notes };

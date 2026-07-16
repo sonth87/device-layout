@@ -1,4 +1,4 @@
-import { t as e } from "./store-DU55EtUQ.js";
+import { t as e } from "./store-429-ivOo.js";
 import { jsx as t } from "react/jsx-runtime";
 //#region src/components/apps/IframeApp.tsx
 function n({ appId: n }) {

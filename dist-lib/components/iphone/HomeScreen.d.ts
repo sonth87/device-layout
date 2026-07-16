@@ -5,5 +5,5 @@ interface HomeScreenProps {
     navBarHeight: number;
     homeIndicatorHeight: number;
 }
-export declare function IPhoneHomeScreen({ onOpenApp, statusBarHeight, navBarHeight, homeIndicatorHeight }: HomeScreenProps): import("react/jsx-runtime").JSX.Element;
+export declare function IPhoneHomeScreen({ onOpenApp, statusBarHeight, navBarHeight, homeIndicatorHeight, }: HomeScreenProps): import("react/jsx-runtime").JSX.Element;
 export {};

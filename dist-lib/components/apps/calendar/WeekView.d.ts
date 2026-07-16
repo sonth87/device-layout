@@ -5,6 +5,7 @@ interface WeekViewProps {
     setCurrentView: (v: "day" | "week" | "month" | "year") => void;
     filteredEvents: CalEvent[];
     onEventClick: (ev: CalEvent, el: HTMLElement) => void;
+    isRedHoliday?: (d: Date) => boolean;
 }
-export declare function WeekView({ currentDate, setSelectedDate, setCurrentView, filteredEvents, onEventClick }: WeekViewProps): import("react/jsx-runtime").JSX.Element;
+export declare function WeekView({ currentDate, setSelectedDate, setCurrentView, filteredEvents, onEventClick, isRedHoliday }: WeekViewProps): import("react/jsx-runtime").JSX.Element;
 export {};

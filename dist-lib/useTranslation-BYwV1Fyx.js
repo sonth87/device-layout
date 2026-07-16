@@ -1,4 +1,4 @@
-import { t as e } from "./store-DU55EtUQ.js";
+import { t as e } from "./store-429-ivOo.js";
 //#region src/hooks/useTranslation.ts
 var t = {
 	en: {
@@ -145,7 +145,21 @@ var t = {
 		descWidgetWorldClock: "Clock with city time list",
 		descWidgetNotes: "Quick note preview",
 		descWidgetCalendarToday: "Today date card widget",
-		descWidgetCalendarMonth: "Month view calendar"
+		descWidgetCalendarMonth: "Month view calendar",
+		calToday: "Today",
+		calNewEvent: "New Event",
+		calNewReminder: "New Reminder",
+		calCreateQuickEvent: "Create Quick Event",
+		calQuickEventPlaceholder: "Movie at 7pm on Friday",
+		calDay: "Day",
+		calWeek: "Week",
+		calMonth: "Month",
+		calYear: "Year",
+		calRepeatsYearly: "Repeats yearly",
+		calDoesNotRepeat: "Does not repeat",
+		calUnsubscribe: "Unsubscribe",
+		calDelete: "Delete",
+		calLunarFirstDay: "First day of lunar month"
 	},
 	vi: {
 		system: "Hệ thống",
@@ -291,7 +305,21 @@ var t = {
 		descWidgetWorldClock: "Đồng hồ hiển thị thời gian theo thành phố",
 		descWidgetNotes: "Bản xem trước nhanh ghi chú",
 		descWidgetCalendarToday: "Widget hiển thị ngày hôm nay",
-		descWidgetCalendarMonth: "Lịch hiển thị dạng tháng"
+		descWidgetCalendarMonth: "Lịch hiển thị dạng tháng",
+		calToday: "Hôm nay",
+		calNewEvent: "Sự kiện mới",
+		calNewReminder: "Nhắc nhở mới",
+		calCreateQuickEvent: "Tạo nhanh sự kiện",
+		calQuickEventPlaceholder: "Xem phim lúc 19h tối thứ Sáu",
+		calDay: "Ngày",
+		calWeek: "Tuần",
+		calMonth: "Tháng",
+		calYear: "Năm",
+		calRepeatsYearly: "Lặp lại hàng năm",
+		calDoesNotRepeat: "Không lặp lại",
+		calUnsubscribe: "Hủy đăng ký",
+		calDelete: "Xóa",
+		calLunarFirstDay: "Ngày đầu tiên của tháng âm lịch"
 	},
 	ja: {
 		system: "システム",
@@ -437,7 +465,21 @@ var t = {
 		descWidgetWorldClock: "都市別時間リスト付き時計",
 		descWidgetNotes: "メモのクイックプレビュー",
 		descWidgetCalendarToday: "今日の日付カードウィジェット",
-		descWidgetCalendarMonth: "月間表示カレンダー"
+		descWidgetCalendarMonth: "月間表示カレンダー",
+		calToday: "今日",
+		calNewEvent: "新規イベント",
+		calNewReminder: "新規リマインダー",
+		calCreateQuickEvent: "クイックイベント作成",
+		calQuickEventPlaceholder: "金曜日の午後7時に映画",
+		calDay: "日",
+		calWeek: "週",
+		calMonth: "月",
+		calYear: "年",
+		calRepeatsYearly: "毎年繰り返す",
+		calDoesNotRepeat: "繰り返さない",
+		calUnsubscribe: "登録解除",
+		calDelete: "削除",
+		calLunarFirstDay: "旧暦の初日"
 	},
 	ko: {
 		system: "시스템",
@@ -583,7 +625,21 @@ var t = {
 		descWidgetWorldClock: "도시별 시간 목록이 있는 시계",
 		descWidgetNotes: "빠른 메모 미리보기",
 		descWidgetCalendarToday: "오늘 날짜 카드 위젯",
-		descWidgetCalendarMonth: "월별 달력 보기"
+		descWidgetCalendarMonth: "월별 달력 보기",
+		calToday: "오늘",
+		calNewEvent: "새 이벤트",
+		calNewReminder: "새 미리 알림",
+		calCreateQuickEvent: "빠른 이벤트 생성",
+		calQuickEventPlaceholder: "금요일 오후 7시에 영화",
+		calDay: "일",
+		calWeek: "주",
+		calMonth: "월",
+		calYear: "년",
+		calRepeatsYearly: "매년 반복",
+		calDoesNotRepeat: "반복 안 함",
+		calUnsubscribe: "구독 취소",
+		calDelete: "삭제",
+		calLunarFirstDay: "음력 초하루"
 	},
 	zh: {
 		system: "系统",
@@ -729,7 +785,21 @@ var t = {
 		descWidgetWorldClock: "带有城市时间列表的时钟",
 		descWidgetNotes: "快速便签预览",
 		descWidgetCalendarToday: "今日日期卡片组件",
-		descWidgetCalendarMonth: "月视图日历"
+		descWidgetCalendarMonth: "月视图日历",
+		calToday: "今天",
+		calNewEvent: "新建日程",
+		calNewReminder: "新建提醒",
+		calCreateQuickEvent: "快速创建日程",
+		calQuickEventPlaceholder: "周五晚上7点看电影",
+		calDay: "日",
+		calWeek: "周",
+		calMonth: "月",
+		calYear: "年",
+		calRepeatsYearly: "每年重复",
+		calDoesNotRepeat: "不重复",
+		calUnsubscribe: "取消订阅",
+		calDelete: "删除",
+		calLunarFirstDay: "农历初一"
 	},
 	th: {
 		system: "ระบบ",
@@ -875,7 +945,21 @@ var t = {
 		descWidgetWorldClock: "นาฬิกาพร้อมรายการเวลาของเมืองต่างๆ",
 		descWidgetNotes: "แสดงตัวอย่างโน้ตด่วน",
 		descWidgetCalendarToday: "วิดเจ็ตการ์ดวันที่วันนี้",
-		descWidgetCalendarMonth: "ปฏิทินมุมมองรายเดือน"
+		descWidgetCalendarMonth: "ปฏิทินมุมมองรายเดือน",
+		calToday: "วันนี้",
+		calNewEvent: "กิจกรรมใหม่",
+		calNewReminder: "เตือนความจำใหม่",
+		calCreateQuickEvent: "สร้างกิจกรรมด่วน",
+		calQuickEventPlaceholder: "ดูหนังตอน 19.00 น. วันศุกร์",
+		calDay: "วัน",
+		calWeek: "สัปดาห์",
+		calMonth: "เดือน",
+		calYear: "ปี",
+		calRepeatsYearly: "ซ้ำทุกปี",
+		calDoesNotRepeat: "ไม่ซ้ำ",
+		calUnsubscribe: "ยกเลิกการติดตาม",
+		calDelete: "ลบ",
+		calLunarFirstDay: "วันแรกของเดือนจันทรคติ"
 	}
 };
 function n() {

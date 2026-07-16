@@ -6,6 +6,7 @@ interface MonthViewProps {
     setCurrentView: (v: "day" | "week" | "month" | "year") => void;
     filteredEvents: CalEvent[];
     onEventClick: (ev: CalEvent, el: HTMLElement) => void;
+    isRedHoliday?: (d: Date) => boolean;
 }
-export declare function MonthView({ currentDate, selectedDate, setSelectedDate, setCurrentView, filteredEvents, onEventClick, }: MonthViewProps): import("react/jsx-runtime").JSX.Element;
+export declare function MonthView({ currentDate, selectedDate, setSelectedDate, setCurrentView, filteredEvents, onEventClick, isRedHoliday, }: MonthViewProps): import("react/jsx-runtime").JSX.Element;
 export {};

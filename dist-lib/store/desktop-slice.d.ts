@@ -27,6 +27,7 @@ export interface DesktopSlice {
     useStacks: boolean;
     stackGroupBy: StackGroupBy;
     language: 'en' | 'vi' | 'ja' | 'ko' | 'zh' | 'th';
+    country: string;
     desktopIconSize: number;
     desktopGridSpacing: number;
     desktopTextSize: number;
@@ -53,6 +54,7 @@ export interface DesktopSlice {
     toggleStacks: () => void;
     setStackGroupBy: (by: StackGroupBy) => void;
     setLanguage: (lang: 'en' | 'vi' | 'ja' | 'ko' | 'zh' | 'th') => void;
+    setCountry: (country: string) => void;
     setDesktopIconSize: (size: number) => void;
     setDesktopGridSpacing: (spacing: number) => void;
     setDesktopTextSize: (size: number) => void;

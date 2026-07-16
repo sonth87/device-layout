@@ -701,6 +701,12 @@ function Ve(e, t) {
 			return e.launchMode !== "multi" && i[0] ? (t().focusWindow(i[0].id), i[0].id) : t().openWindow(e, n);
 		},
 		openWindow(n, r) {
+			if (n.launchMode !== "multi") {
+				let r = Object.values(t().windows).find((e) => e.appId === n.id);
+				if (r) return t().focusWindow(r.id), r.isMinimized && e((e) => {
+					e.windows[r.id] && (e.windows[r.id].isMinimized = !1);
+				}), r.id;
+			}
 			let i = Ie(8);
 			return e((e) => {
 				e.zCounter += 1, e.windows[i] = {
@@ -801,7 +807,8 @@ function Ve(e, t) {
 		},
 		resizeWindow(t, n) {
 			e((e) => {
-				e.windows[t] && (e.windows[t].rect = n);
+				let r = e.windows[t];
+				r && (r.prevRect ||= { ...r.rect }, r.rect = n);
 			});
 		},
 		setWindowTitle(t, n) {
@@ -2369,6 +2376,7 @@ function Qe(e) {
 		useStacks: !1,
 		stackGroupBy: "kind",
 		language: "en",
+		country: "vn",
 		desktopIconSize: 64,
 		desktopGridSpacing: 50,
 		desktopTextSize: 12,
@@ -2472,6 +2480,11 @@ function Qe(e) {
 		setLanguage(t) {
 			e((e) => {
 				e.language = t;
+			});
+		},
+		setCountry(t) {
+			e((e) => {
+				e.country = t;
 			});
 		},
 		setDesktopIconSize(t) {
@@ -2758,6 +2771,7 @@ var ot = o()(Me(Pe((e, t) => {
 		vfs: e.vfs,
 		widgetInstances: e.widgetInstances,
 		language: e.language,
+		country: e.country,
 		desktopIconSize: e.desktopIconSize,
 		desktopGridSpacing: e.desktopGridSpacing,
 		desktopTextSize: e.desktopTextSize,

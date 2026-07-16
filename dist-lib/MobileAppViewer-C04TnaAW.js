@@ -1,4 +1,4 @@
-import { r as e, t } from "./store-DU55EtUQ.js";
+import { r as e, t } from "./store-429-ivOo.js";
 import { t as n } from "./utils-B6YmNDS2.js";
 import { t as r } from "./createLucideIcon--WjuKCts.js";
 import { t as i } from "./chevron-right-BcSxNxws.js";
@@ -7,7 +7,7 @@ import { t as o } from "./search-BKG97C0x.js";
 import { t as s } from "./sun-DdSv2tyc.js";
 import { t as c } from "./volume-2-DAfADR-a.js";
 import { t as l } from "./x-BYw6fhgP.js";
-import { t as u } from "./useTranslation-C7Ov8uGR.js";
+import { t as u } from "./useTranslation-BYwV1Fyx.js";
 import { t as d } from "./AppViewport-BDJLAndL.js";
 import * as f from "react";
 import { Children as p, Component as m, Fragment as h, Suspense as g, createContext as _, createElement as v, forwardRef as y, isValidElement as b, lazy as x, useCallback as S, useContext as C, useEffect as w, useId as T, useInsertionEffect as E, useLayoutEffect as ee, useMemo as D, useRef as O, useState as k } from "react";
@@ -9366,19 +9366,19 @@ function tv({ onSpotlight: r } = {}) {
 //#endregion
 //#region src/components/apps/AppRegistry.tsx
 var nv = {
-	Finder: x(() => import("./Finder-CHvt26bl.js").then((e) => ({ default: e.Finder }))),
-	Terminal: x(() => import("./Terminal-B85ZKx7W.js").then((e) => ({ default: e.Terminal }))),
-	Settings: x(() => import("./Settings-t8HTCaVO.js").then((e) => ({ default: e.Settings }))),
-	Browser: x(() => import("./Browser-ChL-YsEw.js").then((e) => ({ default: e.Browser }))),
-	TextEditor: x(() => import("./TextEditor-BESkwX6W.js").then((e) => ({ default: e.TextEditor }))),
-	Clock: x(() => import("./Clock-Bs-RNEdN.js").then((e) => ({ default: e.Clock }))),
-	Notes: x(() => import("./Notes-BjM6wqlW.js").then((e) => ({ default: e.Notes }))),
-	Photos: x(() => import("./Photos-ndTvpPCG.js").then((e) => ({ default: e.Photos }))),
-	Music: x(() => import("./Music-vczAwk71.js").then((e) => ({ default: e.Music }))),
-	Calendar: x(() => import("./Calendar-DMK6x_P-.js").then((e) => ({ default: e.Calendar }))),
-	Messages: x(() => import("./Messages-DanNCDoX.js").then((e) => ({ default: e.Messages }))),
-	IframeApp: x(() => import("./IframeApp-CjBZHt-Q.js").then((e) => ({ default: e.IframeApp }))),
-	MdxApp: x(() => import("./MdxApp-D4g61g31.js").then((e) => ({ default: e.MdxApp })))
+	Finder: x(() => import("./Finder-Cr3XrCsM.js").then((e) => ({ default: e.Finder }))),
+	Terminal: x(() => import("./Terminal-s563vmhU.js").then((e) => ({ default: e.Terminal }))),
+	Settings: x(() => import("./Settings-BaywCphx.js").then((e) => ({ default: e.Settings }))),
+	Browser: x(() => import("./Browser-CzIEKD2s.js").then((e) => ({ default: e.Browser }))),
+	TextEditor: x(() => import("./TextEditor-Br2dYWkq.js").then((e) => ({ default: e.TextEditor }))),
+	Clock: x(() => import("./Clock-Dw7sNgbw.js").then((e) => ({ default: e.Clock }))),
+	Notes: x(() => import("./Notes-B2rRlRIz.js").then((e) => ({ default: e.Notes }))),
+	Photos: x(() => import("./Photos-CvFz5zSt.js").then((e) => ({ default: e.Photos }))),
+	Music: x(() => import("./Music-CSjVO8g4.js").then((e) => ({ default: e.Music }))),
+	Calendar: x(() => import("./Calendar-Ckf2E-jZ.js").then((e) => ({ default: e.Calendar }))),
+	Messages: x(() => import("./Messages-D_GwpAAW.js").then((e) => ({ default: e.Messages }))),
+	IframeApp: x(() => import("./IframeApp-CffwEqsW.js").then((e) => ({ default: e.IframeApp }))),
+	MdxApp: x(() => import("./MdxApp-wE0YQry4.js").then((e) => ({ default: e.MdxApp })))
 };
 function rv() {
 	return /* @__PURE__ */ j("div", {
@@ -9514,10 +9514,10 @@ function cv() {
 	return C(sv);
 }
 function lv({ statusBarHeight: e, navBarHeight: n, homeIndicatorHeight: r = 20 }) {
-	let i = t((e) => e.windows), a = t((e) => e.apps), o = t((e) => e.closeWindow), [s, c] = k(!1), [l, u] = k(!1), d = Object.values(i).filter((e) => !e.isMinimized).sort((e, t) => t.zIndex - e.zIndex)[0] ?? null, f = S(() => {
-		d && o(d.id);
-	}, [d, o]), p = d ? a[d.appId] : null, m = Fd(), h = nd(0), g = ad(h, [0, -220], [1, .75]), _ = ad(h, [0, -220], [0, 48]);
-	return /* @__PURE__ */ j(al, { children: d && p && /* @__PURE__ */ M(td.div, {
+	let i = t((e) => e.windows), a = t((e) => e.apps), o = t((e) => e.closeWindow), [s, c] = k(!1), [l, u] = k(!1), d = Object.values(i).filter((e) => !e.isMinimized).sort((e, t) => t.zIndex - e.zIndex), f = d[0] ?? null, p = S(() => {
+		f && o(f.id);
+	}, [f, o]), m = f ? a[f.appId] : null, h = Fd(), g = nd(0), _ = ad(g, [0, -220], [1, .75]), v = ad(g, [0, -220], [0, 48]);
+	return /* @__PURE__ */ j(al, { children: f && m && /* @__PURE__ */ M(td.div, {
 		initial: {
 			scale: .88,
 			opacity: 0
@@ -9538,13 +9538,13 @@ function lv({ statusBarHeight: e, navBarHeight: n, homeIndicatorHeight: r = 20 }
 		className: "absolute inset-0 z-[500] bg-white dark:bg-neutral-900 flex flex-col overflow-hidden",
 		style: {
 			paddingTop: e,
-			scale: g,
-			y: h,
-			borderRadius: _,
+			scale: _,
+			y: g,
+			borderRadius: v,
 			transformOrigin: "center bottom"
 		},
 		drag: "y",
-		dragControls: m,
+		dragControls: h,
 		dragListener: !1,
 		dragConstraints: {
 			top: -220,
@@ -9555,7 +9555,7 @@ function lv({ statusBarHeight: e, navBarHeight: n, homeIndicatorHeight: r = 20 }
 			bottom: 0
 		},
 		onDragEnd: (e, t) => {
-			t.offset.y < -85 && o(d.id), Md(h, 0, {
+			t.offset.y < -85 && d.forEach((e) => o(e.id)), Md(g, 0, {
 				type: "spring",
 				stiffness: 300,
 				damping: 30
@@ -9581,7 +9581,7 @@ function lv({ statusBarHeight: e, navBarHeight: n, homeIndicatorHeight: r = 20 }
 					className: "flex items-center gap-2 px-3 border-b border-black/8 dark:border-white/8 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl shrink-0 overflow-hidden",
 					children: [
 						/* @__PURE__ */ j("button", {
-							onClick: f,
+							onClick: p,
 							className: "flex items-center gap-0.5 text-blue-500 active:opacity-60 transition-opacity",
 							children: /* @__PURE__ */ j("svg", {
 								className: "w-5 h-5",
@@ -9598,9 +9598,9 @@ function lv({ statusBarHeight: e, navBarHeight: n, homeIndicatorHeight: r = 20 }
 						}),
 						/* @__PURE__ */ j("span", {
 							className: "flex-1 text-center text-[15px] font-semibold text-black dark:text-white truncate",
-							children: p.name
+							children: m.name
 						}),
-						p.menuBarMenus && p.menuBarMenus.length > 0 ? /* @__PURE__ */ j("button", {
+						m.menuBarMenus && m.menuBarMenus.length > 0 ? /* @__PURE__ */ j("button", {
 							onClick: () => u(!0),
 							className: "w-5 h-5 flex items-center justify-center text-blue-500 active:opacity-60 transition-opacity",
 							children: /* @__PURE__ */ j(Vd, { className: "w-5 h-5" })
@@ -9613,24 +9613,25 @@ function lv({ statusBarHeight: e, navBarHeight: n, homeIndicatorHeight: r = 20 }
 				children: /* @__PURE__ */ j(sv.Provider, {
 					value: c,
 					children: /* @__PURE__ */ j(iv, {
-						appId: d.appId,
-						windowId: d.id
+						appId: f.appId,
+						windowId: f.id
 					})
 				})
 			}),
-			p.menuBarMenus && p.menuBarMenus.length > 0 && /* @__PURE__ */ j(av, {
-				menus: p.menuBarMenus,
-				appId: d.appId,
+			m.menuBarMenus && m.menuBarMenus.length > 0 && /* @__PURE__ */ j(av, {
+				menus: m.menuBarMenus,
+				appId: f.appId,
 				open: l,
 				onClose: () => u(!1)
 			}),
 			/* @__PURE__ */ j("div", { style: { height: n + r } }),
 			/* @__PURE__ */ j("div", {
-				onPointerDown: (e) => m.start(e),
-				className: "absolute bottom-2.5 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black/30 dark:bg-white/35 hover:bg-black/50 dark:hover:bg-white/50 rounded-full cursor-grab active:cursor-grabbing z-[1000] pointer-events-auto"
+				onPointerDown: (e) => h.start(e),
+				className: "absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-10 flex items-center justify-center z-[1000] pointer-events-auto cursor-grab active:cursor-grabbing",
+				children: /* @__PURE__ */ j("div", { className: "w-32 h-1.5 bg-black/30 dark:bg-white/35 hover:bg-black/50 dark:hover:bg-white/50 rounded-full" })
 			})
 		]
-	}, d.id) });
+	}, f.id) });
 }
 //#endregion
 export { Gd as A, nd as B, sf as C, Jd as D, Xd as E, Rd as F, Xn as G, al as H, Ld as I, L as K, Id as L, Ud as M, Hd as N, Yd as O, zd as P, Md as R, of as S, tf as T, Jc as U, td as V, G as W, Gf as _, ev as a, gf as b, Gh as c, Dh as d, Ch as f, oh as g, Sh as h, tv as i, Wd as j, Kd as k, Ph as l, wh as m, cv as n, B_ as o, Th as p, iv as r, e_ as s, lv as t, kh as u, Af as v, Qd as w, cf as x, wf as y, ad as z };
