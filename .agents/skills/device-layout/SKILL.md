@@ -80,6 +80,7 @@ pnpm pack           # Creates a tarball (e.g., sonth87-device-layout-0.1.0.tgz)
 - `assetBaseUrl: string`: Base URL prefix for static assets (wallpapers, videos, and app icons). The host app must host these assets and point this prop to them (e.g. `/assets/`).
 - `onImportWallpaper`: Callback function providing wallpaper import capabilities ("Add a Photo" button).
 - `updateActions`: Functions hook to support OTA update checks (e.g. Electron auto-updaters).
+- `isSimpleMode: boolean`: Enforces a minimal, layout-only macOS-styled wrapper (no Dock, no default apps, no desktop context menus, solid background, minimal menubar, no widgets).
 
 ---
 

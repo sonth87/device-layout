@@ -43,6 +43,8 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
    * action rows (e.g. a host with no updater, like a web build).
    */
   updateActions?: UpdateActions;
+  /** Enables Simple Mode layout (no Dock, no default apps, no wallpaper image, no widgets, minimal top menu). */
+  isSimpleMode?: boolean;
 }
 
 /** Fetches update status once on mount so SidebarItem's badge (Settings.tsx)
@@ -57,7 +59,7 @@ function UpdateStatusInitializer() {
   return null;
 }
 
-export function DeviceLayout({ assetBaseUrl = '', apps, onImportWallpaper, wallpapers, updateActions }: DeviceLayoutProps) {
+export function DeviceLayout({ assetBaseUrl = '', apps, onImportWallpaper, wallpapers, updateActions, isSimpleMode }: DeviceLayoutProps) {
   const catalog = buildWallpaperCatalog(wallpapers);
   return (
     <AssetBaseProvider value={assetBaseUrl}>
@@ -65,7 +67,7 @@ export function DeviceLayout({ assetBaseUrl = '', apps, onImportWallpaper, wallp
         <WallpaperImportProvider value={onImportWallpaper ?? null}>
           <UpdateActionsProvider value={updateActions ?? null}>
             <UpdateStatusInitializer />
-            <ThemeProvider apps={apps} />
+            <ThemeProvider apps={apps} isSimpleMode={isSimpleMode} />
           </UpdateActionsProvider>
         </WallpaperImportProvider>
       </WallpaperCatalogProvider>

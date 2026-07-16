@@ -6891,10 +6891,10 @@ function np({ label: e, items: t, appId: n, windowId: r, activeId: i, setActiveI
 }
 //#endregion
 //#region src/components/menubar/MenuBar.tsx
-function rp({ onSpotlight: e } = {}) {
-	let t = C((e) => e.activeAppId), n = C((e) => e.apps), r = t ? n[t] : null, i = r?.menuBarMenus ?? S, a = C((e) => e.wallpaperTextTheme), o = w(Kf, "px-2", a === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10"), [s, c] = M(null);
+function rp({ onSpotlight: e, isSimpleMode: t = !1 } = {}) {
+	let n = C((e) => e.activeAppId), r = C((e) => e.apps), i = n ? r[n] : null, a = i?.menuBarMenus ?? (t ? [] : S), o = C((e) => e.wallpaperTextTheme), s = w(Kf, "px-2", o === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10"), [c, l] = M(null);
 	return /* @__PURE__ */ N(Wf.Provider, {
-		value: a,
+		value: o,
 		children: /* @__PURE__ */ N(Hf, {
 			variant: "menubar",
 			children: /* @__PURE__ */ P("div", {
@@ -6904,41 +6904,41 @@ function rp({ onSpotlight: e } = {}) {
 					/* @__PURE__ */ P("div", {
 						className: "flex shrink-0 items-center gap-0.5",
 						children: [
-							/* @__PURE__ */ N(ep, {
-								activeId: s,
-								setActiveId: c
+							!t && /* @__PURE__ */ N(ep, {
+								activeId: c,
+								setActiveId: l
 							}),
-							/* @__PURE__ */ N(tp, {
-								appConfig: r,
-								appId: t,
-								activeId: s,
-								setActiveId: c
+							!t && /* @__PURE__ */ N(tp, {
+								appConfig: i,
+								appId: n,
+								activeId: c,
+								setActiveId: l
 							}),
-							i.map((e) => /* @__PURE__ */ N(np, {
+							a.map((e) => /* @__PURE__ */ N(np, {
 								label: e.label,
 								items: e.items,
-								appId: t,
-								activeId: s,
-								setActiveId: c
+								appId: n,
+								activeId: c,
+								setActiveId: l
 							}, e.label))
 						]
 					}),
 					/* @__PURE__ */ N("div", { className: "flex-1" }),
-					/* @__PURE__ */ P("div", {
+					!t && /* @__PURE__ */ P("div", {
 						className: "flex shrink-0 items-center gap-0.5",
 						children: [
 							/* @__PURE__ */ N("button", {
 								onClick: e,
-								className: o,
+								className: s,
 								title: "Spotlight Search (⌘Space)",
 								children: /* @__PURE__ */ N(ne, { className: "w-3.5 h-3.5" })
 							}),
 							/* @__PURE__ */ N("button", {
-								className: o,
+								className: s,
 								children: /* @__PURE__ */ N(ef, { className: "w-3.5 h-3.5" })
 							}),
 							/* @__PURE__ */ N("button", {
-								className: o,
+								className: s,
 								children: /* @__PURE__ */ N(Kd, { className: "w-3.5 h-3.5" })
 							}),
 							/* @__PURE__ */ N(Uf, {}),
@@ -6958,7 +6958,7 @@ function rp({ onSpotlight: e } = {}) {
 var ip = {
 	Finder: D(() => import("./Finder-0OHSXa9Z.js").then((e) => ({ default: e.Finder }))),
 	Terminal: D(() => import("./Terminal-C0qSjMuS.js").then((e) => ({ default: e.Terminal }))),
-	Settings: D(() => import("./Settings-Ws8pMiIl.js").then((e) => ({ default: e.Settings }))),
+	Settings: D(() => import("./Settings-2uqbWEbU.js").then((e) => ({ default: e.Settings }))),
 	Browser: D(() => import("./Browser-C7FRsrw8.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: D(() => import("./TextEditor-B4hGOJlH.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: D(() => import("./Clock-CLXxqyxx.js").then((e) => ({ default: e.Clock }))),
@@ -6967,7 +6967,7 @@ var ip = {
 	Photos: D(() => import("./Photos-ia86_sNw.js").then((e) => ({ default: e.Photos }))),
 	Music: D(() => import("./Music-Xv2Navhz2.js").then((e) => ({ default: e.Music }))),
 	Calendar: D(() => import("./Calendar-CmsghnI_.js").then((e) => ({ default: e.Calendar }))),
-	Messages: D(() => import("./Messages-D8dx-R--.js").then((e) => ({ default: e.Messages }))),
+	Messages: D(() => import("./Messages-7SUp9YFi.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: D(() => import("./IframeApp-CI-f5yaW.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: D(() => import("./MdxApp-Cjm3LFWW.js").then((e) => ({ default: e.MdxApp })))
 };

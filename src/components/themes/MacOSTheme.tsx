@@ -20,10 +20,11 @@ interface ChromeProps {
   onOpenApp: (app: AppConfig) => void;
   onSpotlight?: () => void;
   onAppSwitcher?: () => void;
+  isSimpleMode?: boolean;
 }
 
 /** macOS chrome overlay — menubar fixed at top, dock floats at bottom center. */
-export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
+export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: ChromeProps) {
   // Detect top-strip luminance of the current wallpaper and keep
   // wallpaperTextTheme in the store updated (with localStorage caching).
   useWallpaperLuminance();
@@ -48,7 +49,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
   const dockRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!dockAutoHide) {
+    if (!dockAutoHide || isSimpleMode) {
       setDockRevealed(false);
       return;
     }
@@ -81,7 +82,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
       document.removeEventListener('mousemove', handlePeek);
       if (hideTimer) clearTimeout(hideTimer);
     };
-  }, [dockAutoHide, dockHovered]);
+  }, [dockAutoHide, dockHovered, isSimpleMode]);
 
   // Menu bar (+ the fullscreen window's own title bar, see Window.tsx) only
   // auto-hides in true fullscreen. Reveal on hover near the top edge;
@@ -135,23 +136,25 @@ export function MacOSChrome({ onOpenApp, onSpotlight }: ChromeProps) {
         transition={{ type: 'spring', stiffness: 380, damping: 30, mass: 0.8 }}
       >
         <div className="pointer-events-auto">
-          <MenuBar onSpotlight={onSpotlight} />
+          <MenuBar onSpotlight={onSpotlight} isSimpleMode={isSimpleMode} />
         </div>
       </motion.div>
 
-      {/* Dock — auto-hides when a window is maximized or fullscreen */}
-      <motion.div
-        className="absolute inset-x-0 z-40 flex justify-center pointer-events-none"
-        style={{ bottom: 'var(--dock-offset-bottom)' }}
-        animate={{ y: dockVisible ? 0 : DOCK_HIDE_Y }}
-        transition={{ type: 'spring', stiffness: 380, damping: 30, mass: 0.8 }}
-        onMouseEnter={() => setDockHovered(true)}
-        onMouseLeave={() => setDockHovered(false)}
-      >
-        <div ref={dockRef} className="pointer-events-auto">
-          <Dock onOpenApp={onOpenApp} />
-        </div>
-      </motion.div>
+      {/* Dock — auto-hides when a window is maximized or fullscreen. Completely hidden in Simple Mode. */}
+      {!isSimpleMode && (
+        <motion.div
+          className="absolute inset-x-0 z-40 flex justify-center pointer-events-none"
+          style={{ bottom: 'var(--dock-offset-bottom)' }}
+          animate={{ y: dockVisible ? 0 : DOCK_HIDE_Y }}
+          transition={{ type: 'spring', stiffness: 380, damping: 30, mass: 0.8 }}
+          onMouseEnter={() => setDockHovered(true)}
+          onMouseLeave={() => setDockHovered(false)}
+        >
+          <div ref={dockRef} className="pointer-events-auto">
+            <Dock onOpenApp={onOpenApp} />
+          </div>
+        </motion.div>
+      )}
     </>
   );
 }

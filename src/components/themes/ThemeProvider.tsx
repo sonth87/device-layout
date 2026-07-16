@@ -32,6 +32,8 @@ export interface ThemeProviderProps {
    * library (see src/lib.tsx) passes its own app list here instead.
    */
   apps?: AppConfig[];
+  /** Enables Simple Mode layout (no Dock, no default apps, no wallpaper image, no widgets, minimal top menu). */
+  isSimpleMode?: boolean;
 }
 
 /**
@@ -42,7 +44,7 @@ export interface ThemeProviderProps {
  * Only the chrome overlays (MacOSChrome, WindowsChrome, etc.) swap.
  * This prevents useWindowUrlSync from re-running and creating duplicate windows.
  */
-export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
+export function ThemeProvider({ apps, isSimpleMode = false }: ThemeProviderProps = {}) {
   const osTheme = useStore((s) => s.osTheme);
   const colorScheme = useStore((s) => s.colorScheme);
   const resolvedColorScheme = useStore((s) => s.resolvedColorScheme);
@@ -79,9 +81,12 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
 
   useWallpaperCycle();
 
+  // If simple mode is true, default to empty apps list unless apps are explicitly provided
+  const appsToRegister = apps ?? (isSimpleMode ? [] : APPS_CONFIG);
+
   useEffect(() => {
-    registerApps(apps);
-  }, [registerApps, apps]);
+    registerApps(appsToRegister);
+  }, [registerApps, appsToRegister]);
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -96,9 +101,11 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
     return () => mq.removeEventListener('change', handler);
   }, [colorScheme, resolveColorScheme]);
 
+  const activeOSTheme = isSimpleMode ? 'macos' : osTheme;
+
   useEffect(() => {
     const html = document.documentElement;
-    html.setAttribute('data-os-theme', osTheme);
+    html.setAttribute('data-os-theme', activeOSTheme);
     html.setAttribute('data-glass', glassEnabled ? 'true' : 'false');
     html.classList.toggle('dark', resolvedColorScheme === 'dark');
 
@@ -138,16 +145,37 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
       highlightVal = HIGHLIGHT_COLOR_MAP[highlightColor] || 'rgba(0, 122, 254, 0.25)';
     }
     html.style.setProperty('--highlight-color', highlightVal);
-  }, [osTheme, resolvedColorScheme, glassEnabled, accentColor, highlightColor]);
+  }, [activeOSTheme, resolvedColorScheme, glassEnabled, accentColor, highlightColor]);
 
   const handleOpenApp = useCallback((appConfig: AppConfig) => {
     launchApp(appConfig);
   }, [launchApp]);
 
-  const isMacLike = osTheme === 'macos' || osTheme === 'ipad';
-  const showsDesktopIconGrid = osTheme !== 'ipad' && osTheme !== 'iphone' && osTheme !== 'android';
-  const isMobile = osTheme === 'iphone' || osTheme === 'android';
-  const themeConfig = THEMES_CONFIG[osTheme];
+  const isMacLike = activeOSTheme === 'macos' || activeOSTheme === 'ipad';
+  const showsDesktopIconGrid = activeOSTheme !== 'ipad' && activeOSTheme !== 'iphone' && activeOSTheme !== 'android';
+  const isMobile = activeOSTheme === 'iphone' || activeOSTheme === 'android';
+  
+  let themeConfig = THEMES_CONFIG[activeOSTheme];
+  if (isSimpleMode && activeOSTheme === 'macos') {
+    // Override macOS layout parameters in simple mode to remove Dock bottom insets
+    themeConfig = {
+      ...themeConfig,
+      hasDock: false,
+      layout: {
+        ...themeConfig.layout,
+        desktopInsets: { top: 28, right: 0, bottom: 0, left: 0 },
+        chrome: {
+          ...themeConfig.layout.chrome,
+          dockHeight: 0,
+          dockOffsetBottom: 0,
+        },
+        window: {
+          ...themeConfig.layout.window,
+          maximizeInsets: { top: 28, bottom: 0 },
+        },
+      },
+    };
+  }
 
   // Phone frame: fill available height (up to 926px), derive width from 393:852 ratio
   const PHONE_RATIO = 393 / 852;
@@ -159,7 +187,7 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
         "w-full h-full overflow-hidden relative select-none",
         resolvedColorScheme === 'dark' && 'dark'
       )}
-      data-os-theme={osTheme}
+      data-os-theme={activeOSTheme}
       data-glass={glassEnabled ? 'true' : 'false'}
       style={getThemeCssVars(themeConfig)}
       onContextMenu={(e) => e.preventDefault()}
@@ -171,7 +199,7 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
       <NotificationBanner />
 
       {/* Spotlight + App Switcher (macOS / iPad only) */}
-      {isMacLike && (
+      {isMacLike && !isSimpleMode && (
         <>
           <Spotlight
             open={spotlightOpen}
@@ -210,15 +238,15 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
             {/* Chrome — scoped inside the phone frame */}
             <AnimatePresence mode="wait">
               <motion.div
-                key={osTheme}
+                key={activeOSTheme}
                 className="absolute inset-0"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                {osTheme === 'iphone' && <IPhoneChrome onOpenApp={handleOpenApp} />}
-                {osTheme === 'android' && <AndroidChrome onOpenApp={handleOpenApp} />}
+                {activeOSTheme === 'iphone' && <IPhoneChrome onOpenApp={handleOpenApp} />}
+                {activeOSTheme === 'android' && <AndroidChrome onOpenApp={handleOpenApp} />}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -227,8 +255,8 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
         <>
           {/* Desktop canvas — NEVER remounts, preserves WindowManager + useWindowUrlSync state */}
           <div className="absolute inset-0">
-            <Wallpaper>
-              <WidgetLayer />
+            <Wallpaper isSimpleMode={isSimpleMode}>
+              {!isSimpleMode && <WidgetLayer />}
               {showsDesktopIconGrid && <IconGrid key="icon-grid" onOpenApp={handleOpenApp} />}
               <WindowManager key="window-manager" />
             </Wallpaper>
@@ -236,22 +264,22 @@ export function ThemeProvider({ apps = APPS_CONFIG }: ThemeProviderProps = {}) {
 
           {/* Widget gallery panel — slides up on Edit Widgets */}
           <AnimatePresence>
-            {isEditingWidgets && <WidgetGalleryPanel />}
+            {!isSimpleMode && isEditingWidgets && <WidgetGalleryPanel />}
           </AnimatePresence>
 
           {/* Chrome overlay — animated cross-fade on theme switch */}
           <AnimatePresence mode="wait">
             <motion.div
-              key={osTheme}
+              key={activeOSTheme}
               className="absolute inset-0 pointer-events-none"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              {osTheme === 'macos'   && <MacOSChrome   onOpenApp={handleOpenApp} onSpotlight={() => setSpotlightOpen(true)} onAppSwitcher={() => setAppSwitcherOpen(true)} />}
-              {osTheme === 'ipad'    && <IPadChrome    onOpenApp={handleOpenApp} />}
-              {osTheme === 'windows' && <WindowsChrome onOpenApp={handleOpenApp} />}
+              {activeOSTheme === 'macos'   && <MacOSChrome   isSimpleMode={isSimpleMode} onOpenApp={handleOpenApp} onSpotlight={isSimpleMode ? undefined : () => setSpotlightOpen(true)} onAppSwitcher={isSimpleMode ? undefined : () => setAppSwitcherOpen(true)} />}
+              {activeOSTheme === 'ipad'    && <IPadChrome    onOpenApp={handleOpenApp} />}
+              {activeOSTheme === 'windows' && <WindowsChrome onOpenApp={handleOpenApp} />}
             </motion.div>
           </AnimatePresence>
         </>

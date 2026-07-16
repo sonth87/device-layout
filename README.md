@@ -25,6 +25,7 @@ Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, Zustand, and Motio
 
 ### OS Theming
 - [Theme System](docs/content/themes.md) — OS themes, config, adding new themes, CSS custom properties
+- [Simple Mode](docs/simple-mode.md) — minimalist desktop layout with no Dock, widgets, or wallpaper
 
 ### Features
 - [Widget System](docs/content/widgets.md) — declaring, registering, and placing desktop widgets
@@ -79,12 +80,15 @@ Dock, menubar, tooltips, and panel overlays use a composited glass effect built 
 
 **Additional**
 
-- Dark / light / system color scheme
+- Ambient light / dark / system color scheme
 - Dock icon magnification on hover (macOS)
 - Wallpaper picker via desktop right-click context menu
 - Notification banners
 - PWA-ready with offline support via service worker
 - URL-encoded window state — reload and all windows reopen at the same position
+- **Simple Mode** — a minimal layout-only configuration with no Dock, widgets, or wallpaper images, suitable for custom integrations.
+
+![Simple Mode Screenshot](docs/simple.png)
 
 ---
 

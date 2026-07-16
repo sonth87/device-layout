@@ -25,8 +25,10 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
      * action rows (e.g. a host with no updater, like a web build).
      */
     updateActions?: UpdateActions;
+    /** Enables Simple Mode layout (no Dock, no default apps, no wallpaper image, no widgets, minimal top menu). */
+    isSimpleMode?: boolean;
 }
-export declare function DeviceLayout({ assetBaseUrl, apps, onImportWallpaper, wallpapers, updateActions }: DeviceLayoutProps): import("react/jsx-runtime").JSX.Element;
+export declare function DeviceLayout({ assetBaseUrl, apps, onImportWallpaper, wallpapers, updateActions, isSimpleMode }: DeviceLayoutProps): import("react/jsx-runtime").JSX.Element;
 export type { ThemeProviderProps } from './components/themes/ThemeProvider';
 export type { AppConfig, AppContentProps, AppInstance, MenuBarMenu, MenuBarItem, ContextMenuAction } from './types/app';
 export type { WallpaperConfig, WallpaperKind, WallpaperFitMode, WallpaperCycleInterval, WallpaperCycleConfig } from './types/desktop';

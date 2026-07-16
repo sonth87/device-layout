@@ -15,12 +15,12 @@ import { AppleMenuDropdown } from "./AppleMenuDropdown";
 import { AppNameDropdown } from "./AppNameDropdown";
 import { MenuDropdown } from "./MenuDropdown";
 
-export function MenuBar({ onSpotlight }: { onSpotlight?: () => void } = {}) {
+export function MenuBar({ onSpotlight, isSimpleMode = false }: { onSpotlight?: () => void; isSimpleMode?: boolean } = {}) {
   const activeAppId = useStore((s) => s.activeAppId);
   const apps = useStore((s) => s.apps);
   const activeApp = activeAppId ? apps[activeAppId] : null;
   const menus: MenuBarMenu[] =
-    activeApp?.menuBarMenus ?? DEFAULT_MENU_BAR_MENUS;
+    activeApp?.menuBarMenus ?? (isSimpleMode ? [] : DEFAULT_MENU_BAR_MENUS);
   const wallpaperTextTheme = useStore((s) => s.wallpaperTextTheme);
 
   // Build text / hover classes that adapt to wallpaper luminance rather than
@@ -44,17 +44,21 @@ export function MenuBar({ onSpotlight }: { onSpotlight?: () => void } = {}) {
           {/* Left: Apple + app menus */}
           <div className="flex shrink-0 items-center gap-0.5">
             {/* Apple menu */}
-            <AppleMenuDropdown
-              activeId={activeDropdownId}
-              setActiveId={setActiveDropdownId}
-            />
+            {!isSimpleMode && (
+              <AppleMenuDropdown
+                activeId={activeDropdownId}
+                setActiveId={setActiveDropdownId}
+              />
+            )}
             {/* Active app name dropdown */}
-            <AppNameDropdown
-              appConfig={activeApp}
-              appId={activeAppId}
-              activeId={activeDropdownId}
-              setActiveId={setActiveDropdownId}
-            />
+            {!isSimpleMode && (
+              <AppNameDropdown
+                appConfig={activeApp}
+                appId={activeAppId}
+                activeId={activeDropdownId}
+                setActiveId={setActiveDropdownId}
+              />
+            )}
             {/* App menu dropdowns */}
             {menus.map((menu) => (
               <MenuDropdown
@@ -71,26 +75,28 @@ export function MenuBar({ onSpotlight }: { onSpotlight?: () => void } = {}) {
           {/* Spacer */}
           <div className="flex-1" />
 
-          {/* Right: system icons */}
-          <div className="flex shrink-0 items-center gap-0.5">
-            <button
-              onClick={onSpotlight}
-              className={iconBtnClass}
-              title="Spotlight Search (⌘Space)"
-            >
-              <Search className="w-3.5 h-3.5" />
-            </button>
-            <button className={iconBtnClass}>
-              <Wifi className="w-3.5 h-3.5" />
-            </button>
-            <button className={iconBtnClass}>
-              <Battery className="w-3.5 h-3.5" />
-            </button>
-            <ControlCenter />
-            <div className="flex h-6 items-center rounded-md px-2">
-              <MenuBarClock />
+          {/* Right: system icons. Completely hidden in Simple Mode. */}
+          {!isSimpleMode && (
+            <div className="flex shrink-0 items-center gap-0.5">
+              <button
+                onClick={onSpotlight}
+                className={iconBtnClass}
+                title="Spotlight Search (⌘Space)"
+              >
+                <Search className="w-3.5 h-3.5" />
+              </button>
+              <button className={iconBtnClass}>
+                <Wifi className="w-3.5 h-3.5" />
+              </button>
+              <button className={iconBtnClass}>
+                <Battery className="w-3.5 h-3.5" />
+              </button>
+              <ControlCenter />
+              <div className="flex h-6 items-center rounded-md px-2">
+                <MenuBarClock />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </LiquidGlass>
     </MenuBarThemeCtx.Provider>

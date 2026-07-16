@@ -29,7 +29,7 @@ const SEPARATOR_CLS = 'my-[3px] mx-0 h-px bg-black/10 dark:bg-white/10';
 
 const MENU_CLS = 'min-w-[220px] outline-none z-[99999]';
 
-export function Wallpaper({ children }: WallpaperProps) {
+export function Wallpaper({ children, isSimpleMode = false }: WallpaperProps & { isSimpleMode?: boolean }) {
   const { t } = useTranslation();
   const useStacks               = useStore((s) => s.useStacks);
   const stackGroupBy           = useStore((s) => s.stackGroupBy);
@@ -64,6 +64,20 @@ export function Wallpaper({ children }: WallpaperProps) {
     { id: 'date-created',     label: t.dateCreated },
     { id: 'tags',             label: t.tags },
   ];
+
+  if (isSimpleMode) {
+    return (
+      <>
+        {/* Simple Mode: solid background light/dark according to settings */}
+        <div className="absolute inset-0 overflow-hidden bg-[#f4f4f5] dark:bg-[#18181b]" />
+
+        {/* Render children inside a sibling overlay so they are outside of the Trigger DOM tree */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {children}
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
