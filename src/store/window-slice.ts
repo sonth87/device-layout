@@ -112,6 +112,22 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
     },
 
     openWindow(appConfig, options) {
+      // Prevent duplicate windows for single-instance apps (e.g. settings, calendar)
+      if (appConfig.launchMode !== 'multi') {
+        const existing = Object.values(get().windows).find((w) => w.appId === appConfig.id);
+        if (existing) {
+          get().focusWindow(existing.id);
+          if (existing.isMinimized) {
+            set((state) => {
+              if (state.windows[existing.id]) {
+                state.windows[existing.id].isMinimized = false;
+              }
+            });
+          }
+          return existing.id;
+        }
+      }
+
       const id = nanoid(8);
       set((state) => {
         state.zCounter += 1;
@@ -284,7 +300,13 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
 
     resizeWindow(id, rect) {
       set((state) => {
-        if (state.windows[id]) state.windows[id].rect = rect;
+        const win = state.windows[id];
+        if (win) {
+          if (!win.prevRect) {
+            win.prevRect = { ...win.rect };
+          }
+          win.rect = rect;
+        }
       });
     },
 

@@ -78,25 +78,34 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
       focusWindow(windowId);
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
 
-      // If the window is currently maximized, unmaximize it first.
-      // Use prevRect as the drag origin so it "appears" to shrink under the cursor.
+      // If the window is snapped (maximized or snapped left/right), restore only its original dimensions (width/height).
+      // Keep the window positioned under the cursor rather than returning to its old coordinates.
       const win = useStore.getState().windows[windowId];
-      if (win?.isMaximized) {
-        const vpW = window.innerWidth;
-        const vpH = window.innerHeight;
-        const dragTopInset2 = config.layout.window.dragTopInset;
-        const bottomInset2 = config.layout.chrome.taskbarHeight;
-        const viewportRect = { x: 0, y: dragTopInset2, width: vpW, height: vpH - dragTopInset2 - bottomInset2 };
-        // This restores prevRect and clears isMaximized
-        toggleMaximize(windowId, viewportRect);
-        // After toggle, the store has restored prevRect → MotionValues will animate there.
-        // Set startRef to the restored position so drag math is correct.
-        const restored = win.prevRect ?? win.rect;
-        // We want the window to follow the cursor as if the drag started from restored position.
-        // Offset the drag origin so the pointer stays roughly where it was (proportional).
+      if (win?.prevRect) {
+        const restored = win.prevRect;
+        
+        // Calculate new position relative to cursor so it centers naturally under pointer
         const ratioX = (e.clientX - win.rect.x) / win.rect.width;
         const newWinX = Math.round(e.clientX - restored.width * Math.min(Math.max(ratioX, 0.1), 0.9));
-        const newWinY = restored.y;
+        // Put titlebar right under cursor (usually titlebar is ~30px high, so offset by 15px)
+        const newWinY = e.clientY - 15;
+
+        // Restore dimensions in store, positioning it at the calculated coordinates
+        useStore.setState((state) => {
+          const w = state.windows[windowId];
+          if (w) {
+            w.rect = {
+              x: newWinX,
+              y: newWinY,
+              width: restored.width,
+              height: restored.height,
+            };
+            w.prevRect = null;
+            w.isMaximized = false;
+            w.isFullScreen = false;
+          }
+        });
+
         startRef.current = {
           mouseX: e.clientX,
           mouseY: e.clientY,
@@ -159,10 +168,9 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
         x.set(nextX);
         y.set(nextY);
 
-        // Detect top snap by whether the window has hit the top boundary (dragTopInset),
-        // rather than raw pointer Y — the pointer is usually mid-titlebar so it
-        // never gets close enough to viewport top to trigger the EDGE check.
-        const atTopBoundary = nextY <= dragTopInset && rawY < dragTopInset;
+        // Detect top snap only when pointer is hovered deep inside the top menu bar (near the very top of the screen, e.g. Y <= 10px),
+        // matching macOS behavior where you must drag the pointer near the top edge.
+        const atTopBoundary = mv.clientY <= 10;
         const zone = atTopBoundary ? 'top' : getSnapZone(mv.clientX, mv.clientY, dragTopInset);
         emitSnapZone(zone, true, dragTopInset, bottomInset);
       };
@@ -172,12 +180,8 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
         const finalX = x.get();
         const finalY = y.get();
 
-        // Check if we released over a snap zone
-        // Same logic as onMove: use window position for top, pointer edges for sides.
-        const finalRawY = startRef.current
-          ? startRef.current.winY + (uv.clientY - startRef.current.mouseY)
-          : y.get();
-        const atTopBoundary = finalX !== undefined && finalRawY < dragTopInset;
+        // Same Y <= 10px check on release.
+        const atTopBoundary = uv.clientY <= 10;
         const zone = atTopBoundary ? 'top' : getSnapZone(uv.clientX, uv.clientY, dragTopInset);
         const snapRect = getSnapRect(zone, dragTopInset, bottomInset);
         if (snapRect) {

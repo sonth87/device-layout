@@ -80,14 +80,21 @@ export function MonthView({
           const isHoliday = isRedHoliday(cell);
 
           return (
-            <button
+            <div
               key={idx}
+              role="button"
+              tabIndex={0}
               onClick={() => {
                 setSelectedDate(cell);
               }}
               onDoubleClick={() => {
                 setSelectedDate(cell);
                 setCurrentView("day");
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  setSelectedDate(cell);
+                }
               }}
               className={cn(
                 "p-2 text-left flex flex-col justify-between hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors focus:outline-none h-full min-h-0 cursor-pointer",
@@ -129,7 +136,7 @@ export function MonthView({
                   {cell.getDate()}
                 </span>
               </div>
-
+ 
               {/* Day events badges */}
               <div className="mt-1 space-y-1 w-full overflow-hidden flex-1 flex flex-col justify-end">
                 {dayEvs.map((ev) => {
@@ -149,7 +156,7 @@ export function MonthView({
                   );
                 })}
               </div>
-            </button>
+            </div>
           );
         })}
       </div>

@@ -71,9 +71,9 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
           dragElastic={{ top: 0.15, bottom: 0 }}
           onDragEnd={(_, info) => {
             if (info.offset.y < -85) {
-              // Close the window entirely — on mobile there's no dock to restore
-              // from, so minimize is a dead-end. closeWindow also updates the URL.
-              closeWindow(topWindow.id);
+              // Close all windows on mobile to return completely to the home screen,
+              // preventing hidden background windows from popping up and freezing.
+              openWindows.forEach((w) => closeWindow(w.id));
             }
             animate(dragY, 0, { type: 'spring', stiffness: 300, damping: 30 });
           }}
