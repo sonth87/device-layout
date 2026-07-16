@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
-import { useStore } from '@/store';
-import { AppIconImage } from './AppIconImage';
-import type { AppConfig } from '@/types/app';
+import { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
+import { useStore } from "@/store";
+import { AppIconImage } from "./AppIconImage";
+import type { AppConfig } from "@/types/app";
 
-import { useTranslation } from '@/hooks/useTranslation';
+import { useTranslation } from "@/hooks/useTranslation";
 
 // ─── About Dialog UI ─────────────────────────────────────────────────────────
 
@@ -22,15 +22,28 @@ export function AboutDialog({
   // Start centered; offset tracks drag delta from center
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [hovering, setHovering] = useState(false);
-  const dragStart = useRef<{ mx: number; my: number; ox: number; oy: number } | null>(null);
+  const dragStart = useRef<{
+    mx: number;
+    my: number;
+    ox: number;
+    oy: number;
+  } | null>(null);
 
-  const onTitleBarPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    // Don't start drag from close button area
-    if ((e.target as HTMLElement).closest('button')) return;
-    e.preventDefault();
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-    dragStart.current = { mx: e.clientX, my: e.clientY, ox: offset.x, oy: offset.y };
-  }, [offset]);
+  const onTitleBarPointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      // Don't start drag from close button area
+      if ((e.target as HTMLElement).closest("button")) return;
+      e.preventDefault();
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+      dragStart.current = {
+        mx: e.clientX,
+        my: e.clientY,
+        ox: offset.x,
+        oy: offset.y,
+      };
+    },
+    [offset],
+  );
 
   const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragStart.current) return;
@@ -44,7 +57,7 @@ export function AboutDialog({
     dragStart.current = null;
   }, []);
 
-  if (typeof document === 'undefined') return null;
+  if (typeof document === "undefined") return null;
 
   return createPortal(
     <div
@@ -69,12 +82,15 @@ export function AboutDialog({
           onMouseEnter={() => setHovering(true)}
           onMouseLeave={() => setHovering(false)}
         >
-          <div className="flex items-center gap-2" onPointerDown={(e) => e.stopPropagation()}>
+          <div
+            className="flex items-center gap-2"
+            onPointerDown={(e) => e.stopPropagation()}
+          >
             {/* Close — only functional button */}
             <button
               onClick={onClose}
               className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100"
-              style={{ backgroundColor: '#ff5f57' }}
+              style={{ backgroundColor: "#ff5f57" }}
               title="Close"
             >
               {hovering && (
@@ -82,9 +98,15 @@ export function AboutDialog({
               )}
             </button>
             {/* Minimize — always gray, no interaction */}
-            <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: '#d1d1d1' }} />
+            <div
+              className="w-3.5 h-3.5 rounded-full"
+              style={{ backgroundColor: "#d1d1d1" }}
+            />
             {/* Maximize — always gray, no interaction */}
-            <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: '#d1d1d1' }} />
+            <div
+              className="w-3.5 h-3.5 rounded-full"
+              style={{ backgroundColor: "#d1d1d1" }}
+            />
           </div>
         </div>
 
@@ -101,14 +123,14 @@ export function AboutDialog({
           </div>
           <div className="w-full h-px bg-black/10 dark:bg-white/10 my-1" />
           <div className="text-[11px] text-black/40 dark:text-white/40 text-center leading-relaxed">
-            Copyright © 2002–2024 Apple Inc.
+            Copyright © 2026 Skyline
             <br />
             All rights reserved.
           </div>
         </div>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }
 
@@ -122,20 +144,29 @@ export function AboutDialog({
  *   new CustomEvent('app:menu:action', { detail: { appId, action: 'about' } })
  */
 export function GlobalAboutDialog() {
-  const [targetAppConfig, setTargetAppConfig] = useState<AppConfig | null>(null);
+  const [targetAppConfig, setTargetAppConfig] = useState<AppConfig | null>(
+    null,
+  );
 
   useEffect(() => {
     const handler = (e: Event) => {
-      const { appId, action } = (e as CustomEvent<{ appId: string; action: string }>).detail;
-      if (action !== 'about') return;
+      const { appId, action } = (
+        e as CustomEvent<{ appId: string; action: string }>
+      ).detail;
+      if (action !== "about") return;
       const apps = useStore.getState().apps;
       const cfg = apps[appId];
       if (cfg) setTargetAppConfig(cfg);
     };
-    window.addEventListener('app:menu:action', handler);
-    return () => window.removeEventListener('app:menu:action', handler);
+    window.addEventListener("app:menu:action", handler);
+    return () => window.removeEventListener("app:menu:action", handler);
   }, []);
 
   if (!targetAppConfig) return null;
-  return <AboutDialog appConfig={targetAppConfig} onClose={() => setTargetAppConfig(null)} />;
+  return (
+    <AboutDialog
+      appConfig={targetAppConfig}
+      onClose={() => setTargetAppConfig(null)}
+    />
+  );
 }

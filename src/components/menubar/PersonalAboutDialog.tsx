@@ -124,7 +124,7 @@ export function PersonalAboutDialog({ onClose }: PersonalAboutDialogProps) {
             sonth87/device-layout
           </a>
           <div className="text-[11px] text-black/35 dark:text-white/35 text-center mt-1">
-            © 2024 Skyline. All rights reserved.
+            © 2026 Skyline. All rights reserved.
           </div>
         </div>
       </div>
