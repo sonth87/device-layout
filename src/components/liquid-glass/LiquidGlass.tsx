@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/hooks/useTheme";
 import { useStore } from "@/store";
@@ -14,13 +15,14 @@ export type GlassVariant =
   | "panel"
   | "widget";
 
-interface LiquidGlassProps {
+export interface LiquidGlassProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   className?: string;
   variant?: GlassVariant;
   forceGlass?: boolean;
   /** Overrides the variant's default radius (e.g. Dock scaling `--radius-dock` down with dockSize). */
   borderRadius?: string | number;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 const VARIANT_RADIUS_VAR: Record<GlassVariant, string | null> = {
@@ -47,6 +49,9 @@ export function LiquidGlass({
   variant = "panel",
   forceGlass,
   borderRadius,
+  style,
+  ref,
+  ...props
 }: LiquidGlassProps) {
   const { isGlass: themeGlass, colorScheme } = useTheme();
   const isGlass = forceGlass !== undefined ? forceGlass : themeGlass;
@@ -61,6 +66,20 @@ export function LiquidGlass({
   // Dynamic glass maps generator hook
   const { elementRef, maps } = useLiquidGlass();
 
+  const handleRef = React.useCallback(
+    (node: HTMLDivElement | null) => {
+      elementRef.current = node;
+      if (ref) {
+        if (typeof ref === "function") {
+          ref(node);
+        } else {
+          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        }
+      }
+    },
+    [ref, elementRef]
+  );
+
   const filterStr =
     isGlass && maps
       ? `url(#${maps.filterId}) blur(24px)`
@@ -71,7 +90,7 @@ export function LiquidGlass({
   if (!isGlass) {
     return (
       <div
-        ref={elementRef}
+        ref={handleRef}
         className={cn(
           "relative overflow-hidden",
           "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10",
@@ -79,7 +98,8 @@ export function LiquidGlass({
           "border",
           className,
         )}
-        style={radiusStyle}
+        style={{ ...radiusStyle, ...style }}
+        {...props}
       >
         <div className="relative z-20 min-w-0 w-full h-full">{children}</div>
       </div>
@@ -89,13 +109,14 @@ export function LiquidGlass({
   if (glassMode === "clear") {
     return (
       <div
-        ref={elementRef}
+        ref={handleRef}
         className={cn(
           "relative overflow-hidden border border-white/25 dark:border-white/10",
           shadowCls,
           className,
         )}
-        style={radiusStyle}
+        style={{ ...radiusStyle, ...style }}
+        {...props}
       >
         {/* Glass background layer with distortion */}
         <div
@@ -137,7 +158,7 @@ export function LiquidGlass({
 
   return (
     <div
-      ref={elementRef}
+      ref={handleRef}
       className={cn(
         "relative overflow-hidden",
         isGlass
@@ -167,7 +188,9 @@ export function LiquidGlass({
         ...radiusStyle,
         backdropFilter: filterStr,
         WebkitBackdropFilter: filterStr,
+        ...style,
       }}
+      {...props}
     >
       {/* ── Top specular highlight ── */}
       {isGlass && variant !== "menubar" && variant !== "taskbar" && (
@@ -226,6 +249,7 @@ export function LiquidGlass({
               width={maps.width}
               height={maps.height}
               result="displacement_map"
+              result-type="feImage"
             />
             <feDisplacementMap
               in="blurred_source"
