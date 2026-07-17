@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef, FormEvent } from "react";
+import { useState, useRef, FormEvent, useEffect } from "react";
 import { useAppTranslation } from "@/hooks/useAppTranslation";
+import { useBrowser } from "@/hooks/useBrowser";
 
 const BROWSER_LOCALE = {
   en: {
@@ -43,7 +44,15 @@ import { useStore } from "@/store";
 export function Browser({ appId }: AppContentProps) {
   const { t } = useAppTranslation(appId, BROWSER_LOCALE);
   const appConfig = useStore((s) => s.apps[appId]);
+  const browser = useBrowser();
   const initialUrl = appConfig?.iframeUrl ?? "https://dantri.com.vn";
+
+  // Log browser environment detection on mount
+  useEffect(() => {
+    console.log(
+      `[Browser] Initialized with ${browser.isElectron() ? "Electron" : "Web"} provider`
+    );
+  }, [browser]);
 
   const [navHistory, setNavHistory] = useState<string[]>([initialUrl]);
   const [historyIdx, setHistoryIdx] = useState(0);
@@ -94,8 +103,12 @@ export function Browser({ appId }: AppContentProps) {
     const idx = historyIdx + 1;
     setHistoryIdx(idx);
     setInputUrl(navHistory[idx]);
-    setLoading(true);
-  };
+    setLoading(true);async () => {
+    try {
+      await browser.openExternal(url);
+    } catch (error) {
+      console.error("Failed to open external:", error);
+    }
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();

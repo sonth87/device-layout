@@ -1,10 +1,20 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useStore } from '@/store';
+import { useBrowser } from '@/hooks/useBrowser';
 import type { AppContentProps } from './AppRegistry';
 
 export function IframeApp({ appId }: AppContentProps) {
   const appConfig = useStore((s) => s.apps[appId]);
+  const browser = useBrowser();
+
+  // Log browser environment detection on mount
+  useEffect(() => {
+    console.log(
+      `[IframeApp:${appId}] Initialized with ${browser.isElectron() ? 'Electron' : 'Web'} provider`
+    );
+  }, [appId, browser]);
 
   if (!appConfig?.iframeUrl) {
     return (
