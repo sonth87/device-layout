@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useStore } from '@/store';
+import { useTheme } from '@/hooks/useTheme';
 import { encodeWindowToParam, decodeWindowFromParam } from '@/lib/url-codec';
 
 /**
@@ -17,6 +18,7 @@ export function useWindowUrlSync() {
   const focusWindow = useStore((s) => s.focusWindow);
   const urlHydrated = useStore((s) => s.urlHydrated);
   const setUrlHydrated = useStore((s) => s.setUrlHydrated);
+  const { config } = useTheme();
 
   // Decode URL → open windows (only once, after apps are registered)
   useEffect(() => {
@@ -33,8 +35,22 @@ export function useWindowUrlSync() {
       if (!decoded) continue;
       const appConfig = apps[decoded.appId];
       if (!appConfig) continue;
+
+      // If window was maximized when saved, use current viewport rect instead of saved rect.
+      // This prevents layout issues when the browser is resized or opened on a different screen.
+      let rectToUse = decoded.rect;
+      if (decoded.isMaximized) {
+        const { top, bottom } = config.layout.window.maximizeInsets;
+        rectToUse = {
+          x: 0,
+          y: top,
+          width: window.innerWidth,
+          height: Math.max(1, window.innerHeight - top - bottom),
+        };
+      }
+
       const windowId = openWindow(appConfig, {
-        ...decoded.rect,
+        ...rectToUse,
         isMaximized: decoded.isMaximized,
         isFullScreen: decoded.isFullScreen,
         prevRect: decoded.prevRect,
@@ -47,7 +63,7 @@ export function useWindowUrlSync() {
     if (focusedWindowId) focusWindow(focusedWindowId);
 
     setUrlHydrated(true);
-  }, [apps, openWindow, focusWindow, urlHydrated, setUrlHydrated]);
+  }, [apps, openWindow, focusWindow, urlHydrated, setUrlHydrated, config]);
 
   // Encode windows → URL
   useEffect(() => {

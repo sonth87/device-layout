@@ -356,7 +356,7 @@ export function AppIcon({
               </div>
               <span
                 className={cn(
-                  "block w-full text-white font-medium leading-tight px-1.5 py-0.5 rounded-[4px] border border-transparent",
+                  "block w-full text-white font-medium leading-tight px-0 py-0.5 rounded-[4px] border border-transparent",
                   labelPosition === 'bottom' ? "text-center mx-auto" : "text-left"
                 )}
                 style={{

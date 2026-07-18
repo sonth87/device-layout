@@ -7,7 +7,7 @@ import { useStore } from '@/store';
 import { cn } from '@/lib/utils';
 import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
 
-export function ControlCenter() {
+export function ControlCenter({ forceDark = false }: { forceDark?: boolean } = {}) {
   const [open, setOpen] = useState(false);
   const colorScheme = useStore((s) => s.colorScheme);
   const setColorScheme = useStore((s) => s.setColorScheme);
@@ -17,15 +17,17 @@ export function ControlCenter() {
   const [volume, setVolume] = useState(75);
   const [brightness, setBrightness] = useState(80);
 
-  const triggerCls = wallpaperTextTheme === 'light'
+  const effectiveTheme = forceDark ? 'dark' : wallpaperTextTheme;
+
+  const triggerCls = effectiveTheme === 'light'
     ? 'text-black/70 hover:bg-black/10'
     : 'text-white/80 hover:bg-white/10';
 
-  const textPrimary = wallpaperTextTheme === 'light' ? 'text-black/90' : 'text-white/90';
-  const textSecondary = wallpaperTextTheme === 'light' ? 'text-black/55' : 'text-white/55';
-  const textTertiary = wallpaperTextTheme === 'light' ? 'text-black/45' : 'text-white/45';
-  const subBg = wallpaperTextTheme === 'light' ? 'bg-black/5' : 'bg-white/5';
-  const appearanceBtnCls = wallpaperTextTheme === 'light'
+  const textPrimary = effectiveTheme === 'light' ? 'text-black/90' : 'text-white/90';
+  const textSecondary = effectiveTheme === 'light' ? 'text-black/55' : 'text-white/55';
+  const textTertiary = effectiveTheme === 'light' ? 'text-black/45' : 'text-white/45';
+  const subBg = effectiveTheme === 'light' ? 'bg-black/5' : 'bg-white/5';
+  const appearanceBtnCls = effectiveTheme === 'light'
     ? 'hover:bg-black/10 text-black/70'
     : 'hover:bg-white/10 text-white/80';
 
@@ -146,4 +148,3 @@ export function ControlCenter() {
     </Popover.Root>
   );
 }
-

@@ -14,7 +14,8 @@ const PEEK_ZONE = 20; // px from top/bottom edge to trigger menu bar / dock reve
 const DOCK_HIDE_Y = 120;
 const MENU_BAR_HEIGHT = 28; // matches --menubar-height; slide distance when hidden
 const WINDOW_CHROME_HEIGHT = 44; // matches --window-chrome-height
-const AUTO_HIDE_DELAY_MS = 1500; // mouse leaves menu bar area → re-hide after this
+const DOCK_AUTO_HIDE_DELAY_MS = 1500;
+const MENU_BAR_AUTO_HIDE_DELAY_MS = 650; // mouse leaves fullscreen top menu area -> re-hide after this
 
 interface ChromeProps {
   onOpenApp: (app: AppConfig) => void;
@@ -39,14 +40,35 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: Ch
     Object.values(s.windows).some((w) => w.isFullScreen && !w.isMinimized)
   );
 
+  // Synchronously read URL params to detect maximized/fullscreen windows BEFORE
+  // async hydration completes — prevents the dock from flashing visible on F5.
+  const [urlHasMaximized] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const params = new URLSearchParams(window.location.search);
+    return params.getAll('w').some((p) => {
+      const flags = parseInt(p.split(':')[2] ?? '0', 10);
+      return Boolean(flags & 6); // bit 2 = maximized, bit 4 = fullscreen
+    });
+  });
+  const urlHydrated = useStore((s) => s.urlHydrated);
+
   const storeDockAutoHide = useStore((s) => s.dockAutoHide);
-  const dockAutoHide = hasMaximized || hasFullScreen || storeDockAutoHide;
+  // Before URL hydration: use url pre-scan to avoid dock flash; after: use live state
+  const dockAutoHide = hasMaximized || hasFullScreen || storeDockAutoHide || (urlHasMaximized && !urlHydrated);
 
   const [dockRevealed, setDockRevealed] = useState(false);
   const [dockHovered, setDockHovered] = useState(false);
   const dockVisible = !dockAutoHide || dockRevealed || dockHovered;
   // Ref to the dock element so we can read its horizontal bounds for the peek zone
   const dockRef = useRef<HTMLDivElement>(null);
+
+  // When URL hydration completes and dock needs to hide, reset dockRevealed
+  // so the dock animation runs smoothly from visible → hidden
+  useEffect(() => {
+    if (urlHydrated && dockAutoHide) {
+      setDockRevealed(false);
+    }
+  }, [urlHydrated, dockAutoHide]);
 
   useEffect(() => {
     if (!dockAutoHide || isSimpleMode) {
@@ -73,7 +95,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: Ch
         }
       } else {
         if (!hideTimer) {
-          hideTimer = setTimeout(() => setDockRevealed(false), AUTO_HIDE_DELAY_MS);
+          hideTimer = setTimeout(() => setDockRevealed(false), DOCK_AUTO_HIDE_DELAY_MS);
         }
       }
     };
@@ -86,7 +108,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: Ch
 
   // Menu bar (+ the fullscreen window's own title bar, see Window.tsx) only
   // auto-hides in true fullscreen. Reveal on hover near the top edge;
-  // re-hide 1.5s after the pointer leaves the menu bar strip (not just the
+  // re-hide shortly after the pointer leaves the menu bar strip (not just the
   // peek zone — once revealed, the bar itself extends past PEEK_ZONE). Lives
   // in the store (not local state) so Window.tsx's title bar can read the
   // same value and slide in lockstep.
@@ -100,6 +122,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: Ch
       return;
     }
     let hideTimer: ReturnType<typeof setTimeout> | null = null;
+    let revealTimer: ReturnType<typeof setTimeout> | null = null;
     const handlePeek = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       const isInsideMenuBar = target?.closest('[data-menubar="true"]');
@@ -107,13 +130,22 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: Ch
       const isInsideDropdown = target?.closest('[data-menu-portal="true"]') || target?.closest('[data-radix-popper-content-wrapper]');
 
       if (e.clientY <= PEEK_ZONE) {
-        setMenuBarRevealed(true);
+        // Delay reveal by 0.5s when hovering near top edge
+        if (!revealTimer) {
+          revealTimer = setTimeout(() => {
+            setMenuBarRevealed(true);
+            revealTimer = null;
+          }, 500);
+        }
         if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
       } else if (isInsideMenuBar || isInsideWindowChrome || isInsideDropdown) {
+        // Keep revealed when inside menu bar or dropdowns
         if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
       } else {
+        // Start hide timer when leaving
+        if (revealTimer) { clearTimeout(revealTimer); revealTimer = null; }
         if (!hideTimer) {
-          hideTimer = setTimeout(() => setMenuBarRevealed(false), AUTO_HIDE_DELAY_MS);
+          hideTimer = setTimeout(() => setMenuBarRevealed(false), MENU_BAR_AUTO_HIDE_DELAY_MS);
         }
       }
     };
@@ -121,6 +153,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: Ch
     return () => {
       document.removeEventListener('mousemove', handlePeek);
       if (hideTimer) clearTimeout(hideTimer);
+      if (revealTimer) clearTimeout(revealTimer);
     };
   }, [hasFullScreen, setMenuBarRevealed]);
 
@@ -136,7 +169,11 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: Ch
         transition={{ type: 'spring', stiffness: 380, damping: 30, mass: 0.8 }}
       >
         <div className="pointer-events-auto">
-          <MenuBar onSpotlight={onSpotlight} isSimpleMode={isSimpleMode} />
+          <MenuBar
+            onSpotlight={onSpotlight}
+            isSimpleMode={isSimpleMode}
+            forceDark={hasFullScreen}
+          />
         </div>
       </motion.div>
 

@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useStore } from '@/store';
 
-export function MenuBarClock() {
+export function MenuBarClock({ forceDark = false }: { forceDark?: boolean } = {}) {
   const [time, setTime] = useState('');
   const [date, setDate] = useState('');
   const wallpaperTextTheme = useStore((s) => s.wallpaperTextTheme);
-  const cls = wallpaperTextTheme === 'light' ? 'text-black/80' : 'text-white/85';
+  const cls = forceDark || wallpaperTextTheme === 'dark' ? 'text-white/85' : 'text-black/80';
 
   useEffect(() => {
     const update = () => {

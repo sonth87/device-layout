@@ -104,7 +104,7 @@ export function createDesktopSlice(set: Setter): DesktopSlice {
     stackGroupBy: 'kind',
     language: 'en',
     country: 'vn',
-    desktopIconSize: 64,
+    desktopIconSize: 56,
     desktopGridSpacing: 50,
     desktopTextSize: 12,
     desktopLabelPosition: 'bottom',

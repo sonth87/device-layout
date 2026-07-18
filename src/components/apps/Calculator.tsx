@@ -482,7 +482,7 @@ export function Calculator({ windowId, appId }: AppContentProps) {
   };
 
   return (
-    <div className="flex h-full w-full bg-[#f4f3ee] dark:bg-[#1b1916] text-[#1c1c1e] dark:text-white select-none overflow-hidden rounded-b-[20px]">
+    <div className="flex h-full w-full bg-[#f4f3ee] dark:bg-[#1b1916] text-[#1c1c1e] dark:text-white select-none overflow-hidden">
       
       {/* ── 1. HISTORY SIDEBAR ────────────────────────────────────── */}
       {showHistory && (

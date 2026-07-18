@@ -90,8 +90,7 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
                 : 'bg-neutral-50/95 dark:bg-[#0F1115]/97'
             )
       )}
-      onPointerDown={onPointerDown}
-      onDoubleClick={() => toggleMaximize(windowId, viewportRect)}
+      onPointerDown={onPointerDown}      onClick={(e) => { e.stopPropagation(); }}      onDoubleClick={() => toggleMaximize(windowId, viewportRect)}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
@@ -287,6 +286,7 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
         'select-none cursor-move',
       )}
       onPointerDown={onPointerDown}
+      onClick={(e) => { e.stopPropagation(); }}
       onDoubleClick={() => toggleMaximize(windowId, viewportRect)}
     >
       {isTransparent && win.appId === 'calculator' ? (
@@ -357,8 +357,8 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
           <Minus className="w-3.5 h-3.5" strokeWidth={2} />
         </button>
         <button
-          onClick={() => toggleMaximize(windowId, viewportRect)}
-          className="w-11 h-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black/70 dark:text-white/70"
+          className="w-11 h-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black/70 dark:text-white/70 cursor-default"
+          title="Double-click title bar to maximize/restore"
         >
           <Square className="w-3 h-3" strokeWidth={2} />
         </button>

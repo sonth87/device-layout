@@ -15,7 +15,15 @@ import { AppleMenuDropdown } from "./AppleMenuDropdown";
 import { AppNameDropdown } from "./AppNameDropdown";
 import { MenuDropdown } from "./MenuDropdown";
 
-export function MenuBar({ onSpotlight, isSimpleMode = false }: { onSpotlight?: () => void; isSimpleMode?: boolean } = {}) {
+export function MenuBar({
+  onSpotlight,
+  isSimpleMode = false,
+  forceDark = false,
+}: {
+  onSpotlight?: () => void;
+  isSimpleMode?: boolean;
+  forceDark?: boolean;
+} = {}) {
   const activeAppId = useStore((s) => s.activeAppId);
   const apps = useStore((s) => s.apps);
   const activeApp = activeAppId ? apps[activeAppId] : null;
@@ -26,8 +34,9 @@ export function MenuBar({ onSpotlight, isSimpleMode = false }: { onSpotlight?: (
   // Build text / hover classes that adapt to wallpaper luminance rather than
   // the system color scheme, so dark text is used on bright wallpapers and
   // vice versa, regardless of Light/Dark Mode.
+  const effectiveTheme = forceDark ? "dark" : wallpaperTextTheme;
   const iconClass =
-    wallpaperTextTheme === "light"
+    effectiveTheme === "light"
       ? "text-black/70 hover:bg-black/10"
       : "text-white/80 hover:bg-white/10";
   const iconBtnClass = cn(menuBarButtonClass, "px-2", iconClass);
@@ -35,10 +44,15 @@ export function MenuBar({ onSpotlight, isSimpleMode = false }: { onSpotlight?: (
   const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null);
 
   return (
-    <MenuBarThemeCtx.Provider value={wallpaperTextTheme}>
-      <LiquidGlass variant="menubar">
+    <MenuBarThemeCtx.Provider value={effectiveTheme}>
+      <LiquidGlass
+        variant="menubar"
+        forceGlass={forceDark ? false : undefined}
+        className={forceDark ? "border-black/70 bg-[#111318] shadow-none" : undefined}
+      >
         <div
           data-menubar="true"
+          data-fullscreen-menubar={forceDark ? "true" : undefined}
           className="flex h-(--menubar-height) w-full items-center px-2"
         >
           {/* Left: Apple + app menus */}
@@ -91,9 +105,9 @@ export function MenuBar({ onSpotlight, isSimpleMode = false }: { onSpotlight?: (
               <button className={iconBtnClass}>
                 <Battery className="w-3.5 h-3.5" />
               </button>
-              <ControlCenter />
+              <ControlCenter forceDark={forceDark} />
               <div className="flex h-6 items-center rounded-md px-2">
-                <MenuBarClock />
+                <MenuBarClock forceDark={forceDark} />
               </div>
             </div>
           )}

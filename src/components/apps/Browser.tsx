@@ -103,12 +103,8 @@ export function Browser({ appId }: AppContentProps) {
     const idx = historyIdx + 1;
     setHistoryIdx(idx);
     setInputUrl(navHistory[idx]);
-    setLoading(true);async () => {
-    try {
-      await browser.openExternal(url);
-    } catch (error) {
-      console.error("Failed to open external:", error);
-    }
+    setLoading(true);
+  };
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();

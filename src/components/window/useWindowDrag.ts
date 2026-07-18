@@ -67,6 +67,11 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
     winX: number;
     winY: number;
     escaped: boolean;
+    /** Set when window is maximized at drag-start; actual restore is deferred until pointer moves ≥5px */
+    pendingRestore?: {
+      prevRect: { x: number; y: number; width: number; height: number };
+      maximizedRect: { x: number; y: number; width: number; height: number };
+    };
   } | null>(null);
 
   const onPointerDown = useCallback(
@@ -78,40 +83,21 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
       focusWindow(windowId);
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
 
-      // If the window is snapped (maximized or snapped left/right), restore only its original dimensions (width/height).
-      // Keep the window positioned under the cursor rather than returning to its old coordinates.
+      // If the window is maximized/snapped, defer restore until the pointer actually moves.
+      // This prevents a single click on the title bar from restoring the window.
       const win = useStore.getState().windows[windowId];
       if (win?.prevRect) {
-        const restored = win.prevRect;
-        
-        // Calculate new position relative to cursor so it centers naturally under pointer
-        const ratioX = (e.clientX - win.rect.x) / win.rect.width;
-        const newWinX = Math.round(e.clientX - restored.width * Math.min(Math.max(ratioX, 0.1), 0.9));
-        // Put titlebar right under cursor (usually titlebar is ~30px high, so offset by 15px)
-        const newWinY = e.clientY - 15;
-
-        // Restore dimensions in store, positioning it at the calculated coordinates
-        useStore.setState((state) => {
-          const w = state.windows[windowId];
-          if (w) {
-            w.rect = {
-              x: newWinX,
-              y: newWinY,
-              width: restored.width,
-              height: restored.height,
-            };
-            w.prevRect = null;
-            w.isMaximized = false;
-            w.isFullScreen = false;
-          }
-        });
-
+        // Don't restore yet — record pending restore, will execute on first real drag movement
         startRef.current = {
           mouseX: e.clientX,
           mouseY: e.clientY,
-          winX: newWinX,
-          winY: newWinY,
+          winX: x.get(),
+          winY: y.get(),
           escaped: false,
+          pendingRestore: {
+            prevRect: { ...win.prevRect },
+            maximizedRect: { ...win.rect },
+          },
         };
       } else {
         startRef.current = {
@@ -124,12 +110,60 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
       }
 
       const dragTopInset = config.layout.window.dragTopInset;
-      // For macOS (no taskbar): bottomInset = 0 so fullscreen fills to viewport bottom.
-      // For Windows: bottomInset = taskbarHeight so maximize respects the taskbar.
       const bottomInset = config.layout.chrome.taskbarHeight;
+      const vpW = window.innerWidth;
+      const vpH = window.innerHeight;
+      const winEl = document.getElementById(`window-${windowId}`);
+      const winW = winEl?.offsetWidth ?? 600;
+      const winH = winEl?.offsetHeight ?? 400;
+
+      // Calculate escape state before setting up listeners
+      const hardMinX = useStore.getState().allowDragOutOfBounds ? -(winW - 200) : 0;
+      const hardMaxX = useStore.getState().allowDragOutOfBounds ? vpW - Math.min(200, winW) : vpW - winW;
+      const hardMinY = dragTopInset;
+      const hardMaxY = useStore.getState().allowDragOutOfBounds 
+        ? vpH - Math.min(200, winH) 
+        : vpH - bottomInset - winH;
+
+      const currentX = startRef.current?.winX ?? x.get();
+      const currentY = startRef.current?.winY ?? y.get();
+      const isCurrentlyEscaped = currentX < hardMinX || currentX > hardMaxX ||
+                                 currentY < hardMinY || currentY > hardMaxY;
+
+      // Update escaped flag
+      if (startRef.current) {
+        startRef.current.escaped = isCurrentlyEscaped;
+      }
 
       const onMove = (mv: PointerEvent) => {
         if (!startRef.current) return;
+
+        // Deferred restore: only restore from maximize once pointer has moved ≥5px
+        if (startRef.current.pendingRestore) {
+          const dx = mv.clientX - startRef.current.mouseX;
+          const dy = mv.clientY - startRef.current.mouseY;
+          if (Math.hypot(dx, dy) < 5) return; // not moved enough yet — do nothing
+
+          const { prevRect, maximizedRect } = startRef.current.pendingRestore;
+          const ratioX = (startRef.current.mouseX - maximizedRect.x) / maximizedRect.width;
+          const newWinX = Math.round(startRef.current.mouseX - prevRect.width * Math.min(Math.max(ratioX, 0.1), 0.9));
+          const newWinY = startRef.current.mouseY - 15;
+
+          useStore.setState((state) => {
+            const w = state.windows[windowId];
+            if (w) {
+              w.rect = { x: newWinX, y: newWinY, width: prevRect.width, height: prevRect.height };
+              w.prevRect = null;
+              w.isMaximized = false;
+              w.isFullScreen = false;
+            }
+          });
+
+          startRef.current.winX = newWinX;
+          startRef.current.winY = newWinY;
+          delete startRef.current.pendingRestore;
+        }
+
         const vpW = window.innerWidth;
         const vpH = window.innerHeight;
 
@@ -159,11 +193,25 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
         const rightEdge = vpW - winW;
         const bottomEdge = vpH - bottomInset - winH;
 
-        // X: magnetic snap on left and right viewport edges
-        const nextX = applyEdgeSnap(rawX, leftEdge, rightEdge, hardMinX, hardMaxX, true, true);
+        // Check if window has already escaped the bounds at drag start
+        if (!startRef.current) return;
+        const hasEscaped = startRef.current.escaped;
 
-        // Y: hard clamp on top (menubar), magnetic snap on bottom edge
-        const nextY = applyEdgeSnap(rawY, hardMinY, bottomEdge, hardMinY, hardMaxY, false, true);
+        // If window is already outside bounds, disable all snap behavior and use infinite limits
+        const effectiveSnapLoEnabled = !hasEscaped && false;
+        const effectiveSnapHiEnabled = !hasEscaped && true;
+        
+        // If escaped, use infinite hard limits to allow free dragging without clamping
+        const effectiveHardMinX = hasEscaped ? -Infinity : hardMinX;
+        const effectiveHardMaxX = hasEscaped ? Infinity : hardMaxX;
+        const effectiveHardMinY = hasEscaped ? -Infinity : hardMinY;
+        const effectiveHardMaxY = hasEscaped ? Infinity : hardMaxY;
+
+        // X: magnetic snap on left and right viewport edges (disabled if escaped)
+        const nextX = applyEdgeSnap(rawX, leftEdge, rightEdge, effectiveHardMinX, effectiveHardMaxX, !hasEscaped, !hasEscaped);
+
+        // Y: magnetic snap only applies if window hasn't escaped
+        const nextY = applyEdgeSnap(rawY, hardMinY, bottomEdge, effectiveHardMinY, effectiveHardMaxY, effectiveSnapLoEnabled, effectiveSnapHiEnabled);
 
         x.set(nextX);
         y.set(nextY);
@@ -177,6 +225,15 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
 
       const onUp = (uv: PointerEvent) => {
         if (!startRef.current) return;
+
+        // If pending restore was never triggered (pure click, no drag), just cancel
+        if (startRef.current.pendingRestore) {
+          startRef.current = null;
+          window.removeEventListener('pointermove', onMove);
+          window.removeEventListener('pointerup', onUp);
+          return;
+        }
+
         const finalX = x.get();
         const finalY = y.get();
 

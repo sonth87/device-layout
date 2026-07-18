@@ -269,6 +269,7 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
       // Skip marquee selection when clicking inside windows, menubars, dock, widgets, app icons or menus
       if (
         target.closest('[id^="window-"]') ||
+        target.closest('[data-windowchrome="true"]') ||
         target.closest('[data-menubar="true"]') ||
         target.closest('[data-dock="true"]') ||
         target.closest('[data-widget="true"]') ||
