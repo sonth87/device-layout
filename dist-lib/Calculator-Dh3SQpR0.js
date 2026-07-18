@@ -1,7 +1,7 @@
-import { t as e } from "./store-CdxLZEmC.js";
+import { t as e } from "./store-DYo5O0gz.js";
 import { t } from "./utils-B6YmNDS2.js";
 import { t as n } from "./createLucideIcon--WjuKCts.js";
-import { t as r } from "./useTranslation-CKCi_Vov.js";
+import { t as r } from "./useTranslation-AaeY9AzC.js";
 import { useCallback as i, useEffect as a, useState as o } from "react";
 import { Fragment as s, jsx as c, jsxs as l } from "react/jsx-runtime";
 var u = n("delete", [
@@ -344,7 +344,7 @@ function d({ windowId: n, appId: d }) {
 		K,
 		G
 	]), /* @__PURE__ */ l("div", {
-		className: "flex h-full w-full bg-[#f4f3ee] dark:bg-[#1b1916] text-[#1c1c1e] dark:text-white select-none overflow-hidden rounded-b-[20px]",
+		className: "flex h-full w-full bg-[#f4f3ee] dark:bg-[#1b1916] text-[#1c1c1e] dark:text-white select-none overflow-hidden",
 		children: [g && /* @__PURE__ */ l("div", {
 			className: "w-[180px] shrink-0 border-r border-black/5 dark:border-white/5 bg-[#eae8e4] dark:bg-[#171513] flex flex-col h-full z-10 transition-all duration-200",
 			children: [

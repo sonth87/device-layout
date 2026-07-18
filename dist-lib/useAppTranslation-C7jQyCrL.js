@@ -1,4 +1,4 @@
-import { t as e } from "./store-CdxLZEmC.js";
+import { t as e } from "./store-DYo5O0gz.js";
 //#region src/hooks/useAppTranslation.ts
 function t(t, n) {
 	let r = e((e) => e.language) || "en", i = e((e) => e.apps), a = n ?? i[t]?.locale;

@@ -1,5 +1,5 @@
 import { C as e, E as t, O as n, S as r, T as i, a, b as o, c as s, d as c, f as l, g as u, i as d, l as f, m as p, n as m, o as h, p as g, r as _, s as v, t as y, u as b, v as x } from "./Combination-dkRdWOFm.js";
-import { r as S, t as C } from "./store-CdxLZEmC.js";
+import { r as S, t as C } from "./store-DYo5O0gz.js";
 import { t as w } from "./utils-B6YmNDS2.js";
 import { t as T } from "./createLucideIcon--WjuKCts.js";
 import { t as ee } from "./chevron-right-BcSxNxws.js";
@@ -8,7 +8,7 @@ import { t as ne } from "./search-BKG97C0x.js";
 import { t as re } from "./sun-DdSv2tyc.js";
 import { t as ie } from "./volume-2-DAfADR-a.js";
 import { t as ae } from "./x-BYw6fhgP.js";
-import { t as oe } from "./useTranslation-CKCi_Vov.js";
+import { t as oe } from "./useTranslation-AaeY9AzC.js";
 import { t as se } from "./AppViewport-BDJLAndL.js";
 import * as E from "react";
 import { Children as ce, Component as le, Fragment as ue, Suspense as de, createContext as fe, createElement as pe, forwardRef as me, isValidElement as he, lazy as D, useCallback as O, useContext as k, useEffect as A, useId as ge, useInsertionEffect as _e, useLayoutEffect as ve, useMemo as ye, useRef as j, useState as M } from "react";
@@ -5864,26 +5864,26 @@ var Kd = T("battery", [["path", {
 ]);
 //#endregion
 //#region src/components/menubar/MenuBarClock.tsx
-function tf() {
-	let [e, t] = M(""), [n, r] = M(""), i = C((e) => e.wallpaperTextTheme) === "light" ? "text-black/80" : "text-white/85";
+function tf({ forceDark: e = !1 } = {}) {
+	let [t, n] = M(""), [r, i] = M(""), a = C((e) => e.wallpaperTextTheme), o = e || a === "dark" ? "text-white/85" : "text-black/80";
 	return A(() => {
 		let e = () => {
 			let e = /* @__PURE__ */ new Date();
-			t(e.toLocaleTimeString([], {
+			n(e.toLocaleTimeString([], {
 				hour: "2-digit",
 				minute: "2-digit"
-			})), r(e.toLocaleDateString([], {
+			})), i(e.toLocaleDateString([], {
 				weekday: "short",
 				month: "short",
 				day: "numeric"
 			}));
 		};
 		e();
-		let n = setInterval(e, 1e3);
-		return () => clearInterval(n);
+		let t = setInterval(e, 1e3);
+		return () => clearInterval(t);
 	}, []), /* @__PURE__ */ P("div", {
-		className: `flex items-center gap-1.5 text-[12px] font-medium ${i} select-none tabular-nums`,
-		children: [/* @__PURE__ */ N("span", { children: n }), /* @__PURE__ */ N("span", { children: e })]
+		className: `flex items-center gap-1.5 text-[12px] font-medium ${o} select-none tabular-nums`,
+		children: [/* @__PURE__ */ N("span", { children: r }), /* @__PURE__ */ N("span", { children: t })]
 	});
 }
 //#endregion
@@ -6349,16 +6349,16 @@ function Hf({ children: e, className: t, variant: n = "panel", forceGlass: r, bo
 }
 //#endregion
 //#region src/components/menubar/ControlCenter.tsx
-function Uf() {
-	let [e, t] = M(!1), n = C((e) => e.colorScheme), r = C((e) => e.setColorScheme), i = C((e) => e.glassEnabled), a = C((e) => e.setGlassEnabled), o = C((e) => e.wallpaperTextTheme), [s, c] = M(75), [l, u] = M(80), d = o === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10", f = o === "light" ? "text-black/90" : "text-white/90", p = o === "light" ? "text-black/55" : "text-white/55", m = o === "light" ? "text-black/45" : "text-white/45", h = o === "light" ? "bg-black/5" : "bg-white/5", g = o === "light" ? "hover:bg-black/10 text-black/70" : "hover:bg-white/10 text-white/80";
+function Uf({ forceDark: e = !1 } = {}) {
+	let [t, n] = M(!1), r = C((e) => e.colorScheme), i = C((e) => e.setColorScheme), a = C((e) => e.glassEnabled), o = C((e) => e.setGlassEnabled), s = C((e) => e.wallpaperTextTheme), [c, l] = M(75), [u, d] = M(80), f = e ? "dark" : s, p = f === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10", m = f === "light" ? "text-black/90" : "text-white/90", h = f === "light" ? "text-black/55" : "text-white/55", g = f === "light" ? "text-black/45" : "text-white/45", _ = f === "light" ? "bg-black/5" : "bg-white/5", v = f === "light" ? "hover:bg-black/10 text-black/70" : "hover:bg-white/10 text-white/80";
 	return /* @__PURE__ */ P(kf, {
-		open: e,
-		onOpenChange: t,
+		open: t,
+		onOpenChange: n,
 		modal: !1,
 		children: [/* @__PURE__ */ N(Af, {
 			asChild: !0,
 			children: /* @__PURE__ */ N("button", {
-				className: `p-1.5 rounded-md transition-colors flex items-center gap-1 ${d}`,
+				className: `p-1.5 rounded-md transition-colors flex items-center gap-1 ${p}`,
 				"aria-label": "Control Center",
 				children: /* @__PURE__ */ N(Qd, { className: "w-3.5 h-3.5" })
 			})
@@ -6377,22 +6377,22 @@ function Uf() {
 					className: "grid grid-cols-2 gap-3",
 					children: [
 						/* @__PURE__ */ P("div", {
-							className: w("rounded-[var(--radius-input)] p-3 flex items-center gap-2", h),
+							className: w("rounded-[var(--radius-input)] p-3 flex items-center gap-2", _),
 							children: [/* @__PURE__ */ N("div", {
 								className: "w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shrink-0",
 								children: /* @__PURE__ */ N(ef, { className: "w-4 h-4 text-white" })
 							}), /* @__PURE__ */ P("div", { children: [/* @__PURE__ */ N("p", {
-								className: w("text-xs font-semibold", f),
+								className: w("text-xs font-semibold", m),
 								children: "Wi-Fi"
 							}), /* @__PURE__ */ N("p", {
-								className: w("text-[10px]", p),
+								className: w("text-[10px]", h),
 								children: "Connected"
 							})] })]
 						}),
 						/* @__PURE__ */ P("div", {
-							className: w("rounded-[var(--radius-input)] p-3", h),
+							className: w("rounded-[var(--radius-input)] p-3", _),
 							children: [/* @__PURE__ */ N("p", {
-								className: w("text-xs font-semibold mb-2", f),
+								className: w("text-xs font-semibold mb-2", m),
 								children: "Appearance"
 							}), /* @__PURE__ */ N("div", {
 								className: "flex gap-1",
@@ -6410,69 +6410,69 @@ function Uf() {
 										icon: /* @__PURE__ */ N(Xd, { className: "w-3 h-3" })
 									}
 								].map(({ id: e, icon: t }) => /* @__PURE__ */ N("button", {
-									onClick: () => r(e),
-									className: w("flex-1 flex items-center justify-center py-1 rounded-md text-[10px] transition-colors", n === e ? "bg-blue-500 text-white" : g),
+									onClick: () => i(e),
+									className: w("flex-1 flex items-center justify-center py-1 rounded-md text-[10px] transition-colors", r === e ? "bg-blue-500 text-white" : v),
 									children: t
 								}, e))
 							})]
 						}),
 						/* @__PURE__ */ P("div", {
-							className: w("col-span-2 rounded-[var(--radius-input)] p-3", h),
+							className: w("col-span-2 rounded-[var(--radius-input)] p-3", _),
 							children: [/* @__PURE__ */ P("div", {
 								className: "flex items-center gap-2 mb-2",
 								children: [
-									/* @__PURE__ */ N(re, { className: w("w-3 h-3", f) }),
+									/* @__PURE__ */ N(re, { className: w("w-3 h-3", m) }),
 									/* @__PURE__ */ N("p", {
-										className: w("text-xs font-semibold", f),
+										className: w("text-xs font-semibold", m),
 										children: "Brightness"
 									}),
 									/* @__PURE__ */ P("span", {
-										className: w("text-[10px] ml-auto", m),
-										children: [l, "%"]
+										className: w("text-[10px] ml-auto", g),
+										children: [u, "%"]
 									})
 								]
 							}), /* @__PURE__ */ N("input", {
 								type: "range",
 								min: 0,
 								max: 100,
-								value: l,
-								onChange: (e) => u(+e.target.value),
+								value: u,
+								onChange: (e) => d(+e.target.value),
 								className: "w-full h-1.5 accent-blue-500"
 							})]
 						}),
 						/* @__PURE__ */ P("div", {
-							className: w("col-span-2 rounded-[var(--radius-input)] p-3", h),
+							className: w("col-span-2 rounded-[var(--radius-input)] p-3", _),
 							children: [/* @__PURE__ */ P("div", {
 								className: "flex items-center gap-2 mb-2",
 								children: [
-									/* @__PURE__ */ N(ie, { className: w("w-3 h-3", f) }),
+									/* @__PURE__ */ N(ie, { className: w("w-3 h-3", m) }),
 									/* @__PURE__ */ N("p", {
-										className: w("text-xs font-semibold", f),
+										className: w("text-xs font-semibold", m),
 										children: "Sound"
 									}),
 									/* @__PURE__ */ P("span", {
-										className: w("text-[10px] ml-auto", m),
-										children: [s, "%"]
+										className: w("text-[10px] ml-auto", g),
+										children: [c, "%"]
 									})
 								]
 							}), /* @__PURE__ */ N("input", {
 								type: "range",
 								min: 0,
 								max: 100,
-								value: s,
-								onChange: (e) => c(+e.target.value),
+								value: c,
+								onChange: (e) => l(+e.target.value),
 								className: "w-full h-1.5 accent-blue-500"
 							})]
 						}),
 						/* @__PURE__ */ P("div", {
-							className: w("col-span-2 rounded-[var(--radius-input)] p-3 flex items-center justify-between", h),
+							className: w("col-span-2 rounded-[var(--radius-input)] p-3 flex items-center justify-between", _),
 							children: [/* @__PURE__ */ N("p", {
-								className: w("text-xs font-semibold", f),
+								className: w("text-xs font-semibold", m),
 								children: "Liquid Glass"
 							}), /* @__PURE__ */ N("button", {
-								onClick: () => a(!i),
-								className: w("w-10 h-5 rounded-full transition-colors relative", i ? "bg-blue-500" : "bg-neutral-300 dark:bg-white/15"),
-								children: /* @__PURE__ */ N("span", { className: w("absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all", i ? "left-5" : "left-0.5") })
+								onClick: () => o(!a),
+								className: w("w-10 h-5 rounded-full transition-colors relative", a ? "bg-blue-500" : "bg-neutral-300 dark:bg-white/15"),
+								children: /* @__PURE__ */ N("span", { className: w("absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all", a ? "left-5" : "left-0.5") })
 							})]
 						})
 					]
@@ -6891,35 +6891,38 @@ function np({ label: e, items: t, appId: n, windowId: r, activeId: i, setActiveI
 }
 //#endregion
 //#region src/components/menubar/MenuBar.tsx
-function rp({ onSpotlight: e, isSimpleMode: t = !1 } = {}) {
-	let n = C((e) => e.activeAppId), r = C((e) => e.apps), i = n ? r[n] : null, a = i?.menuBarMenus ?? (t ? [] : S), o = C((e) => e.wallpaperTextTheme), s = w(Kf, "px-2", o === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10"), [c, l] = M(null);
+function rp({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1 } = {}) {
+	let r = C((e) => e.activeAppId), i = C((e) => e.apps), a = r ? i[r] : null, o = a?.menuBarMenus ?? (t ? [] : S), s = C((e) => e.wallpaperTextTheme), c = n ? "dark" : s, l = w(Kf, "px-2", c === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10"), [u, d] = M(null);
 	return /* @__PURE__ */ N(Wf.Provider, {
-		value: o,
+		value: c,
 		children: /* @__PURE__ */ N(Hf, {
 			variant: "menubar",
+			forceGlass: !n && void 0,
+			className: n ? "border-black/70 bg-[#111318] shadow-none" : void 0,
 			children: /* @__PURE__ */ P("div", {
 				"data-menubar": "true",
+				"data-fullscreen-menubar": n ? "true" : void 0,
 				className: "flex h-(--menubar-height) w-full items-center px-2",
 				children: [
 					/* @__PURE__ */ P("div", {
 						className: "flex shrink-0 items-center gap-0.5",
 						children: [
 							!t && /* @__PURE__ */ N(ep, {
-								activeId: c,
-								setActiveId: l
+								activeId: u,
+								setActiveId: d
 							}),
 							!t && /* @__PURE__ */ N(tp, {
-								appConfig: i,
-								appId: n,
-								activeId: c,
-								setActiveId: l
+								appConfig: a,
+								appId: r,
+								activeId: u,
+								setActiveId: d
 							}),
-							a.map((e) => /* @__PURE__ */ N(np, {
+							o.map((e) => /* @__PURE__ */ N(np, {
 								label: e.label,
 								items: e.items,
-								appId: n,
-								activeId: c,
-								setActiveId: l
+								appId: r,
+								activeId: u,
+								setActiveId: d
 							}, e.label))
 						]
 					}),
@@ -6929,22 +6932,22 @@ function rp({ onSpotlight: e, isSimpleMode: t = !1 } = {}) {
 						children: [
 							/* @__PURE__ */ N("button", {
 								onClick: e,
-								className: s,
+								className: l,
 								title: "Spotlight Search (⌘Space)",
 								children: /* @__PURE__ */ N(ne, { className: "w-3.5 h-3.5" })
 							}),
 							/* @__PURE__ */ N("button", {
-								className: s,
+								className: l,
 								children: /* @__PURE__ */ N(ef, { className: "w-3.5 h-3.5" })
 							}),
 							/* @__PURE__ */ N("button", {
-								className: s,
+								className: l,
 								children: /* @__PURE__ */ N(Kd, { className: "w-3.5 h-3.5" })
 							}),
-							/* @__PURE__ */ N(Uf, {}),
+							/* @__PURE__ */ N(Uf, { forceDark: n }),
 							/* @__PURE__ */ N("div", {
 								className: "flex h-6 items-center rounded-md px-2",
-								children: /* @__PURE__ */ N(tf, {})
+								children: /* @__PURE__ */ N(tf, { forceDark: n })
 							})
 						]
 					})
@@ -6956,20 +6959,20 @@ function rp({ onSpotlight: e, isSimpleMode: t = !1 } = {}) {
 //#endregion
 //#region src/components/apps/AppRegistry.tsx
 var ip = {
-	Finder: D(() => import("./Finder-0OHSXa9Z.js").then((e) => ({ default: e.Finder }))),
-	Terminal: D(() => import("./Terminal-C0qSjMuS.js").then((e) => ({ default: e.Terminal }))),
-	Settings: D(() => import("./Settings-2uqbWEbU.js").then((e) => ({ default: e.Settings }))),
-	Browser: D(() => import("./Browser-C7FRsrw8.js").then((e) => ({ default: e.Browser }))),
-	TextEditor: D(() => import("./TextEditor-B4hGOJlH.js").then((e) => ({ default: e.TextEditor }))),
-	Clock: D(() => import("./Clock-CLXxqyxx.js").then((e) => ({ default: e.Clock }))),
-	Calculator: D(() => import("./Calculator-IeyYpT-n.js").then((e) => ({ default: e.Calculator }))),
-	Notes: D(() => import("./Notes-BuS7iBYj.js").then((e) => ({ default: e.Notes }))),
-	Photos: D(() => import("./Photos-ia86_sNw.js").then((e) => ({ default: e.Photos }))),
-	Music: D(() => import("./Music-Xv2Navhz2.js").then((e) => ({ default: e.Music }))),
-	Calendar: D(() => import("./Calendar-CmsghnI_.js").then((e) => ({ default: e.Calendar }))),
-	Messages: D(() => import("./Messages-7SUp9YFi.js").then((e) => ({ default: e.Messages }))),
-	IframeApp: D(() => import("./IframeApp-CI-f5yaW.js").then((e) => ({ default: e.IframeApp }))),
-	MdxApp: D(() => import("./MdxApp-Cjm3LFWW.js").then((e) => ({ default: e.MdxApp })))
+	Finder: D(() => import("./Finder-D3lwYHZU.js").then((e) => ({ default: e.Finder }))),
+	Terminal: D(() => import("./Terminal-BwdcbJMh.js").then((e) => ({ default: e.Terminal }))),
+	Settings: D(() => import("./Settings-ZZFWIK5g.js").then((e) => ({ default: e.Settings }))),
+	Browser: D(() => import("./Browser-JiQjiTVF.js").then((e) => ({ default: e.Browser }))),
+	TextEditor: D(() => import("./TextEditor-CZt1ppyM.js").then((e) => ({ default: e.TextEditor }))),
+	Clock: D(() => import("./Clock-_WBYJ-rj.js").then((e) => ({ default: e.Clock }))),
+	Calculator: D(() => import("./Calculator-Dh3SQpR0.js").then((e) => ({ default: e.Calculator }))),
+	Notes: D(() => import("./Notes-08lM_rNG.js").then((e) => ({ default: e.Notes }))),
+	Photos: D(() => import("./Photos-D0vw-jtL.js").then((e) => ({ default: e.Photos }))),
+	Music: D(() => import("./Music-DDPupFdj.js").then((e) => ({ default: e.Music }))),
+	Calendar: D(() => import("./Calendar-CUkMcNVO.js").then((e) => ({ default: e.Calendar }))),
+	Messages: D(() => import("./Messages-3tgAzyD-.js").then((e) => ({ default: e.Messages }))),
+	IframeApp: D(() => import("./IframeApp-BAqcNMZz.js").then((e) => ({ default: e.IframeApp }))),
+	MdxApp: D(() => import("./MdxApp-Bz_3pSof.js").then((e) => ({ default: e.MdxApp })))
 };
 function ap() {
 	return /* @__PURE__ */ N("div", {

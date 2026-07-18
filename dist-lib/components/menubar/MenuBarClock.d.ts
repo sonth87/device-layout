@@ -1,1 +1,3 @@
-export declare function MenuBarClock(): import("react/jsx-runtime").JSX.Element;
+export declare function MenuBarClock({ forceDark }?: {
+    forceDark?: boolean;
+}): import("react/jsx-runtime").JSX.Element;

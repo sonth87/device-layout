@@ -1,5 +1,5 @@
-import { t as e } from "./store-CdxLZEmC.js";
-import { t } from "./useTranslation-CKCi_Vov.js";
+import { t as e } from "./store-DYo5O0gz.js";
+import { t } from "./useTranslation-AaeY9AzC.js";
 import { useEffect as n, useRef as r, useState as i } from "react";
 import { jsx as a, jsxs as o } from "react/jsx-runtime";
 //#region src/components/apps/Terminal.tsx
