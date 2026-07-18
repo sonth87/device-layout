@@ -208,6 +208,10 @@ export const translations = {
     calUnsubscribe: 'Unsubscribe',
     calDelete: 'Delete',
     calLunarFirstDay: 'First day of lunar month',
+
+    // ── App crash boundary ───────────────────────────────────────────────
+    appCrashedTitle: 'ran into a problem',
+    appCrashedRetry: 'Try Again',
   },
 
   vi: {
@@ -369,6 +373,10 @@ export const translations = {
     calUnsubscribe: 'Hủy đăng ký',
     calDelete: 'Xóa',
     calLunarFirstDay: 'Ngày đầu tiên của tháng âm lịch',
+
+    // ── App crash boundary ───────────────────────────────────────────────
+    appCrashedTitle: 'đã gặp sự cố',
+    appCrashedRetry: 'Thử lại',
   },
 
   ja: {
@@ -530,6 +538,10 @@ export const translations = {
     calUnsubscribe: '登録解除',
     calDelete: '削除',
     calLunarFirstDay: '旧暦の初日',
+
+    // ── App crash boundary ───────────────────────────────────────────────
+    appCrashedTitle: 'で問題が発生しました',
+    appCrashedRetry: '再試行',
   },
 
   ko: {
@@ -691,6 +703,10 @@ export const translations = {
     calUnsubscribe: '구독 취소',
     calDelete: '삭제',
     calLunarFirstDay: '음력 초하루',
+
+    // ── App crash boundary ───────────────────────────────────────────────
+    appCrashedTitle: '에 문제가 발생했습니다',
+    appCrashedRetry: '다시 시도',
   },
 
   zh: {
@@ -852,6 +868,10 @@ export const translations = {
     calUnsubscribe: '取消订阅',
     calDelete: '删除',
     calLunarFirstDay: '农历初一',
+
+    // ── App crash boundary ───────────────────────────────────────────────
+    appCrashedTitle: '遇到了问题',
+    appCrashedRetry: '重试',
   },
 
   th: {
@@ -1013,6 +1033,10 @@ export const translations = {
     calUnsubscribe: 'ยกเลิกการติดตาม',
     calDelete: 'ลบ',
     calLunarFirstDay: 'วันแรกของเดือนจันทรคติ',
+
+    // ── App crash boundary ───────────────────────────────────────────────
+    appCrashedTitle: 'พบปัญหา',
+    appCrashedRetry: 'ลองอีกครั้ง',
   },
 } as const;
 

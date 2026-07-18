@@ -159,7 +159,9 @@ var t = {
 		calDoesNotRepeat: "Does not repeat",
 		calUnsubscribe: "Unsubscribe",
 		calDelete: "Delete",
-		calLunarFirstDay: "First day of lunar month"
+		calLunarFirstDay: "First day of lunar month",
+		appCrashedTitle: "ran into a problem",
+		appCrashedRetry: "Try Again"
 	},
 	vi: {
 		system: "Hệ thống",
@@ -319,7 +321,9 @@ var t = {
 		calDoesNotRepeat: "Không lặp lại",
 		calUnsubscribe: "Hủy đăng ký",
 		calDelete: "Xóa",
-		calLunarFirstDay: "Ngày đầu tiên của tháng âm lịch"
+		calLunarFirstDay: "Ngày đầu tiên của tháng âm lịch",
+		appCrashedTitle: "đã gặp sự cố",
+		appCrashedRetry: "Thử lại"
 	},
 	ja: {
 		system: "システム",
@@ -479,7 +483,9 @@ var t = {
 		calDoesNotRepeat: "繰り返さない",
 		calUnsubscribe: "登録解除",
 		calDelete: "削除",
-		calLunarFirstDay: "旧暦の初日"
+		calLunarFirstDay: "旧暦の初日",
+		appCrashedTitle: "で問題が発生しました",
+		appCrashedRetry: "再試行"
 	},
 	ko: {
 		system: "시스템",
@@ -639,7 +645,9 @@ var t = {
 		calDoesNotRepeat: "반복 안 함",
 		calUnsubscribe: "구독 취소",
 		calDelete: "삭제",
-		calLunarFirstDay: "음력 초하루"
+		calLunarFirstDay: "음력 초하루",
+		appCrashedTitle: "에 문제가 발생했습니다",
+		appCrashedRetry: "다시 시도"
 	},
 	zh: {
 		system: "系统",
@@ -799,7 +807,9 @@ var t = {
 		calDoesNotRepeat: "不重复",
 		calUnsubscribe: "取消订阅",
 		calDelete: "删除",
-		calLunarFirstDay: "农历初一"
+		calLunarFirstDay: "农历初一",
+		appCrashedTitle: "遇到了问题",
+		appCrashedRetry: "重试"
 	},
 	th: {
 		system: "ระบบ",
@@ -959,7 +969,9 @@ var t = {
 		calDoesNotRepeat: "ไม่ซ้ำ",
 		calUnsubscribe: "ยกเลิกการติดตาม",
 		calDelete: "ลบ",
-		calLunarFirstDay: "วันแรกของเดือนจันทรคติ"
+		calLunarFirstDay: "วันแรกของเดือนจันทรคติ",
+		appCrashedTitle: "พบปัญหา",
+		appCrashedRetry: "ลองอีกครั้ง"
 	}
 };
 function n() {

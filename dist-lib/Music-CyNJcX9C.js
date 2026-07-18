@@ -2,7 +2,7 @@ import { t as e } from "./utils-B6YmNDS2.js";
 import { t } from "./createLucideIcon--WjuKCts.js";
 import { t as n } from "./heart-4TAFDJLs.js";
 import { t as r } from "./volume-2-DAfADR-a.js";
-import { t as i } from "./useTranslation-AaeY9AzC.js";
+import { t as i } from "./useTranslation-BFiuUWuF.js";
 import { t as a } from "./useAppLayout-DfaXs-1a.js";
 import { useEffect as o, useRef as s, useState as c } from "react";
 import { jsx as l, jsxs as u } from "react/jsx-runtime";

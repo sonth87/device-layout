@@ -158,6 +158,8 @@ export declare const translations: {
         readonly calUnsubscribe: "Unsubscribe";
         readonly calDelete: "Delete";
         readonly calLunarFirstDay: "First day of lunar month";
+        readonly appCrashedTitle: "ran into a problem";
+        readonly appCrashedRetry: "Try Again";
     };
     readonly vi: {
         readonly system: "Hệ thống";
@@ -318,6 +320,8 @@ export declare const translations: {
         readonly calUnsubscribe: "Hủy đăng ký";
         readonly calDelete: "Xóa";
         readonly calLunarFirstDay: "Ngày đầu tiên của tháng âm lịch";
+        readonly appCrashedTitle: "đã gặp sự cố";
+        readonly appCrashedRetry: "Thử lại";
     };
     readonly ja: {
         readonly system: "システム";
@@ -478,6 +482,8 @@ export declare const translations: {
         readonly calUnsubscribe: "登録解除";
         readonly calDelete: "削除";
         readonly calLunarFirstDay: "旧暦の初日";
+        readonly appCrashedTitle: "で問題が発生しました";
+        readonly appCrashedRetry: "再試行";
     };
     readonly ko: {
         readonly system: "시스템";
@@ -638,6 +644,8 @@ export declare const translations: {
         readonly calUnsubscribe: "구독 취소";
         readonly calDelete: "삭제";
         readonly calLunarFirstDay: "음력 초하루";
+        readonly appCrashedTitle: "에 문제가 발생했습니다";
+        readonly appCrashedRetry: "다시 시도";
     };
     readonly zh: {
         readonly system: "系统";
@@ -798,6 +806,8 @@ export declare const translations: {
         readonly calUnsubscribe: "取消订阅";
         readonly calDelete: "删除";
         readonly calLunarFirstDay: "农历初一";
+        readonly appCrashedTitle: "遇到了问题";
+        readonly appCrashedRetry: "重试";
     };
     readonly th: {
         readonly system: "ระบบ";
@@ -958,6 +968,8 @@ export declare const translations: {
         readonly calUnsubscribe: "ยกเลิกการติดตาม";
         readonly calDelete: "ลบ";
         readonly calLunarFirstDay: "วันแรกของเดือนจันทรคติ";
+        readonly appCrashedTitle: "พบปัญหา";
+        readonly appCrashedRetry: "ลองอีกครั้ง";
     };
 };
 export type TranslationKey = keyof typeof translations.en;
@@ -1121,6 +1133,8 @@ export declare function useTranslation(): {
         calUnsubscribe: "Unsubscribe";
         calDelete: "Delete";
         calLunarFirstDay: "First day of lunar month";
+        appCrashedTitle: "ran into a problem";
+        appCrashedRetry: "Try Again";
     } | {
         system: "Hệ thống";
         applications: "Ứng dụng";
@@ -1280,6 +1294,8 @@ export declare function useTranslation(): {
         calUnsubscribe: "Hủy đăng ký";
         calDelete: "Xóa";
         calLunarFirstDay: "Ngày đầu tiên của tháng âm lịch";
+        appCrashedTitle: "đã gặp sự cố";
+        appCrashedRetry: "Thử lại";
     } | {
         system: "システム";
         applications: "アプリケーション";
@@ -1439,6 +1455,8 @@ export declare function useTranslation(): {
         calUnsubscribe: "登録解除";
         calDelete: "削除";
         calLunarFirstDay: "旧暦の初日";
+        appCrashedTitle: "で問題が発生しました";
+        appCrashedRetry: "再試行";
     } | {
         system: "시스템";
         applications: "응용 프로그램";
@@ -1598,6 +1616,8 @@ export declare function useTranslation(): {
         calUnsubscribe: "구독 취소";
         calDelete: "삭제";
         calLunarFirstDay: "음력 초하루";
+        appCrashedTitle: "에 문제가 발생했습니다";
+        appCrashedRetry: "다시 시도";
     } | {
         system: "系统";
         applications: "应用程序";
@@ -1757,6 +1777,8 @@ export declare function useTranslation(): {
         calUnsubscribe: "取消订阅";
         calDelete: "删除";
         calLunarFirstDay: "农历初一";
+        appCrashedTitle: "遇到了问题";
+        appCrashedRetry: "重试";
     } | {
         system: "ระบบ";
         applications: "แอปพลิเคชัน";
@@ -1916,6 +1938,8 @@ export declare function useTranslation(): {
         calUnsubscribe: "ยกเลิกการติดตาม";
         calDelete: "ลบ";
         calLunarFirstDay: "วันแรกของเดือนจันทรคติ";
+        appCrashedTitle: "พบปัญหา";
+        appCrashedRetry: "ลองอีกครั้ง";
     };
     language: "en" | "vi" | "ja" | "ko" | "zh" | "th";
     getAppName: (id: string, defaultName: string) => string;

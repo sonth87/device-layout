@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { C as g, S as _, T as v, _ as y, a as b, b as x, c as S, f as C, g as w, h as T, i as E, m as D, o as O, p as k, r as A, s as j, t as M, u as N, v as ee, w as te, x as P, y as ne } from "./MobileAppViewer-DjQQssz9.js";
+import { C as g, S as _, T as v, _ as y, a as b, b as x, c as S, f as C, g as w, h as T, i as E, m as D, o as O, p as k, r as A, s as j, t as M, u as N, v as ee, w as te, x as P, y as ne } from "./MobileAppViewer-CgMtZ2nx.js";
 import { d as re, i as ie, l as ae, n as oe, r as se, t as F, u as ce } from "./store-DYo5O0gz.js";
 import { t as I } from "./utils-B6YmNDS2.js";
 import { t as L } from "./createLucideIcon--WjuKCts.js";
-import { a as le, c as ue, d as de, f as fe, g as pe, h as me, l as he, m as ge, n as _e, o as ve, p as R, r as ye, s as be, t as xe, u as Se } from "./update-actions-C0eBFLDX.js";
+import { a as le, c as ue, d as de, f as fe, g as pe, h as me, l as he, m as ge, n as _e, o as ve, p as R, r as ye, s as be, t as xe, u as Se } from "./update-actions-D9Zux29r.js";
 import { t as Ce } from "./check-DoT5IS9-.js";
 import { t as we } from "./chevron-right-BcSxNxws.js";
 import { t as Te } from "./grid-3x3-CZiMuCC6.js";
@@ -14,7 +14,7 @@ import { t as Ge } from "./search-BKG97C0x.js";
 import { t as Ke } from "./sun-DdSv2tyc.js";
 import { t as qe } from "./volume-2-DAfADR-a.js";
 import { t as z } from "./x-BYw6fhgP.js";
-import { t as B } from "./useTranslation-AaeY9AzC.js";
+import { t as B } from "./useTranslation-BFiuUWuF.js";
 import * as V from "react";
 import Je, { Suspense as Ye, lazy as H, startTransition as Xe, useCallback as U, useContext as Ze, useEffect as W, useInsertionEffect as Qe, useRef as G, useState as K } from "react";
 import { Fragment as q, jsx as J, jsxs as Y } from "react/jsx-runtime";
@@ -5204,11 +5204,11 @@ function oa(e) {
 //#endregion
 //#region src/components/widgets/WidgetRenderer.tsx
 var sa = {
-	ClockWidget: H(() => import("./ClockWidget-CbgIUbwK.js").then((e) => ({ default: e.ClockWidget }))),
-	ClockDarkWidget: H(() => import("./ClockWidget-CbgIUbwK.js").then((e) => ({ default: e.ClockDarkWidget }))),
-	ClockWorldWidget: H(() => import("./ClockWidget-CbgIUbwK.js").then((e) => ({ default: e.ClockWorldWidget }))),
-	ClockDigitalWidget: H(() => import("./ClockWidget-CbgIUbwK.js").then((e) => ({ default: e.ClockDigitalWidget }))),
-	ClockFlipWidget: H(() => import("./ClockWidget-CbgIUbwK.js").then((e) => ({ default: e.ClockFlipWidget }))),
+	ClockWidget: H(() => import("./ClockWidget-Dqodytrk.js").then((e) => ({ default: e.ClockWidget }))),
+	ClockDarkWidget: H(() => import("./ClockWidget-Dqodytrk.js").then((e) => ({ default: e.ClockDarkWidget }))),
+	ClockWorldWidget: H(() => import("./ClockWidget-Dqodytrk.js").then((e) => ({ default: e.ClockWorldWidget }))),
+	ClockDigitalWidget: H(() => import("./ClockWidget-Dqodytrk.js").then((e) => ({ default: e.ClockDigitalWidget }))),
+	ClockFlipWidget: H(() => import("./ClockWidget-Dqodytrk.js").then((e) => ({ default: e.ClockFlipWidget }))),
 	CalendarWidget: H(() => import("./CalendarWidget-BNqpwJ6L.js").then((e) => ({ default: e.CalendarWidget }))),
 	CalendarTodayWidget: H(() => import("./CalendarWidget-BNqpwJ6L.js").then((e) => ({ default: e.CalendarTodayWidget }))),
 	WeatherWidget: H(() => import("./WeatherWidget-D4EQ_pKf.js").then((e) => ({ default: e.WeatherWidget }))),

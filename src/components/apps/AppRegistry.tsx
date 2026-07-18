@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react';
 import { useStore } from '@/store';
 import type { AppContentProps } from '@/types/app';
 import { AppViewportProvider } from './AppViewport';
+import { AppErrorBoundary } from './AppErrorBoundary';
 
 // Each app is code-split — loaded only when its window opens
 const APP_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentType<AppContentProps>>> = {
@@ -51,7 +52,9 @@ export function AppContent({ appId, windowId }: AppContentProps) {
     return (
       <Suspense fallback={<AppLoadingSkeleton />}>
         <AppViewportProvider>
-          <ExternalComponent appId={appId} windowId={windowId} />
+          <AppErrorBoundary appId={appId} appName={appConfig.name}>
+            <ExternalComponent appId={appId} windowId={windowId} />
+          </AppErrorBoundary>
         </AppViewportProvider>
       </Suspense>
     );
@@ -69,7 +72,9 @@ export function AppContent({ appId, windowId }: AppContentProps) {
   return (
     <Suspense fallback={<AppLoadingSkeleton />}>
       <AppViewportProvider>
-        <Component appId={appId} windowId={windowId} />
+        <AppErrorBoundary appId={appId} appName={appConfig.name}>
+          <Component appId={appId} windowId={windowId} />
+        </AppErrorBoundary>
       </AppViewportProvider>
     </Suspense>
   );
