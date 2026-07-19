@@ -81,6 +81,19 @@ export interface AppConfig {
     launchMode?: 'single' | 'multi';
     /** Top menu bar declarations for macOS MenuBar (replaces hardcoded APP_MENUS) */
     menuBarMenus?: MenuBarMenu[];
+    /**
+     * Custom items for the middle section of the app-name dropdown (the bold
+     * app-name menu at the top-left, e.g. "Ceremony" — see AppNameDropdown.tsx).
+     * That menu is otherwise hardcoded: "About {app}" (top), then this section,
+     * then "Quit {app}" (bottom) — both fixed and not app-configurable. Without
+     * this field, the middle section falls back to disabled macOS placeholders
+     * (Services / Hide / Hide Others / Show All) that make no sense for most
+     * apps. When set, these items REPLACE that placeholder block entirely —
+     * apps that don't need this section shouldn't ship confusing disabled
+     * items. Dispatches through the same 'app:menu:action' CustomEvent as
+     * `menuBarMenus` items, so an app's existing action handler covers both.
+     */
+    appNameMenuExtraItems?: MenuBarItem[];
     /** Styling mode for the window's titlebar */
     titleBarMode?: 'normal' | 'transparent';
     /** Key in AppSettingsRegistry — renders this app's panel inside System Settings */

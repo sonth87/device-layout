@@ -4,9 +4,9 @@ import { useRef, useCallback } from "react";
 import { useStore } from "@/store";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/hooks/useTranslation";
-import type { AppConfig } from "@/types/app";
+import type { AppConfig, MenuBarItem } from "@/types/app";
 import { DropdownPanel } from "./DropdownPanel";
-import { MenuItem, MenuSeparator, useMenuBtnClass, menuBarButtonClass } from "./MenuItems";
+import { MenuItem, MenuItemRow, MenuSeparator, useMenuBtnClass, menuBarButtonClass } from "./MenuItems";
 
 interface AppNameDropdownProps {
   appConfig: AppConfig | null;
@@ -55,6 +55,16 @@ export function AppNameDropdown({
     appWindows.forEach((w) => closeWindow(w.id));
   };
 
+  const extraItems = appConfig?.appNameMenuExtraItems;
+  const handleExtraItemSelect = (item: MenuBarItem) => {
+    setOpen(false);
+    if (item.action && appId) {
+      window.dispatchEvent(
+        new CustomEvent("app:menu:action", { detail: { appId, action: item.action } }),
+      );
+    }
+  };
+
   return (
     <>
       <button
@@ -90,11 +100,23 @@ export function AppNameDropdown({
           disabled={!appId}
         />
         <MenuSeparator />
-        <MenuItem label={t.services} disabled />
-        <MenuSeparator />
-        <MenuItem label={`${t.hide} ${appName}`} shortcut="⌘H" disabled />
-        <MenuItem label={t.hideOthers} shortcut="⌥⌘H" disabled />
-        <MenuItem label={t.showAll} disabled />
+        {extraItems && extraItems.length > 0 ? (
+          extraItems.map((item, i) =>
+            item.separator ? (
+              <MenuSeparator key={`sep-${i}`} />
+            ) : (
+              <MenuItemRow key={item.key} item={item} t={t} onSelect={handleExtraItemSelect} />
+            ),
+          )
+        ) : (
+          <>
+            <MenuItem label={t.services} disabled />
+            <MenuSeparator />
+            <MenuItem label={`${t.hide} ${appName}`} shortcut="⌘H" disabled />
+            <MenuItem label={t.hideOthers} shortcut="⌥⌘H" disabled />
+            <MenuItem label={t.showAll} disabled />
+          </>
+        )}
         <MenuSeparator />
         <MenuItem
           label={`${t.quit} ${appName}`}
