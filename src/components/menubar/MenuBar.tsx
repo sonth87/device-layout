@@ -29,6 +29,7 @@ export function MenuBar({
   const activeApp = activeAppId ? apps[activeAppId] : null;
   const menus: MenuBarMenu[] =
     activeApp?.menuBarMenus ?? (isSimpleMode ? [] : DEFAULT_MENU_BAR_MENUS);
+  const showAppNameMenu = !isSimpleMode || Boolean(activeApp);
   const wallpaperTextTheme = useStore((s) => s.wallpaperTextTheme);
 
   // Build text / hover classes that adapt to wallpaper luminance rather than
@@ -65,7 +66,7 @@ export function MenuBar({
               />
             )}
             {/* Active app name dropdown */}
-            {!isSimpleMode && (
+            {showAppNameMenu && (
               <AppNameDropdown
                 appConfig={activeApp}
                 appId={activeAppId}

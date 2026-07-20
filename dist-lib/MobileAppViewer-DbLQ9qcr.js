@@ -6917,9 +6917,9 @@ function ip({ label: e, items: t, appId: n, windowId: r, activeId: i, setActiveI
 //#endregion
 //#region src/components/menubar/MenuBar.tsx
 function ap({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1 } = {}) {
-	let r = C((e) => e.activeAppId), i = C((e) => e.apps), a = r ? i[r] : null, o = a?.menuBarMenus ?? (t ? [] : S), s = C((e) => e.wallpaperTextTheme), c = n ? "dark" : s, l = w(Jf, "px-2", c === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10"), [u, d] = M(null);
+	let r = C((e) => e.activeAppId), i = C((e) => e.apps), a = r ? i[r] : null, o = a?.menuBarMenus ?? (t ? [] : S), s = !t || !!a, c = C((e) => e.wallpaperTextTheme), l = n ? "dark" : c, u = w(Jf, "px-2", l === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10"), [d, f] = M(null);
 	return /* @__PURE__ */ N(Kf.Provider, {
-		value: c,
+		value: l,
 		children: /* @__PURE__ */ N(Wf, {
 			variant: "menubar",
 			forceGlass: !n && void 0,
@@ -6933,21 +6933,21 @@ function ap({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1 } = {}) {
 						className: "flex shrink-0 items-center gap-0.5",
 						children: [
 							!t && /* @__PURE__ */ N(np, {
-								activeId: u,
-								setActiveId: d
+								activeId: d,
+								setActiveId: f
 							}),
-							!t && /* @__PURE__ */ N(rp, {
+							s && /* @__PURE__ */ N(rp, {
 								appConfig: a,
 								appId: r,
-								activeId: u,
-								setActiveId: d
+								activeId: d,
+								setActiveId: f
 							}),
 							o.map((e) => /* @__PURE__ */ N(ip, {
 								label: e.label,
 								items: e.items,
 								appId: r,
-								activeId: u,
-								setActiveId: d
+								activeId: d,
+								setActiveId: f
 							}, e.label))
 						]
 					}),
@@ -6957,16 +6957,16 @@ function ap({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1 } = {}) {
 						children: [
 							/* @__PURE__ */ N("button", {
 								onClick: e,
-								className: l,
+								className: u,
 								title: "Spotlight Search (⌘Space)",
 								children: /* @__PURE__ */ N(re, { className: "w-3.5 h-3.5" })
 							}),
 							/* @__PURE__ */ N("button", {
-								className: l,
+								className: u,
 								children: /* @__PURE__ */ N(nf, { className: "w-3.5 h-3.5" })
 							}),
 							/* @__PURE__ */ N("button", {
-								className: l,
+								className: u,
 								children: /* @__PURE__ */ N(qd, { className: "w-3.5 h-3.5" })
 							}),
 							/* @__PURE__ */ N(Gf, { forceDark: n }),
@@ -7041,7 +7041,7 @@ var sp = class extends ue {
 }, cp = {
 	Finder: D(() => import("./Finder-Dd8pHzgS.js").then((e) => ({ default: e.Finder }))),
 	Terminal: D(() => import("./Terminal-fsHqvesJ.js").then((e) => ({ default: e.Terminal }))),
-	Settings: D(() => import("./Settings-5DgVqjuS.js").then((e) => ({ default: e.Settings }))),
+	Settings: D(() => import("./Settings-DcnB6xq1.js").then((e) => ({ default: e.Settings }))),
 	Browser: D(() => import("./Browser-JiQjiTVF.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: D(() => import("./TextEditor-CZt1ppyM.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: D(() => import("./Clock-BOQeEPN-.js").then((e) => ({ default: e.Clock }))),
@@ -7050,7 +7050,7 @@ var sp = class extends ue {
 	Photos: D(() => import("./Photos-BiSB3rqG.js").then((e) => ({ default: e.Photos }))),
 	Music: D(() => import("./Music-CyNJcX9C.js").then((e) => ({ default: e.Music }))),
 	Calendar: D(() => import("./Calendar-CZ6r0J7o.js").then((e) => ({ default: e.Calendar }))),
-	Messages: D(() => import("./Messages-eBBPG9IU.js").then((e) => ({ default: e.Messages }))),
+	Messages: D(() => import("./Messages-CgiJ5qs3.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: D(() => import("./IframeApp-BAqcNMZz.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: D(() => import("./MdxApp-Bz_3pSof.js").then((e) => ({ default: e.MdxApp })))
 };
