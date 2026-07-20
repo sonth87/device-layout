@@ -17,5 +17,12 @@ export interface ThemeSlice {
 }
 type S = ThemeSlice;
 type Setter = (fn: (state: S) => void) => void;
-export declare function createThemeSlice(set: Setter): ThemeSlice;
+type Getter = () => {
+    windows: Record<string, {
+        id: string;
+        isFullScreen: boolean;
+    }>;
+    exitFullScreen: (id: string) => void;
+};
+export declare function createThemeSlice(set: Setter, get?: Getter): ThemeSlice;
 export {};

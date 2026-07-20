@@ -21,7 +21,12 @@ export interface ThemeSlice {
 type S = ThemeSlice;
 type Setter = (fn: (state: S) => void) => void;
 
-export function createThemeSlice(set: Setter): ThemeSlice {
+type Getter = () => {
+  windows: Record<string, { id: string; isFullScreen: boolean }>;
+  exitFullScreen: (id: string) => void;
+};
+
+export function createThemeSlice(set: Setter, get?: Getter): ThemeSlice {
   return {
     osTheme: 'macos',
     colorScheme: 'auto',
@@ -32,7 +37,17 @@ export function createThemeSlice(set: Setter): ThemeSlice {
     allowDragOutOfBounds: true,
 
     setOSTheme(theme) {
-      set((state) => { state.osTheme = theme; });
+      set((state) => {
+        state.osTheme = theme;
+      });
+      if (theme !== 'macos' && get) {
+        const windows = get().windows;
+        for (const win of Object.values(windows)) {
+          if (win.isFullScreen) {
+            get().exitFullScreen(win.id);
+          }
+        }
+      }
     },
 
     setColorScheme(scheme) {

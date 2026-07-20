@@ -39,10 +39,36 @@ export function useWindowResize({
         e.stopPropagation();
         (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
 
+        const win = useStore.getState().windows[windowId];
+        let startRect = { x: x.get(), y: y.get(), width: width.get(), height: height.get() };
+
+        if (win?.isFullScreen || win?.isMaximized) {
+          const restoredRect = win.prevRect ?? {
+            x: Math.round((window.innerWidth - 800) / 2),
+            y: Math.round((window.innerHeight - 600) / 2),
+            width: 800,
+            height: 600,
+          };
+          useStore.setState((state) => {
+            const w = state.windows[windowId];
+            if (w) {
+              w.isFullScreen = false;
+              w.isMaximized = false;
+              w.rect = { ...restoredRect };
+              w.prevRect = null;
+            }
+          });
+          x.set(restoredRect.x);
+          y.set(restoredRect.y);
+          width.set(restoredRect.width);
+          height.set(restoredRect.height);
+          startRect = { ...restoredRect };
+        }
+
         startRef.current = {
           mouseX: e.clientX,
           mouseY: e.clientY,
-          rect: { x: x.get(), y: y.get(), width: width.get(), height: height.get() },
+          rect: startRect,
         };
 
         const onMove = (mv: PointerEvent) => {

@@ -770,19 +770,31 @@ function Ve(e, t) {
 			e((e) => {
 				if (!e.windows[t]) return;
 				let r = e.windows[t];
-				r.isFullScreen = !1, r.isMaximized && r.prevRect ? (r.rect = { ...r.prevRect }, r.prevRect = null, r.isMaximized = !1) : (r.prevRect = { ...r.rect }, r.isMaximized = !0, r.rect = { ...n });
+				if (r.isFullScreen || r.isMaximized) {
+					if (r.prevRect) r.rect = { ...r.prevRect }, r.prevRect = null;
+					else {
+						let e = Math.min(800, n.width), t = Math.min(600, n.height);
+						r.rect = {
+							x: Math.round(n.width / 2 - e / 2),
+							y: Math.round(n.height / 2 - t / 2),
+							width: e,
+							height: t
+						};
+					}
+					r.isFullScreen = !1, r.isMaximized = !1;
+				} else r.prevRect = { ...r.rect }, r.isMaximized = !0, r.rect = { ...n };
 			});
 		},
 		enterFullScreen(t) {
 			e((e) => {
 				let n = e.windows[t];
-				n && (n.isMaximized = !1, n.isFullScreen = !0);
+				!n || n.isFullScreen || (n.prevRect ||= { ...n.rect }, n.isMaximized = !1, n.isFullScreen = !0);
 			});
 		},
 		exitFullScreen(t) {
 			e((e) => {
 				let n = e.windows[t];
-				n && (n.isFullScreen = !1);
+				!n || !n.isFullScreen || (n.isFullScreen = !1, n.prevRect &&= (n.rect = { ...n.prevRect }, null));
 			});
 		},
 		toggleFullScreen(e) {
@@ -805,10 +817,10 @@ function Ve(e, t) {
 				e.windows[t] && (e.windows[t].rect.x = n, e.windows[t].rect.y = r);
 			});
 		},
-		resizeWindow(t, n, r = !0) {
+		resizeWindow(t, n, r = !1) {
 			e((e) => {
 				let i = e.windows[t];
-				i && (r ? i.prevRect ||= { ...i.rect } : i.prevRect = null, i.rect = n);
+				i && (i.isFullScreen || i.isMaximized ? (i.isFullScreen = !1, i.isMaximized = !1, i.prevRect = null) : r ? i.prevRect ||= { ...i.rect } : i.prevRect = null, i.rect = n);
 			});
 		},
 		setWindowTitle(t, n) {
@@ -828,362 +840,8 @@ function Ve(e, t) {
 	};
 }
 //#endregion
-//#region src/store/app-slice.ts
-function He(e) {
-	return {
-		apps: {},
-		runningAppIds: [],
-		activeAppId: null,
-		registerApps(t) {
-			e((e) => {
-				e.apps = {};
-				for (let n of t) e.apps[n.id] = n;
-			});
-		},
-		setRunning(t, n) {
-			e((e) => {
-				n && !e.runningAppIds.includes(t) ? e.runningAppIds.push(t) : n || (e.runningAppIds = e.runningAppIds.filter((e) => e !== t));
-			});
-		},
-		setActiveApp(t) {
-			e((e) => {
-				e.activeAppId = t;
-			});
-		}
-	};
-}
-//#endregion
-//#region src/store/theme-slice.ts
-function Ue(e) {
-	return {
-		osTheme: "macos",
-		colorScheme: "auto",
-		resolvedColorScheme: "light",
-		glassEnabled: !0,
-		accentColor: "multicolor",
-		highlightColor: "automatic",
-		allowDragOutOfBounds: !0,
-		setOSTheme(t) {
-			e((e) => {
-				e.osTheme = t;
-			});
-		},
-		setColorScheme(t) {
-			e((e) => {
-				e.colorScheme = t;
-			});
-		},
-		setGlassEnabled(t) {
-			e((e) => {
-				e.glassEnabled = t;
-			});
-		},
-		resolveColorScheme(t) {
-			e((e) => {
-				e.colorScheme === "auto" ? e.resolvedColorScheme = t ? "dark" : "light" : e.resolvedColorScheme = e.colorScheme;
-			});
-		},
-		setAccentColor(t) {
-			e((e) => {
-				e.accentColor = t;
-			});
-		},
-		setHighlightColor(t) {
-			e((e) => {
-				e.highlightColor = t;
-			});
-		},
-		setAllowDragOutOfBounds(t) {
-			e((e) => {
-				e.allowDragOutOfBounds = t;
-			});
-		}
-	};
-}
-//#endregion
-//#region src/config/wallpapers.config.ts
-var We = [
-	{
-		id: "bg-1",
-		name: "Sequoia Night",
-		kind: "picture",
-		url: "/wallpapers/bg-1.jpg",
-		thumbnail: "/wallpapers/bg-1.jpg"
-	},
-	{
-		id: "bg-2",
-		name: "Deep Space",
-		kind: "picture",
-		url: "/wallpapers/bg-2.jpg",
-		thumbnail: "/wallpapers/bg-2.jpg"
-	},
-	{
-		id: "bg-3",
-		name: "Aurora",
-		kind: "picture",
-		url: "/wallpapers/bg-3.jpg",
-		thumbnail: "/wallpapers/bg-3.jpg"
-	},
-	{
-		id: "bg-4",
-		name: "Ocean",
-		kind: "picture",
-		url: "/wallpapers/bg-4.jpg",
-		thumbnail: "/wallpapers/bg-4.jpg"
-	},
-	{
-		id: "bg-5",
-		name: "Horizon",
-		kind: "picture",
-		url: "/wallpapers/bg-5.jpg",
-		thumbnail: "/wallpapers/bg-5.jpg"
-	},
-	{
-		id: "bg-6",
-		name: "Dusk",
-		kind: "picture",
-		url: "/wallpapers/bg-6.jpg",
-		thumbnail: "/wallpapers/bg-6.jpg"
-	},
-	{
-		id: "bg-7",
-		name: "Midnight",
-		kind: "picture",
-		url: "/wallpapers/bg-7.jpg",
-		thumbnail: "/wallpapers/bg-7.jpg"
-	},
-	{
-		id: "bg-8",
-		name: "Mountain",
-		kind: "picture",
-		url: "/wallpapers/bg-8.jpg",
-		thumbnail: "/wallpapers/bg-8.jpg"
-	},
-	{
-		id: "bg-9",
-		name: "Snow",
-		kind: "picture",
-		url: "/wallpapers/bg-9.jpg",
-		thumbnail: "/wallpapers/bg-9.jpg"
-	},
-	{
-		id: "bg-10",
-		name: "Stars",
-		kind: "picture",
-		url: "/wallpapers/bg-10.jpg",
-		thumbnail: "/wallpapers/bg-10.jpg"
-	},
-	{
-		id: "bg-11",
-		name: "Stars",
-		kind: "picture",
-		url: "/wallpapers/bg-11.jpg",
-		thumbnail: "/wallpapers/bg-11.jpg"
-	},
-	{
-		id: "bg-12",
-		name: "Stars",
-		kind: "picture",
-		url: "/wallpapers/bg-12.jpg",
-		thumbnail: "/wallpapers/bg-12.jpg"
-	},
-	{
-		id: "bg-13",
-		name: "Stars",
-		kind: "picture",
-		url: "/wallpapers/bg-13.jpg",
-		thumbnail: "/wallpapers/bg-13.jpg"
-	},
-	{
-		id: "bg-14",
-		name: "Stars",
-		kind: "picture",
-		url: "/wallpapers/bg-14.jpg",
-		thumbnail: "/wallpapers/bg-14.jpg"
-	},
-	{
-		id: "bg-15",
-		name: "Stars",
-		kind: "picture",
-		url: "/wallpapers/bg-15.jpg",
-		thumbnail: "/wallpapers/bg-15.jpg"
-	},
-	{
-		id: "bg-16",
-		name: "Stars",
-		kind: "picture",
-		url: "/wallpapers/bg-16.jpg",
-		thumbnail: "/wallpapers/bg-16.jpg"
-	}
-], Ge = [
-	{
-		id: "live-1",
-		name: "Live 1",
-		kind: "live",
-		url: "/wallpapers/live/live-1.jpg",
-		thumbnail: "/wallpapers/live/live-1.jpg",
-		videoUrl: "/wallpapers/live/live-1.mp4"
-	},
-	{
-		id: "live-2",
-		name: "Live 2",
-		kind: "live",
-		url: "/wallpapers/live/live-2.jpg",
-		thumbnail: "/wallpapers/live/live-2.jpg",
-		videoUrl: "/wallpapers/live/live-2.mp4"
-	},
-	{
-		id: "live-3",
-		name: "Live 3",
-		kind: "live",
-		url: "/wallpapers/live/live-3.jpg",
-		thumbnail: "/wallpapers/live/live-3.jpg",
-		videoUrl: "/wallpapers/live/live-3.mp4"
-	},
-	{
-		id: "live-4",
-		name: "Live 4",
-		kind: "live",
-		url: "/wallpapers/live/live-4.jpg",
-		thumbnail: "/wallpapers/live/live-4.jpg",
-		videoUrl: "/wallpapers/live/live-4.mp4"
-	},
-	{
-		id: "live-5",
-		name: "Live 5",
-		kind: "live",
-		url: "/wallpapers/live/live-5.jpg",
-		thumbnail: "/wallpapers/live/live-5.jpg",
-		videoUrl: "/wallpapers/live/live-5.mp4"
-	},
-	{
-		id: "live-6",
-		name: "Live 6",
-		kind: "live",
-		url: "/wallpapers/live/live-6.jpg",
-		thumbnail: "/wallpapers/live/live-6.jpg",
-		videoUrl: "/wallpapers/live/live-6.mp4"
-	}
-], Ke = [
-	{
-		id: "color-black",
-		name: "Black",
-		kind: "color",
-		colorHex: "#000000"
-	},
-	{
-		id: "color-slate-blue",
-		name: "Slate Blue",
-		kind: "color",
-		colorHex: "#6971B5"
-	},
-	{
-		id: "color-sky-blue",
-		name: "Sky Blue",
-		kind: "color",
-		colorHex: "#13A3CD"
-	},
-	{
-		id: "color-rose",
-		name: "Rose",
-		kind: "color",
-		colorHex: "#DF6B76"
-	},
-	{
-		id: "color-blue",
-		name: "Blue",
-		kind: "color",
-		colorHex: "#3352CD"
-	},
-	{
-		id: "color-peach",
-		name: "Peach",
-		kind: "color",
-		colorHex: "#FEDCC8"
-	},
-	{
-		id: "color-cream",
-		name: "Cream",
-		kind: "color",
-		colorHex: "#F7E2CC"
-	},
-	{
-		id: "color-gold",
-		name: "Gold",
-		kind: "color",
-		colorHex: "#D2A14E"
-	},
-	{
-		id: "color-magenta",
-		name: "Magenta",
-		kind: "color",
-		colorHex: "#CC458E"
-	},
-	{
-		id: "color-red",
-		name: "Red",
-		kind: "color",
-		colorHex: "#E13B19"
-	},
-	{
-		id: "color-pale-pink",
-		name: "Pale Pink",
-		kind: "color",
-		colorHex: "#F7D7D3"
-	},
-	{
-		id: "color-light-gray",
-		name: "Light Gray",
-		kind: "color",
-		colorHex: "#E3E4E6"
-	},
-	{
-		id: "color-soft-pink",
-		name: "Soft Pink",
-		kind: "color",
-		colorHex: "#FEDEE6"
-	},
-	{
-		id: "color-dark-gray",
-		name: "Dark Gray",
-		kind: "color",
-		colorHex: "#6F737D"
-	},
-	{
-		id: "color-silver",
-		name: "Silver",
-		kind: "color",
-		colorHex: "#B9BDC5"
-	},
-	{
-		id: "color-charcoal",
-		name: "Charcoal",
-		kind: "color",
-		colorHex: "#555759"
-	},
-	{
-		id: "color-teal",
-		name: "Teal",
-		kind: "color",
-		colorHex: "#026A71"
-	},
-	{
-		id: "color-mint",
-		name: "Mint",
-		kind: "color",
-		colorHex: "#62C4A5"
-	},
-	{
-		id: "color-yellow",
-		name: "Yellow",
-		kind: "color",
-		colorHex: "#FDB515"
-	}
-], qe = [
-	...We,
-	...Ge,
-	...Ke
-], Je = "bg-1", Ye = [
+//#region src/config/apps.config.ts
+var He = [
 	{
 		label: "File",
 		items: [
@@ -1320,7 +978,7 @@ var We = [
 			action: "help"
 		}]
 	}
-], Xe = [
+], Ue = [
 	{
 		id: "finder",
 		name: "Finder",
@@ -2359,7 +2017,7 @@ var We = [
 		category: "communication",
 		mobileFullscreen: !0
 	}
-], Ze = [
+], We = [
 	"finder",
 	"browser",
 	"calculator",
@@ -2372,12 +2030,371 @@ var We = [
 	"textedit",
 	"clock",
 	"settings"
-];
+], Ge = {};
+for (let e of Ue) Ge[e.id] = e;
+function Ke(e) {
+	return {
+		apps: Ge,
+		runningAppIds: [],
+		activeAppId: null,
+		registerApps(t) {
+			e((e) => {
+				e.apps = {};
+				for (let n of t) e.apps[n.id] = n;
+			});
+		},
+		setRunning(t, n) {
+			e((e) => {
+				n && !e.runningAppIds.includes(t) ? e.runningAppIds.push(t) : n || (e.runningAppIds = e.runningAppIds.filter((e) => e !== t));
+			});
+		},
+		setActiveApp(t) {
+			e((e) => {
+				e.activeAppId = t;
+			});
+		}
+	};
+}
+//#endregion
+//#region src/store/theme-slice.ts
+function qe(e, t) {
+	return {
+		osTheme: "macos",
+		colorScheme: "auto",
+		resolvedColorScheme: "light",
+		glassEnabled: !0,
+		accentColor: "multicolor",
+		highlightColor: "automatic",
+		allowDragOutOfBounds: !0,
+		setOSTheme(n) {
+			if (e((e) => {
+				e.osTheme = n;
+			}), n !== "macos" && t) {
+				let e = t().windows;
+				for (let n of Object.values(e)) n.isFullScreen && t().exitFullScreen(n.id);
+			}
+		},
+		setColorScheme(t) {
+			e((e) => {
+				e.colorScheme = t;
+			});
+		},
+		setGlassEnabled(t) {
+			e((e) => {
+				e.glassEnabled = t;
+			});
+		},
+		resolveColorScheme(t) {
+			e((e) => {
+				e.colorScheme === "auto" ? e.resolvedColorScheme = t ? "dark" : "light" : e.resolvedColorScheme = e.colorScheme;
+			});
+		},
+		setAccentColor(t) {
+			e((e) => {
+				e.accentColor = t;
+			});
+		},
+		setHighlightColor(t) {
+			e((e) => {
+				e.highlightColor = t;
+			});
+		},
+		setAllowDragOutOfBounds(t) {
+			e((e) => {
+				e.allowDragOutOfBounds = t;
+			});
+		}
+	};
+}
+//#endregion
+//#region src/config/wallpapers.config.ts
+var Je = [
+	{
+		id: "bg-1",
+		name: "Sequoia Night",
+		kind: "picture",
+		url: "/wallpapers/bg-1.jpg",
+		thumbnail: "/wallpapers/bg-1.jpg"
+	},
+	{
+		id: "bg-2",
+		name: "Deep Space",
+		kind: "picture",
+		url: "/wallpapers/bg-2.jpg",
+		thumbnail: "/wallpapers/bg-2.jpg"
+	},
+	{
+		id: "bg-3",
+		name: "Aurora",
+		kind: "picture",
+		url: "/wallpapers/bg-3.jpg",
+		thumbnail: "/wallpapers/bg-3.jpg"
+	},
+	{
+		id: "bg-4",
+		name: "Ocean",
+		kind: "picture",
+		url: "/wallpapers/bg-4.jpg",
+		thumbnail: "/wallpapers/bg-4.jpg"
+	},
+	{
+		id: "bg-5",
+		name: "Horizon",
+		kind: "picture",
+		url: "/wallpapers/bg-5.jpg",
+		thumbnail: "/wallpapers/bg-5.jpg"
+	},
+	{
+		id: "bg-6",
+		name: "Dusk",
+		kind: "picture",
+		url: "/wallpapers/bg-6.jpg",
+		thumbnail: "/wallpapers/bg-6.jpg"
+	},
+	{
+		id: "bg-7",
+		name: "Midnight",
+		kind: "picture",
+		url: "/wallpapers/bg-7.jpg",
+		thumbnail: "/wallpapers/bg-7.jpg"
+	},
+	{
+		id: "bg-8",
+		name: "Mountain",
+		kind: "picture",
+		url: "/wallpapers/bg-8.jpg",
+		thumbnail: "/wallpapers/bg-8.jpg"
+	},
+	{
+		id: "bg-9",
+		name: "Snow",
+		kind: "picture",
+		url: "/wallpapers/bg-9.jpg",
+		thumbnail: "/wallpapers/bg-9.jpg"
+	},
+	{
+		id: "bg-10",
+		name: "Stars",
+		kind: "picture",
+		url: "/wallpapers/bg-10.jpg",
+		thumbnail: "/wallpapers/bg-10.jpg"
+	},
+	{
+		id: "bg-11",
+		name: "Stars",
+		kind: "picture",
+		url: "/wallpapers/bg-11.jpg",
+		thumbnail: "/wallpapers/bg-11.jpg"
+	},
+	{
+		id: "bg-12",
+		name: "Stars",
+		kind: "picture",
+		url: "/wallpapers/bg-12.jpg",
+		thumbnail: "/wallpapers/bg-12.jpg"
+	},
+	{
+		id: "bg-13",
+		name: "Stars",
+		kind: "picture",
+		url: "/wallpapers/bg-13.jpg",
+		thumbnail: "/wallpapers/bg-13.jpg"
+	},
+	{
+		id: "bg-14",
+		name: "Stars",
+		kind: "picture",
+		url: "/wallpapers/bg-14.jpg",
+		thumbnail: "/wallpapers/bg-14.jpg"
+	},
+	{
+		id: "bg-15",
+		name: "Stars",
+		kind: "picture",
+		url: "/wallpapers/bg-15.jpg",
+		thumbnail: "/wallpapers/bg-15.jpg"
+	},
+	{
+		id: "bg-16",
+		name: "Stars",
+		kind: "picture",
+		url: "/wallpapers/bg-16.jpg",
+		thumbnail: "/wallpapers/bg-16.jpg"
+	}
+], Ye = [
+	{
+		id: "live-1",
+		name: "Live 1",
+		kind: "live",
+		url: "/wallpapers/live/live-1.jpg",
+		thumbnail: "/wallpapers/live/live-1.jpg",
+		videoUrl: "/wallpapers/live/live-1.mp4"
+	},
+	{
+		id: "live-2",
+		name: "Live 2",
+		kind: "live",
+		url: "/wallpapers/live/live-2.jpg",
+		thumbnail: "/wallpapers/live/live-2.jpg",
+		videoUrl: "/wallpapers/live/live-2.mp4"
+	},
+	{
+		id: "live-3",
+		name: "Live 3",
+		kind: "live",
+		url: "/wallpapers/live/live-3.jpg",
+		thumbnail: "/wallpapers/live/live-3.jpg",
+		videoUrl: "/wallpapers/live/live-3.mp4"
+	},
+	{
+		id: "live-4",
+		name: "Live 4",
+		kind: "live",
+		url: "/wallpapers/live/live-4.jpg",
+		thumbnail: "/wallpapers/live/live-4.jpg",
+		videoUrl: "/wallpapers/live/live-4.mp4"
+	},
+	{
+		id: "live-5",
+		name: "Live 5",
+		kind: "live",
+		url: "/wallpapers/live/live-5.jpg",
+		thumbnail: "/wallpapers/live/live-5.jpg",
+		videoUrl: "/wallpapers/live/live-5.mp4"
+	},
+	{
+		id: "live-6",
+		name: "Live 6",
+		kind: "live",
+		url: "/wallpapers/live/live-6.jpg",
+		thumbnail: "/wallpapers/live/live-6.jpg",
+		videoUrl: "/wallpapers/live/live-6.mp4"
+	}
+], Xe = [
+	{
+		id: "color-black",
+		name: "Black",
+		kind: "color",
+		colorHex: "#000000"
+	},
+	{
+		id: "color-slate-blue",
+		name: "Slate Blue",
+		kind: "color",
+		colorHex: "#6971B5"
+	},
+	{
+		id: "color-sky-blue",
+		name: "Sky Blue",
+		kind: "color",
+		colorHex: "#13A3CD"
+	},
+	{
+		id: "color-rose",
+		name: "Rose",
+		kind: "color",
+		colorHex: "#DF6B76"
+	},
+	{
+		id: "color-blue",
+		name: "Blue",
+		kind: "color",
+		colorHex: "#3352CD"
+	},
+	{
+		id: "color-peach",
+		name: "Peach",
+		kind: "color",
+		colorHex: "#FEDCC8"
+	},
+	{
+		id: "color-cream",
+		name: "Cream",
+		kind: "color",
+		colorHex: "#F7E2CC"
+	},
+	{
+		id: "color-gold",
+		name: "Gold",
+		kind: "color",
+		colorHex: "#D2A14E"
+	},
+	{
+		id: "color-magenta",
+		name: "Magenta",
+		kind: "color",
+		colorHex: "#CC458E"
+	},
+	{
+		id: "color-red",
+		name: "Red",
+		kind: "color",
+		colorHex: "#E13B19"
+	},
+	{
+		id: "color-pale-pink",
+		name: "Pale Pink",
+		kind: "color",
+		colorHex: "#F7D7D3"
+	},
+	{
+		id: "color-light-gray",
+		name: "Light Gray",
+		kind: "color",
+		colorHex: "#E3E4E6"
+	},
+	{
+		id: "color-soft-pink",
+		name: "Soft Pink",
+		kind: "color",
+		colorHex: "#FEDEE6"
+	},
+	{
+		id: "color-dark-gray",
+		name: "Dark Gray",
+		kind: "color",
+		colorHex: "#6F737D"
+	},
+	{
+		id: "color-silver",
+		name: "Silver",
+		kind: "color",
+		colorHex: "#B9BDC5"
+	},
+	{
+		id: "color-charcoal",
+		name: "Charcoal",
+		kind: "color",
+		colorHex: "#555759"
+	},
+	{
+		id: "color-teal",
+		name: "Teal",
+		kind: "color",
+		colorHex: "#026A71"
+	},
+	{
+		id: "color-mint",
+		name: "Mint",
+		kind: "color",
+		colorHex: "#62C4A5"
+	},
+	{
+		id: "color-yellow",
+		name: "Yellow",
+		kind: "color",
+		colorHex: "#FDB515"
+	}
+], Ze = [
+	...Je,
+	...Ye,
+	...Xe
+], Qe = "bg-1";
 //#endregion
 //#region src/store/desktop-slice.ts
-function Qe(e) {
+function $e(e) {
 	return {
-		wallpaperId: Je,
+		wallpaperId: Qe,
 		wallpaperFitMode: "fill",
 		customWallpapers: [],
 		wallpaperCycle: {
@@ -2387,7 +2404,7 @@ function Qe(e) {
 			group: "builtin"
 		},
 		iconLayout: [],
-		dockAppIds: Ze,
+		dockAppIds: We,
 		dockSize: 43,
 		dockMagnification: .48,
 		dockAutoHide: !1,
@@ -2422,7 +2439,7 @@ function Qe(e) {
 		},
 		removeCustomWallpaper(t) {
 			e((e) => {
-				e.customWallpapers = e.customWallpapers.filter((e) => e.id !== t), e.wallpaperId === t && (e.wallpaperId = Je);
+				e.customWallpapers = e.customWallpapers.filter((e) => e.id !== t), e.wallpaperId === t && (e.wallpaperId = Qe);
 			});
 		},
 		setWallpaperCycle(t) {
@@ -2552,8 +2569,8 @@ function Qe(e) {
 }
 //#endregion
 //#region src/store/notification-slice.ts
-var $e = 50;
-function et(e) {
+var et = 50;
+function tt(e) {
 	return {
 		notifications: [],
 		pushNotification(t) {
@@ -2564,7 +2581,7 @@ function et(e) {
 					id: n,
 					timestamp: Date.now(),
 					read: !1
-				}), e.notifications.length > $e && (e.notifications = e.notifications.slice(0, $e));
+				}), e.notifications.length > et && (e.notifications = e.notifications.slice(0, et));
 			}), n;
 		},
 		markRead(t) {
@@ -2592,15 +2609,15 @@ function et(e) {
 }
 //#endregion
 //#region src/store/vfs-slice.ts
-function tt(e) {
+function nt(e) {
 	let t = e.lastIndexOf("/");
 	return t <= 0 ? "/" : e.slice(0, t);
 }
 function $(e) {
 	return e.slice(e.lastIndexOf("/") + 1);
 }
-var nt = rt();
-function rt() {
+var rt = it();
+function it() {
 	let e = Date.now(), t = [
 		"/",
 		"/Users",
@@ -2633,9 +2650,9 @@ function rt() {
 	};
 	return n;
 }
-function it(e, t) {
+function at(e, t) {
 	return {
-		vfs: nt,
+		vfs: rt,
 		vfsWriteFile(t, n, r) {
 			e((e) => {
 				let i = Date.now(), a = e.vfs[t];
@@ -2650,7 +2667,7 @@ function it(e, t) {
 						modifiedAt: i,
 						mimeType: r
 					};
-					let a = tt(t);
+					let a = nt(t);
 					e.vfs[a] || (e.vfs[a] = {
 						type: "dir",
 						name: $(a),
@@ -2700,7 +2717,7 @@ function it(e, t) {
 		},
 		vfsLs(e) {
 			let n = t().vfs, r = e.endsWith("/") && e !== "/" ? e.slice(0, -1) : e;
-			return Object.values(n).filter((e) => e.path !== r && tt(e.path) === r);
+			return Object.values(n).filter((e) => e.path !== r && nt(e.path) === r);
 		},
 		vfsExists(e) {
 			return !!t().vfs[e];
@@ -2709,7 +2726,7 @@ function it(e, t) {
 }
 //#endregion
 //#region src/store/widget-slice.ts
-function at(e, t) {
+function ot(e, t) {
 	return {
 		widgetInstances: [],
 		isEditingWidgets: !1,
@@ -2757,16 +2774,16 @@ function at(e, t) {
 }
 //#endregion
 //#region src/store/index.ts
-var ot = o()(Me(Pe((e, t) => {
+var st = o()(Me(Pe((e, t) => {
 	let n = e, r = t;
 	return {
 		...Ve(n, r),
-		...He(n),
-		...Ue(n),
-		...Qe(n),
-		...et(n),
-		...it(n, r),
-		...at(n, r)
+		...Ke(n),
+		...qe(n, r),
+		...$e(n),
+		...tt(n),
+		...at(n, r),
+		...ot(n, r)
 	};
 }, {
 	name: "desktop-layout-store",
@@ -2808,4 +2825,4 @@ var ot = o()(Me(Pe((e, t) => {
 	})
 })));
 //#endregion
-export { Je as a, Ke as c, Le as d, o as f, qe as i, ze as l, Xe as n, Ge as o, Ye as r, We as s, ot as t, Re as u };
+export { Je as a, He as c, Le as d, o as f, Ye as i, ze as l, Ze as n, Xe as o, Qe as r, Ue as s, st as t, Re as u };

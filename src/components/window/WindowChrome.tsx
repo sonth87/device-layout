@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { X, Minus, Maximize2, Square, Calculator as CalcIcon, Check, ChevronDown, Sidebar } from 'lucide-react';
+import { X, Minus, Maximize2, Square, Copy, Calculator as CalcIcon, Check, ChevronDown, Sidebar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
@@ -225,6 +225,8 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
   const closeWindow = useStore((s) => s.closeWindow);
   const minimizeWindow = useStore((s) => s.minimizeWindow);
   const toggleMaximize = useStore((s) => s.toggleMaximize);
+  const enterFullScreen = useStore((s) => s.enterFullScreen);
+  const exitFullScreen = useStore((s) => s.exitFullScreen);
   const { config } = useTheme();
   const viewport = useViewportSize();
   const { getAppName } = useTranslation();
@@ -357,10 +359,21 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
           <Minus className="w-3.5 h-3.5" strokeWidth={2} />
         </button>
         <button
-          className="w-11 h-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black/70 dark:text-white/70 cursor-default"
-          title="Double-click title bar to maximize/restore"
+          onClick={() => {
+            if (win.isFullScreen || win.isMaximized) {
+              exitFullScreen(windowId);
+            } else {
+              enterFullScreen(windowId);
+            }
+          }}
+          className="w-11 h-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black/70 dark:text-white/70"
+          title={win.isMaximized || win.isFullScreen ? 'Restore' : 'Fullscreen'}
         >
-          <Square className="w-3 h-3" strokeWidth={2} />
+          {win.isMaximized || win.isFullScreen ? (
+            <Copy className="w-3 h-3 rotate-180" strokeWidth={2} />
+          ) : (
+            <Square className="w-3 h-3" strokeWidth={2} />
+          )}
         </button>
         <button
           onClick={() => closeWindow(windowId)}

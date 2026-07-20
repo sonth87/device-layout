@@ -39,7 +39,10 @@ export const useStore: UseBoundStore<StoreWithMiddlewares> = create<RootStore>()
             setActiveApp: (appId: string | null) => void;
           }),
           ...createAppSlice(s),
-          ...createThemeSlice(s),
+          ...createThemeSlice(s, g as unknown as () => {
+            windows: Record<string, { id: string; isFullScreen: boolean }>;
+            exitFullScreen: (id: string) => void;
+          }),
           ...createDesktopSlice(s),
           ...createNotificationSlice(s),
           ...createVFSSlice(s, g),

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { useStore } from '@/store';
 import { useTheme } from '@/hooks/useTheme';
@@ -16,6 +16,7 @@ export function WindowManager() {
   const windows = useStore((s) => s.windows);
   const apps = useStore((s) => s.apps);
   const resizeWindow = useStore((s) => s.resizeWindow);
+  const exitFullScreen = useStore((s) => s.exitFullScreen);
   const allowDragOutOfBounds = useStore((s) => s.allowDragOutOfBounds);
   const viewport = useViewportSize();
   const { config } = useTheme();
@@ -33,7 +34,14 @@ export function WindowManager() {
       if (!appConfig) continue;
 
       let nextRect;
-      if (win.isMaximized) {
+      if (win.isFullScreen && config.hasMenuBar) {
+        nextRect = {
+          x: 0,
+          y: 0,
+          width: viewport.width,
+          height: viewport.height,
+        };
+      } else if (win.isMaximized || win.isFullScreen) {
         nextRect = viewportRect;
       } else {
         const minW = appConfig.minSize?.width ?? 320;

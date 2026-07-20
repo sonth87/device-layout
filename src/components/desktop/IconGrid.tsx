@@ -38,8 +38,8 @@ function resolveIconPositions({
     let hasStored = false;
 
     if (stored && desktopSortBy === 'none') {
-      const col = Math.max(0, Math.round((stored.x - PAD) / 108));
-      const row = Math.max(0, Math.min(maxRows - 1, Math.round((stored.y - PAD) / 124)));
+      const col = Math.max(0, Math.round((stored.x - PAD) / cellW));
+      const row = Math.max(0, Math.min(maxRows - 1, Math.round((stored.y - PAD) / cellH)));
       preferredIndex = col * maxRows + row;
       hasStored = true;
     }
@@ -419,19 +419,21 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
     for (const app of sortedAppList) {
       const orig = posMap[app.id] || { x: PAD, y: PAD };
       if (dragGroup.has(app.id)) {
-        const sCol = Math.round((orig.x - PAD) / 108);
-        const sRow = Math.round((orig.y - PAD) / 124);
+        const appStart = dragStartCoords[app.id] || { x: PAD, y: PAD };
+        const appStartCol = Math.round((appStart.x - PAD) / cellW);
+        const appStartRow = Math.round((appStart.y - PAD) / cellH);
 
-        const startCol = Math.round((startAnchor.x - PAD) / cellW);
-        const startRow = Math.round((startAnchor.y - PAD) / cellH);
+        const anchorStartCol = Math.round((startAnchor.x - PAD) / cellW);
+        const anchorStartRow = Math.round((startAnchor.y - PAD) / cellH);
+        
         const endCol = Math.round((x - PAD) / cellW);
         const endRow = Math.round((y - PAD) / cellH);
 
-        const dCol = endCol - startCol;
-        const dRow = endRow - startRow;
+        const dCol = endCol - anchorStartCol;
+        const dRow = endRow - anchorStartRow;
 
-        const nCol = Math.max(0, sCol + dCol);
-        const nRow = Math.max(0, sRow + dRow);
+        const nCol = Math.max(0, appStartCol + dCol);
+        const nRow = Math.max(0, appStartRow + dRow);
 
         tempPosMap[app.id] = {
           x: nCol * cellW + PAD,
@@ -460,8 +462,8 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
       const row = Math.round((coords[app.id].y - PAD) / cellH);
       return {
         appId: app.id,
-        x: col * 108 + PAD,
-        y: row * 124 + PAD,
+        x: col * cellW + PAD,
+        y: row * cellH + PAD,
       };
     });
 

@@ -23,7 +23,7 @@ export default defineConfig({
     dts({
       entryRoot: 'src',
       include: ['src/lib.tsx', 'src/**/*.ts', 'src/**/*.tsx'],
-      exclude: ['src/app/**'],
+      exclude: ['src/app/**', 'src/electron/**', 'src/**/__tests__/**', '**/*.test.ts', '**/*.example.ts'],
       outDirs: ['dist-lib'],
       insertTypesEntry: true,
       // store/index.ts's `import { immer } from 'zustand/middleware/immer'`

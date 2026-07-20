@@ -92,10 +92,11 @@ export function LiquidGlass({
       <div
         ref={handleRef}
         className={cn(
-          "relative overflow-hidden",
-          "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10",
+          "relative overflow-hidden border",
+          variant === "panel"
+            ? "bg-white/95 dark:bg-[#1a1c26]/95 border-white/20 dark:border-white/10"
+            : "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10",
           shadowCls,
-          "border",
           className,
         )}
         style={{ ...radiusStyle, ...style }}

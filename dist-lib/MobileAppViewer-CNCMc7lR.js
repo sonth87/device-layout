@@ -1,5 +1,5 @@
 import { C as e, E as t, O as n, S as r, T as i, a, b as o, c as s, d as c, f as l, g as u, i as d, l as f, m as p, n as m, o as h, p as g, r as _, s as v, t as y, u as b, v as x } from "./Combination-dkRdWOFm.js";
-import { r as S, t as C } from "./store-DYo5O0gz.js";
+import { c as S, t as C } from "./store-BQ3wWDKN.js";
 import { t as w } from "./utils-B6YmNDS2.js";
 import { t as T } from "./createLucideIcon--WjuKCts.js";
 import { t as ee } from "./chevron-right-BcSxNxws.js";
@@ -9,7 +9,7 @@ import { t as re } from "./search-BKG97C0x.js";
 import { t as ie } from "./sun-DdSv2tyc.js";
 import { t as ae } from "./volume-2-DAfADR-a.js";
 import { t as oe } from "./x-BYw6fhgP.js";
-import { t as se } from "./useTranslation-BFiuUWuF.js";
+import { t as se } from "./useTranslation-WZxIuhj4.js";
 import { t as ce } from "./AppViewport-BDJLAndL.js";
 import * as E from "react";
 import { Children as le, Component as ue, Fragment as de, Suspense as fe, createContext as pe, createElement as me, forwardRef as he, isValidElement as ge, lazy as D, useCallback as O, useContext as k, useEffect as A, useId as _e, useInsertionEffect as ve, useLayoutEffect as ye, useMemo as be, useRef as j, useState as M } from "react";
@@ -6349,7 +6349,7 @@ function Wf({ children: e, className: t, variant: n = "panel", forceGlass: r, bo
 		]
 	}) : /* @__PURE__ */ N("div", {
 		ref: _,
-		className: w("relative overflow-hidden", "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10", m, "border", t),
+		className: w("relative overflow-hidden border", n === "panel" ? "bg-white/95 dark:bg-[#1a1c26]/95 border-white/20 dark:border-white/10" : "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10", m, t),
 		style: {
 			...p,
 			...a
@@ -7039,20 +7039,20 @@ var sp = class extends ue {
 		}, this.state.retryCount);
 	}
 }, cp = {
-	Finder: D(() => import("./Finder-Dd8pHzgS.js").then((e) => ({ default: e.Finder }))),
-	Terminal: D(() => import("./Terminal-fsHqvesJ.js").then((e) => ({ default: e.Terminal }))),
-	Settings: D(() => import("./Settings-DcnB6xq1.js").then((e) => ({ default: e.Settings }))),
-	Browser: D(() => import("./Browser-JiQjiTVF.js").then((e) => ({ default: e.Browser }))),
-	TextEditor: D(() => import("./TextEditor-CZt1ppyM.js").then((e) => ({ default: e.TextEditor }))),
-	Clock: D(() => import("./Clock-BOQeEPN-.js").then((e) => ({ default: e.Clock }))),
-	Calculator: D(() => import("./Calculator-C8y-nyXC.js").then((e) => ({ default: e.Calculator }))),
-	Notes: D(() => import("./Notes-08lM_rNG.js").then((e) => ({ default: e.Notes }))),
-	Photos: D(() => import("./Photos-BiSB3rqG.js").then((e) => ({ default: e.Photos }))),
-	Music: D(() => import("./Music-CyNJcX9C.js").then((e) => ({ default: e.Music }))),
-	Calendar: D(() => import("./Calendar-CZ6r0J7o.js").then((e) => ({ default: e.Calendar }))),
-	Messages: D(() => import("./Messages-CgiJ5qs3.js").then((e) => ({ default: e.Messages }))),
-	IframeApp: D(() => import("./IframeApp-BAqcNMZz.js").then((e) => ({ default: e.IframeApp }))),
-	MdxApp: D(() => import("./MdxApp-Bz_3pSof.js").then((e) => ({ default: e.MdxApp })))
+	Finder: D(() => import("./Finder-CyOvQbZF.js").then((e) => ({ default: e.Finder }))),
+	Terminal: D(() => import("./Terminal-bV4MUGHt.js").then((e) => ({ default: e.Terminal }))),
+	Settings: D(() => import("./Settings-CvrWam5l.js").then((e) => ({ default: e.Settings }))),
+	Browser: D(() => import("./Browser-BIl5C3t1.js").then((e) => ({ default: e.Browser }))),
+	TextEditor: D(() => import("./TextEditor-DBYIlqT3.js").then((e) => ({ default: e.TextEditor }))),
+	Clock: D(() => import("./Clock-DBrWK5G4.js").then((e) => ({ default: e.Clock }))),
+	Calculator: D(() => import("./Calculator-BH4UOaPi.js").then((e) => ({ default: e.Calculator }))),
+	Notes: D(() => import("./Notes-DfFoXpMe.js").then((e) => ({ default: e.Notes }))),
+	Photos: D(() => import("./Photos-B05aU8R_.js").then((e) => ({ default: e.Photos }))),
+	Music: D(() => import("./Music-B65Ru7XW.js").then((e) => ({ default: e.Music }))),
+	Calendar: D(() => import("./Calendar-Cc_-2eqC.js").then((e) => ({ default: e.Calendar }))),
+	Messages: D(() => import("./Messages-C7t3NP5f.js").then((e) => ({ default: e.Messages }))),
+	IframeApp: D(() => import("./IframeApp-DZ3b9VXX.js").then((e) => ({ default: e.IframeApp }))),
+	MdxApp: D(() => import("./MdxApp-Jf3-FVYV.js").then((e) => ({ default: e.MdxApp })))
 };
 function lp() {
 	return /* @__PURE__ */ N("div", {

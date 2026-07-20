@@ -40,21 +40,29 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: Ch
     Object.values(s.windows).some((w) => w.isFullScreen && !w.isMinimized)
   );
 
-  // Synchronously read URL params to detect maximized/fullscreen windows BEFORE
-  // async hydration completes — prevents the dock from flashing visible on F5.
-  const [urlHasMaximized] = useState(() => {
-    if (typeof window === 'undefined') return false;
+  // Read URL params to detect maximized/fullscreen windows BEFORE
+  // async hydration completes — prevents chrome/dock from flashing visible on F5.
+  const [urlState, setUrlState] = useState({ hasMaximized: false, hasFullScreen: false });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
-    return params.getAll('w').some((p) => {
+    let hasMax = false;
+    let hasFull = false;
+    for (const p of params.getAll('w')) {
       const flags = parseInt(p.split(':')[2] ?? '0', 10);
-      return Boolean(flags & 6); // bit 2 = maximized, bit 4 = fullscreen
-    });
-  });
+      if (flags & 2) hasMax = true;
+      if (flags & 4) hasFull = true;
+    }
+    setUrlState({ hasMaximized: hasMax, hasFullScreen: hasFull });
+  }, []);
+
   const urlHydrated = useStore((s) => s.urlHydrated);
 
+  const isFullScreenActive = hasFullScreen || (!urlHydrated && urlState.hasFullScreen);
   const storeDockAutoHide = useStore((s) => s.dockAutoHide);
   // Before URL hydration: use url pre-scan to avoid dock flash; after: use live state
-  const dockAutoHide = hasMaximized || hasFullScreen || storeDockAutoHide || (urlHasMaximized && !urlHydrated);
+  const dockAutoHide = hasMaximized || isFullScreenActive || storeDockAutoHide || (urlState.hasMaximized && !urlHydrated);
 
   const [dockRevealed, setDockRevealed] = useState(false);
   const [dockHovered, setDockHovered] = useState(false);
@@ -114,7 +122,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: Ch
   // same value and slide in lockstep.
   const menuBarRevealed = useStore((s) => s.fullscreenChromeRevealed);
   const setMenuBarRevealed = useStore((s) => s.setFullscreenChromeRevealed);
-  const menuBarVisible = !hasFullScreen || menuBarRevealed;
+  const menuBarVisible = !isFullScreenActive || menuBarRevealed;
 
   useEffect(() => {
     if (!hasFullScreen) {

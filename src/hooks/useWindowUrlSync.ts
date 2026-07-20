@@ -36,10 +36,17 @@ export function useWindowUrlSync() {
       const appConfig = apps[decoded.appId];
       if (!appConfig) continue;
 
-      // If window was maximized when saved, use current viewport rect instead of saved rect.
+      // If window was maximized or fullscreen when saved, use current viewport rect instead of saved rect.
       // This prevents layout issues when the browser is resized or opened on a different screen.
       let rectToUse = decoded.rect;
-      if (decoded.isMaximized) {
+      if (decoded.isFullScreen) {
+        rectToUse = {
+          x: 0,
+          y: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        };
+      } else if (decoded.isMaximized) {
         const { top, bottom } = config.layout.window.maximizeInsets;
         rectToUse = {
           x: 0,

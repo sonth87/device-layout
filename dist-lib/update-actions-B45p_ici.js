@@ -1,5 +1,5 @@
-import { d as e, l as t } from "./MobileAppViewer-DbLQ9qcr.js";
-import { a as n, c as r, f as i, i as a, o, s } from "./store-DYo5O0gz.js";
+import { d as e, l as t } from "./MobileAppViewer-CNCMc7lR.js";
+import { a as n, f as r, i, n as a, o, r as s } from "./store-BQ3wWDKN.js";
 import { t as c } from "./createLucideIcon--WjuKCts.js";
 import { n as l, t as u } from "./settings-B5duO7Zc.js";
 import { n as d, t as f } from "./folder-C9z1AA3T.js";
@@ -376,7 +376,7 @@ function F({ appConfig: e, size: t = 56, className: n = "", fill: r = !1 }) {
 }
 //#endregion
 //#region src/lib/update-status-store.ts
-var I = i((e) => ({
+var I = r((e) => ({
 	status: null,
 	setStatus: (t) => e({ status: t })
 }));
@@ -386,11 +386,11 @@ function L(e) {
 //#endregion
 //#region src/lib/wallpaper-catalog.ts
 var R = {
-	pictures: s,
-	live: o,
-	colors: r,
+	pictures: n,
+	live: i,
+	colors: o,
 	all: a,
-	defaultId: n
+	defaultId: s
 }, z = g(R), B = z.Provider;
 function V() {
 	return _(z);
@@ -398,12 +398,12 @@ function V() {
 function H(e) {
 	return e ? {
 		pictures: e,
-		live: o,
-		colors: r,
+		live: i,
+		colors: o,
 		all: [
 			...e,
-			...o,
-			...r
+			...i,
+			...o
 		],
 		defaultId: e[0]?.id ?? "bg-1"
 	} : R;

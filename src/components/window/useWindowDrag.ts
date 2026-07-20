@@ -47,9 +47,11 @@ interface UseWindowDragOptions {
   windowId: string;
   x: MotionValue<number>;
   y: MotionValue<number>;
+  width?: MotionValue<number>;
+  height?: MotionValue<number>;
 }
 
-export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
+export function useWindowDrag({ windowId, x, y, width, height }: UseWindowDragOptions) {
   const { moveWindow, resizeWindow, maximizeWindow, toggleMaximize, focusWindow } = useStore(
     useShallow((s) => ({
       moveWindow: s.moveWindow,
@@ -83,11 +85,19 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
       focusWindow(windowId);
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
 
-      // If the window is maximized/snapped, defer restore until the pointer actually moves.
+      // If the window is maximized/fullscreen/snapped, defer restore until the pointer actually moves.
       // This prevents a single click on the title bar from restoring the window.
       const win = useStore.getState().windows[windowId];
-      if (win?.prevRect) {
-        // Don't restore yet — record pending restore, will execute on first real drag movement
+      if (win?.isMaximized || win?.isFullScreen || win?.prevRect) {
+        const fallbackW = win.rect.width < window.innerWidth && win.rect.width > 0 ? win.rect.width : 800;
+        const fallbackH = win.rect.height < window.innerHeight && win.rect.height > 0 ? win.rect.height : 600;
+        const prevRectToUse = win.prevRect ?? {
+          x: Math.round(window.innerWidth / 2 - fallbackW / 2),
+          y: Math.round(window.innerHeight / 2 - fallbackH / 2),
+          width: fallbackW,
+          height: fallbackH,
+        };
+
         startRef.current = {
           mouseX: e.clientX,
           mouseY: e.clientY,
@@ -95,7 +105,7 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
           winY: y.get(),
           escaped: false,
           pendingRestore: {
-            prevRect: { ...win.prevRect },
+            prevRect: prevRectToUse,
             maximizedRect: { ...win.rect },
           },
         };
@@ -158,6 +168,9 @@ export function useWindowDrag({ windowId, x, y }: UseWindowDragOptions) {
               w.isFullScreen = false;
             }
           });
+          if (width) width.set(prevRect.width);
+          if (height) height.set(prevRect.height);
+          resizeWindow(windowId, { x: newWinX, y: newWinY, width: prevRect.width, height: prevRect.height });
 
           startRef.current.winX = newWinX;
           startRef.current.winY = newWinY;

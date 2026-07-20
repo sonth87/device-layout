@@ -176,6 +176,10 @@ export function AppIcon({
   const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isTouchRef = useRef(false);
 
+  // Store latest props to avoid stale closures in pointer events
+  const latestProps = useRef({ x, y, onDrop, onOpen, onDragStart, onDrag, onUpAfterClick });
+  latestProps.current = { x, y, onDrop, onOpen, onDragStart, onDrag, onUpAfterClick };
+
   // Update visual pos when store pos changes (unless mid-drag)
   const pos = dragging ? dragPos : { x, y };
 
@@ -250,11 +254,11 @@ export function AppIcon({
 
       setDragPos({ x: nextX, y: nextY });
 
-      if (firstDrag && onDragStart) {
-        onDragStart();
+      if (firstDrag && latestProps.current.onDragStart) {
+        latestProps.current.onDragStart();
       }
-      if (onDrag) {
-        onDrag(nextX, nextY);
+      if (latestProps.current.onDrag) {
+        latestProps.current.onDrag(nextX, nextY);
       }
     };
 
@@ -268,22 +272,24 @@ export function AppIcon({
       const dx = up.clientX - dragRef.current.startMouseX;
       const dy = up.clientY - dragRef.current.startMouseY;
       const moved = dragRef.current.moved;
+      const startX = dragRef.current.startX;
+      const startY = dragRef.current.startY;
       dragRef.current = null;
       setDragging(false);
 
       if (moved) {
-        // Commit drag position
-        onDrop(x + dx, y + dy);
+        // Commit drag position using the original startX/startY to avoid double-adding dx/dy
+        latestProps.current.onDrop(startX + dx, startY + dy);
       } else {
-        if (onUpAfterClick) {
-          onUpAfterClick(appConfig.id);
+        if (latestProps.current.onUpAfterClick) {
+          latestProps.current.onUpAfterClick(appConfig.id);
         }
         // It's a click — handle double-click-to-open
         clickCountRef.current += 1;
         if (clickCountRef.current === 2) {
           clickCountRef.current = 0;
           if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
-          onOpen(appConfig);
+          latestProps.current.onOpen(appConfig);
         } else {
           clickTimerRef.current = setTimeout(() => {
             clickCountRef.current = 0;

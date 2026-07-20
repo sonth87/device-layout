@@ -231,11 +231,21 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
       set((state) => {
         if (!state.windows[id]) return;
         const win = state.windows[id];
-        // Zoom trong lúc đang fullscreen: thoát fullscreen trước (không giữ cả 2 cùng lúc).
-        win.isFullScreen = false;
-        if (win.isMaximized && win.prevRect) {
-          win.rect = { ...win.prevRect };
-          win.prevRect = null;
+        if (win.isFullScreen || win.isMaximized) {
+          if (win.prevRect) {
+            win.rect = { ...win.prevRect };
+            win.prevRect = null;
+          } else {
+            const defaultW = Math.min(800, viewportRect.width);
+            const defaultH = Math.min(600, viewportRect.height);
+            win.rect = {
+              x: Math.round(viewportRect.width / 2 - defaultW / 2),
+              y: Math.round(viewportRect.height / 2 - defaultH / 2),
+              width: defaultW,
+              height: defaultH,
+            };
+          }
+          win.isFullScreen = false;
           win.isMaximized = false;
         } else {
           win.prevRect = { ...win.rect };
@@ -255,7 +265,10 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
     enterFullScreen(id) {
       set((state) => {
         const win = state.windows[id];
-        if (!win) return;
+        if (!win || win.isFullScreen) return;
+        if (!win.prevRect) {
+          win.prevRect = { ...win.rect };
+        }
         win.isMaximized = false;
         win.isFullScreen = true;
       });
@@ -264,7 +277,12 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
     exitFullScreen(id) {
       set((state) => {
         const win = state.windows[id];
-        if (win) win.isFullScreen = false;
+        if (!win || !win.isFullScreen) return;
+        win.isFullScreen = false;
+        if (win.prevRect) {
+          win.rect = { ...win.prevRect };
+          win.prevRect = null;
+        }
       });
     },
 
@@ -298,11 +316,15 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
       });
     },
 
-    resizeWindow(id, rect, savePrev = true) {
+    resizeWindow(id, rect, savePrev = false) {
       set((state) => {
         const win = state.windows[id];
         if (win) {
-          if (savePrev) {
+          if (win.isFullScreen || win.isMaximized) {
+            win.isFullScreen = false;
+            win.isMaximized = false;
+            win.prevRect = null;
+          } else if (savePrev) {
             if (!win.prevRect) {
               win.prevRect = { ...win.rect };
             }

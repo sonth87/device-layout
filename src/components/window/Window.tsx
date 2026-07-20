@@ -38,22 +38,27 @@ export function Window({ windowId }: WindowProps) {
     return () => window.removeEventListener('keydown', handler);
   }, [win?.isFullScreen, win?.isFocused, windowId, exitFullScreen]);
 
-  const mx = useMotionValue(win?.rect.x ?? 100);
-  const my = useMotionValue(win?.rect.y ?? 100);
-  const mw = useMotionValue(win?.rect.width ?? 800);
-  const mh = useMotionValue(win?.rect.height ?? 600);
+  const mx = useMotionValue(win?.isFullScreen ? 0 : (win?.rect.x ?? 100));
+  const my = useMotionValue(win?.isFullScreen ? 0 : (win?.rect.y ?? 100));
+  const mw = useMotionValue(win?.isFullScreen ? (typeof window !== 'undefined' ? window.innerWidth : 800) : (win?.rect.width ?? 800));
+  const mh = useMotionValue(win?.isFullScreen ? (typeof window !== 'undefined' ? window.innerHeight : 600) : (win?.rect.height ?? 600));
 
-  // Animate rect changes (maximize/restore) with spring
+  // Animate rect changes (maximize/restore/fullscreen) with spring
   useEffect(() => {
     if (!win) return;
-    animate(mx, win.rect.x, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
-    animate(my, win.rect.y, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
-    animate(mw, win.rect.width, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
-    animate(mh, win.rect.height, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [win?.rect.x, win?.rect.y, win?.rect.width, win?.rect.height]);
+    const targetX = win.isFullScreen ? 0 : win.rect.x;
+    const targetY = win.isFullScreen ? 0 : win.rect.y;
+    const targetW = win.isFullScreen ? (typeof window !== 'undefined' ? window.innerWidth : 800) : win.rect.width;
+    const targetH = win.isFullScreen ? (typeof window !== 'undefined' ? window.innerHeight : 600) : win.rect.height;
 
-  const { onPointerDown: onDragStart } = useWindowDrag({ windowId, x: mx, y: my });
+    animate(mx, targetX, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
+    animate(my, targetY, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
+    animate(mw, targetW, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
+    animate(mh, targetH, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [win?.rect.x, win?.rect.y, win?.rect.width, win?.rect.height, win?.isFullScreen]);
+
+  const { onPointerDown: onDragStart } = useWindowDrag({ windowId, x: mx, y: my, width: mw, height: mh });
   const appConfig = win ? apps[win.appId] : undefined;
   const { getResizeHandler } = useWindowResize({
     windowId, x: mx, y: my, width: mw, height: mh,
@@ -63,10 +68,6 @@ export function Window({ windowId }: WindowProps) {
 
   if (!win) return null;
 
-  // isFullscreen (viewport-filling layout, no chrome) — true for mobile,
-  // maximized (fills between menu bar/dock), AND true macOS fullscreen
-  // (fills the ENTIRE viewport, over menu bar/dock — win.isFullScreen).
-  const isFullscreen = isMobile || win.isMaximized || win.isFullScreen;
   const isFloatingWindow = isFloating && !isMobile;
 
   return (
@@ -82,20 +83,12 @@ export function Window({ windowId }: WindowProps) {
         exit: { scale: 0.88, opacity: 0, transition: { duration: 0.15 } },
       }}
       style={
-        isFullscreen && !win.isMaximized
+        (win.isFullScreen && config.hasMenuBar) || isMobile
           ? {
-              // mw/mh are Framer Motion MotionValues — they're set on the DOM
-              // node imperatively and DON'T get cleared just because this
-              // style object stops referencing them (React's style diffing
-              // doesn't see them as "present" here, but the motion value
-              // subscription is still driving the underlying style until
-              // explicitly reset). Without resetting x/y/width/height to
-              // fixed values, the window keeps its last floating-mode size
-              // instead of filling the viewport via inset:0.
               position: 'absolute', inset: 0, x: 0, y: 0, width: '100%', height: '100%',
               zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: win.isFullScreen ? 0 : 'var(--radius-window)',
             }
-          : { position: 'absolute', x: mx, y: my, width: mw, height: mh, zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: win.isFullScreen ? 0 : 'var(--radius-window)' }
+          : { position: 'absolute', x: mx, y: my, width: mw, height: mh, zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: (win.isFullScreen || win.isMaximized) ? 0 : 'var(--radius-window)' }
       }
       className={cn(
         'flex flex-col overflow-hidden',
@@ -124,12 +117,14 @@ export function Window({ windowId }: WindowProps) {
           the same fullscreenChromeRevealed store flag MacOSTheme.tsx sets,
           so both bars move in lockstep (see docs/dev/history.md). Overlay
           (not a flex member) so it doesn't push window content down when revealed. */}
-      {(isFloatingWindow || win.isMaximized) && !win.isFullScreen && (
+      {/* Chrome (title bar) — normal flex-column member when floating, maximized, or non-macOS theme.
+          In true macOS fullscreen it's hidden by default but slides down as an absolute overlay. */}
+      {(!win.isFullScreen || !config.hasMenuBar) && (
         <div className={cn(appConfig?.titleBarMode === 'transparent' ? 'absolute top-0 inset-x-0 z-20' : 'relative')}>
           <WindowChrome windowId={windowId} onPointerDown={onDragStart} />
         </div>
       )}
-      {win.isFullScreen && (
+      {win.isFullScreen && config.hasMenuBar && (
         <motion.div
           className="absolute top-0 inset-x-0 z-20"
           animate={{ y: fullscreenChromeRevealed ? 28 : '-100%' }}
