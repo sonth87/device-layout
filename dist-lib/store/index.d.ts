@@ -23,7 +23,7 @@ type StoreWithMiddlewares = Mutate<StoreApi<RootStore>, [
 export declare const useStore: UseBoundStore<StoreWithMiddlewares>;
 export declare const useWindows: () => Record<string, import('../types/window').WindowState>;
 export declare const useApps: () => Record<string, import('../lib').AppConfig>;
-export declare const useOSTheme: () => import('../types/theme').OSTheme;
+export declare const useOSTheme: () => import('../lib').OSTheme;
 export declare const useColorScheme: () => "light" | "dark";
 export declare const useGlassEnabled: () => boolean;
 export declare const useNotifications: () => import('../types/notification').AppNotification[];

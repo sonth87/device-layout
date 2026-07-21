@@ -56,4 +56,5 @@ export { APPS_CONFIG } from './config/apps.config';
  * focused app's handlers run (see docs/guides/adding-an-app.md in sky-app
  * for the R2-driven "1 app active at a time" contract this supports).
  */
+export type { ColorScheme, OSTheme } from './types/theme';
 export { useStore } from './store';

@@ -6153,23 +6153,31 @@ function Da(e, t = "macos") {
 }
 //#endregion
 //#region src/components/themes/ThemeProvider.tsx
-function Oa({ apps: e, isSimpleMode: t = !1 } = {}) {
-	let n = I((e) => e.osTheme), r = I((e) => e.colorScheme), i = I((e) => e.resolvedColorScheme), a = I((e) => e.resolveColorScheme), o = I((e) => e.registerApps), s = I((e) => e.launchApp), c = I((e) => e.glassEnabled), l = I((e) => e.isEditingWidgets), u = I((e) => e.accentColor), d = I((e) => e.highlightColor), [f, p] = K(!1), [m, h] = K(!1), [_, v] = K(!1), b = nt(() => Da(t, n), [t, n]);
+function Oa({ apps: e, isSimpleMode: t = !1, colorScheme: n } = {}) {
+	let r = I((e) => e.osTheme), i = I((e) => e.colorScheme), a = I((e) => e.setColorScheme), o = I((e) => e.resolvedColorScheme), s = I((e) => e.resolveColorScheme);
+	W(() => {
+		n && n !== i && a(n);
+	}, [
+		n,
+		i,
+		a
+	]);
+	let c = I((e) => e.registerApps), l = I((e) => e.launchApp), u = I((e) => e.glassEnabled), d = I((e) => e.isEditingWidgets), f = I((e) => e.accentColor), p = I((e) => e.highlightColor), [m, h] = K(!1), [_, v] = K(!1), [b, x] = K(!1), C = nt(() => Da(t, r), [t, r]);
 	W(() => {
 		let e = () => {
 			let e = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent), t = window.innerWidth <= 768;
-			v(e || t);
+			x(e || t);
 		};
 		return e(), window.addEventListener("resize", e), () => window.removeEventListener("resize", e);
 	}, []), Sa({
-		onSpotlight: () => p((e) => !e),
-		onAppSwitcher: () => h((e) => !e)
+		onSpotlight: () => h((e) => !e),
+		onAppSwitcher: () => v((e) => !e)
 	}), wa();
-	let x = nt(() => {
+	let w = nt(() => {
 		let t = [];
-		if (b.defaultApps === !0) t = ce;
-		else if (Array.isArray(b.defaultApps)) {
-			let e = new Set(b.defaultApps);
+		if (C.defaultApps === !0) t = ce;
+		else if (Array.isArray(C.defaultApps)) {
+			let e = new Set(C.defaultApps);
 			t = ce.filter((t) => e.has(t.id));
 		}
 		if (e) {
@@ -6177,19 +6185,19 @@ function Oa({ apps: e, isSimpleMode: t = !1 } = {}) {
 			return [...e, ...r];
 		}
 		return t;
-	}, [e, b.defaultApps]);
+	}, [e, C.defaultApps]);
 	W(() => {
-		o(x);
-	}, [o, x]), W(() => {
+		c(w);
+	}, [c, w]), W(() => {
 		let e = window.matchMedia("(prefers-color-scheme: dark)"), t = () => {
-			a(e.matches);
+			s(e.matches);
 		};
-		return a(e.matches), e.addEventListener("change", t), () => e.removeEventListener("change", t);
-	}, [r, a]);
-	let C = n;
+		return s(e.matches), e.addEventListener("change", t), () => e.removeEventListener("change", t);
+	}, [i, s]);
+	let T = r;
 	W(() => {
 		let e = document.documentElement;
-		e.setAttribute("data-os-theme", C), e.setAttribute("data-glass", c ? "true" : "false"), e.classList.toggle("dark", i === "dark");
+		e.setAttribute("data-os-theme", T), e.setAttribute("data-glass", u ? "true" : "false"), e.classList.toggle("dark", o === "dark");
 		let t = {
 			multicolor: "#007afe",
 			blue: "#007afe",
@@ -6200,7 +6208,7 @@ function Oa({ apps: e, isSimpleMode: t = !1 } = {}) {
 			yellow: "#f5c400",
 			green: "#63be44",
 			graphite: "#8e8e93"
-		}[u] || "#007afe";
+		}[f] || "#007afe";
 		e.style.setProperty("--accent-color", t), e.style.setProperty("--win-accent", t);
 		let n = {
 			blue: "rgba(0, 122, 254, 0.25)",
@@ -6212,22 +6220,22 @@ function Oa({ apps: e, isSimpleMode: t = !1 } = {}) {
 			green: "rgba(99, 190, 68, 0.25)",
 			graphite: "rgba(142, 142, 147, 0.3)"
 		}, r = "";
-		r = d === "automatic" ? n[u === "multicolor" ? "blue" : u] || "rgba(0, 122, 254, 0.25)" : n[d] || "rgba(0, 122, 254, 0.25)", e.style.setProperty("--highlight-color", r);
+		r = p === "automatic" ? n[f === "multicolor" ? "blue" : f] || "rgba(0, 122, 254, 0.25)" : n[p] || "rgba(0, 122, 254, 0.25)", e.style.setProperty("--highlight-color", r);
 	}, [
-		C,
-		i,
-		c,
+		T,
+		o,
 		u,
-		d
+		f,
+		p
 	]);
-	let w = U((e) => {
-		s(e);
-	}, [s]), T = C === "macos" || C === "ipad", E = C !== "ipad" && C !== "iphone" && C !== "android", D = C === "iphone" || C === "android", O = F[C];
-	return b.isSimpleModeActive && C === "macos" && !b.dock && (O = {
-		...O,
+	let E = U((e) => {
+		l(e);
+	}, [l]), D = T === "macos" || T === "ipad", O = T !== "ipad" && T !== "iphone" && T !== "android", k = T === "iphone" || T === "android", A = F[T];
+	return C.isSimpleModeActive && T === "macos" && !C.dock && (A = {
+		...A,
 		hasDock: !1,
 		layout: {
-			...O.layout,
+			...A.layout,
 			desktopInsets: {
 				top: 28,
 				right: 0,
@@ -6235,12 +6243,12 @@ function Oa({ apps: e, isSimpleMode: t = !1 } = {}) {
 				left: 0
 			},
 			chrome: {
-				...O.layout.chrome,
+				...A.layout.chrome,
 				dockHeight: 0,
 				dockOffsetBottom: 0
 			},
 			window: {
-				...O.layout.window,
+				...A.layout.window,
 				maximizeInsets: {
 					top: 28,
 					bottom: 0
@@ -6248,31 +6256,31 @@ function Oa({ apps: e, isSimpleMode: t = !1 } = {}) {
 			}
 		}
 	}), /* @__PURE__ */ J(S, {
-		features: b,
+		features: C,
 		children: /* @__PURE__ */ Y("div", {
-			className: L("w-full h-full overflow-hidden relative select-none", i === "dark" && "dark"),
-			"data-os-theme": C,
-			"data-glass": c ? "true" : "false",
-			style: Ta(O),
+			className: L("w-full h-full overflow-hidden relative select-none", o === "dark" && "dark"),
+			"data-os-theme": T,
+			"data-glass": u ? "true" : "false",
+			style: Ta(A),
 			onContextMenu: (e) => e.preventDefault(),
 			children: [
 				/* @__PURE__ */ J(lt, {}),
 				/* @__PURE__ */ J(xa, {}),
-				T && !b.isSimpleModeActive && /* @__PURE__ */ Y(q, { children: [/* @__PURE__ */ J(va, {
-					open: f,
-					onClose: () => p(!1)
-				}), /* @__PURE__ */ J(ya, {
+				D && !C.isSimpleModeActive && /* @__PURE__ */ Y(q, { children: [/* @__PURE__ */ J(va, {
 					open: m,
 					onClose: () => h(!1)
+				}), /* @__PURE__ */ J(ya, {
+					open: _,
+					onClose: () => v(!1)
 				})] }),
-				D ? /* @__PURE__ */ J("div", {
-					className: L("absolute inset-0 flex items-center justify-center", _ ? "bg-transparent" : "bg-black/60"),
+				k ? /* @__PURE__ */ J("div", {
+					className: L("absolute inset-0 flex items-center justify-center", b ? "bg-transparent" : "bg-black/60"),
 					children: /* @__PURE__ */ Y("div", {
-						className: L("relative overflow-hidden", !_ && "shadow-2xl ring-1 ring-white/10"),
+						className: L("relative overflow-hidden", !b && "shadow-2xl ring-1 ring-white/10"),
 						style: {
-							height: _ ? "100%" : "min(calc(100dvh - 32px), 926px)",
-							width: _ ? "100%" : "min(calc((min(calc(100dvh - 32px), 926px)) * 0.4612676056338028), 100vw)",
-							borderRadius: _ ? "0px" : "min(44px, calc(min(calc(100dvh - 32px), 926px) * 0.047))"
+							height: b ? "100%" : "min(calc(100dvh - 32px), 926px)",
+							width: b ? "100%" : "min(calc((min(calc(100dvh - 32px), 926px)) * 0.4612676056338028), 100vw)",
+							borderRadius: b ? "0px" : "min(44px, calc(min(calc(100dvh - 32px), 926px) * 0.047))"
 						},
 						children: [/* @__PURE__ */ J(Zi, { children: null }), /* @__PURE__ */ J(g, {
 							mode: "wait",
@@ -6282,20 +6290,20 @@ function Oa({ apps: e, isSimpleMode: t = !1 } = {}) {
 								animate: { opacity: 1 },
 								exit: { opacity: 0 },
 								transition: { duration: .2 },
-								children: [C === "iphone" && /* @__PURE__ */ J(Ur, { onOpenApp: w }), C === "android" && /* @__PURE__ */ J(ni, { onOpenApp: w })]
-							}, C)
+								children: [T === "iphone" && /* @__PURE__ */ J(Ur, { onOpenApp: E }), T === "android" && /* @__PURE__ */ J(ni, { onOpenApp: E })]
+							}, T)
 						})]
 					})
 				}) : /* @__PURE__ */ Y(q, { children: [
 					/* @__PURE__ */ J("div", {
 						className: "absolute inset-0",
 						children: /* @__PURE__ */ Y(Zi, { children: [
-							b.widgets.showWidgets && /* @__PURE__ */ J(pa, {}),
-							E && (!b.isSimpleModeActive || b.iconGrid) && /* @__PURE__ */ J(ia, { onOpenApp: w }, "icon-grid"),
+							C.widgets.showWidgets && /* @__PURE__ */ J(pa, {}),
+							O && (!C.isSimpleModeActive || C.iconGrid) && /* @__PURE__ */ J(ia, { onOpenApp: E }, "icon-grid"),
 							/* @__PURE__ */ J(sn, {}, "window-manager")
 						] })
 					}),
-					/* @__PURE__ */ J(g, { children: b.widgets.allowGalleryEdit && l && /* @__PURE__ */ J(_a, {}) }),
+					/* @__PURE__ */ J(g, { children: C.widgets.allowGalleryEdit && d && /* @__PURE__ */ J(_a, {}) }),
 					/* @__PURE__ */ J(g, {
 						mode: "wait",
 						children: /* @__PURE__ */ Y(y.div, {
@@ -6305,16 +6313,16 @@ function Oa({ apps: e, isSimpleMode: t = !1 } = {}) {
 							exit: { opacity: 0 },
 							transition: { duration: .2 },
 							children: [
-								C === "macos" && /* @__PURE__ */ J(hr, {
-									isSimpleMode: b.isSimpleModeActive,
-									onOpenApp: w,
-									onSpotlight: b.menuBar.spotlight ? () => p(!0) : void 0,
-									onAppSwitcher: b.menuBar.appSwitcher ? () => h(!0) : void 0
+								T === "macos" && /* @__PURE__ */ J(hr, {
+									isSimpleMode: C.isSimpleModeActive,
+									onOpenApp: E,
+									onSpotlight: C.menuBar.spotlight ? () => h(!0) : void 0,
+									onAppSwitcher: C.menuBar.appSwitcher ? () => v(!0) : void 0
 								}),
-								C === "ipad" && /* @__PURE__ */ J(Ar, { onOpenApp: w }),
-								C === "windows" && /* @__PURE__ */ J(Yr, { onOpenApp: w })
+								T === "ipad" && /* @__PURE__ */ J(Ar, { onOpenApp: E }),
+								T === "windows" && /* @__PURE__ */ J(Yr, { onOpenApp: E })
 							]
-						}, C)
+						}, T)
 					})
 				] })
 			]

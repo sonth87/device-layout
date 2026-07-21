@@ -1,5 +1,6 @@
 import { AppConfig } from '../../types/app';
 import { SimpleModeProp } from '../../types/simple-mode';
+import { ColorScheme } from '../../types/theme';
 export interface ThemeProviderProps {
     /**
      * Apps to register on mount. Defaults to the built-in APPS_CONFIG so
@@ -9,6 +10,8 @@ export interface ThemeProviderProps {
     apps?: AppConfig[];
     /** Enables Simple Mode layout (boolean or detailed SimpleModeFeatures object). */
     isSimpleMode?: SimpleModeProp;
+    /** Sets or overrides active color scheme ('dark' | 'light' | 'auto'). */
+    colorScheme?: ColorScheme;
 }
 /**
  * ThemeProvider — single root component.
@@ -18,4 +21,4 @@ export interface ThemeProviderProps {
  * Only the chrome overlays (MacOSChrome, WindowsChrome, etc.) swap.
  * This prevents useWindowUrlSync from re-running and creating duplicate windows.
  */
-export declare function ThemeProvider({ apps, isSimpleMode }?: ThemeProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare function ThemeProvider({ apps, isSimpleMode, colorScheme: colorSchemeProp }?: ThemeProviderProps): import("react/jsx-runtime").JSX.Element;

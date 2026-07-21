@@ -23,6 +23,7 @@ import { getThemeCssVars } from '@/lib/theme-layout';
 import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
 import type { SimpleModeProp } from '@/types/simple-mode';
+import type { ColorScheme } from '@/types/theme';
 import { resolveSimpleModeFeatures } from '@/utils/simple-mode-resolver';
 import { SimpleModeProvider } from '@/contexts/SimpleModeContext';
 
@@ -35,6 +36,8 @@ export interface ThemeProviderProps {
   apps?: AppConfig[];
   /** Enables Simple Mode layout (boolean or detailed SimpleModeFeatures object). */
   isSimpleMode?: SimpleModeProp;
+  /** Sets or overrides active color scheme ('dark' | 'light' | 'auto'). */
+  colorScheme?: ColorScheme;
 }
 
 /**
@@ -45,11 +48,18 @@ export interface ThemeProviderProps {
  * Only the chrome overlays (MacOSChrome, WindowsChrome, etc.) swap.
  * This prevents useWindowUrlSync from re-running and creating duplicate windows.
  */
-export function ThemeProvider({ apps, isSimpleMode = false }: ThemeProviderProps = {}) {
+export function ThemeProvider({ apps, isSimpleMode = false, colorScheme: colorSchemeProp }: ThemeProviderProps = {}) {
   const osTheme = useStore((s) => s.osTheme);
   const colorScheme = useStore((s) => s.colorScheme);
+  const setColorScheme = useStore((s) => s.setColorScheme);
   const resolvedColorScheme = useStore((s) => s.resolvedColorScheme);
   const resolveColorScheme = useStore((s) => s.resolveColorScheme);
+
+  useEffect(() => {
+    if (colorSchemeProp && colorSchemeProp !== colorScheme) {
+      setColorScheme(colorSchemeProp);
+    }
+  }, [colorSchemeProp, colorScheme, setColorScheme]);
   const registerApps = useStore((s) => s.registerApps);
   const launchApp = useStore((s) => s.launchApp);
   const glassEnabled = useStore((s) => s.glassEnabled);

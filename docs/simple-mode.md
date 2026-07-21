@@ -83,6 +83,7 @@ import '@sonth87/device-layout/style.css';
 export function MinimalDesktop() {
   return (
     <DeviceLayout
+      colorScheme="dark" // 'dark' | 'light' | 'auto'
       isSimpleMode={true}
       apps={[myCustomApp]}
     />
