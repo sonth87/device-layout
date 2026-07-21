@@ -180,6 +180,7 @@ When modifying or expanding Simple Mode components:
 - Standard default apps filtering must respect `features.defaultApps` (`boolean | string[]`).
 - Standalone fallbacks (e.g. standalone wallpaper picker modal when `settings` app is omitted) must use light/dark theme adaptive styling (`bg-white dark:bg-zinc-900 border-black/10 dark:border-zinc-800 text-zinc-900 dark:text-white`).
 - OS Theme choices in Settings Appearance must respect `features.allowedOSThemes`. If `allowedOSThemes.length <= 1`, hide the OS Theme section entirely.
+- Top MenuBar behavior when no window is focused: By default (`fallbackMenuBarAppId: null`), no active app name or menus are displayed when no window is focused. To display a fallback app's menu when inactive (e.g. Finder), pass `fallbackMenuBarAppId="finder"`.
 
 ---
 

@@ -3,6 +3,8 @@ export interface SimpleModeFeatures {
     /** --- 1. Desktop & Wallpaper --- */
     /** Render wallpaper (image/video/color) instead of solid flat color. Default in simple mode: false */
     wallpaper?: boolean;
+    /** Allow Live Wallpapers section in wallpaper picker. Default: true */
+    allowLiveWallpapers?: boolean;
     /** Desktop right-click context menu. Default in simple mode: false */
     contextMenu?: boolean;
     /** Quick wallpaper picker modal on "Change Wallpaper..." click. Default in simple mode: false */
@@ -51,6 +53,7 @@ export type SimpleModeProp = boolean | SimpleModeFeatures;
 export interface NormalizedSimpleModeFeatures {
     isSimpleModeActive: boolean;
     wallpaper: boolean;
+    allowLiveWallpapers: boolean;
     contextMenu: boolean;
     wallpaperPicker: boolean;
     iconGrid: boolean;

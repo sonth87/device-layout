@@ -6,6 +6,7 @@ import { NormalizedSimpleModeFeatures } from '@/types/simple-mode';
 const SimpleModeContext = createContext<NormalizedSimpleModeFeatures>({
   isSimpleModeActive: false,
   wallpaper: true,
+  allowLiveWallpapers: true,
   contextMenu: true,
   wallpaperPicker: true,
   iconGrid: true,

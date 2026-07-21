@@ -32,11 +32,18 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
   onImportWallpaper?: ImportWallpaperFn;
   /**
    * Overrides the "Pictures" section's built-in wallpaper list. Omit to use
-   * device-layout's own full set (16 images) — a host that ships fewer
-   * (e.g. to keep its own repo smaller) passes its own subset here instead.
-   * Live wallpapers/colors are unaffected (device-layout still supplies those).
+   * device-layout's own full set.
    */
   wallpapers?: WallpaperConfig[];
+  /**
+   * Overrides or supplies custom "Live Wallpapers".
+   */
+  liveWallpapers?: WallpaperConfig[];
+  /**
+   * Controls whether to show or hide the "Live Wallpapers" section in the wallpaper picker.
+   * Default: true
+   */
+  allowLiveWallpapers?: boolean;
   /**
    * Implements OTA-update status + native "pick an update file" (offline
    * install via .zip/.dmg/.exe chosen manually — see apps/shell-electron/
@@ -60,15 +67,38 @@ function UpdateStatusInitializer() {
   return null;
 }
 
-export function DeviceLayout({ assetBaseUrl = '', apps, onImportWallpaper, wallpapers, updateActions, isSimpleMode }: DeviceLayoutProps) {
-  const catalog = buildWallpaperCatalog(wallpapers);
+export function DeviceLayout({
+  assetBaseUrl = '',
+  apps,
+  defaultApps,
+  builtInApps,
+  onImportWallpaper,
+  wallpapers,
+  liveWallpapers,
+  allowLiveWallpapers = true,
+  updateActions,
+  isSimpleMode,
+  colorScheme,
+  fallbackMenuBarAppId,
+}: DeviceLayoutProps) {
+  const catalog = buildWallpaperCatalog(wallpapers, liveWallpapers, allowLiveWallpapers);
   return (
     <AssetBaseProvider value={assetBaseUrl}>
       <WallpaperCatalogProvider value={catalog}>
         <WallpaperImportProvider value={onImportWallpaper ?? null}>
           <UpdateActionsProvider value={updateActions ?? null}>
             <UpdateStatusInitializer />
-            <ThemeProvider apps={apps} isSimpleMode={isSimpleMode} />
+            <ThemeProvider
+              apps={apps}
+              defaultApps={defaultApps}
+              builtInApps={builtInApps}
+              isSimpleMode={isSimpleMode}
+              colorScheme={colorScheme}
+              fallbackMenuBarAppId={fallbackMenuBarAppId}
+              wallpapers={wallpapers}
+              liveWallpapers={liveWallpapers}
+              allowLiveWallpapers={allowLiveWallpapers}
+            />
           </UpdateActionsProvider>
         </WallpaperImportProvider>
       </WallpaperCatalogProvider>

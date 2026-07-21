@@ -12,10 +12,12 @@ export function resolveSimpleModeFeatures(
   osTheme: OSTheme = 'macos'
 ): NormalizedSimpleModeFeatures {
   // Case 1: Simple Mode is disabled or false (Full OS Mode)
+  // Case 1: Simple Mode is disabled or false (Full OS Mode)
   if (!isSimpleMode) {
     return {
       isSimpleModeActive: false,
       wallpaper: true,
+      allowLiveWallpapers: true,
       contextMenu: true,
       wallpaperPicker: true,
       iconGrid: true,
@@ -44,6 +46,7 @@ export function resolveSimpleModeFeatures(
     return {
       isSimpleModeActive: true,
       wallpaper: false,
+      allowLiveWallpapers: true,
       contextMenu: false,
       wallpaperPicker: false,
       iconGrid: false,
@@ -129,9 +132,10 @@ export function resolveSimpleModeFeatures(
   return {
     isSimpleModeActive: true,
     wallpaper: Boolean(custom.wallpaper),
+    allowLiveWallpapers: custom.allowLiveWallpapers ?? true,
     contextMenu: Boolean(custom.contextMenu),
     wallpaperPicker: Boolean(custom.wallpaperPicker ?? custom.wallpaper),
-    iconGrid: Boolean(custom.iconGrid),
+    iconGrid: custom.iconGrid ?? true,
     menuBar: menuBarConfig,
     widgets: widgetsConfig,
     dock: Boolean(custom.dock),

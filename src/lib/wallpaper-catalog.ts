@@ -36,13 +36,30 @@ export function useWallpaperCatalog(): WallpaperCatalog {
   return useContext(WallpaperCatalogContext);
 }
 
-export function buildWallpaperCatalog(pictures?: WallpaperConfig[]): WallpaperCatalog {
-  if (!pictures) return DEFAULT_CATALOG;
+export function buildWallpaperCatalog(
+  pictures?: WallpaperConfig[],
+  liveWallpapers?: WallpaperConfig[],
+  allowLiveWallpapers: boolean = true
+): WallpaperCatalog {
+  const picturesLive = pictures ? pictures.filter((w) => w.kind === 'live') : [];
+  const customLive = (liveWallpapers && liveWallpapers.length > 0) ? liveWallpapers : picturesLive;
+
+  const effectiveLive = allowLiveWallpapers
+    ? (customLive.length > 0 ? customLive : LIVE_WALLPAPERS)
+    : [];
+
+  const effectivePictures = pictures
+    ? pictures.filter((w) => w.kind !== 'live' && w.kind !== 'color')
+    : WALLPAPERS;
+
+  const effectiveColors = WALLPAPER_COLORS;
+  const all = [...effectivePictures, ...effectiveLive, ...effectiveColors];
+
   return {
-    pictures,
-    live: LIVE_WALLPAPERS,
-    colors: WALLPAPER_COLORS,
-    all: [...pictures, ...LIVE_WALLPAPERS, ...WALLPAPER_COLORS],
-    defaultId: pictures[0]?.id ?? DEFAULT_WALLPAPER_ID,
+    pictures: effectivePictures,
+    live: effectiveLive,
+    colors: effectiveColors,
+    all,
+    defaultId: all[0]?.id ?? DEFAULT_WALLPAPER_ID,
   };
 }

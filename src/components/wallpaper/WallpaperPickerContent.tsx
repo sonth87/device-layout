@@ -61,12 +61,14 @@ export function WallpaperPickerContent({ variant = 'vertical' }: { variant?: 've
         onSelect={setWallpaper}
       />
 
-      <WallpaperSection
-        title="Live Wallpapers"
-        items={catalog.live}
-        selectedId={wallpaperId}
-        onSelect={setWallpaper}
-      />
+      {catalog.live.length > 0 && (
+        <WallpaperSection
+          title="Live Wallpapers"
+          items={catalog.live}
+          selectedId={wallpaperId}
+          onSelect={setWallpaper}
+        />
+      )}
 
       <WallpaperSection
         title="Colors"

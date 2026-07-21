@@ -22,12 +22,13 @@ interface ChromeProps {
   onSpotlight?: () => void;
   onAppSwitcher?: () => void;
   isSimpleMode?: boolean;
+  fallbackMenuBarAppId?: string | null;
 }
 
 /** macOS chrome overlay — menubar fixed at top, dock floats at bottom center. */
 import { useSimpleModeFeatures } from '@/contexts/SimpleModeContext';
 
-export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: ChromeProps) {
+export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false, fallbackMenuBarAppId }: ChromeProps) {
   const features = useSimpleModeFeatures();
   const showDock = features.dock && (!features.isSimpleModeActive || features.dock);
   // Detect top-strip luminance of the current wallpaper and keep
@@ -184,6 +185,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: Ch
           <MenuBar
             onSpotlight={onSpotlight}
             isSimpleMode={isSimpleMode}
+            fallbackMenuBarAppId={fallbackMenuBarAppId}
             forceDark={hasFullScreen}
           />
         </div>

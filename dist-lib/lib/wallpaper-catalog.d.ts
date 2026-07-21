@@ -16,4 +16,4 @@ export declare const WallpaperCatalogProvider: import('react').Provider<Wallpape
  * override it (e.g. the Next.js dev app, which has the full asset set).
  */
 export declare function useWallpaperCatalog(): WallpaperCatalog;
-export declare function buildWallpaperCatalog(pictures?: WallpaperConfig[]): WallpaperCatalog;
+export declare function buildWallpaperCatalog(pictures?: WallpaperConfig[], liveWallpapers?: WallpaperConfig[], allowLiveWallpapers?: boolean): WallpaperCatalog;

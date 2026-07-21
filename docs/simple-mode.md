@@ -27,6 +27,9 @@ export interface SimpleModeFeatures {
   /** 1. Render dynamic image/video wallpapers instead of solid color (Default: false) */
   wallpaper?: boolean;
 
+  /** 1b. Allow Live Wallpapers section in wallpaper picker (Default: true). Set false to hide section entirely. */
+  allowLiveWallpapers?: boolean;
+
   /** 2. Enable desktop right-click context menu (Default: false) */
   contextMenu?: boolean;
 

@@ -35,9 +35,8 @@ export function AppNameDropdown({
   const closeWindow = useStore((s) => s.closeWindow);
   const { t, getAppName } = useTranslation();
 
-  const appName = appConfig
-    ? getAppName(appConfig.id, appConfig.name)
-    : t.appNameFinder;
+  if (!appConfig) return null;
+  const appName = getAppName(appConfig.id, appConfig.name);
   const handleClose = useCallback(() => setOpen(false), [setOpen]);
 
   const dispatchAction = (action: string) => {

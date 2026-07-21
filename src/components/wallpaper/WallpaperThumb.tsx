@@ -19,17 +19,28 @@ interface WallpaperThumbProps {
 
 function PictureThumbImage({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
   return (
     <div className="relative w-full h-full bg-zinc-200 dark:bg-zinc-800">
-      {!loaded && <div className="absolute inset-0 bg-zinc-300 dark:bg-zinc-850 animate-pulse" />}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={alt}
-        className={cn('w-full h-full object-cover transition-opacity duration-300', loaded ? 'opacity-100' : 'opacity-0')}
-        onLoad={() => setLoaded(true)}
-        onError={() => setLoaded(true)}
-      />
+      {!loaded && !error && <div className="absolute inset-0 bg-zinc-300 dark:bg-zinc-850 animate-pulse" />}
+      {!error && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={alt}
+          className={cn('w-full h-full object-cover transition-opacity duration-300', loaded ? 'opacity-100' : 'opacity-0')}
+          onLoad={() => setLoaded(true)}
+          onError={() => {
+            setLoaded(true);
+            setError(true);
+          }}
+        />
+      )}
+      {error && (
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 to-slate-950 flex items-center justify-center p-2 text-center text-xs text-white/70 font-medium">
+          {alt}
+        </div>
+      )}
     </div>
   );
 }
@@ -37,11 +48,12 @@ function PictureThumbImage({ src, alt }: { src: string; alt: string }) {
 /** Live wallpaper thumbnail — shows poster image at rest, plays video silently on hover. */
 function LiveThumbPreview({ posterSrc, videoSrc, alt }: { posterSrc: string; videoSrc: string; alt: string }) {
   const [hovered, setHovered] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleMouseEnter = () => {
     setHovered(true);
-    videoRef.current?.play();
+    videoRef.current?.play().catch(() => {});
   };
   const handleMouseLeave = () => {
     setHovered(false);
@@ -53,27 +65,33 @@ function LiveThumbPreview({ posterSrc, videoSrc, alt }: { posterSrc: string; vid
 
   return (
     <div
-      className="relative w-full h-full bg-zinc-900"
+      className="relative w-full h-full bg-gradient-to-br from-indigo-950 via-slate-900 to-zinc-950 flex items-center justify-center"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Poster image — fades out when video is playing */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={posterSrc}
-        alt={alt}
-        className={cn('absolute inset-0 w-full h-full object-cover transition-opacity duration-300', hovered ? 'opacity-0' : 'opacity-100')}
-      />
-      {/* Video — preloaded but paused until hover */}
-      <video
-        ref={videoRef}
-        src={videoSrc}
-        muted
-        loop
-        playsInline
-        preload="none"
-        className={cn('absolute inset-0 w-full h-full object-cover transition-opacity duration-300', hovered ? 'opacity-100' : 'opacity-0')}
-      />
+      {!imgError && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={posterSrc}
+          alt={alt}
+          onError={() => setImgError(true)}
+          className={cn('absolute inset-0 w-full h-full object-cover transition-opacity duration-300', hovered ? 'opacity-0' : 'opacity-100')}
+        />
+      )}
+      {imgError && (
+        <span className="text-xs text-white/60 font-medium px-2 text-center select-none">{alt}</span>
+      )}
+      {videoSrc && (
+        <video
+          ref={videoRef}
+          src={videoSrc}
+          muted
+          loop
+          playsInline
+          preload="none"
+          className={cn('absolute inset-0 w-full h-full object-cover transition-opacity duration-300', hovered ? 'opacity-100' : 'opacity-0')}
+        />
+      )}
     </div>
   );
 }

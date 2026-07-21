@@ -4,6 +4,7 @@ interface ChromeProps {
     onSpotlight?: () => void;
     onAppSwitcher?: () => void;
     isSimpleMode?: boolean;
+    fallbackMenuBarAppId?: string | null;
 }
-export declare function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode }: ChromeProps): import("react/jsx-runtime").JSX.Element;
+export declare function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode, fallbackMenuBarAppId }: ChromeProps): import("react/jsx-runtime").JSX.Element;
 export { MacOSChrome as MacOSShell, MacOSChrome as MacOSTheme };

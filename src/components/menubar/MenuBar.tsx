@@ -21,20 +21,22 @@ export function MenuBar({
   onSpotlight,
   isSimpleMode = false,
   forceDark = false,
+  fallbackMenuBarAppId = null,
 }: {
   onSpotlight?: () => void;
   isSimpleMode?: boolean;
   forceDark?: boolean;
+  fallbackMenuBarAppId?: string | null;
 } = {}) {
   const features = useSimpleModeFeatures();
   const activeAppId = useStore((s) => s.activeAppId);
   const apps = useStore((s) => s.apps);
-  const activeApp = activeAppId ? apps[activeAppId] : null;
+  const effectiveAppId = activeAppId ?? fallbackMenuBarAppId;
+  const activeApp = effectiveAppId ? apps[effectiveAppId] : null;
 
   const showAppleMenu = features.menuBar.appleMenu;
-  const showAppNameMenu = features.menuBar.appNameMenu || Boolean(activeApp);
-  const menus: MenuBarMenu[] =
-    activeApp?.menuBarMenus ?? (features.isSimpleModeActive ? [] : DEFAULT_MENU_BAR_MENUS);
+  const showAppNameMenu = features.menuBar.appNameMenu && Boolean(activeApp);
+  const menus: MenuBarMenu[] = activeApp?.menuBarMenus ?? [];
   const wallpaperTextTheme = useStore((s) => s.wallpaperTextTheme);
 
   const effectiveTheme = forceDark ? "dark" : wallpaperTextTheme;

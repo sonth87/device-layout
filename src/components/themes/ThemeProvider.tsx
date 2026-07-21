@@ -22,6 +22,7 @@ import { useWallpaperCycle } from '@/hooks/useWallpaperCycle';
 import { getThemeCssVars } from '@/lib/theme-layout';
 import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
+import type { WallpaperConfig } from '@/types/desktop';
 import type { SimpleModeProp } from '@/types/simple-mode';
 import type { ColorScheme } from '@/types/theme';
 import { resolveSimpleModeFeatures } from '@/utils/simple-mode-resolver';
@@ -34,10 +35,25 @@ export interface ThemeProviderProps {
    * library (see src/lib.tsx) passes its own app list here instead.
    */
   apps?: AppConfig[];
+  /** Controls which built-in default apps (Finder, Notes, Calculator...) to register (boolean | string[]). */
+  defaultApps?: boolean | string[];
+  /** Alias for defaultApps (e.g. builtInApps={false}). */
+  builtInApps?: boolean;
   /** Enables Simple Mode layout (boolean or detailed SimpleModeFeatures object). */
   isSimpleMode?: SimpleModeProp;
   /** Sets or overrides active color scheme ('dark' | 'light' | 'auto'). */
   colorScheme?: ColorScheme;
+  /**
+   * App ID to display in top MenuBar when no window is selected/focused.
+   * Default: null (no app name or menus rendered when no window is focused).
+   */
+  fallbackMenuBarAppId?: string | null;
+  /** Overrides the "Pictures" section's built-in wallpaper list. */
+  wallpapers?: WallpaperConfig[];
+  /** Overrides or supplies custom "Live Wallpapers". */
+  liveWallpapers?: WallpaperConfig[];
+  /** Controls whether to show or hide the "Live Wallpapers" section in wallpaper picker. Default: true */
+  allowLiveWallpapers?: boolean;
 }
 
 /**
@@ -48,7 +64,14 @@ export interface ThemeProviderProps {
  * Only the chrome overlays (MacOSChrome, WindowsChrome, etc.) swap.
  * This prevents useWindowUrlSync from re-running and creating duplicate windows.
  */
-export function ThemeProvider({ apps, isSimpleMode = false, colorScheme: colorSchemeProp }: ThemeProviderProps = {}) {
+export function ThemeProvider({
+  apps,
+  defaultApps: defaultAppsProp,
+  builtInApps,
+  isSimpleMode = false,
+  colorScheme: colorSchemeProp,
+  fallbackMenuBarAppId = null,
+}: ThemeProviderProps = {}) {
   const osTheme = useStore((s) => s.osTheme);
   const colorScheme = useStore((s) => s.colorScheme);
   const setColorScheme = useStore((s) => s.setColorScheme);
@@ -95,14 +118,19 @@ export function ThemeProvider({ apps, isSimpleMode = false, colorScheme: colorSc
 
   useWallpaperCycle();
 
-  // Filter default apps based on resolved features.defaultApps (boolean | string[])
+  // Filter default apps based on resolved features.defaultApps or explicit props
   const appsToRegister = useMemo(() => {
+    const explicitDefaultApps = builtInApps !== undefined ? builtInApps : defaultAppsProp;
+    const effectiveDefaultApps = explicitDefaultApps !== undefined
+      ? explicitDefaultApps
+      : (features.isSimpleModeActive ? features.defaultApps : (apps && apps.length > 0 ? false : true));
+
     let defaultAppsList: AppConfig[] = [];
 
-    if (features.defaultApps === true) {
+    if (effectiveDefaultApps === true) {
       defaultAppsList = APPS_CONFIG;
-    } else if (Array.isArray(features.defaultApps)) {
-      const allowedIds = new Set(features.defaultApps);
+    } else if (Array.isArray(effectiveDefaultApps)) {
+      const allowedIds = new Set(effectiveDefaultApps);
       defaultAppsList = APPS_CONFIG.filter((a) => allowedIds.has(a.id));
     }
 
@@ -113,7 +141,7 @@ export function ThemeProvider({ apps, isSimpleMode = false, colorScheme: colorSc
     }
 
     return defaultAppsList;
-  }, [apps, features.defaultApps]);
+  }, [apps, defaultAppsProp, builtInApps, features.isSimpleModeActive, features.defaultApps]);
 
   useEffect(() => {
     registerApps(appsToRegister);
@@ -311,7 +339,7 @@ export function ThemeProvider({ apps, isSimpleMode = false, colorScheme: colorSc
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                {activeOSTheme === 'macos'   && <MacOSChrome isSimpleMode={features.isSimpleModeActive} onOpenApp={handleOpenApp} onSpotlight={features.menuBar.spotlight ? () => setSpotlightOpen(true) : undefined} onAppSwitcher={features.menuBar.appSwitcher ? () => setAppSwitcherOpen(true) : undefined} />}
+                {activeOSTheme === 'macos'   && <MacOSChrome isSimpleMode={features.isSimpleModeActive} fallbackMenuBarAppId={fallbackMenuBarAppId} onOpenApp={handleOpenApp} onSpotlight={features.menuBar.spotlight ? () => setSpotlightOpen(true) : undefined} onAppSwitcher={features.menuBar.appSwitcher ? () => setAppSwitcherOpen(true) : undefined} />}
                 {activeOSTheme === 'ipad'    && <IPadChrome    onOpenApp={handleOpenApp} />}
                 {activeOSTheme === 'windows' && <WindowsChrome onOpenApp={handleOpenApp} />}
               </motion.div>
