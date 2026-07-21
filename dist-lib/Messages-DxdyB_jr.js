@@ -1,10 +1,10 @@
-import { d as e, l as t } from "./MobileAppViewer-CNCMc7lR.js";
+import { d as e, p as t } from "./MobileAppViewer-BSA3ntzD.js";
 import { t as n } from "./utils-B6YmNDS2.js";
 import { t as r } from "./createLucideIcon--WjuKCts.js";
 import { t as i } from "./plus-Dx6tdmvY.js";
 import { t as a } from "./search-BKG97C0x.js";
 import { t as o } from "./useTranslation-WZxIuhj4.js";
-import { n as s, r as c, t as l } from "./MobileSplitView-DP-q-HtG.js";
+import { n as s, r as c, t as l } from "./MobileSplitView-DXHc75Hn.js";
 import { useEffect as u, useRef as d, useState as f } from "react";
 import { jsx as p, jsxs as m } from "react/jsx-runtime";
 var h = r("send", [["path", {
@@ -296,11 +296,11 @@ function b({ convo: n }) {
 			}),
 			/* @__PURE__ */ p("button", {
 				className: "p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-accent-active",
-				children: /* @__PURE__ */ p(e, { className: "w-4 h-4" })
+				children: /* @__PURE__ */ p(t, { className: "w-4 h-4" })
 			}),
 			/* @__PURE__ */ p("button", {
 				className: "p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-accent-active",
-				children: /* @__PURE__ */ p(t, { className: "w-4 h-4" })
+				children: /* @__PURE__ */ p(e, { className: "w-4 h-4" })
 			})
 		]
 	});

@@ -1,6 +1,4 @@
-'use client';
-
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useMemo } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useStore } from '@/store';
 import { APPS_CONFIG } from '@/config/apps.config';
@@ -24,6 +22,9 @@ import { useWallpaperCycle } from '@/hooks/useWallpaperCycle';
 import { getThemeCssVars } from '@/lib/theme-layout';
 import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
+import type { SimpleModeProp } from '@/types/simple-mode';
+import { resolveSimpleModeFeatures } from '@/utils/simple-mode-resolver';
+import { SimpleModeProvider } from '@/contexts/SimpleModeContext';
 
 export interface ThemeProviderProps {
   /**
@@ -32,8 +33,8 @@ export interface ThemeProviderProps {
    * library (see src/lib.tsx) passes its own app list here instead.
    */
   apps?: AppConfig[];
-  /** Enables Simple Mode layout (no Dock, no default apps, no wallpaper image, no widgets, minimal top menu). */
-  isSimpleMode?: boolean;
+  /** Enables Simple Mode layout (boolean or detailed SimpleModeFeatures object). */
+  isSimpleMode?: SimpleModeProp;
 }
 
 /**
@@ -60,6 +61,9 @@ export function ThemeProvider({ apps, isSimpleMode = false }: ThemeProviderProps
   const [appSwitcherOpen, setAppSwitcherOpen] = useState(false);
   const [isRealMobile, setIsRealMobile] = useState(false);
 
+  // Normalize simple mode feature flags
+  const features = useMemo(() => resolveSimpleModeFeatures(isSimpleMode, osTheme), [isSimpleMode, osTheme]);
+
   useEffect(() => {
     const checkMobile = () => {
       const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -81,8 +85,25 @@ export function ThemeProvider({ apps, isSimpleMode = false }: ThemeProviderProps
 
   useWallpaperCycle();
 
-  // If simple mode is true, default to empty apps list unless apps are explicitly provided
-  const appsToRegister = apps ?? (isSimpleMode ? [] : APPS_CONFIG);
+  // Filter default apps based on resolved features.defaultApps (boolean | string[])
+  const appsToRegister = useMemo(() => {
+    let defaultAppsList: AppConfig[] = [];
+
+    if (features.defaultApps === true) {
+      defaultAppsList = APPS_CONFIG;
+    } else if (Array.isArray(features.defaultApps)) {
+      const allowedIds = new Set(features.defaultApps);
+      defaultAppsList = APPS_CONFIG.filter((a) => allowedIds.has(a.id));
+    }
+
+    if (apps) {
+      const customIds = new Set(apps.map((a) => a.id));
+      const filteredDefaults = defaultAppsList.filter((a) => !customIds.has(a.id));
+      return [...apps, ...filteredDefaults];
+    }
+
+    return defaultAppsList;
+  }, [apps, features.defaultApps]);
 
   useEffect(() => {
     registerApps(appsToRegister);
@@ -101,7 +122,7 @@ export function ThemeProvider({ apps, isSimpleMode = false }: ThemeProviderProps
     return () => mq.removeEventListener('change', handler);
   }, [colorScheme, resolveColorScheme]);
 
-  const activeOSTheme = isSimpleMode ? 'macos' : osTheme;
+  const activeOSTheme = osTheme;
 
   useEffect(() => {
     const html = document.documentElement;
@@ -156,8 +177,8 @@ export function ThemeProvider({ apps, isSimpleMode = false }: ThemeProviderProps
   const isMobile = activeOSTheme === 'iphone' || activeOSTheme === 'android';
   
   let themeConfig = THEMES_CONFIG[activeOSTheme];
-  if (isSimpleMode && activeOSTheme === 'macos') {
-    // Override macOS layout parameters in simple mode to remove Dock bottom insets
+  if (features.isSimpleModeActive && activeOSTheme === 'macos' && !features.dock) {
+    // Override macOS layout parameters in simple mode to remove Dock bottom insets if dock is hidden
     themeConfig = {
       ...themeConfig,
       hasDock: false,
@@ -182,108 +203,113 @@ export function ThemeProvider({ apps, isSimpleMode = false }: ThemeProviderProps
   const PHONE_MAX_H = 926;
 
   return (
-    <div
-      className={cn(
-        "w-full h-full overflow-hidden relative select-none",
-        resolvedColorScheme === 'dark' && 'dark'
-      )}
-      data-os-theme={activeOSTheme}
-      data-glass={glassEnabled ? 'true' : 'false'}
-      style={getThemeCssVars(themeConfig)}
-      onContextMenu={(e) => e.preventDefault()}
-    >
-      {/* SVG filter singleton */}
-      <GlassFilter />
+    <SimpleModeProvider features={features}>
+      <div
+        className={cn(
+          "w-full h-full overflow-hidden relative select-none",
+          resolvedColorScheme === 'dark' && 'dark'
+        )}
+        data-os-theme={activeOSTheme}
+        data-glass={glassEnabled ? 'true' : 'false'}
+        style={getThemeCssVars(themeConfig)}
+        onContextMenu={(e) => e.preventDefault()}
+      >
+        {/* SVG filter singleton */}
+        <GlassFilter />
 
-      {/* Notification toasts — rendered above everything (outside phone frame) */}
-      <NotificationBanner />
+        {/* Notification toasts — rendered above everything (outside phone frame) */}
+        <NotificationBanner />
 
-      {/* Spotlight + App Switcher (macOS / iPad only) */}
-      {isMacLike && !isSimpleMode && (
-        <>
-          <Spotlight
-            open={spotlightOpen}
-            onClose={() => setSpotlightOpen(false)}
-          />
-          <AppSwitcher
-            open={appSwitcherOpen}
-            onClose={() => setAppSwitcherOpen(false)}
-          />
-        </>
-      )}
+        {/* Spotlight + App Switcher (macOS / iPad only) */}
+        {isMacLike && !features.isSimpleModeActive && (
+          <>
+            <Spotlight
+              open={spotlightOpen}
+              onClose={() => setSpotlightOpen(false)}
+            />
+            <AppSwitcher
+              open={appSwitcherOpen}
+              onClose={() => setAppSwitcherOpen(false)}
+            />
+          </>
+        )}
 
-      {isMobile ? (
-        /* ── Phone frame: fills viewport on small screens, capped on large ── */
-        <div className={cn(
-          "absolute inset-0 flex items-center justify-center",
-          isRealMobile ? "bg-transparent" : "bg-black/60"
-        )}>
-          <div
-            className={cn(
-              "relative overflow-hidden",
-              !isRealMobile && "shadow-2xl ring-1 ring-white/10"
-            )}
-            style={{
-              // Height: fill 100dvh with small padding, capped at PHONE_MAX_H (stretches to 100% on real mobile)
-              height: isRealMobile ? "100%" : `min(calc(100dvh - 32px), ${PHONE_MAX_H}px)`,
-              // Width: derived from ratio, capped at PHONE_MAX_W (stretches to 100% on real mobile)
-              width: isRealMobile ? "100%" : `min(calc((min(calc(100dvh - 32px), ${PHONE_MAX_H}px)) * ${PHONE_RATIO}), 100vw)`,
-              // Border-radius scales with height: 44px at max (flat 0px on real mobile)
-              borderRadius: isRealMobile ? "0px" : `min(44px, calc(min(calc(100dvh - 32px), ${PHONE_MAX_H}px) * 0.047))`,
-            }}
-          >
-            {/* Wallpaper fills the phone frame */}
-            <Wallpaper>{null}</Wallpaper>
+        {isMobile ? (
+          /* ── Phone frame: fills viewport on small screens, capped on large ── */
+          <div className={cn(
+            "absolute inset-0 flex items-center justify-center",
+            isRealMobile ? "bg-transparent" : "bg-black/60"
+          )}>
+            <div
+              className={cn(
+                "relative overflow-hidden",
+                !isRealMobile && "shadow-2xl ring-1 ring-white/10"
+              )}
+              style={{
+                // Height: fill 100dvh with small padding, capped at PHONE_MAX_H (stretches to 100% on real mobile)
+                height: isRealMobile ? "100%" : `min(calc(100dvh - 32px), ${PHONE_MAX_H}px)`,
+                // Width: derived from ratio, capped at PHONE_MAX_W (stretches to 100% on real mobile)
+                width: isRealMobile ? "100%" : `min(calc((min(calc(100dvh - 32px), ${PHONE_MAX_H}px)) * ${PHONE_RATIO}), 100vw)`,
+                // Border-radius scales with height: 44px at max (flat 0px on real mobile)
+                borderRadius: isRealMobile ? "0px" : `min(44px, calc(min(calc(100dvh - 32px), ${PHONE_MAX_H}px) * 0.047))`,
+              }}
+            >
+              {/* Wallpaper fills the phone frame */}
+              <Wallpaper>{null}</Wallpaper>
 
-            {/* Chrome — scoped inside the phone frame */}
+              {/* Chrome — scoped inside the phone frame */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeOSTheme}
+                  className="absolute inset-0"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {activeOSTheme === 'iphone' && <IPhoneChrome onOpenApp={handleOpenApp} />}
+                  {activeOSTheme === 'android' && <AndroidChrome onOpenApp={handleOpenApp} />}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Desktop canvas — NEVER remounts, preserves WindowManager + useWindowUrlSync state */}
+            <div className="absolute inset-0">
+              <Wallpaper>
+                {features.widgets.showWidgets && <WidgetLayer />}
+                {(showsDesktopIconGrid && (!features.isSimpleModeActive || features.iconGrid)) && (
+                  <IconGrid key="icon-grid" onOpenApp={handleOpenApp} />
+                )}
+                <WindowManager key="window-manager" />
+              </Wallpaper>
+            </div>
+
+            {/* Widget gallery panel — slides up on Edit Widgets */}
+            <AnimatePresence>
+              {features.widgets.allowGalleryEdit && isEditingWidgets && <WidgetGalleryPanel />}
+            </AnimatePresence>
+
+            {/* Chrome overlay — animated cross-fade on theme switch */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeOSTheme}
-                className="absolute inset-0"
+                className="absolute inset-0 pointer-events-none"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                {activeOSTheme === 'iphone' && <IPhoneChrome onOpenApp={handleOpenApp} />}
-                {activeOSTheme === 'android' && <AndroidChrome onOpenApp={handleOpenApp} />}
+                {activeOSTheme === 'macos'   && <MacOSChrome isSimpleMode={features.isSimpleModeActive} onOpenApp={handleOpenApp} onSpotlight={features.menuBar.spotlight ? () => setSpotlightOpen(true) : undefined} onAppSwitcher={features.menuBar.appSwitcher ? () => setAppSwitcherOpen(true) : undefined} />}
+                {activeOSTheme === 'ipad'    && <IPadChrome    onOpenApp={handleOpenApp} />}
+                {activeOSTheme === 'windows' && <WindowsChrome onOpenApp={handleOpenApp} />}
               </motion.div>
             </AnimatePresence>
-          </div>
-        </div>
-      ) : (
-        <>
-          {/* Desktop canvas — NEVER remounts, preserves WindowManager + useWindowUrlSync state */}
-          <div className="absolute inset-0">
-            <Wallpaper isSimpleMode={isSimpleMode}>
-              {!isSimpleMode && <WidgetLayer />}
-              {showsDesktopIconGrid && <IconGrid key="icon-grid" onOpenApp={handleOpenApp} />}
-              <WindowManager key="window-manager" />
-            </Wallpaper>
-          </div>
-
-          {/* Widget gallery panel — slides up on Edit Widgets */}
-          <AnimatePresence>
-            {!isSimpleMode && isEditingWidgets && <WidgetGalleryPanel />}
-          </AnimatePresence>
-
-          {/* Chrome overlay — animated cross-fade on theme switch */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeOSTheme}
-              className="absolute inset-0 pointer-events-none"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              {activeOSTheme === 'macos'   && <MacOSChrome   isSimpleMode={isSimpleMode} onOpenApp={handleOpenApp} onSpotlight={isSimpleMode ? undefined : () => setSpotlightOpen(true)} onAppSwitcher={isSimpleMode ? undefined : () => setAppSwitcherOpen(true)} />}
-              {activeOSTheme === 'ipad'    && <IPadChrome    onOpenApp={handleOpenApp} />}
-              {activeOSTheme === 'windows' && <WindowsChrome onOpenApp={handleOpenApp} />}
-            </motion.div>
-          </AnimatePresence>
-        </>
-      )}
-    </div>
+          </>
+        )}
+      </div>
+    </SimpleModeProvider>
   );
 }
+

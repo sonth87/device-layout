@@ -25,7 +25,11 @@ interface ChromeProps {
 }
 
 /** macOS chrome overlay — menubar fixed at top, dock floats at bottom center. */
+import { useSimpleModeFeatures } from '@/contexts/SimpleModeContext';
+
 export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: ChromeProps) {
+  const features = useSimpleModeFeatures();
+  const showDock = features.dock && (!features.isSimpleModeActive || features.dock);
   // Detect top-strip luminance of the current wallpaper and keep
   // wallpaperTextTheme in the store updated (with localStorage caching).
   useWallpaperLuminance();
@@ -185,8 +189,8 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false }: Ch
         </div>
       </motion.div>
 
-      {/* Dock — auto-hides when a window is maximized or fullscreen. Completely hidden in Simple Mode. */}
-      {!isSimpleMode && (
+      {/* Dock — auto-hides when a window is maximized or fullscreen. Controlled by features.dock */}
+      {showDock && (
         <motion.div
           className="absolute inset-x-0 z-40 flex justify-center pointer-events-none"
           style={{ bottom: 'var(--dock-offset-bottom)' }}

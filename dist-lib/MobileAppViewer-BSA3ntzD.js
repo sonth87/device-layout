@@ -6915,11 +6915,54 @@ function ip({ label: e, items: t, appId: n, windowId: r, activeId: i, setActiveI
 	})] });
 }
 //#endregion
+//#region src/contexts/SimpleModeContext.tsx
+var ap = pe({
+	isSimpleModeActive: !1,
+	wallpaper: !0,
+	contextMenu: !0,
+	wallpaperPicker: !0,
+	iconGrid: !0,
+	menuBar: {
+		enabled: !0,
+		clock: !0,
+		controlCenter: !0,
+		spotlight: !0,
+		appleMenu: !0,
+		appNameMenu: !0,
+		appSwitcher: !0
+	},
+	widgets: {
+		showWidgets: !0,
+		allowGalleryEdit: !0
+	},
+	dock: !0,
+	defaultApps: !0,
+	allowedOSThemes: [
+		"macos",
+		"windows",
+		"ipad",
+		"iphone",
+		"android"
+	],
+	allowDarkModeToggle: !0
+});
+function op({ features: e, children: t }) {
+	return /* @__PURE__ */ N(ap.Provider, {
+		value: e,
+		children: t
+	});
+}
+function sp() {
+	return k(ap);
+}
+//#endregion
 //#region src/components/menubar/MenuBar.tsx
-function ap({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1 } = {}) {
-	let r = C((e) => e.activeAppId), i = C((e) => e.apps), a = r ? i[r] : null, o = a?.menuBarMenus ?? (t ? [] : S), s = !t || !!a, c = C((e) => e.wallpaperTextTheme), l = n ? "dark" : c, u = w(Jf, "px-2", l === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10"), [d, f] = M(null);
+function cp({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1 } = {}) {
+	let r = sp(), i = C((e) => e.activeAppId), a = C((e) => e.apps), o = i ? a[i] : null, s = r.menuBar.appleMenu, c = r.menuBar.appNameMenu || !!o, l = o?.menuBarMenus ?? (r.isSimpleModeActive ? [] : S), u = C((e) => e.wallpaperTextTheme), d = n ? "dark" : u, f = w(Jf, "px-2", d === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10"), [p, m] = M(null);
+	if (!r.menuBar.enabled) return null;
+	let h = r.menuBar.spotlight || r.menuBar.controlCenter || r.menuBar.clock;
 	return /* @__PURE__ */ N(Kf.Provider, {
-		value: l,
+		value: d,
 		children: /* @__PURE__ */ N(Wf, {
 			variant: "menubar",
 			forceGlass: !n && void 0,
@@ -6932,45 +6975,47 @@ function ap({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1 } = {}) {
 					/* @__PURE__ */ P("div", {
 						className: "flex shrink-0 items-center gap-0.5",
 						children: [
-							!t && /* @__PURE__ */ N(np, {
-								activeId: d,
-								setActiveId: f
+							s && /* @__PURE__ */ N(np, {
+								activeId: p,
+								setActiveId: m
 							}),
-							s && /* @__PURE__ */ N(rp, {
-								appConfig: a,
-								appId: r,
-								activeId: d,
-								setActiveId: f
+							c && /* @__PURE__ */ N(rp, {
+								appConfig: o,
+								appId: i,
+								activeId: p,
+								setActiveId: m
 							}),
-							o.map((e) => /* @__PURE__ */ N(ip, {
+							l.map((e) => /* @__PURE__ */ N(ip, {
 								label: e.label,
 								items: e.items,
-								appId: r,
-								activeId: d,
-								setActiveId: f
+								appId: i,
+								activeId: p,
+								setActiveId: m
 							}, e.label))
 						]
 					}),
 					/* @__PURE__ */ N("div", { className: "flex-1" }),
-					!t && /* @__PURE__ */ P("div", {
+					h && /* @__PURE__ */ P("div", {
 						className: "flex shrink-0 items-center gap-0.5",
 						children: [
-							/* @__PURE__ */ N("button", {
+							r.menuBar.spotlight && /* @__PURE__ */ N("button", {
 								onClick: e,
-								className: u,
+								className: f,
 								title: "Spotlight Search (⌘Space)",
 								children: /* @__PURE__ */ N(re, { className: "w-3.5 h-3.5" })
 							}),
-							/* @__PURE__ */ N("button", {
-								className: u,
-								children: /* @__PURE__ */ N(nf, { className: "w-3.5 h-3.5" })
-							}),
-							/* @__PURE__ */ N("button", {
-								className: u,
-								children: /* @__PURE__ */ N(qd, { className: "w-3.5 h-3.5" })
-							}),
-							/* @__PURE__ */ N(Gf, { forceDark: n }),
-							/* @__PURE__ */ N("div", {
+							r.menuBar.controlCenter && /* @__PURE__ */ P(xe, { children: [
+								/* @__PURE__ */ N("button", {
+									className: f,
+									children: /* @__PURE__ */ N(nf, { className: "w-3.5 h-3.5" })
+								}),
+								/* @__PURE__ */ N("button", {
+									className: f,
+									children: /* @__PURE__ */ N(qd, { className: "w-3.5 h-3.5" })
+								}),
+								/* @__PURE__ */ N(Gf, { forceDark: n })
+							] }),
+							r.menuBar.clock && /* @__PURE__ */ N("div", {
 								className: "flex h-6 items-center rounded-md px-2",
 								children: /* @__PURE__ */ N(rf, { forceDark: n })
 							})
@@ -6983,7 +7028,7 @@ function ap({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1 } = {}) {
 }
 //#endregion
 //#region src/components/apps/AppErrorBoundary.tsx
-function op({ appName: e, error: t, onRetry: n }) {
+function lp({ appName: e, error: t, onRetry: n }) {
 	let { t: r } = se();
 	return /* @__PURE__ */ P("div", {
 		className: "flex h-full w-full flex-col items-center justify-center gap-3 px-6 text-center",
@@ -7010,7 +7055,7 @@ function op({ appName: e, error: t, onRetry: n }) {
 		]
 	});
 }
-var sp = class extends ue {
+var up = class extends ue {
 	constructor(...e) {
 		super(...e), this.state = {
 			error: null,
@@ -7029,7 +7074,7 @@ var sp = class extends ue {
 		console.error(`[AppErrorBoundary] App "${this.props.appId}" crashed:`, e, t.componentStack);
 	}
 	render() {
-		return this.state.error ? /* @__PURE__ */ N(op, {
+		return this.state.error ? /* @__PURE__ */ N(lp, {
 			appName: this.props.appName,
 			error: this.state.error,
 			onRetry: this.handleRetry
@@ -7038,10 +7083,10 @@ var sp = class extends ue {
 			children: this.props.children
 		}, this.state.retryCount);
 	}
-}, cp = {
+}, dp = {
 	Finder: D(() => import("./Finder-CyOvQbZF.js").then((e) => ({ default: e.Finder }))),
 	Terminal: D(() => import("./Terminal-bV4MUGHt.js").then((e) => ({ default: e.Terminal }))),
-	Settings: D(() => import("./Settings-CvrWam5l.js").then((e) => ({ default: e.Settings }))),
+	Settings: D(() => import("./Settings-B-Qw49mL.js").then((e) => ({ default: e.Settings }))),
 	Browser: D(() => import("./Browser-BIl5C3t1.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: D(() => import("./TextEditor-DBYIlqT3.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: D(() => import("./Clock-DBrWK5G4.js").then((e) => ({ default: e.Clock }))),
@@ -7050,17 +7095,17 @@ var sp = class extends ue {
 	Photos: D(() => import("./Photos-B05aU8R_.js").then((e) => ({ default: e.Photos }))),
 	Music: D(() => import("./Music-B65Ru7XW.js").then((e) => ({ default: e.Music }))),
 	Calendar: D(() => import("./Calendar-Cc_-2eqC.js").then((e) => ({ default: e.Calendar }))),
-	Messages: D(() => import("./Messages-C7t3NP5f.js").then((e) => ({ default: e.Messages }))),
+	Messages: D(() => import("./Messages-DxdyB_jr.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: D(() => import("./IframeApp-DZ3b9VXX.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: D(() => import("./MdxApp-Jf3-FVYV.js").then((e) => ({ default: e.MdxApp })))
 };
-function lp() {
+function fp() {
 	return /* @__PURE__ */ N("div", {
 		className: "flex items-center justify-center h-full w-full",
 		children: /* @__PURE__ */ N(Yd, { className: "w-6 h-6 animate-spin text-black/30 dark:text-white/30" })
 	});
 }
-function up({ appId: e, windowId: t }) {
+function pp({ appId: e, windowId: t }) {
 	let n = C((t) => t.apps[e]);
 	if (!n) return /* @__PURE__ */ P("div", {
 		className: "flex items-center justify-center h-full text-sm text-black/40 dark:text-white/40",
@@ -7069,8 +7114,8 @@ function up({ appId: e, windowId: t }) {
 	if (n.render) {
 		let r = n.render;
 		return /* @__PURE__ */ N(fe, {
-			fallback: /* @__PURE__ */ N(lp, {}),
-			children: /* @__PURE__ */ N(ce, { children: /* @__PURE__ */ N(sp, {
+			fallback: /* @__PURE__ */ N(fp, {}),
+			children: /* @__PURE__ */ N(ce, { children: /* @__PURE__ */ N(up, {
 				appId: e,
 				appName: n.name,
 				children: /* @__PURE__ */ N(r, {
@@ -7080,10 +7125,10 @@ function up({ appId: e, windowId: t }) {
 			}) })
 		});
 	}
-	let r = n.component ? cp[n.component] : void 0;
+	let r = n.component ? dp[n.component] : void 0;
 	return r ? /* @__PURE__ */ N(fe, {
-		fallback: /* @__PURE__ */ N(lp, {}),
-		children: /* @__PURE__ */ N(ce, { children: /* @__PURE__ */ N(sp, {
+		fallback: /* @__PURE__ */ N(fp, {}),
+		children: /* @__PURE__ */ N(ce, { children: /* @__PURE__ */ N(up, {
 			appId: e,
 			appName: n.name,
 			children: /* @__PURE__ */ N(r, {
@@ -7098,7 +7143,7 @@ function up({ appId: e, windowId: t }) {
 }
 //#endregion
 //#region src/components/mobile/MobileMenuSheet.tsx
-function dp({ menus: e, appId: t, open: n, onClose: r }) {
+function mp({ menus: e, appId: t, open: n, onClose: r }) {
 	let { t: i } = se(), [a, o] = M(null), s = O((e) => {
 		e.action && window.dispatchEvent(new CustomEvent("app:menu:action", { detail: {
 			appId: t,
@@ -7133,7 +7178,7 @@ function dp({ menus: e, appId: t, open: n, onClose: r }) {
 					children: Zf(e.label, i)
 				}), /* @__PURE__ */ N("div", {
 					className: "rounded-xl overflow-hidden bg-black/[0.03] dark:bg-white/[0.06]",
-					children: e.items.map((e, t) => e.separator ? /* @__PURE__ */ N("div", { className: "h-px mx-3 bg-black/8 dark:bg-white/10" }, `sep-${t}`) : /* @__PURE__ */ N(fp, {
+					children: e.items.map((e, t) => e.separator ? /* @__PURE__ */ N("div", { className: "h-px mx-3 bg-black/8 dark:bg-white/10" }, `sep-${t}`) : /* @__PURE__ */ N(hp, {
 						item: e,
 						t: i,
 						onSelect: s,
@@ -7145,7 +7190,7 @@ function dp({ menus: e, appId: t, open: n, onClose: r }) {
 		})]
 	}, "sheet")] }) }), document.body);
 }
-function fp({ item: e, t, onSelect: n, expandedKey: r, setExpandedKey: i, depth: a = 0 }) {
+function hp({ item: e, t, onSelect: n, expandedKey: r, setExpandedKey: i, depth: a = 0 }) {
 	let o = !!e.children && e.children.length > 0, s = r === e.key;
 	return o ? /* @__PURE__ */ P("div", { children: [/* @__PURE__ */ P("button", {
 		onClick: () => i(s ? null : e.key),
@@ -7169,7 +7214,7 @@ function fp({ item: e, t, onSelect: n, expandedKey: r, setExpandedKey: i, depth:
 			},
 			transition: { duration: .16 },
 			className: "overflow-hidden",
-			children: e.children.map((e, o) => e.separator ? /* @__PURE__ */ N("div", { className: "h-px mx-3 bg-black/8 dark:bg-white/10" }, `sep-${o}`) : /* @__PURE__ */ N(fp, {
+			children: e.children.map((e, o) => e.separator ? /* @__PURE__ */ N("div", { className: "h-px mx-3 bg-black/8 dark:bg-white/10" }, `sep-${o}`) : /* @__PURE__ */ N(hp, {
 				item: e,
 				t,
 				onSelect: n,
@@ -7191,11 +7236,11 @@ function fp({ item: e, t, onSelect: n, expandedKey: r, setExpandedKey: i, depth:
 }
 //#endregion
 //#region src/components/mobile/MobileAppViewer.tsx
-var pp = pe(null);
-function mp() {
-	return k(pp);
+var gp = pe(null);
+function _p() {
+	return k(gp);
 }
-function hp({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }) {
+function vp({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }) {
 	let r = C((e) => e.windows), i = C((e) => e.apps), a = C((e) => e.closeWindow), [o, s] = M(!1), [c, l] = M(!1), u = Object.values(r).filter((e) => !e.isMinimized).sort((e, t) => t.zIndex - e.zIndex), d = u[0] ?? null, f = O(() => {
 		d && a(d.id);
 	}, [d, a]), p = d ? i[d.appId] : null, m = Wd(), h = dd(0), g = md(h, [0, -220], [1, .75]), _ = md(h, [0, -220], [0, 48]);
@@ -7292,15 +7337,15 @@ function hp({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }
 			}),
 			/* @__PURE__ */ N("div", {
 				className: "flex-1 overflow-hidden",
-				children: /* @__PURE__ */ N(pp.Provider, {
+				children: /* @__PURE__ */ N(gp.Provider, {
 					value: s,
-					children: /* @__PURE__ */ N(up, {
+					children: /* @__PURE__ */ N(pp, {
 						appId: d.appId,
 						windowId: d.id
 					})
 				})
 			}),
-			p.menuBarMenus && p.menuBarMenus.length > 0 && /* @__PURE__ */ N(dp, {
+			p.menuBarMenus && p.menuBarMenus.length > 0 && /* @__PURE__ */ N(mp, {
 				menus: p.menuBarMenus,
 				appId: d.appId,
 				open: c,
@@ -7316,4 +7361,4 @@ function hp({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }
 	}, d.id) });
 }
 //#endregion
-export { Y as C, rl as S, B as T, Vd as _, ip as a, ud as b, nf as c, Qd as d, Zd as f, Gd as g, Kd as h, ap as i, tf as l, qd as m, mp as n, Wf as o, Jd as p, up as r, rf as s, hp as t, $d as u, md as v, ar as w, ml as x, dd as y };
+export { ml as C, B as D, ar as E, ud as S, Y as T, Kd as _, op as a, md as b, Wf as c, tf as d, $d as f, qd as g, Jd as h, cp as i, rf as l, Zd as m, _p as n, sp as o, Qd as p, pp as r, ip as s, vp as t, nf as u, Gd as v, rl as w, dd as x, Vd as y };

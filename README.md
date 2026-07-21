@@ -86,9 +86,18 @@ Dock, menubar, tooltips, and panel overlays use a composited glass effect built 
 - Notification banners
 - PWA-ready with offline support via service worker
 - URL-encoded window state — reload and all windows reopen at the same position
-- **Simple Mode** — a minimal layout-only configuration with no Dock, widgets, or wallpaper images, suitable for custom integrations.
+- **Modular Simple Mode** — a highly customizable layout-only configuration with fine-grained feature flags (`wallpaper`, `contextMenu`, `wallpaperPicker`, `menuBar`, `widgets`, `dock`, `defaultApps`, `allowedOSThemes`). Supports full minimal mode (`isSimpleMode={true}`) or custom modular presets. See **[docs/simple-mode.md](docs/simple-mode.md)** for full reference.
 
-![Simple Mode Screenshot](docs/simple.png)
+<details>
+<summary><strong>View Simple Mode Screenshots</strong></summary>
+
+#### Full Minimal Simple Mode (`isSimpleMode={true}`)
+![Full Minimal Simple Mode](docs/simple.png)
+
+#### Modular Simple Mode with Custom Config
+![Modular Simple Mode Playground](docs/simple-with-config.png)
+
+</details>
 
 ---
 

@@ -21,6 +21,7 @@ function resolveIconPositions({
   cellW,
   cellH,
   desktopSortBy = 'none',
+  useStacks = false,
 }: {
   appList: AppConfig[];
   posMap: Record<string, { x: number; y: number }>;
@@ -30,6 +31,7 @@ function resolveIconPositions({
   cellW: number;
   cellH: number;
   desktopSortBy?: string;
+  useStacks?: boolean;
 }) {
   // 1. Calculate preferred indices for all apps
   const appItems = appList.map((app, index) => {
@@ -37,7 +39,7 @@ function resolveIconPositions({
     let preferredIndex = index;
     let hasStored = false;
 
-    if (stored && desktopSortBy === 'none') {
+    if (stored && desktopSortBy === 'none' && !useStacks) {
       const col = Math.max(0, Math.round((stored.x - PAD) / cellW));
       const row = Math.max(0, Math.min(maxRows - 1, Math.round((stored.y - PAD) / cellH)));
       preferredIndex = col * maxRows + row;
@@ -126,6 +128,8 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
   const gridSpacing = useStore((s) => s.desktopGridSpacing);
   const labelPosition = useStore((s) => s.desktopLabelPosition);
   const desktopSortBy = useStore((s) => s.desktopSortBy);
+  const useStacks = useStore((s) => s.useStacks);
+  const stackGroupBy = useStore((s) => s.stackGroupBy);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const { getAppName } = useTranslation();
@@ -169,15 +173,18 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
 
   const appList = Object.values(apps).filter((a) => !a.disabled);
 
-  // Sort appList if sortBy is active
+  // Determine active sort criteria (useStacks takes priority over desktopSortBy)
+  const activeSort = useStacks ? stackGroupBy : desktopSortBy;
+
+  // Sort appList if activeSort is set
   const sortedAppList = [...appList];
-  if (desktopSortBy === 'name') {
+  if (activeSort === 'name' || activeSort === 'shared-by' || activeSort === 'date-last-opened' || activeSort === 'date-added' || activeSort === 'date-modified' || activeSort === 'date-created' || activeSort === 'tags') {
     sortedAppList.sort((a, b) => {
       const nameA = getAppName(a.id, a.name);
       const nameB = getAppName(b.id, b.name);
       return nameA.localeCompare(nameB);
     });
-  } else if (desktopSortBy === 'kind') {
+  } else if (activeSort === 'kind') {
     sortedAppList.sort((a, b) => {
       const catA = a.category ?? 'Other';
       const catB = b.category ?? 'Other';
@@ -225,6 +232,7 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
       cellW,
       cellH,
       desktopSortBy,
+      useStacks,
     });
 
     // 2. Assign resolved coordinates (moving selected ones, placing static ones)
@@ -255,6 +263,7 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
       cellW,
       cellH,
       desktopSortBy,
+      useStacks,
     });
     resolvedCoords = res.coords;
     hoveredIndex = res.hoveredIndex;
@@ -454,6 +463,7 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
       cellW,
       cellH,
       desktopSortBy,
+      useStacks,
     });
 
     // Commit snaps back to grid representation

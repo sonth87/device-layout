@@ -2,6 +2,7 @@ import { ThemeProviderProps } from './components/themes/ThemeProvider';
 import { ImportWallpaperFn } from './lib/wallpaper-import';
 import { UpdateActions } from './lib/update-actions';
 import { WallpaperConfig } from './types/desktop';
+import { SimpleModeProp } from './types/simple-mode';
 export interface DeviceLayoutProps extends ThemeProviderProps {
     /** Base URL prefix for static assets (wallpapers, icons). Default: '' (root-relative paths). */
     assetBaseUrl?: string;
@@ -25,13 +26,14 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
      * action rows (e.g. a host with no updater, like a web build).
      */
     updateActions?: UpdateActions;
-    /** Enables Simple Mode layout (no Dock, no default apps, no wallpaper image, no widgets, minimal top menu). */
-    isSimpleMode?: boolean;
+    /** Enables Simple Mode layout (boolean or detailed SimpleModeFeatures object). */
+    isSimpleMode?: SimpleModeProp;
 }
 export declare function DeviceLayout({ assetBaseUrl, apps, onImportWallpaper, wallpapers, updateActions, isSimpleMode }: DeviceLayoutProps): import("react/jsx-runtime").JSX.Element;
 export type { ThemeProviderProps } from './components/themes/ThemeProvider';
 export type { AppConfig, AppContentProps, AppInstance, MenuBarMenu, MenuBarItem, ContextMenuAction } from './types/app';
 export type { WallpaperConfig, WallpaperKind, WallpaperFitMode, WallpaperCycleInterval, WallpaperCycleConfig } from './types/desktop';
+export type { SimpleModeProp, SimpleModeFeatures, NormalizedSimpleModeFeatures } from './types/simple-mode';
 export type { ImportWallpaperFn } from './lib/wallpaper-import';
 export type { UpdateActions, UpdateStatus, PickUpdateFileResult, CheckUpdateFn, PickUpdateFileFn, UpdateProgress, UpdateProgressPhase, OnProgressFn } from './lib/update-actions';
 export { useUpdateStatusStore, hasAvailableUpdate } from './lib/update-status-store';

@@ -1,4 +1,5 @@
 import { AppConfig } from '../../types/app';
+import { SimpleModeProp } from '../../types/simple-mode';
 export interface ThemeProviderProps {
     /**
      * Apps to register on mount. Defaults to the built-in APPS_CONFIG so
@@ -6,8 +7,8 @@ export interface ThemeProviderProps {
      * library (see src/lib.tsx) passes its own app list here instead.
      */
     apps?: AppConfig[];
-    /** Enables Simple Mode layout (no Dock, no default apps, no wallpaper image, no widgets, minimal top menu). */
-    isSimpleMode?: boolean;
+    /** Enables Simple Mode layout (boolean or detailed SimpleModeFeatures object). */
+    isSimpleMode?: SimpleModeProp;
 }
 /**
  * ThemeProvider — single root component.

@@ -1,7 +1,5 @@
 interface WallpaperProps {
     children: React.ReactNode;
 }
-export declare function Wallpaper({ children, isSimpleMode }: WallpaperProps & {
-    isSimpleMode?: boolean;
-}): import("react/jsx-runtime").JSX.Element;
+export declare function Wallpaper({ children }: WallpaperProps): import("react/jsx-runtime").JSX.Element;
 export {};

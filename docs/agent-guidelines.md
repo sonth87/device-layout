@@ -170,3 +170,27 @@ const atTopBoundary = nextY <= minY && rawY < minY;
 - Do not create abstraction helpers for one-off operations.
 - When adding a new OS theme: compositor in `src/components/themes/`, config in `themes.config.ts`, registration in `ThemeProvider.tsx`.
 - When adding a new app: `AppConfig` in `apps.config.ts`, component in `src/components/apps/`, lazy import in `AppRegistry.tsx`. See [docs/content/apps.md](content/apps.md).
+
+---
+
+## Simple Mode Scoping
+
+When modifying or expanding Simple Mode components:
+- Always access feature flags via `useSimpleModeFeatures()`. Do not read `isSimpleMode` raw prop directly in deep child layout components.
+- Standard default apps filtering must respect `features.defaultApps` (`boolean | string[]`).
+- Standalone fallbacks (e.g. standalone wallpaper picker modal when `settings` app is omitted) must use light/dark theme adaptive styling (`bg-white dark:bg-zinc-900 border-black/10 dark:border-zinc-800 text-zinc-900 dark:text-white`).
+- OS Theme choices in Settings Appearance must respect `features.allowedOSThemes`. If `allowedOSThemes.length <= 1`, hide the OS Theme section entirely.
+
+---
+
+## Task Completion & Versioning Rules
+
+Whenever completing a new feature, refactor, or bug fix:
+1. **Determine SemVer Bump Level**:
+   - `PATCH` (`0.2.5` → `0.2.6`): Bug fixes, style fixes, minor internal tweaks with zero API/type contract changes.
+   - `MINOR` (`0.2.5` → `0.3.0`): Backward-compatible new features, new props, new apps/widgets.
+   - `MAJOR` (`0.2.5` → `1.0.0`): Breaking API changes or breaking store contract changes.
+2. **Bump `package.json` Version**: Increment the `"version"` field in `package.json`.
+3. **Re-build Library Bundle**: Run `pnpm build:lib` to compile the library ESM bundle and TypeScript `.d.ts` declaration files into `dist-lib/`.
+4. **Verify Build**: Ensure `pnpm build:lib` and `pnpm build` complete with zero errors before declaring success. See **[docs/versioning.md](versioning.md)** for complete reference.
+

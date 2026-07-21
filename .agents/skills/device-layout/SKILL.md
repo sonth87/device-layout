@@ -56,10 +56,13 @@ src/
 The project can be built as a standalone ESM library package (`dist-lib/`) to be embedded inside a host application (e.g. an Electron shell, parent Next.js site, or custom web client).
 
 ### 2.1 The Library Build Pipeline
-Run the following commands to compile and package the library:
+Whenever completing a new feature, refactor, or bug fix, agents MUST:
+1. Bump the `version` field in `package.json`.
+2. Run `pnpm build:lib` to re-compile the library ESM bundle and TypeScript `.d.ts` declaration files into `dist-lib/`.
+
 ```bash
 pnpm build:lib      # Compiles source files into dist-lib/ (index.js, style.css, types)
-pnpm pack           # Creates a tarball (e.g., sonth87-device-layout-0.1.0.tgz)
+pnpm pack           # Creates a tarball (e.g., sonth87-device-layout-0.2.6.tgz)
 ```
 
 ### 2.2 Installing and Importing in a Host Project
@@ -80,7 +83,7 @@ pnpm pack           # Creates a tarball (e.g., sonth87-device-layout-0.1.0.tgz)
 - `assetBaseUrl: string`: Base URL prefix for static assets (wallpapers, videos, and app icons). The host app must host these assets and point this prop to them (e.g. `/assets/`).
 - `onImportWallpaper`: Callback function providing wallpaper import capabilities ("Add a Photo" button).
 - `updateActions`: Functions hook to support OTA update checks (e.g. Electron auto-updaters).
-- `isSimpleMode: boolean`: Enforces a minimal, layout-only macOS-styled wrapper (no Dock, no default apps, no desktop context menus, solid background, minimal menubar, no widgets).
+- `isSimpleMode: boolean | SimpleModeFeatures`: Accepts `true` for full minimal mode, or a `SimpleModeFeatures` object for granular modular control over wallpaper, contextMenu, wallpaperPicker, iconGrid, menuBar (clock, controlCenter, spotlight), widgets, dock, defaultApps (`boolean | string[]`), and allowedOSThemes (`OSTheme[]`). See `src/types/simple-mode.ts` and `docs/simple-mode.md` for full reference.
 
 ---
 

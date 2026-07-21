@@ -1,4 +1,4 @@
-import { b as e, n as t, x as n } from "./MobileAppViewer-CNCMc7lR.js";
+import { C as e, S as t, n } from "./MobileAppViewer-BSA3ntzD.js";
 import { t as r } from "./store-BQ3wWDKN.js";
 import { n as i } from "./AppViewport-BDJLAndL.js";
 import { createContext as a, useContext as o, useEffect as s, useRef as c, useState as l } from "react";
@@ -34,7 +34,7 @@ var h = {
 	}
 };
 function g({ list: a, detail: o, onBack: c, className: l = "", listClassName: p = "", detailClassName: m = "", sidebarWidth: g = "w-60" }) {
-	let _ = r((e) => e.osTheme), v = _ === "iphone" || _ === "android", { width: y } = i(), b = y > 0 && y < 480 || y === 0 && v, x = t();
+	let _ = r((e) => e.osTheme), v = _ === "iphone" || _ === "android", { width: y } = i(), b = y > 0 && y < 480 || y === 0 && v, x = n();
 	return s(() => {
 		if (!(!b || !x)) return x(o !== null), () => x(!1);
 	}, [
@@ -46,7 +46,7 @@ function g({ list: a, detail: o, onBack: c, className: l = "", listClassName: p 
 		children: [/* @__PURE__ */ u("div", {
 			className: `absolute inset-0 ${p}`,
 			children: a
-		}), /* @__PURE__ */ u(n, { children: o !== null && /* @__PURE__ */ u(e.div, {
+		}), /* @__PURE__ */ u(e, { children: o !== null && /* @__PURE__ */ u(t.div, {
 			...h,
 			className: `absolute inset-0 bg-white dark:bg-[#0F1115] ${m}`,
 			children: /* @__PURE__ */ u(f.Provider, {

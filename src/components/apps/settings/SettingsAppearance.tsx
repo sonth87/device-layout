@@ -8,6 +8,7 @@ import { useAppLayout } from '@/hooks/useAppLayout';
 import { AppSection, AppListGroup, AppListRow, AppToggle, AppGrid } from '@/components/apps/ui';
 import type { OSTheme, ColorScheme } from '@/types/theme';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useSimpleModeFeatures } from '@/contexts/SimpleModeContext';
 
 const OS_THEMES: OSTheme[] = ['macos', 'ipad', 'iphone', 'windows', 'android'];
 
@@ -145,44 +146,50 @@ export function SettingsAppearance() {
     },
   ];
 
+  const features = useSimpleModeFeatures();
+  const allowedThemes = OS_THEMES.filter((theme) => features.allowedOSThemes.includes(theme));
+  const showOSThemeSection = allowedThemes.length > 1;
+
   return (
     <div className="space-y-6">
       {/* OS Theme */}
-      <AppSection title={t.osTheme}>
-        {isNarrow ? (
-          <AppListGroup>
-            {OS_THEMES.map((theme) => (
-              <AppListRow
-                key={theme}
-                label={THEMES_CONFIG[theme].name}
-                active={osTheme === theme}
-                onPress={() => setOSTheme(theme)}
-              />
-            ))}
-          </AppListGroup>
-        ) : (
-          <AppGrid narrow={2} medium={3} wide={3} gap="12px">
-            {OS_THEMES.map((theme) => {
-              const config = THEMES_CONFIG[theme];
-              return (
-                <button
+      {showOSThemeSection && (
+        <AppSection title={t.osTheme}>
+          {isNarrow ? (
+            <AppListGroup>
+              {allowedThemes.map((theme) => (
+                <AppListRow
                   key={theme}
-                  onClick={() => setOSTheme(theme)}
-                  className={cn(
-                    'rounded-xl border-2 p-3 text-left transition-all',
-                    osTheme === theme
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                      : 'border-transparent bg-white hover:border-black/10 dark:bg-white/5 dark:hover:border-white/10'
-                  )}
-                >
-                  <p className="text-sm font-semibold text-black/90 dark:text-white/90">{config.name}</p>
-                  <p className="mt-1 text-xs text-black/50 dark:text-white/50 leading-5">{config.description}</p>
-                </button>
-              );
-            })}
-          </AppGrid>
-        )}
-      </AppSection>
+                  label={THEMES_CONFIG[theme].name}
+                  active={osTheme === theme}
+                  onPress={() => setOSTheme(theme)}
+                />
+              ))}
+            </AppListGroup>
+          ) : (
+            <AppGrid narrow={2} medium={3} wide={3} gap="12px">
+              {allowedThemes.map((theme) => {
+                const config = THEMES_CONFIG[theme];
+                return (
+                  <button
+                    key={theme}
+                    onClick={() => setOSTheme(theme)}
+                    className={cn(
+                      'rounded-xl border-2 p-3 text-left transition-all',
+                      osTheme === theme
+                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                        : 'border-transparent bg-white hover:border-black/10 dark:bg-white/5 dark:hover:border-white/10'
+                    )}
+                  >
+                    <p className="text-sm font-semibold text-black/90 dark:text-white/90">{config.name}</p>
+                    <p className="mt-1 text-xs text-black/50 dark:text-white/50 leading-5">{config.description}</p>
+                  </button>
+                );
+              })}
+            </AppGrid>
+          )}
+        </AppSection>
+      )}
 
       {/* Color Scheme */}
       <AppSection title={t.colorScheme}>
