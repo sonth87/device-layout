@@ -20,6 +20,7 @@
     "dev:simple": "node scripts/generate-live-thumbnails.js && NODE_OPTIONS='--max-old-space-size=4096' next dev & sleep 2 && open http://localhost:3000/simple",
     "build": "node scripts/generate-live-thumbnails.js && NODE_OPTIONS='--max-old-space-size=4096' next build",
     "build:lib": "vite build",
+    "tag": "node scripts/release-tag.js",
     "start": "next start",
     "lint": "eslint"
   },
