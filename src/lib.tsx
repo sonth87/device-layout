@@ -79,6 +79,7 @@ export function DeviceLayout({
   updateActions,
   isSimpleMode,
   colorScheme,
+  osTheme,
   fallbackMenuBarAppId,
 }: DeviceLayoutProps) {
   const catalog = buildWallpaperCatalog(wallpapers, liveWallpapers, allowLiveWallpapers);
@@ -94,6 +95,7 @@ export function DeviceLayout({
               builtInApps={builtInApps}
               isSimpleMode={isSimpleMode}
               colorScheme={colorScheme}
+              osTheme={osTheme}
               fallbackMenuBarAppId={fallbackMenuBarAppId}
               wallpapers={wallpapers}
               liveWallpapers={liveWallpapers}

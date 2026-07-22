@@ -1,7 +1,7 @@
 import { AppConfig } from '../../types/app';
 import { WallpaperConfig } from '../../types/desktop';
 import { SimpleModeProp } from '../../types/simple-mode';
-import { ColorScheme } from '../../types/theme';
+import { ColorScheme, OSTheme } from '../../types/theme';
 export interface ThemeProviderProps {
     /**
      * Apps to register on mount. Defaults to the built-in APPS_CONFIG so
@@ -17,6 +17,8 @@ export interface ThemeProviderProps {
     isSimpleMode?: SimpleModeProp;
     /** Sets or overrides active color scheme ('dark' | 'light' | 'auto'). */
     colorScheme?: ColorScheme;
+    /** Sets or overrides the active OS theme / platform ('macos' | 'windows' | 'ipad' | 'iphone' | 'android'). */
+    osTheme?: OSTheme;
     /**
      * App ID to display in top MenuBar when no window is selected/focused.
      * Default: null (no app name or menus rendered when no window is focused).
@@ -37,4 +39,4 @@ export interface ThemeProviderProps {
  * Only the chrome overlays (MacOSChrome, WindowsChrome, etc.) swap.
  * This prevents useWindowUrlSync from re-running and creating duplicate windows.
  */
-export declare function ThemeProvider({ apps, defaultApps: defaultAppsProp, builtInApps, isSimpleMode, colorScheme: colorSchemeProp, fallbackMenuBarAppId, }?: ThemeProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare function ThemeProvider({ apps, defaultApps: defaultAppsProp, builtInApps, isSimpleMode, colorScheme: colorSchemeProp, osTheme: osThemeProp, fallbackMenuBarAppId, }?: ThemeProviderProps): import("react/jsx-runtime").JSX.Element;

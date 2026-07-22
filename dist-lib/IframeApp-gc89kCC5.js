@@ -1,4 +1,4 @@
-import { t as e } from "./store-BQ3wWDKN.js";
+import { t as e } from "./store-XIGE1L5-.js";
 import { t } from "./useBrowser-DEKA4mMw.js";
 import { useEffect as n } from "react";
 import { jsx as r } from "react/jsx-runtime";

@@ -54,19 +54,39 @@ type Getter = () => WindowSlice & {
 };
 
 function defaultRect(appConfig: AppConfig, overrides?: WindowOpenOptions): WindowRect {
-  const width = overrides?.width ?? appConfig.defaultSize?.width ?? 800;
-  const height = overrides?.height ?? appConfig.defaultSize?.height ?? 600;
-  const x = overrides?.x ?? appConfig.defaultPosition?.x ?? Math.round((typeof window !== 'undefined' ? window.innerWidth : 1280) / 2 - width / 2);
-  const y = overrides?.y ?? appConfig.defaultPosition?.y ?? Math.round((typeof window !== 'undefined' ? window.innerHeight : 800) / 2 - height / 2);
+  const topInset = 28; // MenuBar height in macOS
+  const bottomInset = 16;
+
+  const winW = typeof window !== 'undefined' ? window.innerWidth : 1280;
+  const winH = typeof window !== 'undefined' ? window.innerHeight : 800;
+
+  const availableW = Math.max(1, winW);
+  const availableH = Math.max(1, winH - topInset - bottomInset);
+
+  const minW = appConfig.minSize?.width ?? 320;
+  const minH = appConfig.minSize?.height ?? 240;
+
+  const rawWidth = overrides?.width ?? appConfig.defaultSize?.width ?? 800;
+  const rawHeight = overrides?.height ?? appConfig.defaultSize?.height ?? 600;
+
+  // Clamp initial dimensions so they NEVER exceed maximum available viewport dimensions
+  const width = Math.min(Math.max(rawWidth, Math.min(minW, availableW)), availableW);
+  const height = Math.min(Math.max(rawHeight, Math.min(minH, availableH)), availableH);
+
+  const defaultX = Math.max(0, Math.round((availableW - width) / 2));
+  const defaultY = Math.max(topInset, Math.round(topInset + (availableH - height) / 2));
+
+  const x = overrides?.x ?? appConfig.defaultPosition?.x ?? defaultX;
+  const y = overrides?.y ?? appConfig.defaultPosition?.y ?? defaultY;
 
   if (typeof window === 'undefined') return { x, y, width, height };
 
   return fitWindowRectToViewport(
     { x, y, width, height },
-    { x: 0, y: 0, width: window.innerWidth, height: window.innerHeight },
+    { x: 0, y: topInset, width: availableW, height: availableH },
     {
-      minWidth: appConfig.minSize?.width ?? 320,
-      minHeight: appConfig.minSize?.height ?? 240,
+      minWidth: minW,
+      minHeight: minH,
     }
   );
 }

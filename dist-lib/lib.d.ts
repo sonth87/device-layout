@@ -36,7 +36,7 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
     /** Enables Simple Mode layout (boolean or detailed SimpleModeFeatures object). */
     isSimpleMode?: SimpleModeProp;
 }
-export declare function DeviceLayout({ assetBaseUrl, apps, defaultApps, builtInApps, onImportWallpaper, wallpapers, liveWallpapers, allowLiveWallpapers, updateActions, isSimpleMode, colorScheme, fallbackMenuBarAppId, }: DeviceLayoutProps): import("react/jsx-runtime").JSX.Element;
+export declare function DeviceLayout({ assetBaseUrl, apps, defaultApps, builtInApps, onImportWallpaper, wallpapers, liveWallpapers, allowLiveWallpapers, updateActions, isSimpleMode, colorScheme, osTheme, fallbackMenuBarAppId, }: DeviceLayoutProps): import("react/jsx-runtime").JSX.Element;
 export type { ThemeProviderProps } from './components/themes/ThemeProvider';
 export type { AppConfig, AppContentProps, AppInstance, MenuBarMenu, MenuBarItem, ContextMenuAction } from './types/app';
 export type { WallpaperConfig, WallpaperKind, WallpaperFitMode, WallpaperCycleInterval, WallpaperCycleConfig } from './types/desktop';

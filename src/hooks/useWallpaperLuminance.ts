@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 import { useStore } from '@/store';
-import { ALL_WALLPAPERS } from '@/config/wallpapers.config';
+import { useWallpaperCatalog } from '@/lib/wallpaper-catalog';
+import type { WallpaperConfig } from '@/types/desktop';
 
 /** Height of the top strip to sample (matches --menubar-height). */
 const SAMPLE_HEIGHT = 28;
@@ -72,12 +73,13 @@ function analyseImageUrl(url: string): Promise<'light' | 'dark'> {
 export function useWallpaperLuminance() {
   const osTheme = useStore((s) => s.osTheme);
   const wallpaperId = useStore((s) => s.wallpaperId);
+  const catalog = useWallpaperCatalog();
 
   useEffect(() => {
     // Only active in macOS mode
     if (osTheme !== 'macos') return;
 
-    const wallpaper = ALL_WALLPAPERS.find((w) => w.id === wallpaperId);
+    const wallpaper = catalog.all.find((w: WallpaperConfig) => w.id === wallpaperId);
     if (!wallpaper) return;
 
     // Getter for the setter — stable Zustand reference, not in deps
@@ -115,5 +117,5 @@ export function useWallpaperLuminance() {
       setTheme(result);
     });
   // Only depends on what changes meaningfully: mode switch or wallpaper change
-  }, [osTheme, wallpaperId]);
+  }, [osTheme, wallpaperId, catalog]);
 }

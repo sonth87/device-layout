@@ -24,7 +24,7 @@ import { cn } from '@/lib/utils';
 import type { AppConfig } from '@/types/app';
 import type { WallpaperConfig } from '@/types/desktop';
 import type { SimpleModeProp } from '@/types/simple-mode';
-import type { ColorScheme } from '@/types/theme';
+import type { ColorScheme, OSTheme } from '@/types/theme';
 import { resolveSimpleModeFeatures } from '@/utils/simple-mode-resolver';
 import { SimpleModeProvider } from '@/contexts/SimpleModeContext';
 
@@ -43,6 +43,8 @@ export interface ThemeProviderProps {
   isSimpleMode?: SimpleModeProp;
   /** Sets or overrides active color scheme ('dark' | 'light' | 'auto'). */
   colorScheme?: ColorScheme;
+  /** Sets or overrides the active OS theme / platform ('macos' | 'windows' | 'ipad' | 'iphone' | 'android'). */
+  osTheme?: OSTheme;
   /**
    * App ID to display in top MenuBar when no window is selected/focused.
    * Default: null (no app name or menus rendered when no window is focused).
@@ -70,13 +72,21 @@ export function ThemeProvider({
   builtInApps,
   isSimpleMode = false,
   colorScheme: colorSchemeProp,
+  osTheme: osThemeProp,
   fallbackMenuBarAppId = null,
 }: ThemeProviderProps = {}) {
   const osTheme = useStore((s) => s.osTheme);
+  const setOSTheme = useStore((s) => s.setOSTheme);
   const colorScheme = useStore((s) => s.colorScheme);
   const setColorScheme = useStore((s) => s.setColorScheme);
   const resolvedColorScheme = useStore((s) => s.resolvedColorScheme);
   const resolveColorScheme = useStore((s) => s.resolveColorScheme);
+
+  useEffect(() => {
+    if (osThemeProp && osThemeProp !== osTheme) {
+      setOSTheme(osThemeProp);
+    }
+  }, [osThemeProp, osTheme, setOSTheme]);
 
   useEffect(() => {
     if (colorSchemeProp && colorSchemeProp !== colorScheme) {
