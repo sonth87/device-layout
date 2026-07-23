@@ -11,6 +11,7 @@ import { IPhoneChrome } from './IPhoneTheme';
 import { WindowsChrome } from './WindowsTheme';
 import { AndroidChrome } from './AndroidTheme';
 import { Wallpaper } from '@/components/desktop/Wallpaper';
+import { EditContextMenu, type ResolveEditContextMenuItems } from '@/components/desktop/EditContextMenu';
 import { IconGrid } from '@/components/desktop/IconGrid';
 import { WidgetLayer } from '@/components/widgets/WidgetLayer';
 import { WidgetGalleryPanel } from '@/components/widgets/WidgetGalleryPanel';
@@ -56,6 +57,16 @@ export interface ThemeProviderProps {
   liveWallpapers?: WallpaperConfig[];
   /** Controls whether to show or hide the "Live Wallpapers" section in wallpaper picker. Default: true */
   allowLiveWallpapers?: boolean;
+  /**
+   * Host TOÀN QUYỀN can thiệp danh sách item của context menu Copy/Paste tự vẽ (EditContextMenu)
+   * — thêm/bớt/ghi đè/sắp xếp lại, tuỳ theo `info.target` (vd chỉ can thiệp khi target nằm trong
+   * 1 app cụ thể qua `target.closest('[data-app-id="..."]')`). Trả `null`/`undefined` = dùng
+   * `defaultItems` y nguyên. Trả `[]` = tắt hẳn context menu tại vùng đó. Không truyền prop này =
+   * dùng menu mặc định của device-layout cho mọi nơi (như trước khi có tuỳ chỉnh này) — thêm sau
+   * feedback thật (2026-07-23): device-layout không nên "khoá cứng" context menu, chặn các app
+   * nhúng (vd sky-app) tích hợp thêm mục riêng của chúng.
+   */
+  resolveEditContextMenuItems?: ResolveEditContextMenuItems;
 }
 
 /**
@@ -74,6 +85,7 @@ export function ThemeProvider({
   colorScheme: colorSchemeProp,
   osTheme: osThemeProp,
   fallbackMenuBarAppId = null,
+  resolveEditContextMenuItems,
 }: ThemeProviderProps = {}) {
   const osTheme = useStore((s) => s.osTheme);
   const setOSTheme = useStore((s) => s.setOSTheme);
@@ -260,8 +272,15 @@ export function ThemeProvider({
         data-os-theme={activeOSTheme}
         data-glass={glassEnabled ? 'true' : 'false'}
         style={getThemeCssVars(themeConfig)}
-        onContextMenu={(e) => e.preventDefault()}
       >
+        {/* EditContextMenu bọc TOÀN BỘ cây — thay cho onContextMenu={preventDefault} vô điều
+           kiện trước đây (chặn cả Copy/Paste trong input của app con, bug thật phát hiện qua
+           sky-app 2026-07-23). Tự vẽ menu Cut/Copy/Paste/Undo/Redo/Select All/Save Image khi
+           target là input/textarea/contentEditable/image/có text bôi đen — nhất quán trên cả
+           web lẫn khi nhúng Electron (host không cần tự implement context menu riêng), vẫn chặn
+           menu mặc định của Chromium (Inspect/Reload/...) cho vùng desktop/icon/window chrome
+           như hành vi gốc — xem EditContextMenu.tsx. */}
+        <EditContextMenu resolveItems={resolveEditContextMenuItems}>
         {/* SVG filter singleton */}
         <GlassFilter />
 
@@ -356,6 +375,7 @@ export function ThemeProvider({
             </AnimatePresence>
           </>
         )}
+        </EditContextMenu>
       </div>
     </SimpleModeProvider>
   );

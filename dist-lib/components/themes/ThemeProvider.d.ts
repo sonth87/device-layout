@@ -1,3 +1,4 @@
+import { ResolveEditContextMenuItems } from '../desktop/EditContextMenu';
 import { AppConfig } from '../../types/app';
 import { WallpaperConfig } from '../../types/desktop';
 import { SimpleModeProp } from '../../types/simple-mode';
@@ -30,6 +31,16 @@ export interface ThemeProviderProps {
     liveWallpapers?: WallpaperConfig[];
     /** Controls whether to show or hide the "Live Wallpapers" section in wallpaper picker. Default: true */
     allowLiveWallpapers?: boolean;
+    /**
+     * Host TOÀN QUYỀN can thiệp danh sách item của context menu Copy/Paste tự vẽ (EditContextMenu)
+     * — thêm/bớt/ghi đè/sắp xếp lại, tuỳ theo `info.target` (vd chỉ can thiệp khi target nằm trong
+     * 1 app cụ thể qua `target.closest('[data-app-id="..."]')`). Trả `null`/`undefined` = dùng
+     * `defaultItems` y nguyên. Trả `[]` = tắt hẳn context menu tại vùng đó. Không truyền prop này =
+     * dùng menu mặc định của device-layout cho mọi nơi (như trước khi có tuỳ chỉnh này) — thêm sau
+     * feedback thật (2026-07-23): device-layout không nên "khoá cứng" context menu, chặn các app
+     * nhúng (vd sky-app) tích hợp thêm mục riêng của chúng.
+     */
+    resolveEditContextMenuItems?: ResolveEditContextMenuItems;
 }
 /**
  * ThemeProvider — single root component.
@@ -39,4 +50,4 @@ export interface ThemeProviderProps {
  * Only the chrome overlays (MacOSChrome, WindowsChrome, etc.) swap.
  * This prevents useWindowUrlSync from re-running and creating duplicate windows.
  */
-export declare function ThemeProvider({ apps, defaultApps: defaultAppsProp, builtInApps, isSimpleMode, colorScheme: colorSchemeProp, osTheme: osThemeProp, fallbackMenuBarAppId, }?: ThemeProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare function ThemeProvider({ apps, defaultApps: defaultAppsProp, builtInApps, isSimpleMode, colorScheme: colorSchemeProp, osTheme: osThemeProp, fallbackMenuBarAppId, resolveEditContextMenuItems, }?: ThemeProviderProps): import("react/jsx-runtime").JSX.Element;

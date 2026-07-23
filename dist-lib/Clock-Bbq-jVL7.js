@@ -1,5 +1,5 @@
 import { t as e } from "./utils-B6YmNDS2.js";
-import { t } from "./useTranslation-CBzONkoP.js";
+import { t } from "./useTranslation-BJqtZQcf.js";
 import { t as n } from "./useAppLayout-DfaXs-1a.js";
 import { useEffect as r, useState as i } from "react";
 import { jsx as a, jsxs as o } from "react/jsx-runtime";

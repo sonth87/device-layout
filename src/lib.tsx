@@ -81,6 +81,7 @@ export function DeviceLayout({
   colorScheme,
   osTheme,
   fallbackMenuBarAppId,
+  resolveEditContextMenuItems,
 }: DeviceLayoutProps) {
   const catalog = buildWallpaperCatalog(wallpapers, liveWallpapers, allowLiveWallpapers);
   return (
@@ -100,6 +101,7 @@ export function DeviceLayout({
               wallpapers={wallpapers}
               liveWallpapers={liveWallpapers}
               allowLiveWallpapers={allowLiveWallpapers}
+              resolveEditContextMenuItems={resolveEditContextMenuItems}
             />
           </UpdateActionsProvider>
         </WallpaperImportProvider>
@@ -110,6 +112,11 @@ export function DeviceLayout({
 
 export type { ThemeProviderProps } from '@/components/themes/ThemeProvider';
 export type { AppConfig, AppContentProps, AppInstance, MenuBarMenu, MenuBarItem, ContextMenuAction } from '@/types/app';
+/**
+ * Host (vd sky-app) truyền `resolveEditContextMenuItems` vào <DeviceLayout> để tự quyết định
+ * danh sách item của context menu Copy/Paste tự vẽ — xem EditContextMenu.tsx's doc comment.
+ */
+export type { EditMenuEntry, EditContextMenuInfo, ResolveEditContextMenuItems } from '@/components/desktop/EditContextMenu';
 export type { WallpaperConfig, WallpaperKind, WallpaperFitMode, WallpaperCycleInterval, WallpaperCycleConfig } from '@/types/desktop';
 export type { SimpleModeProp, SimpleModeFeatures, NormalizedSimpleModeFeatures } from '@/types/simple-mode';
 

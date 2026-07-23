@@ -155,6 +155,41 @@ Both are plain `window`-level `CustomEvent`s — a host can also listen directly
 
 ---
 
+## Edit context menu (right-click Copy/Paste)
+
+The library wraps its entire root tree in a self-drawn right-click menu (`EditContextMenu`) for text editing — Cut, Copy, Paste, Undo, Redo, Select All, and Save Image (for `<img>` targets). This exists because the root container also needs to `preventDefault()` the browser's *native* context menu everywhere else (desktop background, icons, window chrome) to keep the desktop-OS illusion — a bare `preventDefault()` on the whole tree would otherwise swallow every right-click, including inside a host app's own inputs, with no way for the host to get Copy/Paste back. See `src/components/desktop/EditContextMenu.tsx` for the implementation.
+
+It activates automatically — no host wiring required — whenever the right-click target is an `<input>`, `<textarea>`, `contentEditable` element, an `<img>`, or has an active text selection. Anywhere else, the native browser/Electron context menu stays suppressed, same as before this existed.
+
+**A host is never locked into the library's default item list.** Pass `resolveEditContextMenuItems` to `<DeviceLayout>` to inspect or fully replace what renders, on a per-target basis:
+
+```ts
+import type { ResolveEditContextMenuItems } from '@sonth87/device-layout';
+
+const resolveEditContextMenuItems: ResolveEditContextMenuItems = (defaultItems, info) => {
+  // info: { target: HTMLElement; isEditable: boolean; isImage: boolean; hasSelection: boolean }
+
+  // Leave every other app's menu untouched — only customize inside one app.
+  if (!info.target.closest('[data-app-id="my-app"]')) return defaultItems;
+
+  return [
+    ...defaultItems.filter((item) => item.key !== 'undo' && item.key !== 'redo'), // drop items
+    { key: 'my-action', label: 'Preview Image…', onSelect: () => openPreview(info.target) }, // add one
+  ];
+};
+
+<DeviceLayout apps={apps} resolveEditContextMenuItems={resolveEditContextMenuItems} />
+```
+
+Return values:
+- `null` / `undefined` — use `defaultItems` as-is (equivalent to not customizing at all for this target).
+- Any `EditMenuEntry[]` — replaces the menu entirely; freely keep, drop, reorder, or add entries by `key`. Separators are entries with `separator: true`.
+- `[]` — suppresses the menu for this specific right-click (same effect as clicking a non-editable area).
+
+`resolveEditContextMenuItems` runs once per right-click, synchronously, before the menu opens — it is not a React component and cannot use hooks; read whatever it needs from `info.target` or module-level state.
+
+---
+
 ## State ownership and persistence
 
 The library owns one Zustand store (window positions/sizes/z-order, dock contents, running app instances, OS theme, wallpaper, and related UI state), persisted to `localStorage` under a single key. The host does not need to — and should not — duplicate or mirror this state; treat the store as internal to the library and interact with it only through the documented hooks/props, not by reading its shape directly, since the shape is not a stable public contract.
@@ -165,6 +200,6 @@ Anything the host's apps need to persist themselves (documents, user data, app-s
 
 ## Versioning expectations
 
-Treat `AppConfig`, `MenuBarMenu`/`MenuBarItem`, `ContextMenuAction`, the two `CustomEvent` contracts, and the exported hooks as the stable public surface. Everything under `src/components/**` not re-exported from the package root, and the internal Zustand store shape, are implementation details that can change between minor versions without notice.
+Treat `AppConfig`, `MenuBarMenu`/`MenuBarItem`, `ContextMenuAction`, `EditMenuEntry`/`ResolveEditContextMenuItems`, the two `CustomEvent` contracts, and the exported hooks as the stable public surface. Everything under `src/components/**` not re-exported from the package root, and the internal Zustand store shape, are implementation details that can change between minor versions without notice.
 
 When bumping the library version in a host that vendors it via a local tarball, rebuild (`npm run build:lib && npm pack`) and re-run the host's typecheck — a structural-typing mismatch on `AppConfig`-adjacent fields is the most common breakage and surfaces immediately as a compile error, not a runtime one.

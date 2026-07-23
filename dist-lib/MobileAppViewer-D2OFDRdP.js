@@ -9,7 +9,7 @@ import { t as re } from "./search-BKG97C0x.js";
 import { t as ie } from "./sun-DdSv2tyc.js";
 import { t as ae } from "./volume-2-DAfADR-a.js";
 import { t as oe } from "./x-BYw6fhgP.js";
-import { t as se } from "./useTranslation-CBzONkoP.js";
+import { t as se } from "./useTranslation-BJqtZQcf.js";
 import { t as ce } from "./AppViewport-BDJLAndL.js";
 import * as T from "react";
 import { Children as le, Component as ue, Fragment as de, Suspense as fe, createContext as pe, createElement as me, forwardRef as he, isValidElement as ge, lazy as E, useCallback as D, useContext as O, useEffect as _e, useId as ve, useInsertionEffect as ye, useLayoutEffect as be, useMemo as xe, useRef as k, useState as A } from "react";
@@ -7087,18 +7087,18 @@ var lp = class extends ue {
 		}, this.state.retryCount);
 	}
 }, up = {
-	Finder: E(() => import("./Finder-5mDCYgYx.js").then((e) => ({ default: e.Finder }))),
-	Terminal: E(() => import("./Terminal-C8wJ23o0.js").then((e) => ({ default: e.Terminal }))),
-	Settings: E(() => import("./Settings-DUfPzG6r.js").then((e) => ({ default: e.Settings }))),
+	Finder: E(() => import("./Finder-YHoPk4Np.js").then((e) => ({ default: e.Finder }))),
+	Terminal: E(() => import("./Terminal-DFQigwE_.js").then((e) => ({ default: e.Terminal }))),
+	Settings: E(() => import("./Settings-D61MvqMn.js").then((e) => ({ default: e.Settings }))),
 	Browser: E(() => import("./Browser-DhrkWGkV.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: E(() => import("./TextEditor-C-XCXZQT.js").then((e) => ({ default: e.TextEditor }))),
-	Clock: E(() => import("./Clock-BWuqv5vk.js").then((e) => ({ default: e.Clock }))),
-	Calculator: E(() => import("./Calculator-CM7yXNx8.js").then((e) => ({ default: e.Calculator }))),
+	Clock: E(() => import("./Clock-Bbq-jVL7.js").then((e) => ({ default: e.Clock }))),
+	Calculator: E(() => import("./Calculator-kdXp0c4H.js").then((e) => ({ default: e.Calculator }))),
 	Notes: E(() => import("./Notes-CObzczOv.js").then((e) => ({ default: e.Notes }))),
-	Photos: E(() => import("./Photos-nbnBeyWS.js").then((e) => ({ default: e.Photos }))),
-	Music: E(() => import("./Music-D6vfIJsc.js").then((e) => ({ default: e.Music }))),
-	Calendar: E(() => import("./Calendar-B_w9izGX.js").then((e) => ({ default: e.Calendar }))),
-	Messages: E(() => import("./Messages-Dyy5-r_t.js").then((e) => ({ default: e.Messages }))),
+	Photos: E(() => import("./Photos-2XpXzJNR.js").then((e) => ({ default: e.Photos }))),
+	Music: E(() => import("./Music-U7dMGwuL.js").then((e) => ({ default: e.Music }))),
+	Calendar: E(() => import("./Calendar-D7do4uqA.js").then((e) => ({ default: e.Calendar }))),
+	Messages: E(() => import("./Messages-DHgUkj0m.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: E(() => import("./IframeApp-gc89kCC5.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: E(() => import("./MdxApp-_FrXuKdQ.js").then((e) => ({ default: e.MdxApp })))
 };

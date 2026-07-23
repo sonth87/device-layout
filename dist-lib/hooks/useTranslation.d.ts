@@ -97,6 +97,7 @@ export declare const translations: {
         readonly menuCopy: "Copy";
         readonly menuPaste: "Paste";
         readonly menuSelectAll: "Select All";
+        readonly saveImage: "Save Image…";
         readonly menuFind: "Find";
         readonly menuMinimize: "Minimize";
         readonly menuZoom: "Zoom";
@@ -259,6 +260,7 @@ export declare const translations: {
         readonly menuCopy: "Sao chép";
         readonly menuPaste: "Dán";
         readonly menuSelectAll: "Chọn tất cả";
+        readonly saveImage: "Lưu ảnh…";
         readonly menuFind: "Tìm";
         readonly menuMinimize: "Thu nhỏ";
         readonly menuZoom: "Phóng to";
@@ -421,6 +423,7 @@ export declare const translations: {
         readonly menuCopy: "コピー";
         readonly menuPaste: "ペースト";
         readonly menuSelectAll: "すべてを選択";
+        readonly saveImage: "画像を保存…";
         readonly menuFind: "検索";
         readonly menuMinimize: "しまう";
         readonly menuZoom: "ズーム";
@@ -583,6 +586,7 @@ export declare const translations: {
         readonly menuCopy: "복사하기";
         readonly menuPaste: "붙여넣기";
         readonly menuSelectAll: "전체 선택";
+        readonly saveImage: "이미지 저장…";
         readonly menuFind: "찾기";
         readonly menuMinimize: "최소화";
         readonly menuZoom: "유지";
@@ -745,6 +749,7 @@ export declare const translations: {
         readonly menuCopy: "拷贝";
         readonly menuPaste: "粘贴";
         readonly menuSelectAll: "全选";
+        readonly saveImage: "保存图片…";
         readonly menuFind: "查找";
         readonly menuMinimize: "最小化";
         readonly menuZoom: "缩放";
@@ -907,6 +912,7 @@ export declare const translations: {
         readonly menuCopy: "คัดลอก";
         readonly menuPaste: "วาง";
         readonly menuSelectAll: "เลือกทั้งหมด";
+        readonly saveImage: "บันทึกรูปภาพ…";
         readonly menuFind: "ค้นหา";
         readonly menuMinimize: "ย่อขนาด";
         readonly menuZoom: "ขยาย/ย่อ";
@@ -1072,6 +1078,7 @@ export declare function useTranslation(): {
         menuCopy: "Copy";
         menuPaste: "Paste";
         menuSelectAll: "Select All";
+        saveImage: "Save Image…";
         menuFind: "Find";
         menuMinimize: "Minimize";
         menuZoom: "Zoom";
@@ -1233,6 +1240,7 @@ export declare function useTranslation(): {
         menuCopy: "Sao chép";
         menuPaste: "Dán";
         menuSelectAll: "Chọn tất cả";
+        saveImage: "Lưu ảnh…";
         menuFind: "Tìm";
         menuMinimize: "Thu nhỏ";
         menuZoom: "Phóng to";
@@ -1394,6 +1402,7 @@ export declare function useTranslation(): {
         menuCopy: "コピー";
         menuPaste: "ペースト";
         menuSelectAll: "すべてを選択";
+        saveImage: "画像を保存…";
         menuFind: "検索";
         menuMinimize: "しまう";
         menuZoom: "ズーム";
@@ -1555,6 +1564,7 @@ export declare function useTranslation(): {
         menuCopy: "복사하기";
         menuPaste: "붙여넣기";
         menuSelectAll: "전체 선택";
+        saveImage: "이미지 저장…";
         menuFind: "찾기";
         menuMinimize: "최소화";
         menuZoom: "유지";
@@ -1716,6 +1726,7 @@ export declare function useTranslation(): {
         menuCopy: "拷贝";
         menuPaste: "粘贴";
         menuSelectAll: "全选";
+        saveImage: "保存图片…";
         menuFind: "查找";
         menuMinimize: "最小化";
         menuZoom: "缩放";
@@ -1877,6 +1888,7 @@ export declare function useTranslation(): {
         menuCopy: "คัดลอก";
         menuPaste: "วาง";
         menuSelectAll: "เลือกทั้งหมด";
+        saveImage: "บันทึกรูปภาพ…";
         menuFind: "ค้นหา";
         menuMinimize: "ย่อขนาด";
         menuZoom: "ขยาย/ย่อ";
