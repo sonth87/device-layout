@@ -1107,7 +1107,7 @@ function Xt({ windowId: e }) {
 		},
 		className: R("flex flex-col overflow-hidden", t.isMinimized ? "pointer-events-none" : "pointer-events-auto", t.isFocused ? "shadow-[0_22px_70px_rgba(0,0,0,0.5),0_2px_8px_rgba(0,0,0,0.3)]" : "shadow-[0_8px_32px_rgba(0,0,0,0.25)]", !t.isFocused && "brightness-95", "bg-(--window-body-bg)", t.isFocused ? "ring-1 ring-white/20" : ""),
 		onPointerDown: (i) => {
-			n(e), t?.appId && r(t.appId), i.stopPropagation();
+			n(e), t?.appId && r(t.appId), t.isFocused || i.stopPropagation();
 		},
 		children: [
 			(!t.isFullScreen || !l.hasMenuBar) && /* @__PURE__ */ Y("div", {

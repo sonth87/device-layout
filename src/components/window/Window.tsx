@@ -107,7 +107,21 @@ export function Window({ windowId }: WindowProps) {
         // Bring to front on any click
         focusWindow(windowId);
         if (win?.appId) setActiveApp(win.appId);
-        e.stopPropagation();
+        // stopPropagation() CHỈ khi window CHƯA focused — không phải mọi lúc. Trước đây gọi vô
+        // điều kiện (không có lý do rõ trong lịch sử/comment, chỉ đi kèm focusWindow/setActiveApp
+        // — IconGrid.tsx's marquee-select đã tự loại trừ click trong window qua
+        // target.closest('[id^="window-"]'), không cần stopPropagation() để tránh việc đó) —
+        // nhưng nó chặn luôn NATIVE pointerdown nổi bọt tới document, nơi mọi component Radix
+        // dùng chung (Select, DropdownMenu, Popover...) lắng nghe qua DismissableLayer để tự đóng
+        // khi click ra ngoài. Vì bubble bị chặn, dropdown/menu KHÔNG BAO GIỜ tự đóng khi user
+        // click bất kỳ đâu trong window đang mở nó — kể cả cùng window (bug thật phát hiện qua
+        // sky-app's VoicePicker dropdown, 2026-07-23). Chỉ cần chặn ở lần click ĐẦU TIÊN lúc
+        // window còn chưa active (để không có side-effect lạ nào khác từ việc window "vừa được
+        // focus" cũng đồng thời bị hiểu là click-outside bởi 1 lớp Radix nào đó đang mở từ TRƯỚC
+        // — ví dụ mở Select ở window A rồi click sang window B để focus B, click đó không nên bị
+        // Select ở A tính là "click outside" 2 lần cho 2 mục đích khác nhau cùng lúc); mọi
+        // click SAU khi đã focused thì để native event nổi bọt bình thường.
+        if (!win.isFocused) e.stopPropagation();
       }}
     >
       {/* Chrome (title bar) — normal flex-column member when floating/maximized.
