@@ -4856,8 +4856,15 @@ function ia(e, t, n) {
 	}), r;
 }
 function aa({ children: e, resolveItems: t }) {
-	let { t: n } = H(), [r, i] = q(null), a = K(null);
-	return /* @__PURE__ */ X(zi, {
+	let { t: n } = H(), [r, i] = q(null), a = K(null), o = K(null);
+	return G(() => {
+		if (!r) return;
+		let e = (e) => {
+			o.current?.contains(e.target) || i(null);
+		};
+		return document.addEventListener("pointerdown", e, { capture: !0 }), () => document.removeEventListener("pointerdown", e, { capture: !0 });
+	}, [r]), /* @__PURE__ */ X(zi, {
+		modal: !1,
 		onOpenChange: (e) => {
 			e || i(null);
 		},
@@ -4890,6 +4897,7 @@ function aa({ children: e, resolveItems: t }) {
 			asChild: !0,
 			className: $i,
 			children: r ? /* @__PURE__ */ Y(w, {
+				ref: o,
 				variant: "panel",
 				className: "p-1",
 				children: /* @__PURE__ */ Y("div", { children: r.map((e) => e.separator ? /* @__PURE__ */ Y(Wi, { className: Qi }, e.key) : /* @__PURE__ */ Y(Ui, {

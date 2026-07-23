@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import { useTranslation } from '@/hooks/useTranslation';
 import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
@@ -220,6 +220,28 @@ export function EditContextMenu({ children, resolveItems }: EditContextMenuProps
   // Content render qua Portal (ra ngoài cây DOM gốc), nên KHÔNG thể dựa vào document.activeElement
   // lúc click Item (focus đã rời khỏi input khi menu mở).
   const targetRef = useRef<EventTarget | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Đóng menu khi pointerdown xảy ra NGOÀI Content — tự làm thay vì dựa vào Radix's
+  // DismissableLayer (lắng nghe pointerdown ở BUBBLE phase trên document, xem
+  // @radix-ui/react-dismissable-layer's usePointerDownOutside). device-layout's Window.tsx (và
+  // nhiều nơi khác trong WindowChrome.tsx/useWindowDrag.ts) gọi `e.stopPropagation()` trên
+  // onPointerDown để focus window/app khi click vào nó — điều này chặn native pointerdown KHÔNG
+  // BAO GIỜ nổi bọt tới document, nên bubble-phase listener của Radix không bao giờ thấy click đó
+  // (bug thật, 2026-07-23: click ra ngoài trong CÙNG app thì tắt được vì đường nổi bọt chưa gặp
+  // stopPropagation nào, nhưng click sang app/window KHÁC để focus nó thì never đóng được — đúng
+  // như user mô tả). Sửa bằng CAPTURE-phase listener của riêng mình — capture chạy TRƯỚC mọi
+  // handler khác (kể cả stopPropagation() ở bubble phase của Window.tsx không kịp chặn), nên luôn
+  // thấy được pointerdown dù xảy ra ở bất kỳ đâu, kể cả trong 1 Window/app hoàn toàn khác.
+  useEffect(() => {
+    if (!entries) return;
+    const handlePointerDown = (event: PointerEvent) => {
+      if (contentRef.current?.contains(event.target as Node)) return;
+      setEntries(null);
+    };
+    document.addEventListener('pointerdown', handlePointerDown, { capture: true });
+    return () => document.removeEventListener('pointerdown', handlePointerDown, { capture: true });
+  }, [entries]);
 
   const handleContextMenu = useCallback((event: React.MouseEvent) => {
     const result = readEditFlags(event.target);
@@ -253,14 +275,25 @@ export function EditContextMenu({ children, resolveItems }: EditContextMenuProps
 
   return (
     <ContextMenu.Root
+      // ContextMenu.Root KHÔNG hỗ trợ `open` controlled (khác Dialog/DropdownMenu — chỉ có
+      // `onOpenChange`, xem @radix-ui/react-context-menu's ContextMenuProps) — không thể làm
+      // fully-controlled 2 chiều. `onOpenChange` vẫn cần giữ để bắt các đường đóng KHÁC click-
+      // outside mà mình chưa tự xử lý (Escape, chọn xong 1 Item) — đồng bộ 1 chiều Radix →
+      // `entries`. Riêng click-outside dùng capture-phase listener riêng bên dưới (useEffect) vì
+      // Radix's DismissableLayer lắng nghe pointerdown ở BUBBLE phase trên document, và
+      // device-layout's Window.tsx gọi stopPropagation() trên pointerdown để focus window khi
+      // click vào nó — chặn mất native event trước khi tới bubble-phase listener của Radix nếu
+      // click đó rơi vào 1 Window/app KHÁC (bug thật, 2026-07-23).
+      //
+      // `modal={false}` — BẮT BUỘC. Radix's @radix-ui/react-menu (dưới ContextMenu) tự đặt
+      // `disableOutsidePointerEvents: context.open` khi modal=true (default), tức áp
+      // `pointer-events: none` lên body cho đến khi Radix's INTERNAL `open` về false. Vì mình
+      // không có cách ép Radix đóng thật (không có `open` controlled), khi capture-phase listener
+      // tự setEntries(null) mà Radix vẫn tưởng đang mở, toàn bộ app bị khoá pointer-events —
+      // không click được BẤT CỨ ĐÂU (đúng hiện tượng user báo). modal=false tắt hẳn cơ chế khoá
+      // đó, để dismiss hoàn toàn do mình tự quản lý qua `entries`.
+      modal={false}
       onOpenChange={(open) => {
-        // Root chạy UNCONTROLLED nếu không có `onOpenChange` — Radix tự đóng Content khi click ra
-        // ngoài/Escape/chọn item, nhưng KHÔNG có cách nào cho mình biết để dọn `entries` theo (2
-        // state độc lập, dễ lệch nhau). Khi Radix báo đóng (open === false) vì bất kỳ lý do gì,
-        // dọn `entries` về null ngay — nếu không, lần click-ra-ngoài kế tiếp thấy `entries` cũ
-        // còn "sống" trong React state trong khi Radix's internal open đã false, gây lệch pha
-        // khiến DismissableLayer's click-outside không đóng được nữa (bug thật, 2026-07-23: phải
-        // bấm đúng 1 menu item mới tắt được, click ra ngoài không ăn).
         if (!open) setEntries(null);
       }}
     >
@@ -274,7 +307,7 @@ export function EditContextMenu({ children, resolveItems }: EditContextMenuProps
       <ContextMenu.Portal>
         <ContextMenu.Content asChild className={MENU_CLS}>
           {entries ? (
-            <LiquidGlass variant="panel" className="p-1">
+            <LiquidGlass ref={contentRef} variant="panel" className="p-1">
               <div>
                 {entries.map((entry) =>
                   entry.separator ? (
