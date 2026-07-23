@@ -252,7 +252,18 @@ export function EditContextMenu({ children, resolveItems }: EditContextMenuProps
   }, [resolveItems, t]);
 
   return (
-    <ContextMenu.Root>
+    <ContextMenu.Root
+      onOpenChange={(open) => {
+        // Root chạy UNCONTROLLED nếu không có `onOpenChange` — Radix tự đóng Content khi click ra
+        // ngoài/Escape/chọn item, nhưng KHÔNG có cách nào cho mình biết để dọn `entries` theo (2
+        // state độc lập, dễ lệch nhau). Khi Radix báo đóng (open === false) vì bất kỳ lý do gì,
+        // dọn `entries` về null ngay — nếu không, lần click-ra-ngoài kế tiếp thấy `entries` cũ
+        // còn "sống" trong React state trong khi Radix's internal open đã false, gây lệch pha
+        // khiến DismissableLayer's click-outside không đóng được nữa (bug thật, 2026-07-23: phải
+        // bấm đúng 1 menu item mới tắt được, click ra ngoài không ăn).
+        if (!open) setEntries(null);
+      }}
+    >
       <ContextMenu.Trigger asChild onContextMenu={handleContextMenu}>
         <div className="contents">{children}</div>
       </ContextMenu.Trigger>

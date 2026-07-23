@@ -4857,45 +4857,50 @@ function ia(e, t, n) {
 }
 function aa({ children: e, resolveItems: t }) {
 	let { t: n } = H(), [r, i] = q(null), a = K(null);
-	return /* @__PURE__ */ X(zi, { children: [/* @__PURE__ */ Y(Bi, {
-		asChild: !0,
-		onContextMenu: W((e) => {
-			let r = ea(e.target);
-			if (!r) {
-				e.preventDefault(), i(null);
-				return;
-			}
-			a.current = e.target;
-			let o = ia(r.flags, e.target, n), s = t?.(o, {
-				target: r.target,
-				isEditable: r.flags.isEditable,
-				isImage: r.flags.isImage,
-				hasSelection: r.flags.hasSelection
-			}) ?? o;
-			if (s.length === 0) {
-				e.preventDefault(), i(null);
-				return;
-			}
-			i(s);
-		}, [t, n]),
-		children: /* @__PURE__ */ Y("div", {
-			className: "contents",
-			children: e
-		})
-	}), /* @__PURE__ */ Y(Vi, { children: /* @__PURE__ */ Y(Hi, {
-		asChild: !0,
-		className: $i,
-		children: r ? /* @__PURE__ */ Y(w, {
-			variant: "panel",
-			className: "p-1",
-			children: /* @__PURE__ */ Y("div", { children: r.map((e) => e.separator ? /* @__PURE__ */ Y(Wi, { className: Qi }, e.key) : /* @__PURE__ */ Y(Ui, {
-				className: Zi,
-				disabled: e.disabled,
-				onSelect: e.onSelect,
-				children: e.label
-			}, e.key)) })
-		}) : /* @__PURE__ */ Y("div", {})
-	}) })] });
+	return /* @__PURE__ */ X(zi, {
+		onOpenChange: (e) => {
+			e || i(null);
+		},
+		children: [/* @__PURE__ */ Y(Bi, {
+			asChild: !0,
+			onContextMenu: W((e) => {
+				let r = ea(e.target);
+				if (!r) {
+					e.preventDefault(), i(null);
+					return;
+				}
+				a.current = e.target;
+				let o = ia(r.flags, e.target, n), s = t?.(o, {
+					target: r.target,
+					isEditable: r.flags.isEditable,
+					isImage: r.flags.isImage,
+					hasSelection: r.flags.hasSelection
+				}) ?? o;
+				if (s.length === 0) {
+					e.preventDefault(), i(null);
+					return;
+				}
+				i(s);
+			}, [t, n]),
+			children: /* @__PURE__ */ Y("div", {
+				className: "contents",
+				children: e
+			})
+		}), /* @__PURE__ */ Y(Vi, { children: /* @__PURE__ */ Y(Hi, {
+			asChild: !0,
+			className: $i,
+			children: r ? /* @__PURE__ */ Y(w, {
+				variant: "panel",
+				className: "p-1",
+				children: /* @__PURE__ */ Y("div", { children: r.map((e) => e.separator ? /* @__PURE__ */ Y(Wi, { className: Qi }, e.key) : /* @__PURE__ */ Y(Ui, {
+					className: Zi,
+					disabled: e.disabled,
+					onSelect: e.onSelect,
+					children: e.label
+				}, e.key)) })
+			}) : /* @__PURE__ */ Y("div", {})
+		}) })]
+	});
 }
 //#endregion
 //#region src/components/desktop/AppIcon.tsx
