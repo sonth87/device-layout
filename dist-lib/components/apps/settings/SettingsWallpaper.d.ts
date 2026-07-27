@@ -1,1 +1,1 @@
-export declare function SettingsWallpaper(): import("react/jsx-runtime").JSX.Element;
+export declare function SettingsWallpaper(): import("react").JSX.Element;

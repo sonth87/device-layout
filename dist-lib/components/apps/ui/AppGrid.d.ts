@@ -17,5 +17,5 @@ interface AppGridProps {
  *     {photos.map(p => <PhotoCard key={p.id} photo={p} />)}
  *   </AppGrid>
  */
-export declare function AppGrid({ narrow, medium, wide, gap, children, className, }: AppGridProps): import("react/jsx-runtime").JSX.Element;
+export declare function AppGrid({ narrow, medium, wide, gap, children, className, }: AppGridProps): import("react").JSX.Element;
 export {};

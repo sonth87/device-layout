@@ -4,5 +4,5 @@ interface StartMenuProps {
     onClose: () => void;
     onOpenApp: (app: AppConfig) => void;
 }
-export declare function StartMenu({ open, onClose, onOpenApp }: StartMenuProps): import("react/jsx-runtime").JSX.Element;
+export declare function StartMenu({ open, onClose, onOpenApp }: StartMenuProps): import("react").JSX.Element;
 export {};

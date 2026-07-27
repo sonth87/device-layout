@@ -1,1 +1,1 @@
-export declare function SettingsUpdate(): import("react/jsx-runtime").JSX.Element;
+export declare function SettingsUpdate(): import("react").JSX.Element;

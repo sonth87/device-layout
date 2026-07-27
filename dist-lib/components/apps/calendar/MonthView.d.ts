@@ -8,5 +8,5 @@ interface MonthViewProps {
     onEventClick: (ev: CalEvent, el: HTMLElement) => void;
     isRedHoliday?: (d: Date) => boolean;
 }
-export declare function MonthView({ currentDate, selectedDate, setSelectedDate, setCurrentView, filteredEvents, onEventClick, isRedHoliday, }: MonthViewProps): import("react/jsx-runtime").JSX.Element;
+export declare function MonthView({ currentDate, selectedDate, setSelectedDate, setCurrentView, filteredEvents, onEventClick, isRedHoliday, }: MonthViewProps): import("react").JSX.Element;
 export {};

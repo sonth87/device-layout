@@ -1,1 +1,1 @@
-export declare function SettingsNotifications(): import("react/jsx-runtime").JSX.Element;
+export declare function SettingsNotifications(): import("react").JSX.Element;

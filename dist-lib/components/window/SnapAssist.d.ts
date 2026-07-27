@@ -1,1 +1,1 @@
-export declare function SnapAssist(): import("react/jsx-runtime").JSX.Element | null;
+export declare function SnapAssist(): import("react").JSX.Element | null;

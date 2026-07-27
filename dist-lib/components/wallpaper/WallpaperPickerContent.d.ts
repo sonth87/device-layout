@@ -10,4 +10,4 @@
  */
 export declare function WallpaperPickerContent({ variant }?: {
     variant?: 'vertical' | 'horizontal';
-}): import("react/jsx-runtime").JSX.Element;
+}): import("react").JSX.Element;

@@ -7,5 +7,5 @@ interface MenuDropdownProps {
     activeId: string | null;
     setActiveId: (id: string | null) => void;
 }
-export declare function MenuDropdown({ label, items, appId, windowId, activeId, setActiveId, }: MenuDropdownProps): import("react/jsx-runtime").JSX.Element;
+export declare function MenuDropdown({ label, items, appId, windowId, activeId, setActiveId, }: MenuDropdownProps): import("react").JSX.Element;
 export {};

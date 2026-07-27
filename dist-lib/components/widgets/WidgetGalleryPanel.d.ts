@@ -1,1 +1,1 @@
-export declare function WidgetGalleryPanel(): import("react/jsx-runtime").JSX.Element;
+export declare function WidgetGalleryPanel(): import("react").JSX.Element;

@@ -4,5 +4,5 @@ interface WallpaperDetailPanelProps {
     cycleGroup: 'builtin' | 'custom';
     variant?: 'vertical' | 'horizontal';
 }
-export declare function WallpaperDetailPanel({ wallpaper, cycleGroup, variant }: WallpaperDetailPanelProps): import("react/jsx-runtime").JSX.Element;
+export declare function WallpaperDetailPanel({ wallpaper, cycleGroup, variant }: WallpaperDetailPanelProps): import("react").JSX.Element;
 export {};

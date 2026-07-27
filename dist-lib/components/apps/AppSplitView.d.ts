@@ -10,5 +10,5 @@ interface AppSplitViewProps {
         height: number;
     }) => ReactNode;
 }
-export declare function AppSplitView({ sidebar, sidebarWidthClass, sidebarClassName, contentClassName, className, children, }: AppSplitViewProps): import("react/jsx-runtime").JSX.Element;
+export declare function AppSplitView({ sidebar, sidebarWidthClass, sidebarClassName, contentClassName, className, children, }: AppSplitViewProps): import("react").JSX.Element;
 export {};

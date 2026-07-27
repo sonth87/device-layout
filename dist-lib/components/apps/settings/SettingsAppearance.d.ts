@@ -1,1 +1,1 @@
-export declare function SettingsAppearance(): import("react/jsx-runtime").JSX.Element;
+export declare function SettingsAppearance(): import("react").JSX.Element;

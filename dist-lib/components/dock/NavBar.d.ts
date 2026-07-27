@@ -5,5 +5,5 @@ interface NavBarProps {
     navBarHeight?: number;
 }
 /** Bottom dock — used by iPhone OS and Android themes */
-export declare function NavBar({ onOpenApp, navBarHeight }: NavBarProps): import("react/jsx-runtime").JSX.Element;
+export declare function NavBar({ onOpenApp, navBarHeight }: NavBarProps): import("react").JSX.Element;
 export {};

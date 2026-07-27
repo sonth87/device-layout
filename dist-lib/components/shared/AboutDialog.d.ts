@@ -10,4 +10,4 @@ export declare function AboutDialog({ appConfig, onClose, }: {
  * Any app can trigger it by dispatching:
  *   new CustomEvent('app:menu:action', { detail: { appId, action: 'about' } })
  */
-export declare function GlobalAboutDialog(): import("react/jsx-runtime").JSX.Element | null;
+export declare function GlobalAboutDialog(): import("react").JSX.Element | null;

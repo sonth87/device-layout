@@ -13,5 +13,5 @@ interface AppListGroupProps {
  *     <AppListRow label="Region" value="Vietnam" onPress={...} />
  *   </AppListGroup>
  */
-export declare function AppListGroup({ children, className }: AppListGroupProps): import("react/jsx-runtime").JSX.Element;
+export declare function AppListGroup({ children, className }: AppListGroupProps): import("react").JSX.Element;
 export {};

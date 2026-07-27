@@ -5,5 +5,5 @@ interface AppNameDropdownProps {
     activeId: string | null;
     setActiveId: (id: string | null) => void;
 }
-export declare function AppNameDropdown({ appConfig, appId, activeId, setActiveId, }: AppNameDropdownProps): import("react/jsx-runtime").JSX.Element | null;
+export declare function AppNameDropdown({ appConfig, appId, activeId, setActiveId, }: AppNameDropdownProps): import("react").JSX.Element | null;
 export {};

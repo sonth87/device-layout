@@ -50,4 +50,4 @@ export interface ThemeProviderProps {
  * Only the chrome overlays (MacOSChrome, WindowsChrome, etc.) swap.
  * This prevents useWindowUrlSync from re-running and creating duplicate windows.
  */
-export declare function ThemeProvider({ apps, defaultApps: defaultAppsProp, builtInApps, isSimpleMode, colorScheme: colorSchemeProp, osTheme: osThemeProp, fallbackMenuBarAppId, resolveEditContextMenuItems, }?: ThemeProviderProps): import("react/jsx-runtime").JSX.Element;
+export declare function ThemeProvider({ apps, defaultApps: defaultAppsProp, builtInApps, isSimpleMode, colorScheme: colorSchemeProp, osTheme: osThemeProp, fallbackMenuBarAppId, resolveEditContextMenuItems, }?: ThemeProviderProps): import("react").JSX.Element;

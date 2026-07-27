@@ -41,8 +41,8 @@ export interface MenuBarMenu {
 export interface AppConfig {
   id: string;
   name: string;
-  /** "lucide:IconName" or "/path/to/icon.svg" */
-  icon: string;
+  /** "lucide:IconName", "/path/to/icon.svg", or a React component */
+  icon: string | ComponentType<any>;
   /** Gradient color pair [from, to] for icon background */
   iconColor?: [string, string];
   /** Text/icon color inside icon background (default white) */

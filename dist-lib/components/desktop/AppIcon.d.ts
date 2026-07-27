@@ -11,5 +11,5 @@ interface AppIconProps {
     onSelect?: (appId: string, e: React.PointerEvent) => void;
     onUpAfterClick?: (appId: string) => void;
 }
-export declare function AppIcon({ appConfig, x, y, onOpen, onDrop, onDragStart, onDrag, isSelected, onSelect, onUpAfterClick, }: AppIconProps): import("react/jsx-runtime").JSX.Element;
+export declare function AppIcon({ appConfig, x, y, onOpen, onDrop, onDragStart, onDrag, isSelected, onSelect, onUpAfterClick, }: AppIconProps): import("react").JSX.Element;
 export {};

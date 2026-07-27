@@ -1,1 +1,1 @@
-export declare function Photos(): import("react/jsx-runtime").JSX.Element;
+export declare function Photos(): import("react").JSX.Element;

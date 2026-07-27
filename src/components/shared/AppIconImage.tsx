@@ -37,6 +37,33 @@ export function AppIconImage({ appConfig, size = 56, className = '', fill = fals
   const textColor = appConfig.iconTextColor ?? '#ffffff';
   const iconSize = Math.round(size * 0.5);
 
+  // Custom React Component icon with gradient background
+  if (typeof appConfig.icon !== 'string') {
+    const CustomIcon = appConfig.icon;
+    return (
+      <div
+        className={`flex items-center justify-center shrink-0 ${className}`}
+        style={{
+          width: fill ? '100%' : size,
+          height: fill ? '100%' : size,
+          background: `linear-gradient(145deg, ${fromColor}, ${toColor})`,
+          borderRadius: 'var(--radius-icon)',
+          boxShadow: `0 ${Math.round(size * 0.02)}px ${Math.round(size * 0.08)}px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)`,
+          overflow: 'hidden',
+        }}
+      >
+        <CustomIcon
+          style={{
+            width: fill ? '50%' : iconSize,
+            height: fill ? '50%' : iconSize,
+            color: textColor,
+          }}
+          strokeWidth={1.7}
+        />
+      </div>
+    );
+  }
+
   // Lucide icon with gradient background
   if (appConfig.icon.startsWith('lucide:')) {
     const iconName = appConfig.icon.replace('lucide:', '');
@@ -51,6 +78,7 @@ export function AppIconImage({ appConfig, size = 56, className = '', fill = fals
           background: `linear-gradient(145deg, ${fromColor}, ${toColor})`,
           borderRadius: 'var(--radius-icon)',
           boxShadow: `0 ${Math.round(size * 0.02)}px ${Math.round(size * 0.08)}px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)`,
+          overflow: 'hidden',
         }}
       >
         {LucideComp ? (
@@ -81,7 +109,12 @@ export function AppIconImage({ appConfig, size = 56, className = '', fill = fals
         width={size}
         height={size}
         className={`object-contain ${className}`}
-        style={{ width: fill ? '100%' : size, height: fill ? '100%' : size }}
+        style={{
+          width: fill ? '100%' : size,
+          height: fill ? '100%' : size,
+          borderRadius: 'var(--radius-icon)',
+          overflow: 'hidden',
+        }}
         onError={() => setImgFailed(true)}
       />
     );
@@ -97,6 +130,7 @@ export function AppIconImage({ appConfig, size = 56, className = '', fill = fals
         background: `linear-gradient(145deg, ${fromColor}, ${toColor})`,
         borderRadius: 'var(--radius-icon)',
         boxShadow: `0 ${Math.round(size * 0.02)}px ${Math.round(size * 0.08)}px rgba(0,0,0,0.35)`,
+        overflow: 'hidden',
       }}
     >
       <span style={{ color: textColor, fontSize: size * 0.38, fontWeight: 700 }}>

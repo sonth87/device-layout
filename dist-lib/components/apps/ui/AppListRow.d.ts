@@ -34,5 +34,5 @@ interface AppListRowProps {
  * Example — selected row (checkmark):
  *   <AppListRow label="macOS 26" active={theme === 'macos'} onPress={() => setTheme('macos')} />
  */
-export declare function AppListRow({ label, subtitle, icon, value, control, onPress, active, disabled, className, }: AppListRowProps): import("react/jsx-runtime").JSX.Element;
+export declare function AppListRow({ label, subtitle, icon, value, control, onPress, active, disabled, className, }: AppListRowProps): import("react").JSX.Element;
 export {};
