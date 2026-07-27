@@ -177,8 +177,24 @@ export function AppIcon({
   const isTouchRef = useRef(false);
 
   // Store latest props to avoid stale closures in pointer events
-  const latestProps = useRef({ x, y, onDrop, onOpen, onDragStart, onDrag, onUpAfterClick });
-  latestProps.current = { x, y, onDrop, onOpen, onDragStart, onDrag, onUpAfterClick };
+  const latestProps = useRef({
+    x,
+    y,
+    onDrop,
+    onOpen,
+    onDragStart,
+    onDrag,
+    onUpAfterClick,
+  });
+  latestProps.current = {
+    x,
+    y,
+    onDrop,
+    onOpen,
+    onDragStart,
+    onDrag,
+    onUpAfterClick,
+  };
 
   // Update visual pos when store pos changes (unless mid-drag)
   const pos = dragging ? dragPos : { x, y };
@@ -327,7 +343,8 @@ export function AppIcon({
             style={{
               left: pos.x,
               top: pos.y,
-              width: labelPosition === 'bottom' ? iconSize + 56 : iconSize + 104,
+              width:
+                labelPosition === "bottom" ? iconSize + 56 : iconSize + 104,
               zIndex: dragging ? 1000 : 1,
               transition: dragging
                 ? "none"
@@ -337,11 +354,11 @@ export function AppIcon({
             <button
               className={cn(
                 "flex w-full items-center select-none rounded-lg",
-                labelPosition === 'bottom' ? "flex-col text-center gap-2 p-2" : "flex-row text-left gap-3 p-2",
+                labelPosition === "bottom"
+                  ? "flex-col text-center gap-2 p-2"
+                  : "flex-row text-left gap-3 p-2",
                 "focus:outline-none transition-transform duration-75",
-                isSelected
-                  ? "bg-white/8 dark:bg-white/5"
-                  : "hover:bg-white/15",
+                isSelected ? "bg-white/8 dark:bg-white/5" : "hover:bg-white/15",
                 pressed && !dragging && "scale-90 opacity-80",
                 dragging && "scale-105 opacity-90 drop-shadow-2xl",
               )}
@@ -363,21 +380,28 @@ export function AppIcon({
               <span
                 className={cn(
                   "block w-full text-white font-medium leading-tight px-0 py-0.5 rounded-[4px] border border-transparent",
-                  labelPosition === 'bottom' ? "text-center mx-auto" : "text-left"
+                  labelPosition === "bottom"
+                    ? "text-center mx-auto"
+                    : "text-left",
                 )}
                 style={{
                   fontSize: `${textSize}px`,
-                  maxWidth: labelPosition === 'bottom' ? `${iconSize + 48}px` : '100px',
-                  display: '-webkit-box',
+                  maxWidth:
+                    labelPosition === "bottom" ? `${iconSize + 48}px` : "100px",
+                  display: "-webkit-box",
                   WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                  wordBreak: 'break-word',
-                  backgroundColor: isSelected ? 'var(--accent-color)' : undefined,
-                  borderColor: isSelected ? 'rgba(255,255,255,0.1)' : 'transparent',
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  wordBreak: "break-word",
+                  backgroundColor: isSelected
+                    ? "var(--accent-color)"
+                    : undefined,
+                  borderColor: isSelected
+                    ? "rgba(255,255,255,0.1)"
+                    : "transparent",
                   textShadow: isSelected
-                    ? 'none'
-                    : "0 1px 0px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6)",
+                    ? "none"
+                    : "0 2px 0px rgba(0,0,0,0.3), 0 0 5px rgba(0,0,0,0.5)",
                 }}
               >
                 {displayName}
@@ -388,7 +412,10 @@ export function AppIcon({
 
         {appConfig.contextMenu && appConfig.contextMenu.length > 0 && (
           <ContextMenu.Portal>
-            <ContextMenu.Content asChild className="min-w-48 outline-none z-[99999]">
+            <ContextMenu.Content
+              asChild
+              className="min-w-48 outline-none z-[99999]"
+            >
               <LiquidGlass variant="panel" className="p-1 text-xs">
                 <div>
                   <ContextMenuItems
