@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { C as g, D as _, E as v, O as y, S as b, T as x, _ as S, a as C, b as w, c as T, d as E, g as D, h as O, i as k, l as A, o as j, p as M, r as ee, s as te, t as N, u as ne, v as P, w as F, x as re, y as ie } from "./MobileAppViewer-DsHz8IN2.js";
+import { C as g, D as _, E as v, O as y, S as b, T as x, _ as S, a as C, b as w, c as T, d as E, g as D, h as O, i as k, l as A, o as j, p as M, r as ee, s as te, t as N, u as ne, v as P, w as F, x as re, y as ie } from "./MobileAppViewer-BzsZonOr.js";
 import { c as ae, d as oe, l as se, s as ce, t as I, u as le } from "./store-XIGE1L5-.js";
 import { t as L } from "./utils-B6YmNDS2.js";
 import { t as R } from "./createLucideIcon--WjuKCts.js";
-import { a as ue, c as de, d as fe, f as pe, g as me, h as he, i as ge, l as _e, m as ve, n as ye, o as be, p as z, r as xe, s as Se, t as Ce, u as we } from "./update-actions-CvBFDs6t.js";
+import { a as ue, c as de, d as fe, f as pe, g as me, h as he, i as ge, l as _e, m as ve, n as ye, o as be, p as z, r as xe, s as Se, t as Ce, u as we } from "./update-actions-BkJ6NZ9j.js";
 import { t as Te } from "./check-DoT5IS9-.js";
 import { t as Ee } from "./chevron-right-BcSxNxws.js";
 import { t as De } from "./grid-3x3-CZiMuCC6.js";
@@ -1889,74 +1889,114 @@ function $n({ onOpenApp: e }) {
 }
 //#endregion
 //#region src/components/shared/FloatingWindow.tsx
-function er({ onClose: e, children: t, title: n, width: r = 288, blocking: i = !0, contentClassName: a }) {
-	let [o, s] = K({
+function er({ onClose: e, children: t, title: n, width: r = 288, height: i, blocking: a = !0, resizable: o = !1, minWidth: s = 260, minHeight: c = 160, contentClassName: l }) {
+	let [u, d] = K({
 		x: 0,
 		y: 0
-	}), [c, l] = K(!1), u = G(null), d = U((e) => {
-		e.target.closest("button") || (e.preventDefault(), e.currentTarget.setPointerCapture(e.pointerId), u.current = {
+	}), [f, p] = K({
+		width: r,
+		height: i
+	}), [m, h] = K(!1), g = G(null), _ = G(null), v = U((e) => {
+		e.target.closest("button") || (e.preventDefault(), e.currentTarget.setPointerCapture(e.pointerId), g.current = {
 			mx: e.clientX,
 			my: e.clientY,
-			ox: o.x,
-			oy: o.y
+			ox: u.x,
+			oy: u.y
 		});
-	}, [o]), f = U((e) => {
-		u.current && s({
-			x: u.current.ox + (e.clientX - u.current.mx),
-			y: u.current.oy + (e.clientY - u.current.my)
+	}, [u]), y = U((e) => {
+		g.current && d({
+			x: g.current.ox + (e.clientX - g.current.mx),
+			y: g.current.oy + (e.clientY - g.current.my)
 		});
-	}, []), p = U(() => {
-		u.current = null;
+	}, []), b = U(() => {
+		g.current = null;
+	}, []), x = U((e) => {
+		e.preventDefault(), e.stopPropagation(), e.currentTarget.setPointerCapture(e.pointerId), _.current = {
+			mx: e.clientX,
+			my: e.clientY,
+			w: f.width,
+			h: f.height ?? c
+		};
+	}, [f, c]), S = U((e) => {
+		_.current && p({
+			width: Math.max(s, _.current.w + (e.clientX - _.current.mx)),
+			height: Math.max(c, _.current.h + (e.clientY - _.current.my))
+		});
+	}, [s, c]), C = U(() => {
+		_.current = null;
 	}, []);
 	return typeof document > "u" ? null : rt(/* @__PURE__ */ Y("div", {
 		className: "fixed inset-0 flex items-center justify-center pointer-events-none",
 		style: { zIndex: 99999 },
-		children: [i && /* @__PURE__ */ J("div", { className: "absolute inset-0 pointer-events-auto" }), /* @__PURE__ */ Y("div", {
+		children: [a && /* @__PURE__ */ J("div", { className: "absolute inset-0 pointer-events-auto" }), /* @__PURE__ */ Y("div", {
 			"data-windowchrome": "true",
-			className: "relative flex flex-col items-center bg-neutral-100/97 dark:bg-[#1c1c1e]/97 backdrop-blur-2xl rounded-(--radius-window) shadow-2xl border border-black/10 dark:border-white/8 overflow-hidden pointer-events-auto",
+			className: "relative flex flex-col bg-neutral-100/97 dark:bg-[#1c1c1e]/97 backdrop-blur-2xl rounded-(--radius-window) shadow-2xl border border-black/10 dark:border-white/8 overflow-hidden pointer-events-auto",
 			style: {
-				width: r,
-				transform: `translate(${o.x}px, ${o.y}px)`
+				width: f.width,
+				height: f.height,
+				transform: `translate(${u.x}px, ${u.y}px)`
 			},
-			onPointerMove: f,
-			onPointerUp: p,
-			onPointerCancel: p,
-			children: [/* @__PURE__ */ Y("div", {
-				className: "w-full flex items-center gap-2 px-4 pt-3.5 pb-2 border-b border-black/8 dark:border-white/8 cursor-move select-none bg-neutral-200/60 dark:bg-white/5",
-				onPointerDown: d,
-				onMouseEnter: () => l(!0),
-				onMouseLeave: () => l(!1),
-				children: [/* @__PURE__ */ Y("div", {
-					className: "flex items-center gap-2",
-					onPointerDown: (e) => e.stopPropagation(),
-					children: [
-						/* @__PURE__ */ J("button", {
-							onClick: e,
-							className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100",
-							style: { backgroundColor: "#ff5f57" },
-							title: "Close",
-							children: c && /* @__PURE__ */ J(B, {
-								className: "w-2 h-2 text-red-900/80",
-								strokeWidth: 3
+			onPointerMove: y,
+			onPointerUp: b,
+			onPointerCancel: b,
+			children: [
+				/* @__PURE__ */ Y("div", {
+					className: "w-full flex shrink-0 items-center gap-2 px-4 pt-3.5 pb-2 border-b border-black/8 dark:border-white/8 cursor-move select-none bg-neutral-200/60 dark:bg-white/5",
+					onPointerDown: v,
+					onMouseEnter: () => h(!0),
+					onMouseLeave: () => h(!1),
+					children: [/* @__PURE__ */ Y("div", {
+						className: "flex items-center gap-2",
+						onPointerDown: (e) => e.stopPropagation(),
+						children: [
+							/* @__PURE__ */ J("button", {
+								onClick: e,
+								className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100",
+								style: { backgroundColor: "#ff5f57" },
+								title: "Close",
+								children: m && /* @__PURE__ */ J(B, {
+									className: "w-2 h-2 text-red-900/80",
+									strokeWidth: 3
+								})
+							}),
+							/* @__PURE__ */ J("div", {
+								className: "w-3.5 h-3.5 rounded-full",
+								style: { backgroundColor: "#d1d1d1" }
+							}),
+							/* @__PURE__ */ J("div", {
+								className: "w-3.5 h-3.5 rounded-full",
+								style: { backgroundColor: "#d1d1d1" }
 							})
-						}),
-						/* @__PURE__ */ J("div", {
-							className: "w-3.5 h-3.5 rounded-full",
-							style: { backgroundColor: "#d1d1d1" }
-						}),
-						/* @__PURE__ */ J("div", {
-							className: "w-3.5 h-3.5 rounded-full",
-							style: { backgroundColor: "#d1d1d1" }
+						]
+					}), n && /* @__PURE__ */ J("span", {
+						className: "flex-1 text-center text-[12px] font-medium text-black/60 dark:text-white/60 select-none",
+						children: n
+					})]
+				}),
+				/* @__PURE__ */ J("div", {
+					className: l ?? "flex flex-col items-center px-8 pt-6 pb-7 gap-3 select-none",
+					children: t
+				}),
+				o && /* @__PURE__ */ J("div", {
+					onPointerDown: x,
+					onPointerMove: S,
+					onPointerUp: C,
+					onPointerCancel: C,
+					className: "absolute bottom-0 right-0 h-4 w-4 cursor-nwse-resize",
+					style: { touchAction: "none" },
+					title: "Kéo để đổi kích thước",
+					children: /* @__PURE__ */ J("svg", {
+						viewBox: "0 0 16 16",
+						className: "absolute bottom-0.5 right-0.5 h-2.5 w-2.5 opacity-40",
+						children: /* @__PURE__ */ J("path", {
+							d: "M14 2L2 14M14 8L8 14M14 14L14 14",
+							stroke: "currentColor",
+							strokeWidth: "1.5",
+							strokeLinecap: "round"
 						})
-					]
-				}), n && /* @__PURE__ */ J("span", {
-					className: "flex-1 text-center text-[12px] font-medium text-black/60 dark:text-white/60 select-none",
-					children: n
-				})]
-			}), /* @__PURE__ */ J("div", {
-				className: a ?? "flex flex-col items-center px-8 pt-6 pb-7 gap-3 select-none",
-				children: t
-			})]
+					})
+				})
+			]
 		})]
 	}), document.body);
 }

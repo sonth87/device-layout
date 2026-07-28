@@ -38,7 +38,15 @@ export function MenuBarExtraButton({
     <Popover.Root modal={false}>
       <Popover.Trigger asChild>
         <button
-          className={cn(menuBarButtonClass, 'relative px-2', iconClass)}
+          className={cn(
+            menuBarButtonClass,
+            'relative px-2',
+            iconClass,
+            // Radix tự set data-state="open"/"closed" trên trigger — không cần React state
+            // riêng để biết popover đang mở. Cùng class 'nút đang chọn' mà MenuDropdown.tsx
+            // dùng, để icon này trông nhất quán với các menu khác khi đang mở.
+            'data-[state=open]:bg-accent-active data-[state=open]:text-white',
+          )}
           title={item.label}
           aria-label={item.label}
         >

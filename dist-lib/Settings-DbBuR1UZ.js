@@ -1,15 +1,15 @@
-import { o as e, y as t } from "./MobileAppViewer-DsHz8IN2.js";
+import { o as e, y as t } from "./MobileAppViewer-BzsZonOr.js";
 import { t as n } from "./store-XIGE1L5-.js";
 import { t as r } from "./utils-B6YmNDS2.js";
 import { t as i } from "./createLucideIcon--WjuKCts.js";
-import { d as a, f as o, g as s, n as c, p as l, r as u } from "./update-actions-CvBFDs6t.js";
+import { d as a, f as o, g as s, n as c, p as l, r as u } from "./update-actions-BkJ6NZ9j.js";
 import { t as d } from "./settings-B5duO7Zc.js";
 import { n as f } from "./music-D8WdwHqS.js";
 import { t as p } from "./refresh-cw-BNk9TuR7.js";
 import { t as m } from "./useTranslation-BJqtZQcf.js";
 import { n as h, t as g } from "./holidays-service-CqYEsHC1.js";
 import { t as _ } from "./useAppLayout-DfaXs-1a.js";
-import { n as v, r as y, t as b } from "./MobileSplitView-CwiRZdib.js";
+import { n as v, r as y, t as b } from "./MobileSplitView-CjtO4G6s.js";
 import { a as x, i as S, n as C, r as w, t as T } from "./ui-D0242z7L.js";
 import { Suspense as E, lazy as D, useCallback as O, useEffect as k, useRef as A, useState as j } from "react";
 import { Fragment as M, jsx as N, jsxs as P } from "react/jsx-runtime";
