@@ -72,7 +72,13 @@ export function MenuBarExtraButton({
         <Popover.Content
           align="end"
           sideOffset={6}
-          className="z-[9999] outline-none"
+          // z-index PHẢI lớn hơn zIndex 99999 của FloatingWindow (giá trị số quyết định thứ
+          // tự vẽ, không phải thứ tự DOM, khi cả 2 khác giá trị) — thanh menu bar trên macOS
+          // thật LUÔN nổi trên mọi cửa sổ app, không riêng gì lúc mới mở. Trước đó z-[9999]
+          // (thấp hơn 99999) khiến popover này luôn vẽ DƯỚI bất kỳ FloatingWindow nào đang mở
+          // cùng lúc (vd EngineManager) dù đóng/mở lại popover theo cách nào — bug thật phát
+          // hiện qua ảnh chụp: cửa sổ "Quản lý engine" đè lên nửa popover trạng thái TTS.
+          className="z-[100000] outline-none"
           onInteractOutside={(e) => {
             // Không đóng khi bấm vào phần tử con của chính popover.
             const target = e.target as Element;

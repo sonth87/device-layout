@@ -6629,7 +6629,7 @@ function ep({ item: e, forceDark: t = !1 }) {
 		}), /* @__PURE__ */ N(Mf, { children: /* @__PURE__ */ N(Nf, {
 			align: "end",
 			sideOffset: 6,
-			className: "z-[9999] outline-none",
+			className: "z-[100000] outline-none",
 			onInteractOutside: (e) => {
 				e.target.closest("[data-radix-popper-content-wrapper]") && e.preventDefault();
 			},
@@ -7141,7 +7141,7 @@ var mp = class extends ue {
 }, hp = {
 	Finder: D(() => import("./Finder-YHoPk4Np.js").then((e) => ({ default: e.Finder }))),
 	Terminal: D(() => import("./Terminal-DFQigwE_.js").then((e) => ({ default: e.Terminal }))),
-	Settings: D(() => import("./Settings-8oOHm6yG.js").then((e) => ({ default: e.Settings }))),
+	Settings: D(() => import("./Settings-DsKG--dP.js").then((e) => ({ default: e.Settings }))),
 	Browser: D(() => import("./Browser-DhrkWGkV.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: D(() => import("./TextEditor-C-XCXZQT.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: D(() => import("./Clock-Bbq-jVL7.js").then((e) => ({ default: e.Clock }))),
@@ -7150,7 +7150,7 @@ var mp = class extends ue {
 	Photos: D(() => import("./Photos-2XpXzJNR.js").then((e) => ({ default: e.Photos }))),
 	Music: D(() => import("./Music-U7dMGwuL.js").then((e) => ({ default: e.Music }))),
 	Calendar: D(() => import("./Calendar-D7do4uqA.js").then((e) => ({ default: e.Calendar }))),
-	Messages: D(() => import("./Messages-Cl51R92Z.js").then((e) => ({ default: e.Messages }))),
+	Messages: D(() => import("./Messages-0_Gt__f9.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: D(() => import("./IframeApp-gc89kCC5.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: D(() => import("./MdxApp-_FrXuKdQ.js").then((e) => ({ default: e.MdxApp })))
 };
