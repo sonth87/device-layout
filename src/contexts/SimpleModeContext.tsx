@@ -18,6 +18,7 @@ const SimpleModeContext = createContext<NormalizedSimpleModeFeatures>({
     appleMenu: true,
     appNameMenu: true,
     appSwitcher: true,
+    extras: true,
   },
   widgets: {
     showWidgets: true,

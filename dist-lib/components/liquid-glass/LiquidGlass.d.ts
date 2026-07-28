@@ -9,4 +9,4 @@ export interface LiquidGlassProps extends React.HTMLAttributes<HTMLDivElement> {
     borderRadius?: string | number;
     ref?: React.Ref<HTMLDivElement>;
 }
-export declare function LiquidGlass({ children, className, variant, forceGlass, borderRadius, style, ref, ...props }: LiquidGlassProps): React.JSX.Element;
+export declare function LiquidGlass({ children, className, variant, forceGlass, borderRadius, style, ref, ...props }: LiquidGlassProps): import("react/jsx-runtime").JSX.Element;

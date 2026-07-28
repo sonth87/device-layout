@@ -1,1 +1,1 @@
-export declare function Clock(): import("react").JSX.Element;
+export declare function Clock(): import("react/jsx-runtime").JSX.Element;

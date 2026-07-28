@@ -12,5 +12,5 @@ interface AppToggleProps {
  *     control={<AppToggle checked={enabled} onChange={setEnabled} />}
  *   />
  */
-export declare function AppToggle({ checked, onChange, disabled }: AppToggleProps): import("react").JSX.Element;
+export declare function AppToggle({ checked, onChange, disabled }: AppToggleProps): import("react/jsx-runtime").JSX.Element;
 export {};

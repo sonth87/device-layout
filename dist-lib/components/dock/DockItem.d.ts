@@ -11,5 +11,5 @@ interface DockItemProps {
     /** Icon size when magnified (cursor directly over it) — baseSize * (1 + dockMagnification). Equals baseSize when magnification is "Off". */
     maxSize: number;
 }
-export declare function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen, baseSize, maxSize }: DockItemProps): import("react").JSX.Element;
+export declare function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen, baseSize, maxSize }: DockItemProps): import("react/jsx-runtime").JSX.Element;
 export {};

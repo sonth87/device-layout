@@ -3,5 +3,5 @@ import { NormalizedSimpleModeFeatures } from '../types/simple-mode';
 export declare function SimpleModeProvider({ features, children, }: {
     features: NormalizedSimpleModeFeatures;
     children: React.ReactNode;
-}): React.JSX.Element;
+}): import("react/jsx-runtime").JSX.Element;
 export declare function useSimpleModeFeatures(): NormalizedSimpleModeFeatures;

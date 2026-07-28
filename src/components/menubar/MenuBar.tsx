@@ -5,6 +5,8 @@ import { Wifi, Battery, Search } from "lucide-react";
 import { useStore } from "@/store";
 import { MenuBarClock } from "./MenuBarClock";
 import { ControlCenter } from "./ControlCenter";
+import { MenuBarExtraButton } from "./MenuBarExtraButton";
+import { useMenuBarExtras } from "@/lib/menu-bar-extras";
 import { LiquidGlass } from "@/components/liquid-glass/LiquidGlass";
 import { DEFAULT_MENU_BAR_MENUS } from "@/config/apps.config";
 import { cn } from "@/lib/utils";
@@ -48,12 +50,15 @@ export function MenuBar({
 
   const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null);
 
+  const menuBarExtras = useMenuBarExtras();
+  const showExtras = features.menuBar.extras && menuBarExtras.length > 0;
+
   if (!features.menuBar.enabled) {
     return null;
   }
 
   const hasRightIcons =
-    features.menuBar.spotlight || features.menuBar.controlCenter || features.menuBar.clock;
+    features.menuBar.spotlight || features.menuBar.controlCenter || features.menuBar.clock || showExtras;
 
   return (
     <MenuBarThemeCtx.Provider value={effectiveTheme}>
@@ -113,6 +118,13 @@ export function MenuBar({
                   <Search className="w-3.5 h-3.5" />
                 </button>
               )}
+
+              {/* Icon do host đăng ký (vd trạng thái service của app nhúng) — đặt trước nhóm
+                  icon hệ thống, giống vị trí icon app nền trên menu bar macOS thật. */}
+              {showExtras &&
+                menuBarExtras.map((item) => (
+                  <MenuBarExtraButton key={item.id} item={item} forceDark={forceDark} />
+                ))}
 
               {features.menuBar.controlCenter && (
                 <>

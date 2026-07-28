@@ -5,5 +5,5 @@ interface DayViewProps {
     filteredEvents: CalEvent[];
     onEventClick: (ev: CalEvent, el: HTMLElement) => void;
 }
-export declare function DayView({ selectedDate, setSelectedDate, filteredEvents, onEventClick }: DayViewProps): import("react").JSX.Element;
+export declare function DayView({ selectedDate, setSelectedDate, filteredEvents, onEventClick }: DayViewProps): import("react/jsx-runtime").JSX.Element;
 export {};

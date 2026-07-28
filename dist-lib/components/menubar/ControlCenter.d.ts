@@ -1,3 +1,3 @@
 export declare function ControlCenter({ forceDark }?: {
     forceDark?: boolean;
-}): import("react").JSX.Element;
+}): import("react/jsx-runtime").JSX.Element;

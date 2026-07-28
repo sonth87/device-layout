@@ -3,6 +3,6 @@ export declare function MenuBar({ onSpotlight, isSimpleMode, forceDark, fallback
     isSimpleMode?: boolean;
     forceDark?: boolean;
     fallbackMenuBarAppId?: string | null;
-}): import("react").JSX.Element | null;
+}): import("react/jsx-runtime").JSX.Element | null;
 export { MenuDropdown } from './MenuDropdown';
 export { getMenuLabel, getMenuItemLabel } from './MenuItems';

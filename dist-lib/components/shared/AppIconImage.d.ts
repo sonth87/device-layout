@@ -10,5 +10,5 @@ interface AppIconImageProps {
  * Border radius is driven by the `--radius-icon` CSS variable so all themes
  * stay consistent without any JS calculation.
  */
-export declare function AppIconImage({ appConfig, size, className, fill }: AppIconImageProps): import("react").JSX.Element;
+export declare function AppIconImage({ appConfig, size, className, fill }: AppIconImageProps): import("react/jsx-runtime").JSX.Element;
 export {};

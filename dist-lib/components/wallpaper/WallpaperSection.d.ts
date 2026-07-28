@@ -15,5 +15,5 @@ interface WallpaperSectionProps {
  * toggle that unrolls straight down into a wrapping grid in place — no
  * separate full-screen view, matches a single-column settings panel.
  */
-export declare function WallpaperSection({ title, items, selectedId, cyclingGroup, onSelect, leadingActions, shape, }: WallpaperSectionProps): import("react").JSX.Element | null;
+export declare function WallpaperSection({ title, items, selectedId, cyclingGroup, onSelect, leadingActions, shape, }: WallpaperSectionProps): import("react/jsx-runtime").JSX.Element | null;
 export {};

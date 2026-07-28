@@ -22,6 +22,10 @@ export interface SimpleModeFeatures {
     appleMenu?: boolean;
     appNameMenu?: boolean;
     appSwitcher?: boolean;
+    /** Icon do host đăng ký qua <DeviceLayout menuBarExtras>. Default: true (giống
+     * appNameMenu — mang thông tin trạng thái thực của host, không phải trang trí OS
+     * thuần tuý nên vẫn hiện dù ở simple mode). */
+    extras?: boolean;
   };
 
   /** --- 3. Widgets --- */
@@ -72,6 +76,7 @@ export interface NormalizedSimpleModeFeatures {
     appleMenu: boolean;
     appNameMenu: boolean;
     appSwitcher: boolean;
+    extras: boolean;
   };
   widgets: {
     showWidgets: boolean;

@@ -9,5 +9,5 @@ interface AppSectionProps {
  * A labelled content section — title + optional description + children.
  * Used as the top-level grouping inside any settings/detail panel.
  */
-export declare function AppSection({ title, description, children, className }: AppSectionProps): import("react").JSX.Element;
+export declare function AppSection({ title, description, children, className }: AppSectionProps): import("react/jsx-runtime").JSX.Element;
 export {};

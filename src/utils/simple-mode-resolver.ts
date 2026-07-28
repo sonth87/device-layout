@@ -29,6 +29,7 @@ export function resolveSimpleModeFeatures(
         appleMenu: true,
         appNameMenu: true,
         appSwitcher: true,
+        extras: true,
       },
       widgets: {
         showWidgets: true,
@@ -58,6 +59,7 @@ export function resolveSimpleModeFeatures(
         appleMenu: false,
         appNameMenu: true,
         appSwitcher: false,
+        extras: true,
       },
       widgets: {
         showWidgets: false,
@@ -82,6 +84,7 @@ export function resolveSimpleModeFeatures(
     appleMenu: false,
     appNameMenu: true,
     appSwitcher: false,
+    extras: true,
   };
 
   if (typeof custom.menuBar === 'boolean') {
@@ -93,6 +96,7 @@ export function resolveSimpleModeFeatures(
       appleMenu: custom.menuBar,
       appNameMenu: custom.menuBar,
       appSwitcher: custom.menuBar,
+      extras: custom.menuBar,
     };
   } else if (typeof custom.menuBar === 'object' && custom.menuBar !== null) {
     menuBarConfig = {
@@ -103,6 +107,7 @@ export function resolveSimpleModeFeatures(
       appleMenu: Boolean(custom.menuBar.appleMenu),
       appNameMenu: custom.menuBar.appNameMenu ?? true,
       appSwitcher: Boolean(custom.menuBar.appSwitcher),
+      extras: custom.menuBar.extras ?? true,
     };
   }
 

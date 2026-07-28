@@ -1,1 +1,1 @@
-export declare function Music(): import("react").JSX.Element;
+export declare function Music(): import("react/jsx-runtime").JSX.Element;

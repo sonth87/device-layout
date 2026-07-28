@@ -13,5 +13,5 @@ interface WindowMenuBarProps {
  * 'app:menu:action' CustomEvent, just always including this window's id so
  * useMenuAction(appId, handler, windowId) can filter per-window if needed.
  */
-export declare function WindowMenuBar({ windowId }: WindowMenuBarProps): import("react").JSX.Element | null;
+export declare function WindowMenuBar({ windowId }: WindowMenuBarProps): import("react/jsx-runtime").JSX.Element | null;
 export {};

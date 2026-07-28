@@ -10,13 +10,13 @@ export declare function MenuItem({ label, shortcut, disabled, onClick, }: {
     shortcut?: string;
     disabled?: boolean;
     onClick?: () => void;
-}): import("react").JSX.Element;
-export declare function MenuSeparator(): import("react").JSX.Element;
+}): import("react/jsx-runtime").JSX.Element;
+export declare function MenuSeparator(): import("react/jsx-runtime").JSX.Element;
 export declare function getMenuLabel(label: string, t: TranslationDict): string;
 export declare function getMenuItemLabel(label: string, t: TranslationDict): string;
 export declare function MenuItemRow({ item, t, onSelect, }: {
     item: MenuBarItem;
     t: TranslationDict;
     onSelect: (item: MenuBarItem) => void;
-}): import("react").JSX.Element;
+}): import("react/jsx-runtime").JSX.Element;
 export {};

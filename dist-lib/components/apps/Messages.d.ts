@@ -1,1 +1,1 @@
-export declare function Messages(): import("react").JSX.Element;
+export declare function Messages(): import("react/jsx-runtime").JSX.Element;

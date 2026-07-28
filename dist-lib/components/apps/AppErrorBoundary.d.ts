@@ -21,6 +21,6 @@ export declare class AppErrorBoundary extends Component<AppErrorBoundaryProps, A
     static getDerivedStateFromError(error: Error): Pick<AppErrorBoundaryState, 'error'>;
     componentDidCatch(error: Error, info: ErrorInfo): void;
     private handleRetry;
-    render(): import("react").JSX.Element;
+    render(): import("react/jsx-runtime").JSX.Element;
 }
 export {};

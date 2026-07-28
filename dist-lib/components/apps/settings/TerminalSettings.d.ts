@@ -1,1 +1,1 @@
-export declare function TerminalSettings(): import("react").JSX.Element;
+export declare function TerminalSettings(): import("react/jsx-runtime").JSX.Element;

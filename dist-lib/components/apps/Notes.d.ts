@@ -1,1 +1,1 @@
-export declare function Notes(): import("react").JSX.Element;
+export declare function Notes(): import("react/jsx-runtime").JSX.Element;

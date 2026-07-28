@@ -17,6 +17,7 @@ import { WallpaperImportProvider, type ImportWallpaperFn } from '@/lib/wallpaper
 import { WallpaperCatalogProvider, buildWallpaperCatalog } from '@/lib/wallpaper-catalog';
 import { UpdateActionsProvider, useUpdateActions, type UpdateActions } from '@/lib/update-actions';
 import { useUpdateStatusStore } from '@/lib/update-status-store';
+import { MenuBarExtrasProvider, type MenuBarExtraItem } from '@/lib/menu-bar-extras';
 import type { WallpaperConfig } from '@/types/desktop';
 import type { SimpleModeProp } from '@/types/simple-mode';
 import './app/globals.css';
@@ -53,6 +54,12 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
   updateActions?: UpdateActions;
   /** Enables Simple Mode layout (boolean or detailed SimpleModeFeatures object). */
   isSimpleMode?: SimpleModeProp;
+  /**
+   * Icon trạng thái host đăng ký trên menu bar, cạnh đồng hồ hệ thống — giống "menu bar
+   * extras" của macOS thật (icon app nền như Dropbox/1Password). Bấm vào hiện popover
+   * với nội dung do host cung cấp qua `content`. Ẩn hoàn toàn khi để trống/không truyền.
+   */
+  menuBarExtras?: MenuBarExtraItem[];
 }
 
 /** Fetches update status once on mount so SidebarItem's badge (Settings.tsx)
@@ -82,6 +89,7 @@ export function DeviceLayout({
   osTheme,
   fallbackMenuBarAppId,
   resolveEditContextMenuItems,
+  menuBarExtras,
 }: DeviceLayoutProps) {
   const catalog = buildWallpaperCatalog(wallpapers, liveWallpapers, allowLiveWallpapers);
   return (
@@ -89,20 +97,22 @@ export function DeviceLayout({
       <WallpaperCatalogProvider value={catalog}>
         <WallpaperImportProvider value={onImportWallpaper ?? null}>
           <UpdateActionsProvider value={updateActions ?? null}>
-            <UpdateStatusInitializer />
-            <ThemeProvider
-              apps={apps}
-              defaultApps={defaultApps}
-              builtInApps={builtInApps}
-              isSimpleMode={isSimpleMode}
-              colorScheme={colorScheme}
-              osTheme={osTheme}
-              fallbackMenuBarAppId={fallbackMenuBarAppId}
-              wallpapers={wallpapers}
-              liveWallpapers={liveWallpapers}
-              allowLiveWallpapers={allowLiveWallpapers}
-              resolveEditContextMenuItems={resolveEditContextMenuItems}
-            />
+            <MenuBarExtrasProvider value={menuBarExtras ?? []}>
+              <UpdateStatusInitializer />
+              <ThemeProvider
+                apps={apps}
+                defaultApps={defaultApps}
+                builtInApps={builtInApps}
+                isSimpleMode={isSimpleMode}
+                colorScheme={colorScheme}
+                osTheme={osTheme}
+                fallbackMenuBarAppId={fallbackMenuBarAppId}
+                wallpapers={wallpapers}
+                liveWallpapers={liveWallpapers}
+                allowLiveWallpapers={allowLiveWallpapers}
+                resolveEditContextMenuItems={resolveEditContextMenuItems}
+              />
+            </MenuBarExtrasProvider>
           </UpdateActionsProvider>
         </WallpaperImportProvider>
       </WallpaperCatalogProvider>
@@ -120,6 +130,15 @@ export type { EditMenuEntry, EditContextMenuInfo, ResolveEditContextMenuItems } 
 export type { WallpaperConfig, WallpaperKind, WallpaperFitMode, WallpaperCycleInterval, WallpaperCycleConfig } from '@/types/desktop';
 export type { SimpleModeProp, SimpleModeFeatures, NormalizedSimpleModeFeatures } from '@/types/simple-mode';
 
+export type { MenuBarExtraItem, MenuBarExtraStatus } from '@/lib/menu-bar-extras';
+/**
+ * Cửa sổ nổi kéo-thả kiểu "About This Mac" — dùng cho panel thông tin/log ngắn hạn không
+ * cần quản lý bởi WindowManager (không windowId, không vào Dock/App Switcher). `blocking`
+ * mặc định true (chặn tương tác phía sau, giống About thật); đặt false cho cửa sổ tiện ích
+ * muốn giữ mở song song khi vẫn thao tác app khác — vd cửa sổ xem log.
+ */
+export { FloatingWindow } from '@/components/shared/FloatingWindow';
+export type { FloatingWindowProps } from '@/components/shared/FloatingWindow';
 export type { ImportWallpaperFn } from '@/lib/wallpaper-import';
 export type { UpdateActions, UpdateStatus, PickUpdateFileResult, CheckUpdateFn, PickUpdateFileFn, UpdateProgress, UpdateProgressPhase, OnProgressFn } from '@/lib/update-actions';
 export { useUpdateStatusStore, hasAvailableUpdate } from '@/lib/update-status-store';

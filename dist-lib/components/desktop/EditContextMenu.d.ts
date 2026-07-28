@@ -49,5 +49,5 @@ interface EditContextMenuProps {
  * công. Ngược lại, nếu KHÔNG preventDefault (target hợp lệ: input/text/image), Radix tự chạy tiếp
  * và mở Content tại đúng vị trí click.
  */
-export declare function EditContextMenu({ children, resolveItems }: EditContextMenuProps): import("react").JSX.Element;
+export declare function EditContextMenu({ children, resolveItems }: EditContextMenuProps): import("react/jsx-runtime").JSX.Element;
 export {};

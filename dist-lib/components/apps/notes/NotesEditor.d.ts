@@ -12,5 +12,5 @@ interface NotesEditorProps {
     onDeletePermanently?: (id: string) => void;
     onCreateNoteInFolder: () => void;
 }
-export declare function NotesEditor({ note, folderName, noteCount, onUpdate, onBack, onShareToggle, onPinToggle, onDelete, onRestore, onDeletePermanently, onCreateNoteInFolder }: NotesEditorProps): import("react").JSX.Element | null;
+export declare function NotesEditor({ note, folderName, noteCount, onUpdate, onBack, onShareToggle, onPinToggle, onDelete, onRestore, onDeletePermanently, onCreateNoteInFolder }: NotesEditorProps): import("react/jsx-runtime").JSX.Element | null;
 export {};

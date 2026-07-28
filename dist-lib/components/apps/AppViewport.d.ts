@@ -5,6 +5,6 @@ interface AppViewportSize {
 }
 export declare function AppViewportProvider({ children }: {
     children: ReactNode;
-}): import("react").JSX.Element;
+}): import("react/jsx-runtime").JSX.Element;
 export declare function useAppViewport(): AppViewportSize;
 export {};

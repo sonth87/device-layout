@@ -9,5 +9,5 @@ interface WallpaperThumbProps {
     shape?: 'card' | 'circle';
     size?: 'sm' | 'md';
 }
-export declare function WallpaperThumb({ wallpaper, selected, cycling, onClick, shape, size }: WallpaperThumbProps): import("react").JSX.Element;
+export declare function WallpaperThumb({ wallpaper, selected, cycling, onClick, shape, size }: WallpaperThumbProps): import("react/jsx-runtime").JSX.Element;
 export {};

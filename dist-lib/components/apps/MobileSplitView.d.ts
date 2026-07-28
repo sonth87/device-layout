@@ -16,5 +16,5 @@ interface MobileSplitViewProps {
     detailClassName?: string;
     sidebarWidth?: string;
 }
-export declare function MobileSplitView({ list, detail, onBack, className, listClassName, detailClassName, sidebarWidth, }: MobileSplitViewProps): import("react").JSX.Element;
+export declare function MobileSplitView({ list, detail, onBack, className, listClassName, detailClassName, sidebarWidth, }: MobileSplitViewProps): import("react/jsx-runtime").JSX.Element;
 export {};

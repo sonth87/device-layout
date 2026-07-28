@@ -1,6 +1,7 @@
 import { ThemeProviderProps } from './components/themes/ThemeProvider';
 import { ImportWallpaperFn } from './lib/wallpaper-import';
 import { UpdateActions } from './lib/update-actions';
+import { MenuBarExtraItem } from './lib/menu-bar-extras';
 import { WallpaperConfig } from './types/desktop';
 import { SimpleModeProp } from './types/simple-mode';
 export interface DeviceLayoutProps extends ThemeProviderProps {
@@ -35,8 +36,14 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
     updateActions?: UpdateActions;
     /** Enables Simple Mode layout (boolean or detailed SimpleModeFeatures object). */
     isSimpleMode?: SimpleModeProp;
+    /**
+     * Icon trạng thái host đăng ký trên menu bar, cạnh đồng hồ hệ thống — giống "menu bar
+     * extras" của macOS thật (icon app nền như Dropbox/1Password). Bấm vào hiện popover
+     * với nội dung do host cung cấp qua `content`. Ẩn hoàn toàn khi để trống/không truyền.
+     */
+    menuBarExtras?: MenuBarExtraItem[];
 }
-export declare function DeviceLayout({ assetBaseUrl, apps, defaultApps, builtInApps, onImportWallpaper, wallpapers, liveWallpapers, allowLiveWallpapers, updateActions, isSimpleMode, colorScheme, osTheme, fallbackMenuBarAppId, resolveEditContextMenuItems, }: DeviceLayoutProps): import("react").JSX.Element;
+export declare function DeviceLayout({ assetBaseUrl, apps, defaultApps, builtInApps, onImportWallpaper, wallpapers, liveWallpapers, allowLiveWallpapers, updateActions, isSimpleMode, colorScheme, osTheme, fallbackMenuBarAppId, resolveEditContextMenuItems, menuBarExtras, }: DeviceLayoutProps): import("react/jsx-runtime").JSX.Element;
 export type { ThemeProviderProps } from './components/themes/ThemeProvider';
 export type { AppConfig, AppContentProps, AppInstance, MenuBarMenu, MenuBarItem, ContextMenuAction } from './types/app';
 /**
@@ -46,6 +53,15 @@ export type { AppConfig, AppContentProps, AppInstance, MenuBarMenu, MenuBarItem,
 export type { EditMenuEntry, EditContextMenuInfo, ResolveEditContextMenuItems } from './components/desktop/EditContextMenu';
 export type { WallpaperConfig, WallpaperKind, WallpaperFitMode, WallpaperCycleInterval, WallpaperCycleConfig } from './types/desktop';
 export type { SimpleModeProp, SimpleModeFeatures, NormalizedSimpleModeFeatures } from './types/simple-mode';
+export type { MenuBarExtraItem, MenuBarExtraStatus } from './lib/menu-bar-extras';
+/**
+ * Cửa sổ nổi kéo-thả kiểu "About This Mac" — dùng cho panel thông tin/log ngắn hạn không
+ * cần quản lý bởi WindowManager (không windowId, không vào Dock/App Switcher). `blocking`
+ * mặc định true (chặn tương tác phía sau, giống About thật); đặt false cho cửa sổ tiện ích
+ * muốn giữ mở song song khi vẫn thao tác app khác — vd cửa sổ xem log.
+ */
+export { FloatingWindow } from './components/shared/FloatingWindow';
+export type { FloatingWindowProps } from './components/shared/FloatingWindow';
 export type { ImportWallpaperFn } from './lib/wallpaper-import';
 export type { UpdateActions, UpdateStatus, PickUpdateFileResult, CheckUpdateFn, PickUpdateFileFn, UpdateProgress, UpdateProgressPhase, OnProgressFn } from './lib/update-actions';
 export { useUpdateStatusStore, hasAvailableUpdate } from './lib/update-status-store';

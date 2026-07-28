@@ -4,5 +4,5 @@ interface MobileAppViewerProps {
     navBarHeight: number;
     homeIndicatorHeight?: number;
 }
-export declare function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHeight }: MobileAppViewerProps): import("react").JSX.Element;
+export declare function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHeight }: MobileAppViewerProps): import("react/jsx-runtime").JSX.Element;
 export {};
