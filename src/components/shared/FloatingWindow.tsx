@@ -58,28 +58,44 @@ export function FloatingWindow({
   minHeight = 160,
   contentClassName,
 }: FloatingWindowProps) {
-  // Bắt đầu ở giữa màn hình; offset lưu độ lệch so với tâm sau khi kéo.
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const windowRef = useRef<HTMLDivElement>(null);
+  // null = chưa từng kéo/resize, khung vẫn nằm giữa màn hình qua flex centering của container
+  // ngoài (co giãn đều 2 phía quanh tâm — đúng ý cho panel ngắn kiểu About). Chỉ set giá trị
+  // ở lần đầu kéo HOẶC resize: neo góc trên-trái vào ĐÚNG vị trí trên màn hình lúc đó, rồi
+  // chuyển hẳn sang position tuyệt đối theo góc này. Nếu vẫn còn center-by-flex trong lúc
+  // resize thì đổi width/height sẽ đẩy khung lớn ra cả 2 phía quanh tâm (bug thật: kéo góc
+  // dưới-phải để phóng to lại thấy cạnh trên-trái cũng lùi ra xa theo) — neo góc cố định thì
+  // resize chỉ phình về đúng phía đang kéo.
+  const [anchor, setAnchor] = useState<{ left: number; top: number } | null>(null);
   const [size, setSize] = useState({ width, height });
   const [hovering, setHovering] = useState(false);
-  const dragStart = useRef<{ mx: number; my: number; ox: number; oy: number } | null>(null);
+  const dragStart = useRef<{ mx: number; my: number; left: number; top: number } | null>(null);
   const resizeStart = useRef<{ mx: number; my: number; w: number; h: number } | null>(null);
+
+  const ensureAnchor = useCallback((): { left: number; top: number } => {
+    if (anchor) return anchor;
+    const rect = windowRef.current!.getBoundingClientRect();
+    const next = { left: rect.left, top: rect.top };
+    setAnchor(next);
+    return next;
+  }, [anchor]);
 
   const onTitleBarPointerDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       if ((e.target as HTMLElement).closest('button')) return; // không kéo khi bấm nút đóng
       e.preventDefault();
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-      dragStart.current = { mx: e.clientX, my: e.clientY, ox: offset.x, oy: offset.y };
+      const { left, top } = ensureAnchor();
+      dragStart.current = { mx: e.clientX, my: e.clientY, left, top };
     },
-    [offset],
+    [ensureAnchor],
   );
 
   const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragStart.current) return;
-    setOffset({
-      x: dragStart.current.ox + (e.clientX - dragStart.current.mx),
-      y: dragStart.current.oy + (e.clientY - dragStart.current.my),
+    setAnchor({
+      left: dragStart.current.left + (e.clientX - dragStart.current.mx),
+      top: dragStart.current.top + (e.clientY - dragStart.current.my),
     });
   }, []);
 
@@ -92,6 +108,7 @@ export function FloatingWindow({
       e.preventDefault();
       e.stopPropagation(); // không để title bar's onPointerMove tưởng đây là kéo di chuyển
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+      ensureAnchor(); // neo góc trên-trái TRƯỚC khi đổi size, để size chỉ lớn dần về phía dưới-phải
       resizeStart.current = {
         mx: e.clientX,
         my: e.clientY,
@@ -99,7 +116,7 @@ export function FloatingWindow({
         h: size.height ?? minHeight,
       };
     },
-    [size, minHeight],
+    [ensureAnchor, size, minHeight],
   );
 
   const onResizePointerMove = useCallback(
@@ -121,7 +138,11 @@ export function FloatingWindow({
 
   return createPortal(
     <div
-      className="fixed inset-0 flex items-center justify-center pointer-events-none"
+      className={
+        anchor
+          ? 'fixed inset-0 pointer-events-none'
+          : 'fixed inset-0 flex items-center justify-center pointer-events-none'
+      }
       style={{ zIndex: 99999 }}
     >
       {/* Backdrop — chỉ chặn tương tác phía sau khi blocking=true. Khi false, không render
@@ -130,13 +151,14 @@ export function FloatingWindow({
       {blocking && <div className="absolute inset-0 pointer-events-auto" />}
 
       <div
+        ref={windowRef}
         data-windowchrome="true"
         className="relative flex flex-col bg-neutral-100/97 dark:bg-[#1c1c1e]/97 backdrop-blur-2xl rounded-(--radius-window) shadow-2xl border border-black/10 dark:border-white/8 overflow-hidden pointer-events-auto"
-        style={{
-          width: size.width,
-          height: size.height,
-          transform: `translate(${offset.x}px, ${offset.y}px)`,
-        }}
+        style={
+          anchor
+            ? { position: 'absolute', left: anchor.left, top: anchor.top, width: size.width, height: size.height }
+            : { width: size.width, height: size.height }
+        }
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
@@ -175,6 +197,8 @@ export function FloatingWindow({
           {children}
         </div>
 
+        {/* Vùng bắt kéo resize — không vẽ icon (yêu cầu thực tế: icon 3 gạch chéo trông xấu),
+            chỉ giữ hitbox + con trỏ nwse-resize để vẫn nhận biết được là góc kéo được. */}
         {resizable && (
           <div
             onPointerDown={onResizePointerDown}
@@ -184,16 +208,7 @@ export function FloatingWindow({
             className="absolute bottom-0 right-0 h-4 w-4 cursor-nwse-resize"
             style={{ touchAction: 'none' }}
             title="Kéo để đổi kích thước"
-          >
-            <svg viewBox="0 0 16 16" className="absolute bottom-0.5 right-0.5 h-2.5 w-2.5 opacity-40">
-              <path
-                d="M14 2L2 14M14 8L8 14M14 14L14 14"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </div>
+          />
         )}
       </div>
     </div>,

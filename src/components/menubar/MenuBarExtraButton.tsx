@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { LiquidGlass } from '@/components/liquid-glass/LiquidGlass';
 import { cn } from '@/lib/utils';
@@ -34,8 +34,15 @@ export function MenuBarExtraButton({
   const iconClass =
     effectiveTheme === 'light' ? 'text-black/70 hover:bg-black/10' : 'text-white/80 hover:bg-white/10';
 
+  // Controlled (thay vì uncontrolled như trước) — CẦN để tự đóng khi bấm 1 mục hành động
+  // trong item.content (vd "Xem log" mở cửa sổ log riêng). Không tự đóng thì popover đứng
+  // yên phía sau cửa sổ vừa mở, và do cửa sổ (FloatingWindow, z 99999) luôn vẽ trên popover
+  // (z 9999) nên trông như cửa sổ "đè" lên menu — đúng hành vi menu thật (MenuDropdown.tsx)
+  // là bấm 1 mục thì đóng menu ngay, không phải lỗi z-index.
+  const [open, setOpen] = useState(false);
+
   return (
-    <Popover.Root modal={false}>
+    <Popover.Root modal={false} open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
         <button
           className={cn(
@@ -72,6 +79,13 @@ export function MenuBarExtraButton({
             if (target.closest('[data-radix-popper-content-wrapper]')) e.preventDefault();
           }}
           onFocusOutside={(e) => e.preventDefault()}
+          onClick={(e) => {
+            // Bấm 1 <button> bên trong content (mục hành động) → đóng popover, cùng hành vi
+            // "chọn mục thì đóng menu" của MenuDropdown.tsx. Nội dung do host cung cấp
+            // (item.content) nên không biết trước cấu trúc — dò bằng closest('button') thay
+            // vì bắt callback riêng.
+            if ((e.target as HTMLElement).closest('button')) setOpen(false);
+          }}
         >
           <LiquidGlass variant="panel" className="min-w-56 max-w-sm p-3">
             {item.content}

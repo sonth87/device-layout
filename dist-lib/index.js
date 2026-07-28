@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { C as g, D as _, E as v, O as y, S as b, T as x, _ as S, a as C, b as w, c as T, d as E, g as D, h as O, i as k, l as A, o as j, p as M, r as ee, s as te, t as N, u as ne, v as P, w as F, x as re, y as ie } from "./MobileAppViewer-BzsZonOr.js";
+import { C as g, D as _, E as v, O as y, S as b, T as x, _ as S, a as C, b as w, c as T, d as E, g as D, h as O, i as k, l as A, o as j, p as M, r as ee, s as te, t as N, u as ne, v as P, w as F, x as re, y as ie } from "./MobileAppViewer-BfFzEOTp.js";
 import { c as ae, d as oe, l as se, s as ce, t as I, u as le } from "./store-XIGE1L5-.js";
 import { t as L } from "./utils-B6YmNDS2.js";
 import { t as R } from "./createLucideIcon--WjuKCts.js";
-import { a as ue, c as de, d as fe, f as pe, g as me, h as he, i as ge, l as _e, m as ve, n as ye, o as be, p as z, r as xe, s as Se, t as Ce, u as we } from "./update-actions-BkJ6NZ9j.js";
+import { a as ue, c as de, d as fe, f as pe, g as me, h as he, i as ge, l as _e, m as ve, n as ye, o as be, p as z, r as xe, s as Se, t as Ce, u as we } from "./update-actions-Bp_pWxcq.js";
 import { t as Te } from "./check-DoT5IS9-.js";
 import { t as Ee } from "./chevron-right-BcSxNxws.js";
 import { t as De } from "./grid-3x3-CZiMuCC6.js";
@@ -1890,61 +1890,78 @@ function $n({ onOpenApp: e }) {
 //#endregion
 //#region src/components/shared/FloatingWindow.tsx
 function er({ onClose: e, children: t, title: n, width: r = 288, height: i, blocking: a = !0, resizable: o = !1, minWidth: s = 260, minHeight: c = 160, contentClassName: l }) {
-	let [u, d] = K({
-		x: 0,
-		y: 0
-	}), [f, p] = K({
+	let u = G(null), [d, f] = K(null), [p, m] = K({
 		width: r,
 		height: i
-	}), [m, h] = K(!1), g = G(null), _ = G(null), v = U((e) => {
-		e.target.closest("button") || (e.preventDefault(), e.currentTarget.setPointerCapture(e.pointerId), g.current = {
-			mx: e.clientX,
-			my: e.clientY,
-			ox: u.x,
-			oy: u.y
-		});
-	}, [u]), y = U((e) => {
-		g.current && d({
-			x: g.current.ox + (e.clientX - g.current.mx),
-			y: g.current.oy + (e.clientY - g.current.my)
-		});
-	}, []), b = U(() => {
-		g.current = null;
-	}, []), x = U((e) => {
-		e.preventDefault(), e.stopPropagation(), e.currentTarget.setPointerCapture(e.pointerId), _.current = {
-			mx: e.clientX,
-			my: e.clientY,
-			w: f.width,
-			h: f.height ?? c
+	}), [h, g] = K(!1), _ = G(null), v = G(null), y = U(() => {
+		if (d) return d;
+		let e = u.current.getBoundingClientRect(), t = {
+			left: e.left,
+			top: e.top
 		};
-	}, [f, c]), S = U((e) => {
-		_.current && p({
-			width: Math.max(s, _.current.w + (e.clientX - _.current.mx)),
-			height: Math.max(c, _.current.h + (e.clientY - _.current.my))
+		return f(t), t;
+	}, [d]), b = U((e) => {
+		if (e.target.closest("button")) return;
+		e.preventDefault(), e.currentTarget.setPointerCapture(e.pointerId);
+		let { left: t, top: n } = y();
+		_.current = {
+			mx: e.clientX,
+			my: e.clientY,
+			left: t,
+			top: n
+		};
+	}, [y]), x = U((e) => {
+		_.current && f({
+			left: _.current.left + (e.clientX - _.current.mx),
+			top: _.current.top + (e.clientY - _.current.my)
 		});
-	}, [s, c]), C = U(() => {
+	}, []), S = U(() => {
 		_.current = null;
+	}, []), C = U((e) => {
+		e.preventDefault(), e.stopPropagation(), e.currentTarget.setPointerCapture(e.pointerId), y(), v.current = {
+			mx: e.clientX,
+			my: e.clientY,
+			w: p.width,
+			h: p.height ?? c
+		};
+	}, [
+		y,
+		p,
+		c
+	]), w = U((e) => {
+		v.current && m({
+			width: Math.max(s, v.current.w + (e.clientX - v.current.mx)),
+			height: Math.max(c, v.current.h + (e.clientY - v.current.my))
+		});
+	}, [s, c]), T = U(() => {
+		v.current = null;
 	}, []);
 	return typeof document > "u" ? null : rt(/* @__PURE__ */ Y("div", {
-		className: "fixed inset-0 flex items-center justify-center pointer-events-none",
+		className: d ? "fixed inset-0 pointer-events-none" : "fixed inset-0 flex items-center justify-center pointer-events-none",
 		style: { zIndex: 99999 },
 		children: [a && /* @__PURE__ */ J("div", { className: "absolute inset-0 pointer-events-auto" }), /* @__PURE__ */ Y("div", {
+			ref: u,
 			"data-windowchrome": "true",
 			className: "relative flex flex-col bg-neutral-100/97 dark:bg-[#1c1c1e]/97 backdrop-blur-2xl rounded-(--radius-window) shadow-2xl border border-black/10 dark:border-white/8 overflow-hidden pointer-events-auto",
-			style: {
-				width: f.width,
-				height: f.height,
-				transform: `translate(${u.x}px, ${u.y}px)`
+			style: d ? {
+				position: "absolute",
+				left: d.left,
+				top: d.top,
+				width: p.width,
+				height: p.height
+			} : {
+				width: p.width,
+				height: p.height
 			},
-			onPointerMove: y,
-			onPointerUp: b,
-			onPointerCancel: b,
+			onPointerMove: x,
+			onPointerUp: S,
+			onPointerCancel: S,
 			children: [
 				/* @__PURE__ */ Y("div", {
 					className: "w-full flex shrink-0 items-center gap-2 px-4 pt-3.5 pb-2 border-b border-black/8 dark:border-white/8 cursor-move select-none bg-neutral-200/60 dark:bg-white/5",
-					onPointerDown: v,
-					onMouseEnter: () => h(!0),
-					onMouseLeave: () => h(!1),
+					onPointerDown: b,
+					onMouseEnter: () => g(!0),
+					onMouseLeave: () => g(!1),
 					children: [/* @__PURE__ */ Y("div", {
 						className: "flex items-center gap-2",
 						onPointerDown: (e) => e.stopPropagation(),
@@ -1954,7 +1971,7 @@ function er({ onClose: e, children: t, title: n, width: r = 288, height: i, bloc
 								className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100",
 								style: { backgroundColor: "#ff5f57" },
 								title: "Close",
-								children: m && /* @__PURE__ */ J(B, {
+								children: h && /* @__PURE__ */ J(B, {
 									className: "w-2 h-2 text-red-900/80",
 									strokeWidth: 3
 								})
@@ -1978,23 +1995,13 @@ function er({ onClose: e, children: t, title: n, width: r = 288, height: i, bloc
 					children: t
 				}),
 				o && /* @__PURE__ */ J("div", {
-					onPointerDown: x,
-					onPointerMove: S,
-					onPointerUp: C,
-					onPointerCancel: C,
+					onPointerDown: C,
+					onPointerMove: w,
+					onPointerUp: T,
+					onPointerCancel: T,
 					className: "absolute bottom-0 right-0 h-4 w-4 cursor-nwse-resize",
 					style: { touchAction: "none" },
-					title: "Kéo để đổi kích thước",
-					children: /* @__PURE__ */ J("svg", {
-						viewBox: "0 0 16 16",
-						className: "absolute bottom-0.5 right-0.5 h-2.5 w-2.5 opacity-40",
-						children: /* @__PURE__ */ J("path", {
-							d: "M14 2L2 14M14 8L8 14M14 14L14 14",
-							stroke: "currentColor",
-							strokeWidth: "1.5",
-							strokeLinecap: "round"
-						})
-					})
+					title: "Kéo để đổi kích thước"
 				})
 			]
 		})]

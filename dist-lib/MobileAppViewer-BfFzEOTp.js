@@ -6613,13 +6613,15 @@ var $f = {
 	neutral: "bg-neutral-400"
 };
 function ep({ item: e, forceDark: t = !1 }) {
-	let n = k(Gf);
+	let n = k(Gf), r = (t ? "dark" : n) === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10", [i, a] = M(!1);
 	return /* @__PURE__ */ P(Af, {
 		modal: !1,
+		open: i,
+		onOpenChange: a,
 		children: [/* @__PURE__ */ N(jf, {
 			asChild: !0,
 			children: /* @__PURE__ */ P("button", {
-				className: C(qf, "relative px-2", (t ? "dark" : n) === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10", "data-[state=open]:bg-accent-active data-[state=open]:text-white"),
+				className: C(qf, "relative px-2", r, "data-[state=open]:bg-accent-active data-[state=open]:text-white"),
 				title: e.label,
 				"aria-label": e.label,
 				children: [e.icon, e.status && /* @__PURE__ */ N("span", { className: C("absolute bottom-0.5 right-0.5 h-1.5 w-1.5 rounded-full ring-1 ring-black/20", $f[e.status]) })]
@@ -6632,6 +6634,9 @@ function ep({ item: e, forceDark: t = !1 }) {
 				e.target.closest("[data-radix-popper-content-wrapper]") && e.preventDefault();
 			},
 			onFocusOutside: (e) => e.preventDefault(),
+			onClick: (e) => {
+				e.target.closest("button") && a(!1);
+			},
 			children: /* @__PURE__ */ N(Uf, {
 				variant: "panel",
 				className: "min-w-56 max-w-sm p-3",
@@ -7136,7 +7141,7 @@ var mp = class extends ue {
 }, hp = {
 	Finder: D(() => import("./Finder-YHoPk4Np.js").then((e) => ({ default: e.Finder }))),
 	Terminal: D(() => import("./Terminal-DFQigwE_.js").then((e) => ({ default: e.Terminal }))),
-	Settings: D(() => import("./Settings-DbBuR1UZ.js").then((e) => ({ default: e.Settings }))),
+	Settings: D(() => import("./Settings-8oOHm6yG.js").then((e) => ({ default: e.Settings }))),
 	Browser: D(() => import("./Browser-DhrkWGkV.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: D(() => import("./TextEditor-C-XCXZQT.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: D(() => import("./Clock-Bbq-jVL7.js").then((e) => ({ default: e.Clock }))),
@@ -7145,7 +7150,7 @@ var mp = class extends ue {
 	Photos: D(() => import("./Photos-2XpXzJNR.js").then((e) => ({ default: e.Photos }))),
 	Music: D(() => import("./Music-U7dMGwuL.js").then((e) => ({ default: e.Music }))),
 	Calendar: D(() => import("./Calendar-D7do4uqA.js").then((e) => ({ default: e.Calendar }))),
-	Messages: D(() => import("./Messages-b7Orj-FW.js").then((e) => ({ default: e.Messages }))),
+	Messages: D(() => import("./Messages-Cl51R92Z.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: D(() => import("./IframeApp-gc89kCC5.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: D(() => import("./MdxApp-_FrXuKdQ.js").then((e) => ({ default: e.MdxApp })))
 };
