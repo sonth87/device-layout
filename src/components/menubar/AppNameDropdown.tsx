@@ -77,11 +77,11 @@ export function AppNameDropdown({
         }}
         className={cn(
           menuBarButtonClass,
-          "font-semibold",
+          "font-bold",
           open ? "bg-accent-active text-white" : btnClass,
         )}
       >
-        <span className="text-[13px] font-semibold">{appName}</span>
+        <span className="text-[14px] font-bold">{appName}</span>
       </button>
 
       <DropdownPanel

@@ -22,7 +22,7 @@ export function useMenuBtnClass() {
 }
 
 export const menuBarButtonClass =
-  "flex h-6 items-center rounded-md px-2.5 text-[13px] leading-none transition-colors";
+  "flex h-6 items-center rounded-md px-2.5 text-[14px] leading-none transition-colors";
 
 export function MenuItem({
   label,

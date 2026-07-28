@@ -38,7 +38,7 @@ export function ControlCenter({ forceDark = false }: { forceDark?: boolean } = {
           className={`p-1.5 rounded-md transition-colors flex items-center gap-1 ${triggerCls}`}
           aria-label="Control Center"
         >
-          <Sliders className="w-3.5 h-3.5" />
+          <Sliders className="w-4 h-4" />
         </button>
       </Popover.Trigger>
       <Popover.Portal>

@@ -115,7 +115,7 @@ export function MenuBar({
                   className={iconBtnClass}
                   title="Spotlight Search (⌘Space)"
                 >
-                  <Search className="w-3.5 h-3.5" />
+                  <Search className="w-4 h-4" />
                 </button>
               )}
 
@@ -129,10 +129,10 @@ export function MenuBar({
               {features.menuBar.controlCenter && (
                 <>
                   <button className={iconBtnClass}>
-                    <Wifi className="w-3.5 h-3.5" />
+                    <Wifi className="w-4 h-4" />
                   </button>
                   <button className={iconBtnClass}>
-                    <Battery className="w-3.5 h-3.5" />
+                    <Battery className="w-4 h-4" />
                   </button>
                   <ControlCenter forceDark={forceDark} />
                 </>

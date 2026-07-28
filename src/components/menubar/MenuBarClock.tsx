@@ -21,7 +21,7 @@ export function MenuBarClock({ forceDark = false }: { forceDark?: boolean } = {}
   }, []);
 
   return (
-    <div className={`flex items-center gap-1.5 text-[12px] font-medium ${cls} select-none tabular-nums`}>
+    <div className={`flex items-center gap-1.5 text-[14px] font-medium ${cls} select-none tabular-nums`}>
       <span>{date}</span>
       <span>{time}</span>
     </div>
