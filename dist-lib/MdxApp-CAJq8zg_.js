@@ -1,4 +1,4 @@
-import { t as e } from "./store-XIGE1L5-.js";
+import { t as e } from "./store-8-JrD4GH.js";
 import { jsx as t, jsxs as n } from "react/jsx-runtime";
 //#region src/components/apps/MdxApp.tsx
 function r({ appId: r }) {

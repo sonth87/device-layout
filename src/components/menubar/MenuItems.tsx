@@ -28,11 +28,13 @@ export function MenuItem({
   label,
   shortcut,
   disabled,
+  checked,
   onClick,
 }: {
   label: string;
   shortcut?: string;
   disabled?: boolean;
+  checked?: boolean;
   onClick?: () => void;
 }) {
   return (
@@ -46,7 +48,12 @@ export function MenuItem({
       )}
       onClick={onClick}
     >
-      <span>{label}</span>
+      <span className="flex items-center">
+        {/* Chỗ trống cố định cho dấu check (kiểu native macOS checkbox menu item) — giữ
+            thẳng hàng label giữa các item có/không checked trong cùng 1 menu. */}
+        <span className="mr-1.5 w-3 shrink-0 text-center">{checked ? "✓" : ""}</span>
+        {label}
+      </span>
       {shortcut && (
         <span className="text-[11px] opacity-50 ml-6">{shortcut}</span>
       )}
@@ -143,6 +150,7 @@ export function MenuItemRow({
         label={getMenuItemLabel(item.label, t)}
         shortcut={item.shortcut}
         disabled={item.disabled}
+        checked={item.checked}
         onClick={() => onSelect(item)}
       />
     );

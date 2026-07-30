@@ -2052,6 +2052,15 @@ function Ke(e) {
 			e((e) => {
 				e.activeAppId = t;
 			});
+		},
+		updateAppConfig(t, n) {
+			e((e) => {
+				let r = e.apps[t];
+				r && (e.apps[t] = {
+					...r,
+					...n
+				});
+			});
 		}
 	};
 }

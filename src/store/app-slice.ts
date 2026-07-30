@@ -9,6 +9,14 @@ export interface AppSlice {
   registerApps: (configs: AppConfig[]) => void;
   setRunning: (appId: string, running: boolean) => void;
   setActiveApp: (appId: string | null) => void;
+  /**
+   * Patch a registered app's config after `registerApps()` — e.g. a host app
+   * updating its own `menuBarMenus` at runtime (checked state, item labels)
+   * to reflect live app state. `apps` is already read reactively by MenuBar/
+   * dock/etc via `useStore((s) => s.apps)`, so this alone is enough to make
+   * any part of AppConfig dynamic — no separate "live config" concept needed.
+   */
+  updateAppConfig: (appId: string, patch: Partial<AppConfig>) => void;
 }
 
 type S = AppSlice;
@@ -47,6 +55,14 @@ export function createAppSlice(set: Setter): AppSlice {
     setActiveApp(appId) {
       set((state) => {
         state.activeAppId = appId;
+      });
+    },
+
+    updateAppConfig(appId, patch) {
+      set((state) => {
+        const existing = state.apps[appId];
+        if (!existing) return;
+        state.apps[appId] = { ...existing, ...patch };
       });
     },
   };

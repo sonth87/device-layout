@@ -1,5 +1,5 @@
 import { C as e, E as t, O as n, S as r, T as i, a, b as o, c as s, d as c, f as l, g as u, i as d, l as f, m as p, n as m, o as h, p as g, r as _, s as v, t as y, u as b, v as x } from "./Combination-dkRdWOFm.js";
-import { t as S } from "./store-XIGE1L5-.js";
+import { t as S } from "./store-8-JrD4GH.js";
 import { t as C } from "./utils-B6YmNDS2.js";
 import { t as w } from "./createLucideIcon--WjuKCts.js";
 import { t as ee } from "./chevron-right-BcSxNxws.js";
@@ -9,7 +9,7 @@ import { t as re } from "./search-BKG97C0x.js";
 import { t as ie } from "./sun-DdSv2tyc.js";
 import { t as ae } from "./volume-2-DAfADR-a.js";
 import { t as oe } from "./x-BYw6fhgP.js";
-import { t as se } from "./useTranslation-BJqtZQcf.js";
+import { t as se } from "./useTranslation-C5kXMUqi.js";
 import { t as ce } from "./AppViewport-BDJLAndL.js";
 import * as T from "react";
 import { Children as le, Component as ue, Fragment as de, Suspense as fe, createContext as E, createElement as pe, forwardRef as me, isValidElement as he, lazy as D, useCallback as O, useContext as k, useEffect as A, useId as ge, useInsertionEffect as _e, useLayoutEffect as ve, useMemo as ye, useRef as j, useState as M } from "react";
@@ -5896,7 +5896,7 @@ function nf({ forceDark: e = !1 } = {}) {
 		let t = setInterval(e, 1e3);
 		return () => clearInterval(t);
 	}, []), /* @__PURE__ */ P("div", {
-		className: `flex items-center gap-1.5 text-[12px] font-medium ${o} select-none tabular-nums`,
+		className: `flex items-center gap-1.5 text-[14px] font-medium ${o} select-none tabular-nums`,
 		children: [/* @__PURE__ */ N("span", { children: r }), /* @__PURE__ */ N("span", { children: t })]
 	});
 }
@@ -6374,7 +6374,7 @@ function Wf({ forceDark: e = !1 } = {}) {
 			children: /* @__PURE__ */ N("button", {
 				className: `p-1.5 rounded-md transition-colors flex items-center gap-1 ${p}`,
 				"aria-label": "Control Center",
-				children: /* @__PURE__ */ N(Qd, { className: "w-3.5 h-3.5" })
+				children: /* @__PURE__ */ N(Qd, { className: "w-4 h-4" })
 			})
 		}), /* @__PURE__ */ N(Mf, { children: /* @__PURE__ */ N(Nf, {
 			align: "end",
@@ -6501,13 +6501,19 @@ var Gf = E("dark");
 function Kf() {
 	return k(Gf) === "light" ? "text-black/80 hover:bg-black/10" : "text-white/85 hover:bg-white/10";
 }
-var qf = "flex h-6 items-center rounded-md px-2.5 text-[13px] leading-none transition-colors";
-function Jf({ label: e, shortcut: t, disabled: n, onClick: r }) {
+var qf = "flex h-6 items-center rounded-md px-2.5 text-[14px] leading-none transition-colors";
+function Jf({ label: e, shortcut: t, disabled: n, checked: r, onClick: i }) {
 	return /* @__PURE__ */ P("button", {
 		disabled: n,
 		className: C("w-full flex items-center justify-between px-3 py-1.5 text-[13px] transition-colors cursor-default rounded-lg text-left", n ? "text-black/30 dark:text-white/30" : "hover:bg-accent-active hover:text-white text-black dark:text-white"),
-		onClick: r,
-		children: [/* @__PURE__ */ N("span", { children: e }), t && /* @__PURE__ */ N("span", {
+		onClick: i,
+		children: [/* @__PURE__ */ P("span", {
+			className: "flex items-center",
+			children: [/* @__PURE__ */ N("span", {
+				className: "mr-1.5 w-3 shrink-0 text-center",
+				children: r ? "✓" : ""
+			}), e]
+		}), t && /* @__PURE__ */ N("span", {
 			className: "text-[11px] opacity-50 ml-6",
 			children: t
 		})]
@@ -6601,6 +6607,7 @@ function Qf({ item: e, t, onSelect: n }) {
 		label: Zf(e.label, t),
 		shortcut: e.shortcut,
 		disabled: e.disabled,
+		checked: e.checked,
 		onClick: () => n(e)
 	});
 }
@@ -6872,9 +6879,9 @@ function sp({ appConfig: e, appId: t, activeId: n, setActiveId: r }) {
 		onMouseEnter: () => {
 			n !== null && r("app-name");
 		},
-		className: C(qf, "font-semibold", i ? "bg-accent-active text-white" : o),
+		className: C(qf, "font-bold", i ? "bg-accent-active text-white" : o),
 		children: /* @__PURE__ */ N("span", {
-			className: "text-[13px] font-semibold",
+			className: "text-[14px] font-bold",
 			children: d
 		})
 	}), /* @__PURE__ */ P(ip, {
@@ -7053,7 +7060,7 @@ function fp({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1, fallbackM
 								onClick: e,
 								className: m,
 								title: "Spotlight Search (⌘Space)",
-								children: /* @__PURE__ */ N(re, { className: "w-3.5 h-3.5" })
+								children: /* @__PURE__ */ N(re, { className: "w-4 h-4" })
 							}),
 							v && _.map((e) => /* @__PURE__ */ N(ep, {
 								item: e,
@@ -7062,11 +7069,11 @@ function fp({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1, fallbackM
 							i.menuBar.controlCenter && /* @__PURE__ */ P(be, { children: [
 								/* @__PURE__ */ N("button", {
 									className: m,
-									children: /* @__PURE__ */ N(tf, { className: "w-3.5 h-3.5" })
+									children: /* @__PURE__ */ N(tf, { className: "w-4 h-4" })
 								}),
 								/* @__PURE__ */ N("button", {
 									className: m,
-									children: /* @__PURE__ */ N(Kd, { className: "w-3.5 h-3.5" })
+									children: /* @__PURE__ */ N(Kd, { className: "w-4 h-4" })
 								}),
 								/* @__PURE__ */ N(Wf, { forceDark: n })
 							] }),
@@ -7139,20 +7146,20 @@ var mp = class extends ue {
 		}, this.state.retryCount);
 	}
 }, hp = {
-	Finder: D(() => import("./Finder-YHoPk4Np.js").then((e) => ({ default: e.Finder }))),
-	Terminal: D(() => import("./Terminal-DFQigwE_.js").then((e) => ({ default: e.Terminal }))),
-	Settings: D(() => import("./Settings-DsKG--dP.js").then((e) => ({ default: e.Settings }))),
-	Browser: D(() => import("./Browser-DhrkWGkV.js").then((e) => ({ default: e.Browser }))),
-	TextEditor: D(() => import("./TextEditor-C-XCXZQT.js").then((e) => ({ default: e.TextEditor }))),
-	Clock: D(() => import("./Clock-Bbq-jVL7.js").then((e) => ({ default: e.Clock }))),
-	Calculator: D(() => import("./Calculator-kdXp0c4H.js").then((e) => ({ default: e.Calculator }))),
-	Notes: D(() => import("./Notes-CObzczOv.js").then((e) => ({ default: e.Notes }))),
-	Photos: D(() => import("./Photos-2XpXzJNR.js").then((e) => ({ default: e.Photos }))),
-	Music: D(() => import("./Music-U7dMGwuL.js").then((e) => ({ default: e.Music }))),
-	Calendar: D(() => import("./Calendar-D7do4uqA.js").then((e) => ({ default: e.Calendar }))),
-	Messages: D(() => import("./Messages-0_Gt__f9.js").then((e) => ({ default: e.Messages }))),
-	IframeApp: D(() => import("./IframeApp-gc89kCC5.js").then((e) => ({ default: e.IframeApp }))),
-	MdxApp: D(() => import("./MdxApp-_FrXuKdQ.js").then((e) => ({ default: e.MdxApp })))
+	Finder: D(() => import("./Finder-BB7oZuyx.js").then((e) => ({ default: e.Finder }))),
+	Terminal: D(() => import("./Terminal-C55a7p1b.js").then((e) => ({ default: e.Terminal }))),
+	Settings: D(() => import("./Settings-CV9ece6m.js").then((e) => ({ default: e.Settings }))),
+	Browser: D(() => import("./Browser-hEqHPiIK.js").then((e) => ({ default: e.Browser }))),
+	TextEditor: D(() => import("./TextEditor-iru1gdUU.js").then((e) => ({ default: e.TextEditor }))),
+	Clock: D(() => import("./Clock-BEzpL5Ds.js").then((e) => ({ default: e.Clock }))),
+	Calculator: D(() => import("./Calculator-ozMCBLt4.js").then((e) => ({ default: e.Calculator }))),
+	Notes: D(() => import("./Notes-Ccx_EdMi.js").then((e) => ({ default: e.Notes }))),
+	Photos: D(() => import("./Photos-Dnq0JOOH.js").then((e) => ({ default: e.Photos }))),
+	Music: D(() => import("./Music-CozOuLAL.js").then((e) => ({ default: e.Music }))),
+	Calendar: D(() => import("./Calendar-uT2XargG.js").then((e) => ({ default: e.Calendar }))),
+	Messages: D(() => import("./Messages-7UnG3O91.js").then((e) => ({ default: e.Messages }))),
+	IframeApp: D(() => import("./IframeApp-CoyQDe6J.js").then((e) => ({ default: e.IframeApp }))),
+	MdxApp: D(() => import("./MdxApp-CAJq8zg_.js").then((e) => ({ default: e.MdxApp })))
 };
 function gp() {
 	return /* @__PURE__ */ N("div", {

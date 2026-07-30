@@ -31,6 +31,14 @@ export interface MenuBarItem {
   separator?: boolean;
   disabled?: boolean;
   children?: MenuBarItem[];
+  /**
+   * Renders a checkmark before the label (native checkbox-menu-item style).
+   * Static per declaration — for a checkmark that reflects live app state,
+   * the host app should call `useStore.getState().updateAppConfig(appId, {
+   * menuBarMenus })` with a freshly computed array whenever the underlying
+   * state changes (menuBarMenus is already read reactively from the store).
+   */
+  checked?: boolean;
 }
 
 export interface MenuBarMenu {

@@ -1,7 +1,7 @@
-import { t as e } from "./store-XIGE1L5-.js";
+import { t as e } from "./store-8-JrD4GH.js";
 import { t } from "./utils-B6YmNDS2.js";
 import { t as n } from "./createLucideIcon--WjuKCts.js";
-import { t as r } from "./useTranslation-BJqtZQcf.js";
+import { t as r } from "./useTranslation-C5kXMUqi.js";
 import { useCallback as i, useEffect as a, useState as o } from "react";
 import { Fragment as s, jsx as c, jsxs as l } from "react/jsx-runtime";
 var u = n("delete", [
