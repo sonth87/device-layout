@@ -103,10 +103,10 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
         <button
           onClick={() => closeWindow(windowId)}
           className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75"
-          style={{ backgroundColor: win.isFocused ? '#ff5f57' : '#d1d1d1' }}
+          style={{ backgroundColor: (win.isFocused || hovering) ? '#ff5f57' : '#d1d1d1' }}
           title="Close"
         >
-          {hovering && win.isFocused && (
+          {hovering && (
             <X className="w-2 h-2 text-red-900/80" strokeWidth={3} />
           )}
         </button>
@@ -115,10 +115,10 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
         <button
           onClick={() => minimizeWindow(windowId)}
           className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75"
-          style={{ backgroundColor: win.isFocused ? '#febc2e' : '#d1d1d1' }}
+          style={{ backgroundColor: (win.isFocused || hovering) ? '#febc2e' : '#d1d1d1' }}
           title="Minimize"
         >
-          {hovering && win.isFocused && (
+          {hovering && (
             <Minus className="w-2 h-2 text-yellow-900/80" strokeWidth={3} />
           )}
         </button>
@@ -128,10 +128,10 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
         <button
           onClick={() => toggleFullScreen(windowId)}
           className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75"
-          style={{ backgroundColor: win.isFocused ? '#28c840' : '#d1d1d1' }}
+          style={{ backgroundColor: (win.isFocused || hovering) ? '#28c840' : '#d1d1d1' }}
           title={win.isFullScreen ? 'Exit Full Screen' : 'Enter Full Screen'}
         >
-          {hovering && win.isFocused && (
+          {hovering && (
             <Maximize2 className="w-1.5 h-1.5 text-green-900/80" strokeWidth={3} />
           )}
         </button>
@@ -230,6 +230,7 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
   const { config } = useTheme();
   const viewport = useViewportSize();
   const { getAppName } = useTranslation();
+  const [hovering, setHovering] = useState(false);
 
   // Calculator custom titlebar states
   const [calcMode, setCalcMode] = useState<CalculatorMode>('basic');
@@ -290,6 +291,8 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
       onPointerDown={onPointerDown}
       onClick={(e) => { e.stopPropagation(); }}
       onDoubleClick={() => toggleMaximize(windowId, viewportRect)}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
     >
       {isTransparent && win.appId === 'calculator' ? (
         <div className="flex-1 flex items-center gap-4 pl-3 h-full select-none">
@@ -347,14 +350,22 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
       ) : isTransparent ? (
         <div className="flex-1 pointer-events-none" />
       ) : (
-        <span className="flex-1 text-[12px] font-medium truncate text-black/75 dark:text-white/75 pl-3">
+        <span className={cn(
+          "flex-1 text-[12px] font-medium truncate pl-3 transition-colors",
+          win.isFocused ? 'text-black/75 dark:text-white/75' : 'text-black/35 dark:text-white/35'
+        )}>
           {getAppName(win.appId, win.title)}
         </span>
       )}
       <div className="flex items-center h-full pr-1" onPointerDown={(e) => e.stopPropagation()}>
         <button
           onClick={() => minimizeWindow(windowId)}
-          className="w-11 h-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black/70 dark:text-white/70"
+          className={cn(
+            "w-11 h-full flex items-center justify-center transition-colors",
+            (win.isFocused || hovering)
+              ? "hover:bg-black/10 dark:hover:bg-white/10 text-black/70 dark:text-white/70"
+              : "text-black/30 dark:text-white/30 pointer-events-none"
+          )}
         >
           <Minus className="w-3.5 h-3.5" strokeWidth={2} />
         </button>
@@ -366,7 +377,12 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
               enterFullScreen(windowId);
             }
           }}
-          className="w-11 h-full flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors text-black/70 dark:text-white/70"
+          className={cn(
+            "w-11 h-full flex items-center justify-center transition-colors",
+            (win.isFocused || hovering)
+              ? "hover:bg-black/10 dark:hover:bg-white/10 text-black/70 dark:text-white/70"
+              : "text-black/30 dark:text-white/30 pointer-events-none"
+          )}
           title={win.isMaximized || win.isFullScreen ? 'Restore' : 'Fullscreen'}
         >
           {win.isMaximized || win.isFullScreen ? (
@@ -377,7 +393,12 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
         </button>
         <button
           onClick={() => closeWindow(windowId)}
-          className="w-11 h-full flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors text-black/70 dark:text-white/70"
+          className={cn(
+            "w-11 h-full flex items-center justify-center transition-colors",
+            (win.isFocused || hovering)
+              ? "hover:bg-red-500 hover:text-white text-black/70 dark:text-white/70"
+              : "text-black/30 dark:text-white/30 pointer-events-none"
+          )}
         >
           <X className="w-3.5 h-3.5" strokeWidth={2} />
         </button>

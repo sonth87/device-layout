@@ -12,12 +12,14 @@ import { SystemTray } from '@/components/windows/SystemTray';
 import type { AppConfig } from '@/types/app';
 import { useTranslation } from '@/hooks/useTranslation';
 import { AppIconImage } from '@/components/shared/AppIconImage';
+import { useCustomOSIcon } from '@/contexts/CustomOSIconContext';
 
 interface TaskbarProps {
   onOpenApp: (app: AppConfig) => void;
 }
 
 export function Taskbar({ onOpenApp }: TaskbarProps) {
+  const { windowsStartIcon } = useCustomOSIcon();
   const [startMenuOpen, setStartMenuOpen] = useState(false);
   const [systemTrayOpen, setSystemTrayOpen] = useState(false);
 
@@ -69,12 +71,18 @@ export function Taskbar({ onOpenApp }: TaskbarProps) {
             )}
             title="Start"
           >
-            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-              <rect x="3" y="3" width="8" height="8" rx="1" className="fill-blue-400"/>
-              <rect x="13" y="3" width="8" height="8" rx="1" className="fill-blue-500"/>
-              <rect x="3" y="13" width="8" height="8" rx="1" className="fill-blue-500"/>
-              <rect x="13" y="13" width="8" height="8" rx="1" className="fill-blue-400"/>
-            </svg>
+            {windowsStartIcon ? (
+              <span className="flex items-center justify-center h-5 w-auto max-h-5 select-none [&>svg]:h-full [&>svg]:w-auto [&>img]:h-full [&>img]:w-auto">
+                {windowsStartIcon}
+              </span>
+            ) : (
+              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
+                <rect x="3" y="3" width="8" height="8" rx="1" className="fill-blue-400"/>
+                <rect x="13" y="3" width="8" height="8" rx="1" className="fill-blue-500"/>
+                <rect x="3" y="13" width="8" height="8" rx="1" className="fill-blue-500"/>
+                <rect x="13" y="13" width="8" height="8" rx="1" className="fill-blue-400"/>
+              </svg>
+            )}
           </button>
 
           {/* Search Button */}

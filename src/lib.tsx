@@ -18,6 +18,7 @@ import { WallpaperCatalogProvider, buildWallpaperCatalog } from '@/lib/wallpaper
 import { UpdateActionsProvider, useUpdateActions, type UpdateActions } from '@/lib/update-actions';
 import { useUpdateStatusStore } from '@/lib/update-status-store';
 import { MenuBarExtrasProvider, type MenuBarExtraItem } from '@/lib/menu-bar-extras';
+import { CustomOSIconProvider } from '@/contexts/CustomOSIconContext';
 import type { WallpaperConfig } from '@/types/desktop';
 import type { SimpleModeProp } from '@/types/simple-mode';
 import './app/globals.css';
@@ -60,6 +61,10 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
    * với nội dung do host cung cấp qua `content`. Ẩn hoàn toàn khi để trống/không truyền.
    */
   menuBarExtras?: MenuBarExtraItem[];
+  /** Custom icon for macOS Apple menu (replaces the Apple glyph) */
+  macOSAppleIcon?: React.ReactNode;
+  /** Custom icon for Windows Start button (replaces the Windows SVG logo) */
+  windowsStartIcon?: React.ReactNode;
 }
 
 /** Fetches update status once on mount so SidebarItem's badge (Settings.tsx)
@@ -90,6 +95,8 @@ export function DeviceLayout({
   fallbackMenuBarAppId,
   resolveEditContextMenuItems,
   menuBarExtras,
+  macOSAppleIcon,
+  windowsStartIcon,
 }: DeviceLayoutProps) {
   const catalog = buildWallpaperCatalog(wallpapers, liveWallpapers, allowLiveWallpapers);
   return (
@@ -98,20 +105,22 @@ export function DeviceLayout({
         <WallpaperImportProvider value={onImportWallpaper ?? null}>
           <UpdateActionsProvider value={updateActions ?? null}>
             <MenuBarExtrasProvider value={menuBarExtras ?? []}>
-              <UpdateStatusInitializer />
-              <ThemeProvider
-                apps={apps}
-                defaultApps={defaultApps}
-                builtInApps={builtInApps}
-                isSimpleMode={isSimpleMode}
-                colorScheme={colorScheme}
-                osTheme={osTheme}
-                fallbackMenuBarAppId={fallbackMenuBarAppId}
-                wallpapers={wallpapers}
-                liveWallpapers={liveWallpapers}
-                allowLiveWallpapers={allowLiveWallpapers}
-                resolveEditContextMenuItems={resolveEditContextMenuItems}
-              />
+              <CustomOSIconProvider config={{ macOSAppleIcon, windowsStartIcon }}>
+                <UpdateStatusInitializer />
+                <ThemeProvider
+                  apps={apps}
+                  defaultApps={defaultApps}
+                  builtInApps={builtInApps}
+                  isSimpleMode={isSimpleMode}
+                  colorScheme={colorScheme}
+                  osTheme={osTheme}
+                  fallbackMenuBarAppId={fallbackMenuBarAppId}
+                  wallpapers={wallpapers}
+                  liveWallpapers={liveWallpapers}
+                  allowLiveWallpapers={allowLiveWallpapers}
+                  resolveEditContextMenuItems={resolveEditContextMenuItems}
+                />
+              </CustomOSIconProvider>
             </MenuBarExtrasProvider>
           </UpdateActionsProvider>
         </WallpaperImportProvider>

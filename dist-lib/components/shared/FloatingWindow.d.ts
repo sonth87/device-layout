@@ -28,6 +28,16 @@ export interface FloatingWindowProps {
      * giữa (khớp About); truyền `w-full h-full ...` khi dùng resizable để nội dung lấp đầy
      * khung đã kéo-giãn thay vì co lại giữa khung. */
     contentClassName?: string;
+    /**
+     * Node DOM để portal vào — mặc định `document.body`. Truyền vào root class của app gọi
+     * (vd `.tts-studio-root`/`.ceremony-root`) khi `children` dùng biến theme CSS custom
+     * property scoped theo root đó, nếu không portal ra thẳng `document.body` sẽ NẰM NGOÀI
+     * subtree đó và mất hết theme (đúng Rule 4, docs/guides/app-css-theming.md của app gọi —
+     * `createPortal` thủ công phải route vào container root class, không phải `document.body`
+     * mặc định). Chrome của chính FloatingWindow (title bar, khung ngoài) không bị ảnh hưởng
+     * vì dùng class Tailwind `dark:` trực tiếp, không phụ thuộc biến theme của app.
+     */
+    container?: Element | DocumentFragment | null;
 }
 /**
  * Cửa sổ nổi, kéo-thả được, không thuộc WindowManager (không có windowId, không xuất hiện
@@ -40,4 +50,4 @@ export interface FloatingWindowProps {
  * nằm ngoài các nhánh DOM mà marquee-select tự động loại trừ (`id^="window-"`, dock, widget…)
  * — xem IconGrid.tsx's handleWindowPointerDown.
  */
-export declare function FloatingWindow({ onClose, children, title, width, height, blocking, resizable, minWidth, minHeight, contentClassName, }: FloatingWindowProps): import('react').ReactPortal | null;
+export declare function FloatingWindow({ onClose, children, title, width, height, blocking, resizable, minWidth, minHeight, contentClassName, container, }: FloatingWindowProps): import('react').ReactPortal | null;

@@ -7,6 +7,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { DropdownPanel } from "./DropdownPanel";
 import { MenuItem, MenuSeparator, useMenuBtnClass, menuBarButtonClass } from "./MenuItems";
 import { PersonalAboutDialog } from "./PersonalAboutDialog";
+import { useCustomOSIcon } from "@/contexts/CustomOSIconContext";
 
 interface AppleMenuDropdownProps {
   activeId: string | null;
@@ -14,6 +15,7 @@ interface AppleMenuDropdownProps {
 }
 
 export function AppleMenuDropdown({ activeId, setActiveId }: AppleMenuDropdownProps) {
+  const { macOSAppleIcon } = useCustomOSIcon();
   const open = activeId === "apple";
   const setOpen = useCallback(
     (o: boolean | ((prev: boolean) => boolean)) => {
@@ -53,7 +55,13 @@ export function AppleMenuDropdown({ activeId, setActiveId }: AppleMenuDropdownPr
           open ? "bg-accent-active text-white" : btnClass,
         )}
       >
-        <span className="text-2xl leading-none font-sans">&#xf8ff;</span>
+        {macOSAppleIcon ? (
+          <span className="flex items-center justify-center h-4 w-auto max-h-4 shrink-0 select-none [&>svg]:h-full [&>svg]:w-auto [&>img]:h-full [&>img]:w-auto">
+            {macOSAppleIcon}
+          </span>
+        ) : (
+          <span className="text-2xl leading-none font-sans">&#xf8ff;</span>
+        )}
       </button>
 
       <DropdownPanel

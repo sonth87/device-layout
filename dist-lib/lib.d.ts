@@ -42,8 +42,12 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
      * với nội dung do host cung cấp qua `content`. Ẩn hoàn toàn khi để trống/không truyền.
      */
     menuBarExtras?: MenuBarExtraItem[];
+    /** Custom icon for macOS Apple menu (replaces the Apple glyph) */
+    macOSAppleIcon?: React.ReactNode;
+    /** Custom icon for Windows Start button (replaces the Windows SVG logo) */
+    windowsStartIcon?: React.ReactNode;
 }
-export declare function DeviceLayout({ assetBaseUrl, apps, defaultApps, builtInApps, onImportWallpaper, wallpapers, liveWallpapers, allowLiveWallpapers, updateActions, isSimpleMode, colorScheme, osTheme, fallbackMenuBarAppId, resolveEditContextMenuItems, menuBarExtras, }: DeviceLayoutProps): import("react/jsx-runtime").JSX.Element;
+export declare function DeviceLayout({ assetBaseUrl, apps, defaultApps, builtInApps, onImportWallpaper, wallpapers, liveWallpapers, allowLiveWallpapers, updateActions, isSimpleMode, colorScheme, osTheme, fallbackMenuBarAppId, resolveEditContextMenuItems, menuBarExtras, macOSAppleIcon, windowsStartIcon, }: DeviceLayoutProps): import("react/jsx-runtime").JSX.Element;
 export type { ThemeProviderProps } from './components/themes/ThemeProvider';
 export type { AppConfig, AppContentProps, AppInstance, MenuBarMenu, MenuBarItem, ContextMenuAction } from './types/app';
 /**

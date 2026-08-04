@@ -6803,55 +6803,70 @@ function ap({ onClose: e }) {
 	}), document.body);
 }
 //#endregion
+//#region src/contexts/CustomOSIconContext.tsx
+var op = E({});
+function sp({ config: e, children: t }) {
+	return /* @__PURE__ */ N(op.Provider, {
+		value: e,
+		children: t
+	});
+}
+function cp() {
+	return k(op);
+}
+//#endregion
 //#region src/components/menubar/AppleMenuDropdown.tsx
-function op({ activeId: e, setActiveId: t }) {
-	let n = e === "apple", r = O((e) => {
-		t((typeof e == "function" ? e(n) : e) ? "apple" : null);
-	}, [n, t]), i = Kf(), [a, o] = M(!1), s = j(null), c = S((e) => e.apps), l = S((e) => e.launchApp), { t: u } = se(), d = O(() => r(!1), [r]);
+function lp({ activeId: e, setActiveId: t }) {
+	let { macOSAppleIcon: n } = cp(), r = e === "apple", i = O((e) => {
+		t((typeof e == "function" ? e(r) : e) ? "apple" : null);
+	}, [r, t]), a = Kf(), [o, s] = M(!1), c = j(null), l = S((e) => e.apps), u = S((e) => e.launchApp), { t: d } = se(), f = O(() => i(!1), [i]);
 	return /* @__PURE__ */ P(be, { children: [
 		/* @__PURE__ */ N("button", {
-			ref: s,
+			ref: c,
 			onMouseDown: (e) => {
-				e.button === 0 && r((e) => !e);
+				e.button === 0 && i((e) => !e);
 			},
 			onMouseEnter: () => {
 				e !== null && t("apple");
 			},
-			className: C(qf, n ? "bg-accent-active text-white" : i),
-			children: /* @__PURE__ */ N("span", {
+			className: C(qf, r ? "bg-accent-active text-white" : a),
+			children: n ? /* @__PURE__ */ N("span", {
+				className: "flex items-center justify-center h-4 w-auto max-h-4 shrink-0 select-none [&>svg]:h-full [&>svg]:w-auto [&>img]:h-full [&>img]:w-auto",
+				children: n
+			}) : /* @__PURE__ */ N("span", {
 				className: "text-2xl leading-none font-sans",
 				children: ""
 			})
 		}),
 		/* @__PURE__ */ P(ip, {
-			anchorRef: s,
-			open: n,
-			onClose: d,
+			anchorRef: c,
+			open: r,
+			onClose: f,
 			minWidth: 220,
 			children: [
 				/* @__PURE__ */ N(Jf, {
-					label: u.aboutThisMac,
+					label: d.aboutThisMac,
 					onClick: () => {
-						r(!1), o(!0);
+						i(!1), s(!0);
 					}
 				}),
 				/* @__PURE__ */ N(Yf, {}),
 				/* @__PURE__ */ N(Jf, {
-					label: u.systemSettings,
+					label: d.systemSettings,
 					onClick: () => {
-						r(!1);
-						let e = c.settings;
-						e && l(e);
+						i(!1);
+						let e = l.settings;
+						e && u(e);
 					}
 				})
 			]
 		}),
-		a && /* @__PURE__ */ N(ap, { onClose: () => o(!1) })
+		o && /* @__PURE__ */ N(ap, { onClose: () => s(!1) })
 	] });
 }
 //#endregion
 //#region src/components/menubar/AppNameDropdown.tsx
-function sp({ appConfig: e, appId: t, activeId: n, setActiveId: r }) {
+function up({ appConfig: e, appId: t, activeId: n, setActiveId: r }) {
 	let i = n === "app-name", a = O((e) => {
 		r((typeof e == "function" ? e(i) : e) ? "app-name" : null);
 	}, [i, r]), o = Kf(), s = j(null), c = S((e) => e.closeWindow), { t: l, getAppName: u } = se();
@@ -6934,7 +6949,7 @@ function sp({ appConfig: e, appId: t, activeId: n, setActiveId: r }) {
 }
 //#endregion
 //#region src/components/menubar/MenuDropdown.tsx
-function cp({ label: e, items: t, appId: n, windowId: r, activeId: i, setActiveId: a }) {
+function dp({ label: e, items: t, appId: n, windowId: r, activeId: i, setActiveId: a }) {
 	let o = i === e, s = O((t) => {
 		a((typeof t == "function" ? t(o) : t) ? e : null);
 	}, [
@@ -6972,7 +6987,7 @@ function cp({ label: e, items: t, appId: n, windowId: r, activeId: i, setActiveI
 }
 //#endregion
 //#region src/contexts/SimpleModeContext.tsx
-var lp = E({
+var fp = E({
 	isSimpleModeActive: !1,
 	wallpaper: !0,
 	allowLiveWallpapers: !0,
@@ -7004,19 +7019,19 @@ var lp = E({
 	],
 	allowDarkModeToggle: !0
 });
-function up({ features: e, children: t }) {
-	return /* @__PURE__ */ N(lp.Provider, {
+function pp({ features: e, children: t }) {
+	return /* @__PURE__ */ N(fp.Provider, {
 		value: e,
 		children: t
 	});
 }
-function dp() {
-	return k(lp);
+function mp() {
+	return k(fp);
 }
 //#endregion
 //#region src/components/menubar/MenuBar.tsx
-function fp({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1, fallbackMenuBarAppId: r = null } = {}) {
-	let i = dp(), a = S((e) => e.activeAppId), o = S((e) => e.apps), s = a ?? r, c = s ? o[s] : null, l = i.menuBar.appleMenu, u = i.menuBar.appNameMenu && !!c, d = c?.menuBarMenus ?? [], f = S((e) => e.wallpaperTextTheme), p = n ? "dark" : f, m = C(qf, "px-2", p === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10"), [h, g] = M(null), _ = rp(), v = i.menuBar.extras && _.length > 0;
+function hp({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1, fallbackMenuBarAppId: r = null } = {}) {
+	let i = mp(), a = S((e) => e.activeAppId), o = S((e) => e.apps), s = a ?? r, c = s ? o[s] : null, l = i.menuBar.appleMenu, u = i.menuBar.appNameMenu && !!c, d = c?.menuBarMenus ?? [], f = S((e) => e.wallpaperTextTheme), p = n ? "dark" : f, m = C(qf, "px-2", p === "light" ? "text-black/70 hover:bg-black/10" : "text-white/80 hover:bg-white/10"), [h, g] = M(null), _ = rp(), v = i.menuBar.extras && _.length > 0;
 	if (!i.menuBar.enabled) return null;
 	let y = i.menuBar.spotlight || i.menuBar.controlCenter || i.menuBar.clock || v;
 	return /* @__PURE__ */ N(Gf.Provider, {
@@ -7033,17 +7048,17 @@ function fp({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1, fallbackM
 					/* @__PURE__ */ P("div", {
 						className: "flex shrink-0 items-center gap-0.5",
 						children: [
-							l && /* @__PURE__ */ N(op, {
+							l && /* @__PURE__ */ N(lp, {
 								activeId: h,
 								setActiveId: g
 							}),
-							u && /* @__PURE__ */ N(sp, {
+							u && /* @__PURE__ */ N(up, {
 								appConfig: c,
 								appId: a,
 								activeId: h,
 								setActiveId: g
 							}),
-							d.map((e) => /* @__PURE__ */ N(cp, {
+							d.map((e) => /* @__PURE__ */ N(dp, {
 								label: e.label,
 								items: e.items,
 								appId: a,
@@ -7090,7 +7105,7 @@ function fp({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1, fallbackM
 }
 //#endregion
 //#region src/components/apps/AppErrorBoundary.tsx
-function pp({ appName: e, error: t, onRetry: n }) {
+function gp({ appName: e, error: t, onRetry: n }) {
 	let { t: r } = se();
 	return /* @__PURE__ */ P("div", {
 		className: "flex h-full w-full flex-col items-center justify-center gap-3 px-6 text-center",
@@ -7117,7 +7132,7 @@ function pp({ appName: e, error: t, onRetry: n }) {
 		]
 	});
 }
-var mp = class extends ue {
+var _p = class extends ue {
 	constructor(...e) {
 		super(...e), this.state = {
 			error: null,
@@ -7136,7 +7151,7 @@ var mp = class extends ue {
 		console.error(`[AppErrorBoundary] App "${this.props.appId}" crashed:`, e, t.componentStack);
 	}
 	render() {
-		return this.state.error ? /* @__PURE__ */ N(pp, {
+		return this.state.error ? /* @__PURE__ */ N(gp, {
 			appName: this.props.appName,
 			error: this.state.error,
 			onRetry: this.handleRetry
@@ -7145,10 +7160,10 @@ var mp = class extends ue {
 			children: this.props.children
 		}, this.state.retryCount);
 	}
-}, hp = {
+}, vp = {
 	Finder: D(() => import("./Finder-BB7oZuyx.js").then((e) => ({ default: e.Finder }))),
 	Terminal: D(() => import("./Terminal-C55a7p1b.js").then((e) => ({ default: e.Terminal }))),
-	Settings: D(() => import("./Settings-CV9ece6m.js").then((e) => ({ default: e.Settings }))),
+	Settings: D(() => import("./Settings-CgY3eDDg.js").then((e) => ({ default: e.Settings }))),
 	Browser: D(() => import("./Browser-hEqHPiIK.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: D(() => import("./TextEditor-iru1gdUU.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: D(() => import("./Clock-BEzpL5Ds.js").then((e) => ({ default: e.Clock }))),
@@ -7157,17 +7172,17 @@ var mp = class extends ue {
 	Photos: D(() => import("./Photos-Dnq0JOOH.js").then((e) => ({ default: e.Photos }))),
 	Music: D(() => import("./Music-CozOuLAL.js").then((e) => ({ default: e.Music }))),
 	Calendar: D(() => import("./Calendar-uT2XargG.js").then((e) => ({ default: e.Calendar }))),
-	Messages: D(() => import("./Messages-7UnG3O91.js").then((e) => ({ default: e.Messages }))),
+	Messages: D(() => import("./Messages-xXrfI5y3.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: D(() => import("./IframeApp-CoyQDe6J.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: D(() => import("./MdxApp-CAJq8zg_.js").then((e) => ({ default: e.MdxApp })))
 };
-function gp() {
+function yp() {
 	return /* @__PURE__ */ N("div", {
 		className: "flex items-center justify-center h-full w-full",
 		children: /* @__PURE__ */ N(Jd, { className: "w-6 h-6 animate-spin text-black/30 dark:text-white/30" })
 	});
 }
-function _p({ appId: e, windowId: t }) {
+function bp({ appId: e, windowId: t }) {
 	let n = S((t) => t.apps[e]);
 	if (!n) return /* @__PURE__ */ P("div", {
 		className: "flex items-center justify-center h-full text-sm text-black/40 dark:text-white/40",
@@ -7176,8 +7191,8 @@ function _p({ appId: e, windowId: t }) {
 	if (n.render) {
 		let r = n.render;
 		return /* @__PURE__ */ N(fe, {
-			fallback: /* @__PURE__ */ N(gp, {}),
-			children: /* @__PURE__ */ N(ce, { children: /* @__PURE__ */ N(mp, {
+			fallback: /* @__PURE__ */ N(yp, {}),
+			children: /* @__PURE__ */ N(ce, { children: /* @__PURE__ */ N(_p, {
 				appId: e,
 				appName: n.name,
 				children: /* @__PURE__ */ N(r, {
@@ -7187,10 +7202,10 @@ function _p({ appId: e, windowId: t }) {
 			}) })
 		});
 	}
-	let r = n.component ? hp[n.component] : void 0;
+	let r = n.component ? vp[n.component] : void 0;
 	return r ? /* @__PURE__ */ N(fe, {
-		fallback: /* @__PURE__ */ N(gp, {}),
-		children: /* @__PURE__ */ N(ce, { children: /* @__PURE__ */ N(mp, {
+		fallback: /* @__PURE__ */ N(yp, {}),
+		children: /* @__PURE__ */ N(ce, { children: /* @__PURE__ */ N(_p, {
 			appId: e,
 			appName: n.name,
 			children: /* @__PURE__ */ N(r, {
@@ -7205,7 +7220,7 @@ function _p({ appId: e, windowId: t }) {
 }
 //#endregion
 //#region src/components/mobile/MobileMenuSheet.tsx
-function vp({ menus: e, appId: t, open: n, onClose: r }) {
+function xp({ menus: e, appId: t, open: n, onClose: r }) {
 	let { t: i } = se(), [a, o] = M(null), s = O((e) => {
 		e.action && window.dispatchEvent(new CustomEvent("app:menu:action", { detail: {
 			appId: t,
@@ -7240,7 +7255,7 @@ function vp({ menus: e, appId: t, open: n, onClose: r }) {
 					children: Xf(e.label, i)
 				}), /* @__PURE__ */ N("div", {
 					className: "rounded-xl overflow-hidden bg-black/[0.03] dark:bg-white/[0.06]",
-					children: e.items.map((e, t) => e.separator ? /* @__PURE__ */ N("div", { className: "h-px mx-3 bg-black/8 dark:bg-white/10" }, `sep-${t}`) : /* @__PURE__ */ N(yp, {
+					children: e.items.map((e, t) => e.separator ? /* @__PURE__ */ N("div", { className: "h-px mx-3 bg-black/8 dark:bg-white/10" }, `sep-${t}`) : /* @__PURE__ */ N(Sp, {
 						item: e,
 						t: i,
 						onSelect: s,
@@ -7252,7 +7267,7 @@ function vp({ menus: e, appId: t, open: n, onClose: r }) {
 		})]
 	}, "sheet")] }) }), document.body);
 }
-function yp({ item: e, t, onSelect: n, expandedKey: r, setExpandedKey: i, depth: a = 0 }) {
+function Sp({ item: e, t, onSelect: n, expandedKey: r, setExpandedKey: i, depth: a = 0 }) {
 	let o = !!e.children && e.children.length > 0, s = r === e.key;
 	return o ? /* @__PURE__ */ P("div", { children: [/* @__PURE__ */ P("button", {
 		onClick: () => i(s ? null : e.key),
@@ -7276,7 +7291,7 @@ function yp({ item: e, t, onSelect: n, expandedKey: r, setExpandedKey: i, depth:
 			},
 			transition: { duration: .16 },
 			className: "overflow-hidden",
-			children: e.children.map((e, o) => e.separator ? /* @__PURE__ */ N("div", { className: "h-px mx-3 bg-black/8 dark:bg-white/10" }, `sep-${o}`) : /* @__PURE__ */ N(yp, {
+			children: e.children.map((e, o) => e.separator ? /* @__PURE__ */ N("div", { className: "h-px mx-3 bg-black/8 dark:bg-white/10" }, `sep-${o}`) : /* @__PURE__ */ N(Sp, {
 				item: e,
 				t,
 				onSelect: n,
@@ -7298,11 +7313,11 @@ function yp({ item: e, t, onSelect: n, expandedKey: r, setExpandedKey: i, depth:
 }
 //#endregion
 //#region src/components/mobile/MobileAppViewer.tsx
-var bp = E(null);
-function xp() {
-	return k(bp);
+var Cp = E(null);
+function wp() {
+	return k(Cp);
 }
-function Sp({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }) {
+function Tp({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }) {
 	let r = S((e) => e.windows), i = S((e) => e.apps), a = S((e) => e.closeWindow), [o, s] = M(!1), [c, l] = M(!1), u = Object.values(r).filter((e) => !e.isMinimized).sort((e, t) => t.zIndex - e.zIndex), d = u[0] ?? null, f = O(() => {
 		d && a(d.id);
 	}, [d, a]), p = d ? i[d.appId] : null, m = Ud(), h = ud(0), g = pd(h, [0, -220], [1, .75]), _ = pd(h, [0, -220], [0, 48]);
@@ -7399,15 +7414,15 @@ function Sp({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }
 			}),
 			/* @__PURE__ */ N("div", {
 				className: "flex-1 overflow-hidden",
-				children: /* @__PURE__ */ N(bp.Provider, {
+				children: /* @__PURE__ */ N(Cp.Provider, {
 					value: s,
-					children: /* @__PURE__ */ N(_p, {
+					children: /* @__PURE__ */ N(bp, {
 						appId: d.appId,
 						windowId: d.id
 					})
 				})
 			}),
-			p.menuBarMenus && p.menuBarMenus.length > 0 && /* @__PURE__ */ N(vp, {
+			p.menuBarMenus && p.menuBarMenus.length > 0 && /* @__PURE__ */ N(xp, {
 				menus: p.menuBarMenus,
 				appId: d.appId,
 				open: c,
@@ -7423,4 +7438,4 @@ function Sp({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }
 	}, d.id) });
 }
 //#endregion
-export { ld as C, ir as D, Y as E, B as O, ud as S, nl as T, Kd as _, up as a, Bd as b, np as c, tf as d, ef as f, qd as g, Xd as h, fp as i, Uf as l, Zd as m, xp as n, dp as o, Qd as p, _p as r, cp as s, Sp as t, nf as u, Gd as v, pl as w, pd as x, Wd as y };
+export { B as A, pd as C, nl as D, pl as E, Y as O, Bd as S, ld as T, Xd as _, pp as a, Gd as b, sp as c, Uf as d, nf as f, Zd as g, Qd as h, hp as i, ir as k, cp as l, ef as m, wp as n, mp as o, tf as p, bp as r, dp as s, Tp as t, np as u, qd as v, ud as w, Wd as x, Kd as y };

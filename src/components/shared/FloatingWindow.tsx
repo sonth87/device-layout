@@ -33,6 +33,16 @@ export interface FloatingWindowProps {
    * giữa (khớp About); truyền `w-full h-full ...` khi dùng resizable để nội dung lấp đầy
    * khung đã kéo-giãn thay vì co lại giữa khung. */
   contentClassName?: string;
+  /**
+   * Node DOM để portal vào — mặc định `document.body`. Truyền vào root class của app gọi
+   * (vd `.tts-studio-root`/`.ceremony-root`) khi `children` dùng biến theme CSS custom
+   * property scoped theo root đó, nếu không portal ra thẳng `document.body` sẽ NẰM NGOÀI
+   * subtree đó và mất hết theme (đúng Rule 4, docs/guides/app-css-theming.md của app gọi —
+   * `createPortal` thủ công phải route vào container root class, không phải `document.body`
+   * mặc định). Chrome của chính FloatingWindow (title bar, khung ngoài) không bị ảnh hưởng
+   * vì dùng class Tailwind `dark:` trực tiếp, không phụ thuộc biến theme của app.
+   */
+  container?: Element | DocumentFragment | null;
 }
 
 /**
@@ -57,6 +67,7 @@ export function FloatingWindow({
   minWidth = 260,
   minHeight = 160,
   contentClassName,
+  container,
 }: FloatingWindowProps) {
   const windowRef = useRef<HTMLDivElement>(null);
   // null = chưa từng kéo/resize, khung vẫn nằm giữa màn hình qua flex centering của container
@@ -212,6 +223,6 @@ export function FloatingWindow({
         )}
       </div>
     </div>,
-    document.body,
+    container ?? document.body,
   );
 }
