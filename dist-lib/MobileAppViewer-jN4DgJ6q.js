@@ -6245,7 +6245,7 @@ function Uf({ children: e, className: t, variant: n = "panel", forceGlass: r, bo
 		]
 	}) : /* @__PURE__ */ P("div", {
 		ref: _,
-		className: C("relative overflow-hidden", u ? n === "panel" ? C("bg-white/60 dark:bg-[#1a1c26]/64 border-white/40 dark:border-white/15", m) : C("bg-white/12 dark:bg-white/5 border-white/30 dark:border-white/15", m, "inset_0_1px_0_rgba(255,255,255,0.4)") : C(n === "panel" ? "bg-white/95 dark:bg-[#1a1c26]/95 border-white/20 dark:border-white/10" : "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10", m), "border", t),
+		className: C("relative overflow-hidden", u ? n === "panel" ? C("bg-white/60 dark:bg-[#1a1c26]/64 border-white/40 dark:border-white/15", m) : C("bg-white/12 dark:bg-white/5 border-white/30 dark:border-white/15", m, "inset_0_1px_0_rgba(255,255,255,0.4)") : C(n === "panel" ? "bg-white/95 dark:bg-[#1a1c26]/95 border-white/20 dark:border-white/10" : "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10", m), n === "menubar" || n === "taskbar" ? "border-b" : "border", t),
 		style: {
 			...p,
 			backdropFilter: v,
@@ -7039,11 +7039,11 @@ function hp({ onSpotlight: e, isSimpleMode: t = !1, forceDark: n = !1, fallbackM
 		children: /* @__PURE__ */ N(Uf, {
 			variant: "menubar",
 			forceGlass: !n && void 0,
-			className: n ? "border-black/70 bg-[#111318] shadow-none" : void 0,
+			className: C("h-(--menubar-height) w-full", n ? "border-b-black/70 bg-[#111318] shadow-none" : void 0),
 			children: /* @__PURE__ */ P("div", {
 				"data-menubar": "true",
 				"data-fullscreen-menubar": n ? "true" : void 0,
-				className: "flex h-(--menubar-height) w-full items-center px-2",
+				className: "flex h-full w-full items-center px-2",
 				children: [
 					/* @__PURE__ */ P("div", {
 						className: "flex shrink-0 items-center gap-0.5",
@@ -7163,7 +7163,7 @@ var _p = class extends ue {
 }, vp = {
 	Finder: D(() => import("./Finder-BB7oZuyx.js").then((e) => ({ default: e.Finder }))),
 	Terminal: D(() => import("./Terminal-C55a7p1b.js").then((e) => ({ default: e.Terminal }))),
-	Settings: D(() => import("./Settings-CgY3eDDg.js").then((e) => ({ default: e.Settings }))),
+	Settings: D(() => import("./Settings-D4esjlpO.js").then((e) => ({ default: e.Settings }))),
 	Browser: D(() => import("./Browser-hEqHPiIK.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: D(() => import("./TextEditor-iru1gdUU.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: D(() => import("./Clock-BEzpL5Ds.js").then((e) => ({ default: e.Clock }))),
@@ -7172,7 +7172,7 @@ var _p = class extends ue {
 	Photos: D(() => import("./Photos-Dnq0JOOH.js").then((e) => ({ default: e.Photos }))),
 	Music: D(() => import("./Music-CozOuLAL.js").then((e) => ({ default: e.Music }))),
 	Calendar: D(() => import("./Calendar-uT2XargG.js").then((e) => ({ default: e.Calendar }))),
-	Messages: D(() => import("./Messages-xXrfI5y3.js").then((e) => ({ default: e.Messages }))),
+	Messages: D(() => import("./Messages-BlOviMRw.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: D(() => import("./IframeApp-CoyQDe6J.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: D(() => import("./MdxApp-CAJq8zg_.js").then((e) => ({ default: e.MdxApp })))
 };

@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, _ as C, a as w, b as T, c as E, d as D, f as O, h as k, i as A, k as j, l as M, o as N, p as P, r as ee, s as F, t as te, u as ne, v as re, w as ie, x as ae, y as oe } from "./MobileAppViewer-B0SLPfkx.js";
+import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, _ as C, a as w, b as T, c as E, d as D, f as O, h as k, i as A, k as j, l as M, o as N, p as P, r as ee, s as F, t as te, u as ne, v as re, w as ie, x as ae, y as oe } from "./MobileAppViewer-jN4DgJ6q.js";
 import { c as se, d as ce, l as le, s as ue, t as I, u as de } from "./store-8-JrD4GH.js";
 import { t as L } from "./utils-B6YmNDS2.js";
 import { t as R } from "./createLucideIcon--WjuKCts.js";
-import { a as fe, c as pe, d as me, f as he, g as ge, h as _e, i as ve, l as ye, m as be, n as xe, o as Se, p as z, r as Ce, s as we, t as Te, u as Ee } from "./update-actions-BW2Al5Zd.js";
+import { a as fe, c as pe, d as me, f as he, g as ge, h as _e, i as ve, l as ye, m as be, n as xe, o as Se, p as z, r as Ce, s as we, t as Te, u as Ee } from "./update-actions-e1TqtlaG.js";
 import { t as De } from "./check-DoT5IS9-.js";
 import { t as Oe } from "./chevron-right-BcSxNxws.js";
 import { t as ke } from "./grid-3x3-CZiMuCC6.js";
@@ -5274,12 +5274,17 @@ function ga({ onOpenApp: e }) {
 		});
 		F = e.coords, te = e.hoveredIndex;
 	}
-	W(() => {
+	let ne = G(F);
+	ne.current = F;
+	let re = G(C);
+	re.current = C;
+	let ie = G(w);
+	ie.current = w, W(() => {
 		let e = (e) => {
 			if (e.button !== 0) return;
 			let t = e.target;
 			if (t.closest("[id^=\"window-\"]") || t.closest("[data-windowchrome=\"true\"]") || t.closest("[data-menubar=\"true\"]") || t.closest("[data-dock=\"true\"]") || t.closest("[data-widget=\"true\"]") || t.closest("[data-app-icon=\"true\"]") || t.closest("[data-menu-portal=\"true\"]") || t.closest("[data-radix-popper-content-wrapper]") || !f.current) return;
-			let n = f.current.getBoundingClientRect(), r = e.clientX - n.left, i = e.clientY - n.top, a = e.shiftKey || e.metaKey || e.ctrlKey;
+			let n = f.current.getBoundingClientRect(), r = e.clientX - n.left, i = e.clientY - n.top, a = e.shiftKey || e.metaKey || e.ctrlKey, o = a ? new Set(P.current) : /* @__PURE__ */ new Set();
 			a || _(/* @__PURE__ */ new Set()), y({
 				startX: r,
 				startY: i,
@@ -5294,35 +5299,30 @@ function ga({ onOpenApp: e }) {
 					currentX: n,
 					currentY: s
 				} : null);
-				let l = Math.min(r, n), u = Math.min(i, s), d = Math.max(r, n), p = Math.max(i, s), m = c === "bottom" ? o + 24 : o + 104, h = c === "bottom" ? o + 40 : o + 24, g = new Set(a ? P.current : []);
-				for (let e of ee.current) {
-					let t = F[e.id];
-					if (!t) continue;
-					let n = t.x, r = t.y, i = t.x + m, o = t.y + h;
-					l < i && d > n && u < o && p > r ? g.add(e.id) : a || g.delete(e.id);
-				}
-				_(g);
-			}, l = () => {
-				S.current = !1, y(null), window.removeEventListener("pointermove", s), window.removeEventListener("pointerup", l);
+				let c = Math.min(r, n), l = Math.min(i, s), u = Math.max(r, n), d = Math.max(i, s), p = new Set(o);
+				f.current.querySelectorAll("[data-app-icon=\"true\"]").forEach((e) => {
+					let n = e.getAttribute("data-app-id");
+					if (!n) return;
+					let r = e.getBoundingClientRect(), i = r.left - t.left, o = r.top - t.top, s = r.right - t.left, f = r.bottom - t.top;
+					c < s && u > i && l < f && d > o ? p.add(n) : a || p.delete(n);
+				}), _(p);
+			}, c = () => {
+				S.current = !1, y(null), window.removeEventListener("pointermove", s), window.removeEventListener("pointerup", c);
 			};
-			window.addEventListener("pointermove", s), window.addEventListener("pointerup", l);
+			window.addEventListener("pointermove", s), window.addEventListener("pointerup", c);
 		};
 		return window.addEventListener("pointerdown", e), () => {
 			window.removeEventListener("pointerdown", e);
 		};
-	}, [
-		c,
-		o,
-		F
-	]);
-	let ne = (e, t) => {
+	}, []);
+	let ae = (e, t) => {
 		t.shiftKey || t.metaKey || t.ctrlKey ? _((t) => {
 			let n = new Set(t);
 			return n.has(e) ? n.delete(e) : n.add(e), n;
 		}) : g.has(e) || _(/* @__PURE__ */ new Set([e]));
-	}, re = (e) => {
+	}, oe = (e) => {
 		_(/* @__PURE__ */ new Set([e]));
-	}, ie = (e) => {
+	}, se = (e) => {
 		let t = g;
 		g.has(e) || (t = /* @__PURE__ */ new Set([e]), _(t));
 		let n = {};
@@ -5335,7 +5335,7 @@ function ga({ onOpenApp: e }) {
 			x: F[e]?.x || 0,
 			y: F[e]?.y || 0
 		});
-	}, ae = (e, t, n) => {
+	}, ce = (e, t, n) => {
 		let r = b[e];
 		if (!r) {
 			h(null);
@@ -5389,15 +5389,12 @@ function ga({ onOpenApp: e }) {
 		},
 		children: [
 			v && /* @__PURE__ */ J("div", {
-				className: "absolute rounded-sm pointer-events-none",
+				className: "absolute rounded-sm border border-white/70 bg-white/25 shadow-sm pointer-events-none z-20 backdrop-blur-[1px]",
 				style: {
 					left: Math.min(v.startX, v.currentX),
 					top: Math.min(v.startY, v.currentY),
 					width: Math.abs(v.startX - v.currentX),
-					height: Math.abs(v.startY - v.currentY),
-					border: "0.75px solid rgba(255, 255, 255, 0.28)",
-					backgroundColor: "rgba(255, 255, 255, 0.08)",
-					boxShadow: "0 0 4px rgba(0, 0, 0, 0.05)"
+					height: Math.abs(v.startY - v.currentY)
 				}
 			}),
 			m && (() => {
@@ -5448,15 +5445,15 @@ function ga({ onOpenApp: e }) {
 					y: r,
 					isSelected: g.has(t.id),
 					onOpen: e,
-					onSelect: ne,
-					onUpAfterClick: re,
-					onDragStart: () => ie(t.id),
+					onSelect: ae,
+					onUpAfterClick: oe,
+					onDragStart: () => se(t.id),
 					onDrag: (e, n) => h({
 						appId: t.id,
 						x: e,
 						y: n
 					}),
-					onDrop: (e, n) => ae(t.id, e, n)
+					onDrop: (e, n) => ce(t.id, e, n)
 				}, t.id);
 			})
 		]

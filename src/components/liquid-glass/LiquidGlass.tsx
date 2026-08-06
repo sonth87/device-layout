@@ -182,7 +182,9 @@ export function LiquidGlass({
                 "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10",
                 shadowCls,
               ),
-        "border",
+        variant === "menubar" || variant === "taskbar"
+          ? "border-b"
+          : "border",
         className,
       )}
       style={{

@@ -65,12 +65,15 @@ export function MenuBar({
       <LiquidGlass
         variant="menubar"
         forceGlass={forceDark ? false : undefined}
-        className={forceDark ? "border-black/70 bg-[#111318] shadow-none" : undefined}
+        className={cn(
+          "h-(--menubar-height) w-full",
+          forceDark ? "border-b-black/70 bg-[#111318] shadow-none" : undefined
+        )}
       >
         <div
           data-menubar="true"
           data-fullscreen-menubar={forceDark ? "true" : undefined}
-          className="flex h-(--menubar-height) w-full items-center px-2"
+          className="flex h-full w-full items-center px-2"
         >
           {/* Left: Apple + app menus */}
           <div className="flex shrink-0 items-center gap-0.5">

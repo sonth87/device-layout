@@ -269,6 +269,15 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
     hoveredIndex = res.hoveredIndex;
   }
 
+  const resolvedCoordsRef = useRef(resolvedCoords);
+  resolvedCoordsRef.current = resolvedCoords;
+
+  const cellWRef = useRef(cellW);
+  cellWRef.current = cellW;
+
+  const cellHRef = useRef(cellH);
+  cellHRef.current = cellH;
+
   // Marquee selection interaction handler
   useEffect(() => {
     const handleWindowPointerDown = (e: PointerEvent) => {
@@ -295,6 +304,7 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
       const startY = e.clientY - rect.top;
 
       const hasModifier = e.shiftKey || e.metaKey || e.ctrlKey;
+      const initialSelected = hasModifier ? new Set(selectedAppIdsRef.current) : new Set<string>();
 
       if (!hasModifier) {
         setSelectedAppIds(new Set());
@@ -328,29 +338,29 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
         const x2 = Math.max(startX, curX);
         const y2 = Math.max(startY, curY);
 
-        const iconWidth = labelPosition === 'bottom' ? iconSize + 24 : iconSize + 104;
-        const iconHeight = labelPosition === 'bottom' ? iconSize + 40 : iconSize + 24;
+        const newSelected = new Set<string>(initialSelected);
 
-        const newSelected = new Set<string>(hasModifier ? selectedAppIdsRef.current : []);
+        // Query DOM elements to check actual visual screen bounds of each icon
+        const iconElements = containerRef.current.querySelectorAll<HTMLElement>('[data-app-icon="true"]');
 
-        for (const app of sortedAppListRef.current) {
-          // Compare bounds using resolved coords (stable or dragged)
-          const appCoord = resolvedCoords[app.id];
-          if (!appCoord) continue;
+        iconElements.forEach((el) => {
+          const appId = el.getAttribute('data-app-id');
+          if (!appId) return;
 
-          const ix1 = appCoord.x;
-          const iy1 = appCoord.y;
-          const ix2 = appCoord.x + iconWidth;
-          const iy2 = appCoord.y + iconHeight;
+          const elRect = el.getBoundingClientRect();
+          const ix1 = elRect.left - moveRect.left;
+          const iy1 = elRect.top - moveRect.top;
+          const ix2 = elRect.right - moveRect.left;
+          const iy2 = elRect.bottom - moveRect.top;
 
           const intersects = x1 < ix2 && x2 > ix1 && y1 < iy2 && y2 > iy1;
 
           if (intersects) {
-            newSelected.add(app.id);
+            newSelected.add(appId);
           } else if (!hasModifier) {
-            newSelected.delete(app.id);
+            newSelected.delete(appId);
           }
-        }
+        });
 
         setSelectedAppIds(newSelected);
       };
@@ -370,7 +380,7 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
     return () => {
       window.removeEventListener('pointerdown', handleWindowPointerDown);
     };
-  }, [labelPosition, iconSize, resolvedCoords]);
+  }, []);
 
   // AppIcon click/drag callbacks
   const handleSelectIcon = (appId: string, e: React.PointerEvent) => {
@@ -496,15 +506,12 @@ export function IconGrid({ onOpenApp }: IconGridProps) {
       {/* Marquee Selection Rectangle rendering */}
       {selectionBox && (
         <div
-          className="absolute rounded-sm pointer-events-none"
+          className="absolute rounded-sm border border-white/70 bg-white/25 shadow-sm pointer-events-none z-20 backdrop-blur-[1px]"
           style={{
             left: Math.min(selectionBox.startX, selectionBox.currentX),
             top: Math.min(selectionBox.startY, selectionBox.currentY),
             width: Math.abs(selectionBox.startX - selectionBox.currentX),
             height: Math.abs(selectionBox.startY - selectionBox.currentY),
-            border: '0.75px solid rgba(255, 255, 255, 0.28)',
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            boxShadow: '0 0 4px rgba(0, 0, 0, 0.05)',
           }}
         />
       )}
