@@ -1,4 +1,4 @@
-export type SnapZone = 'left' | 'right' | 'top' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | null;
+export type SnapZone = "left" | "right" | "top" | "top-left" | "top-right" | "bottom-left" | "bottom-right" | null;
 type SnapListener = (zone: SnapZone, isDragging: boolean, topInset: number, bottomInset: number) => void;
 export declare function onSnapZoneChange(fn: SnapListener): () => void;
 export declare function emitSnapZone(zone: SnapZone, isDragging: boolean, topInset?: number, bottomInset?: number): void;

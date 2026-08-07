@@ -112,7 +112,7 @@ export function DockItem({ appConfig, isRunning, hasMinimized, mouseX, onOpen, b
           </Tooltip.Trigger>
 
           {/* Running / minimized indicator dot — always 6 px, below icon */}
-          <div className="shrink-0 h-2.5 flex items-center justify-center gap-1">
+          <div className="shrink-0 h-1.5 flex items-center justify-center gap-1 -mb-0.5">
             {showOpenAppIndicators && isRunning && !hasMinimized && (
               <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.4)]" />
             )}

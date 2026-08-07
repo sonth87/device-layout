@@ -1,5 +1,5 @@
 import { C as e, E as t, O as n, S as r, T as i, a, b as o, c as s, d as c, f as l, g as u, i as d, l as f, m as p, n as m, o as h, p as g, r as _, s as v, t as y, u as b, v as x } from "./Combination-dkRdWOFm.js";
-import { t as S } from "./store-8-JrD4GH.js";
+import { t as S } from "./store-C0-yHQqC.js";
 import { t as C } from "./utils-B6YmNDS2.js";
 import { t as w } from "./createLucideIcon--WjuKCts.js";
 import { t as ee } from "./chevron-right-BcSxNxws.js";
@@ -9,7 +9,7 @@ import { t as re } from "./search-BKG97C0x.js";
 import { t as ie } from "./sun-DdSv2tyc.js";
 import { t as ae } from "./volume-2-DAfADR-a.js";
 import { t as oe } from "./x-BYw6fhgP.js";
-import { t as se } from "./useTranslation-C5kXMUqi.js";
+import { t as se } from "./useTranslation-Cx98_kLA.js";
 import { t as ce } from "./AppViewport-BDJLAndL.js";
 import * as T from "react";
 import { Children as le, Component as ue, Fragment as de, Suspense as fe, createContext as E, createElement as pe, forwardRef as me, isValidElement as he, lazy as D, useCallback as O, useContext as k, useEffect as A, useId as ge, useInsertionEffect as _e, useLayoutEffect as ve, useMemo as ye, useRef as j, useState as M } from "react";
@@ -5592,10 +5592,10 @@ var Wd = {
 			},
 			window: {
 				maximizeInsets: {
-					top: 28,
+					top: 30,
 					bottom: 0
 				},
-				dragTopInset: 28,
+				dragTopInset: 30,
 				minTitleVisibleHeight: 40
 			}
 		}
@@ -7161,20 +7161,20 @@ var _p = class extends ue {
 		}, this.state.retryCount);
 	}
 }, vp = {
-	Finder: D(() => import("./Finder-BB7oZuyx.js").then((e) => ({ default: e.Finder }))),
-	Terminal: D(() => import("./Terminal-C55a7p1b.js").then((e) => ({ default: e.Terminal }))),
-	Settings: D(() => import("./Settings-D4esjlpO.js").then((e) => ({ default: e.Settings }))),
-	Browser: D(() => import("./Browser-hEqHPiIK.js").then((e) => ({ default: e.Browser }))),
-	TextEditor: D(() => import("./TextEditor-iru1gdUU.js").then((e) => ({ default: e.TextEditor }))),
-	Clock: D(() => import("./Clock-BEzpL5Ds.js").then((e) => ({ default: e.Clock }))),
-	Calculator: D(() => import("./Calculator-ozMCBLt4.js").then((e) => ({ default: e.Calculator }))),
-	Notes: D(() => import("./Notes-Ccx_EdMi.js").then((e) => ({ default: e.Notes }))),
-	Photos: D(() => import("./Photos-Dnq0JOOH.js").then((e) => ({ default: e.Photos }))),
-	Music: D(() => import("./Music-CozOuLAL.js").then((e) => ({ default: e.Music }))),
-	Calendar: D(() => import("./Calendar-uT2XargG.js").then((e) => ({ default: e.Calendar }))),
-	Messages: D(() => import("./Messages-BlOviMRw.js").then((e) => ({ default: e.Messages }))),
-	IframeApp: D(() => import("./IframeApp-CoyQDe6J.js").then((e) => ({ default: e.IframeApp }))),
-	MdxApp: D(() => import("./MdxApp-CAJq8zg_.js").then((e) => ({ default: e.MdxApp })))
+	Finder: D(() => import("./Finder-DisPfZtY.js").then((e) => ({ default: e.Finder }))),
+	Terminal: D(() => import("./Terminal-dIR2kxeh.js").then((e) => ({ default: e.Terminal }))),
+	Settings: D(() => import("./Settings-Cy3_0OhX.js").then((e) => ({ default: e.Settings }))),
+	Browser: D(() => import("./Browser-BV9RioSe.js").then((e) => ({ default: e.Browser }))),
+	TextEditor: D(() => import("./TextEditor-DlOOM7SR.js").then((e) => ({ default: e.TextEditor }))),
+	Clock: D(() => import("./Clock-BBMUzuN2.js").then((e) => ({ default: e.Clock }))),
+	Calculator: D(() => import("./Calculator-CUKNVq3V.js").then((e) => ({ default: e.Calculator }))),
+	Notes: D(() => import("./Notes-cVL5BPks.js").then((e) => ({ default: e.Notes }))),
+	Photos: D(() => import("./Photos-DmIQ7S8y.js").then((e) => ({ default: e.Photos }))),
+	Music: D(() => import("./Music-DK7a9P1O.js").then((e) => ({ default: e.Music }))),
+	Calendar: D(() => import("./Calendar-Bfm838C5.js").then((e) => ({ default: e.Calendar }))),
+	Messages: D(() => import("./Messages-DnMkiZb4.js").then((e) => ({ default: e.Messages }))),
+	IframeApp: D(() => import("./IframeApp-IrwvPnZ4.js").then((e) => ({ default: e.IframeApp }))),
+	MdxApp: D(() => import("./MdxApp-BKP3ick0.js").then((e) => ({ default: e.MdxApp })))
 };
 function yp() {
 	return /* @__PURE__ */ N("div", {

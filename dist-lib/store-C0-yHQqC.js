@@ -652,7 +652,7 @@ var ze = {
 //#endregion
 //#region src/store/window-slice.ts
 function Be(e, t) {
-	let n = typeof window < "u" ? window.innerWidth : 1280, r = typeof window < "u" ? window.innerHeight : 800, i = Math.max(1, n), a = Math.max(1, r - 28 - 16), o = e.minSize?.width ?? 320, s = e.minSize?.height ?? 240, c = t?.width ?? e.defaultSize?.width ?? 800, l = t?.height ?? e.defaultSize?.height ?? 600, u = Math.min(Math.max(c, Math.min(o, i)), i), d = Math.min(Math.max(l, Math.min(s, a)), a), f = Math.max(0, Math.round((i - u) / 2)), p = Math.max(28, Math.round(28 + (a - d) / 2)), m = t?.x ?? e.defaultPosition?.x ?? f, h = t?.y ?? e.defaultPosition?.y ?? p;
+	let n = typeof window < "u" ? window.innerWidth : 1280, r = typeof window < "u" ? window.innerHeight : 800, i = Math.max(1, n), a = Math.max(1, r - 30 - 16), o = e.minSize?.width ?? 320, s = e.minSize?.height ?? 240, c = t?.width ?? e.defaultSize?.width ?? 800, l = t?.height ?? e.defaultSize?.height ?? 600, u = Math.min(Math.max(c, Math.min(o, i)), i), d = Math.min(Math.max(l, Math.min(s, a)), a), f = Math.max(0, Math.round((i - u) / 2)), p = Math.max(30, Math.round(30 + (a - d) / 2)), m = t?.x ?? e.defaultPosition?.x ?? f, h = t?.y ?? e.defaultPosition?.y ?? p;
 	return typeof window > "u" ? {
 		x: m,
 		y: h,
@@ -665,7 +665,7 @@ function Be(e, t) {
 		height: d
 	}, {
 		x: 0,
-		y: 28,
+		y: 30,
 		width: i,
 		height: a
 	}, {

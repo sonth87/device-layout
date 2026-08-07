@@ -1,4 +1,4 @@
-import { t as e } from "./store-8-JrD4GH.js";
+import { t as e } from "./store-C0-yHQqC.js";
 //#region src/hooks/useTranslation.ts
 var t = {
 	en: {

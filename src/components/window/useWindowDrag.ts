@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useCallback, useRef } from 'react';
-import type { MotionValue } from 'motion/react';
-import { useStore } from '@/store';
-import { useShallow } from 'zustand/react/shallow';
-import { useTheme } from '@/hooks/useTheme';
-import { emitSnapZone, getSnapZone, getSnapRect } from '@/lib/snap-events';
+import { useCallback, useRef } from "react";
+import type { MotionValue } from "motion/react";
+import { useStore } from "@/store";
+import { useShallow } from "zustand/react/shallow";
+import { useTheme } from "@/hooks/useTheme";
+import { emitSnapZone, getSnapZone, getSnapRect } from "@/lib/snap-events";
 
 // How many px past the viewport edge the cursor must travel before the window breaks free
 const EDGE_SNAP_ESCAPE = 50;
@@ -51,15 +51,27 @@ interface UseWindowDragOptions {
   height?: MotionValue<number>;
 }
 
-export function useWindowDrag({ windowId, x, y, width, height }: UseWindowDragOptions) {
-  const { moveWindow, resizeWindow, maximizeWindow, toggleMaximize, focusWindow } = useStore(
+export function useWindowDrag({
+  windowId,
+  x,
+  y,
+  width,
+  height,
+}: UseWindowDragOptions) {
+  const {
+    moveWindow,
+    resizeWindow,
+    maximizeWindow,
+    toggleMaximize,
+    focusWindow,
+  } = useStore(
     useShallow((s) => ({
       moveWindow: s.moveWindow,
       resizeWindow: s.resizeWindow,
       maximizeWindow: s.maximizeWindow,
       toggleMaximize: s.toggleMaximize,
       focusWindow: s.focusWindow,
-    }))
+    })),
   );
   const allowDragOutOfBounds = useStore((s) => s.allowDragOutOfBounds);
   const { config } = useTheme();
@@ -89,8 +101,14 @@ export function useWindowDrag({ windowId, x, y, width, height }: UseWindowDragOp
       // This prevents a single click on the title bar from restoring the window.
       const win = useStore.getState().windows[windowId];
       if (win?.isMaximized || win?.isFullScreen || win?.prevRect) {
-        const fallbackW = win.rect.width < window.innerWidth && win.rect.width > 0 ? win.rect.width : 800;
-        const fallbackH = win.rect.height < window.innerHeight && win.rect.height > 0 ? win.rect.height : 600;
+        const fallbackW =
+          win.rect.width < window.innerWidth && win.rect.width > 0
+            ? win.rect.width
+            : 800;
+        const fallbackH =
+          win.rect.height < window.innerHeight && win.rect.height > 0
+            ? win.rect.height
+            : 600;
         const prevRectToUse = win.prevRect ?? {
           x: Math.round(window.innerWidth / 2 - fallbackW / 2),
           y: Math.round(window.innerHeight / 2 - fallbackH / 2),
@@ -128,17 +146,24 @@ export function useWindowDrag({ windowId, x, y, width, height }: UseWindowDragOp
       const winH = winEl?.offsetHeight ?? 400;
 
       // Calculate escape state before setting up listeners
-      const hardMinX = useStore.getState().allowDragOutOfBounds ? -(winW - 200) : 0;
-      const hardMaxX = useStore.getState().allowDragOutOfBounds ? vpW - Math.min(200, winW) : vpW - winW;
+      const hardMinX = useStore.getState().allowDragOutOfBounds
+        ? -(winW - 200)
+        : 0;
+      const hardMaxX = useStore.getState().allowDragOutOfBounds
+        ? vpW - Math.min(200, winW)
+        : vpW - winW;
       const hardMinY = dragTopInset;
-      const hardMaxY = useStore.getState().allowDragOutOfBounds 
-        ? vpH - Math.min(200, winH) 
+      const hardMaxY = useStore.getState().allowDragOutOfBounds
+        ? vpH - Math.min(200, winH)
         : vpH - bottomInset - winH;
 
       const currentX = startRef.current?.winX ?? x.get();
       const currentY = startRef.current?.winY ?? y.get();
-      const isCurrentlyEscaped = currentX < hardMinX || currentX > hardMaxX ||
-                                 currentY < hardMinY || currentY > hardMaxY;
+      const isCurrentlyEscaped =
+        currentX < hardMinX ||
+        currentX > hardMaxX ||
+        currentY < hardMinY ||
+        currentY > hardMaxY;
 
       // Update escaped flag
       if (startRef.current) {
@@ -155,14 +180,23 @@ export function useWindowDrag({ windowId, x, y, width, height }: UseWindowDragOp
           if (Math.hypot(dx, dy) < 5) return; // not moved enough yet — do nothing
 
           const { prevRect, maximizedRect } = startRef.current.pendingRestore;
-          const ratioX = (startRef.current.mouseX - maximizedRect.x) / maximizedRect.width;
-          const newWinX = Math.round(startRef.current.mouseX - prevRect.width * Math.min(Math.max(ratioX, 0.1), 0.9));
+          const ratioX =
+            (startRef.current.mouseX - maximizedRect.x) / maximizedRect.width;
+          const newWinX = Math.round(
+            startRef.current.mouseX -
+              prevRect.width * Math.min(Math.max(ratioX, 0.1), 0.9),
+          );
           const newWinY = startRef.current.mouseY - 15;
 
           useStore.setState((state) => {
             const w = state.windows[windowId];
             if (w) {
-              w.rect = { x: newWinX, y: newWinY, width: prevRect.width, height: prevRect.height };
+              w.rect = {
+                x: newWinX,
+                y: newWinY,
+                width: prevRect.width,
+                height: prevRect.height,
+              };
               w.prevRect = null;
               w.isMaximized = false;
               w.isFullScreen = false;
@@ -170,7 +204,12 @@ export function useWindowDrag({ windowId, x, y, width, height }: UseWindowDragOp
           });
           if (width) width.set(prevRect.width);
           if (height) height.set(prevRect.height);
-          resizeWindow(windowId, { x: newWinX, y: newWinY, width: prevRect.width, height: prevRect.height });
+          resizeWindow(windowId, {
+            x: newWinX,
+            y: newWinY,
+            width: prevRect.width,
+            height: prevRect.height,
+          });
 
           startRef.current.winX = newWinX;
           startRef.current.winY = newWinY;
@@ -180,25 +219,28 @@ export function useWindowDrag({ windowId, x, y, width, height }: UseWindowDragOp
         const vpW = window.innerWidth;
         const vpH = window.innerHeight;
 
-        const rawX = startRef.current.winX + (mv.clientX - startRef.current.mouseX);
-        const rawY = startRef.current.winY + (mv.clientY - startRef.current.mouseY);
+        const rawX =
+          startRef.current.winX + (mv.clientX - startRef.current.mouseX);
+        const rawY =
+          startRef.current.winY + (mv.clientY - startRef.current.mouseY);
 
         const winEl = document.getElementById(`window-${windowId}`);
         const winW = winEl?.offsetWidth ?? 600;
         const winH = winEl?.offsetHeight ?? 400;
-        const minTitleVisibleHeight = config.layout.window.minTitleVisibleHeight;
+        const minTitleVisibleHeight =
+          config.layout.window.minTitleVisibleHeight;
 
         // Absolute limits — ensure a portion of the window always stays reachable
         const minOverlap = 200;
-        const hardMinX = allowDragOutOfBounds 
-          ? -(winW - Math.min(minOverlap, winW)) 
+        const hardMinX = allowDragOutOfBounds
+          ? -(winW - Math.min(minOverlap, winW))
           : 0;
-        const hardMaxX = allowDragOutOfBounds 
-          ? vpW - Math.min(minOverlap, winW) 
+        const hardMaxX = allowDragOutOfBounds
+          ? vpW - Math.min(minOverlap, winW)
           : vpW - winW;
         const hardMinY = dragTopInset;
-        const hardMaxY = allowDragOutOfBounds 
-          ? vpH - Math.min(minOverlap, winH) 
+        const hardMaxY = allowDragOutOfBounds
+          ? vpH - Math.min(minOverlap, winH)
           : vpH - bottomInset - winH;
 
         // Viewport-edge snap points
@@ -213,7 +255,7 @@ export function useWindowDrag({ windowId, x, y, width, height }: UseWindowDragOp
         // If window is already outside bounds, disable all snap behavior and use infinite limits
         const effectiveSnapLoEnabled = !hasEscaped && false;
         const effectiveSnapHiEnabled = !hasEscaped && true;
-        
+
         // If escaped, use infinite hard limits to allow free dragging without clamping
         const effectiveHardMinX = hasEscaped ? -Infinity : hardMinX;
         const effectiveHardMaxX = hasEscaped ? Infinity : hardMaxX;
@@ -221,41 +263,60 @@ export function useWindowDrag({ windowId, x, y, width, height }: UseWindowDragOp
         const effectiveHardMaxY = hasEscaped ? Infinity : hardMaxY;
 
         // X: magnetic snap on left and right viewport edges (disabled if escaped)
-        const nextX = applyEdgeSnap(rawX, leftEdge, rightEdge, effectiveHardMinX, effectiveHardMaxX, !hasEscaped, !hasEscaped);
+        const nextX = applyEdgeSnap(
+          rawX,
+          leftEdge,
+          rightEdge,
+          effectiveHardMinX,
+          effectiveHardMaxX,
+          !hasEscaped,
+          !hasEscaped,
+        );
 
         // Y: magnetic snap only applies if window hasn't escaped
-        const nextY = applyEdgeSnap(rawY, hardMinY, bottomEdge, effectiveHardMinY, effectiveHardMaxY, effectiveSnapLoEnabled, effectiveSnapHiEnabled);
+        const nextY = applyEdgeSnap(
+          rawY,
+          hardMinY,
+          bottomEdge,
+          effectiveHardMinY,
+          effectiveHardMaxY,
+          effectiveSnapLoEnabled,
+          effectiveSnapHiEnabled,
+        );
 
         x.set(nextX);
         y.set(nextY);
 
-        // Detect top snap only when pointer is hovered deep inside the top menu bar (near the very top of the screen, e.g. Y <= 10px),
-        // matching macOS behavior where you must drag the pointer near the top edge.
-        const atTopBoundary = mv.clientY <= 10;
-        const zone = atTopBoundary ? 'top' : getSnapZone(mv.clientX, mv.clientY, dragTopInset);
+        // Detect top snap when pointer is within top 25px of the screen (inside top menu bar region)
+        const atTopBoundary = mv.clientY <= 25;
+        const zone = atTopBoundary
+          ? "top"
+          : getSnapZone(mv.clientX, mv.clientY, dragTopInset);
         emitSnapZone(zone, true, dragTopInset, bottomInset);
       };
 
       const onUp = (uv: PointerEvent) => {
         if (!startRef.current) return;
 
-        // If pending restore was never triggered (pure click, no drag), just cancel
+        // If pending Restore was never triggered (pure click, no drag), just cancel
         if (startRef.current.pendingRestore) {
           startRef.current = null;
-          window.removeEventListener('pointermove', onMove);
-          window.removeEventListener('pointerup', onUp);
+          window.removeEventListener("pointermove", onMove);
+          window.removeEventListener("pointerup", onUp);
           return;
         }
 
         const finalX = x.get();
         const finalY = y.get();
 
-        // Same Y <= 10px check on release.
-        const atTopBoundary = uv.clientY <= 10;
-        const zone = atTopBoundary ? 'top' : getSnapZone(uv.clientX, uv.clientY, dragTopInset);
+        // Same Y <= 25px check on release.
+        const atTopBoundary = uv.clientY <= 25;
+        const zone = atTopBoundary
+          ? "top"
+          : getSnapZone(uv.clientX, uv.clientY, dragTopInset);
         const snapRect = getSnapRect(zone, dragTopInset, bottomInset);
         if (snapRect) {
-          if (zone === 'top') {
+          if (zone === "top") {
             // Full-screen snap — mark as maximized so auto-hide dock triggers
             maximizeWindow(windowId, snapRect);
           } else {
@@ -267,14 +328,26 @@ export function useWindowDrag({ windowId, x, y, width, height }: UseWindowDragOp
 
         emitSnapZone(null, false, dragTopInset, bottomInset);
         startRef.current = null;
-        window.removeEventListener('pointermove', onMove);
-        window.removeEventListener('pointerup', onUp);
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
       };
 
-      window.addEventListener('pointermove', onMove);
-      window.addEventListener('pointerup', onUp);
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
     },
-    [config.layout.window.dragTopInset, config.layout.chrome.taskbarHeight, config.layout.window.minTitleVisibleHeight, x, y, windowId, moveWindow, resizeWindow, maximizeWindow, toggleMaximize, focusWindow]
+    [
+      config.layout.window.dragTopInset,
+      config.layout.chrome.taskbarHeight,
+      config.layout.window.minTitleVisibleHeight,
+      x,
+      y,
+      windowId,
+      moveWindow,
+      resizeWindow,
+      maximizeWindow,
+      toggleMaximize,
+      focusWindow,
+    ],
   );
 
   return { onPointerDown };

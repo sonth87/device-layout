@@ -42,8 +42,8 @@ export function Dock({ onOpenApp }: DockProps) {
 
   const gap = Math.round(dockSize * 0.28);
   const px = Math.round(dockSize * 0.47);
-  const pt = Math.round(dockSize * 0.28);
-  const pb = Math.round(dockSize * 0.19);
+  const pt = Math.round(dockSize * 0.12);
+  const pb = Math.round(dockSize * 0.20);
 
   return (
     /*

@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, _ as C, a as w, b as T, c as E, d as D, f as O, h as k, i as A, k as j, l as M, o as N, p as P, r as ee, s as F, t as te, u as ne, v as re, w as ie, x as ae, y as oe } from "./MobileAppViewer-jN4DgJ6q.js";
-import { c as se, d as ce, l as le, s as ue, t as I, u as de } from "./store-8-JrD4GH.js";
+import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, _ as C, a as w, b as T, c as E, d as D, f as O, h as k, i as A, k as j, l as M, o as N, p as P, r as ee, s as F, t as te, u as ne, v as re, w as ie, x as ae, y as oe } from "./MobileAppViewer-BXRRd3jj.js";
+import { c as se, d as ce, l as le, s as ue, t as I, u as de } from "./store-C0-yHQqC.js";
 import { t as L } from "./utils-B6YmNDS2.js";
 import { t as R } from "./createLucideIcon--WjuKCts.js";
-import { a as fe, c as pe, d as me, f as he, g as ge, h as _e, i as ve, l as ye, m as be, n as xe, o as Se, p as z, r as Ce, s as we, t as Te, u as Ee } from "./update-actions-e1TqtlaG.js";
+import { a as fe, c as pe, d as me, f as he, g as ge, h as _e, i as ve, l as ye, m as be, n as xe, o as Se, p as z, r as Ce, s as we, t as Te, u as Ee } from "./update-actions-B9BD4jTM.js";
 import { t as De } from "./check-DoT5IS9-.js";
 import { t as Oe } from "./chevron-right-BcSxNxws.js";
 import { t as ke } from "./grid-3x3-CZiMuCC6.js";
@@ -14,7 +14,7 @@ import { t as Ye } from "./search-BKG97C0x.js";
 import { t as Xe } from "./sun-DdSv2tyc.js";
 import { t as Ze } from "./volume-2-DAfADR-a.js";
 import { t as B } from "./x-BYw6fhgP.js";
-import { t as V } from "./useTranslation-C5kXMUqi.js";
+import { t as V } from "./useTranslation-Cx98_kLA.js";
 import * as H from "react";
 import Qe, { Suspense as $e, lazy as et, startTransition as tt, useCallback as U, useContext as nt, useEffect as W, useInsertionEffect as rt, useMemo as it, useRef as G, useState as K } from "react";
 import { Fragment as q, jsx as J, jsxs as Y } from "react/jsx-runtime";
@@ -454,7 +454,7 @@ function At({ windowId: e, onPointerDown: t }) {
 		y: S,
 		width: l.width,
 		height: l.height - S - C
-	};
+	}, { osTheme: E } = T(), D = E === "ipad";
 	return /* @__PURE__ */ Y("div", {
 		"data-windowchrome": "true",
 		className: L("flex items-center gap-0 h-(--window-chrome-height) px-4 shrink-0", "select-none cursor-move z-30", x ? "bg-transparent border-b-0" : L("border-b border-black/8 dark:border-white/8", n.isFocused ? "bg-neutral-100/95 dark:bg-[#151821]/97" : "bg-neutral-50/95 dark:bg-[#0F1115]/97")),
@@ -466,12 +466,12 @@ function At({ windowId: e, onPointerDown: t }) {
 		onMouseEnter: () => d(!0),
 		onMouseLeave: () => d(!1),
 		children: [/* @__PURE__ */ Y("div", {
-			className: "flex items-center gap-2 mr-3",
+			className: L("absolute left-4 flex items-center gap-2 origin-left transition-all duration-200 ease-out z-10", D && "hover:scale-130 hover:gap-1.5"),
 			onPointerDown: (e) => e.stopPropagation(),
 			children: [
 				/* @__PURE__ */ J("button", {
 					onClick: () => i(e),
-					className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75",
+					className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
 					style: { backgroundColor: n.isFocused || u ? "#ff5f57" : "#d1d1d1" },
 					title: "Close",
 					children: u && /* @__PURE__ */ J(B, {
@@ -481,7 +481,7 @@ function At({ windowId: e, onPointerDown: t }) {
 				}),
 				/* @__PURE__ */ J("button", {
 					onClick: () => a(e),
-					className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75",
+					className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
 					style: { backgroundColor: n.isFocused || u ? "#febc2e" : "#d1d1d1" },
 					title: "Minimize",
 					children: u && /* @__PURE__ */ J(St, {
@@ -491,7 +491,7 @@ function At({ windowId: e, onPointerDown: t }) {
 				}),
 				/* @__PURE__ */ J("button", {
 					onClick: () => s(e),
-					className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75",
+					className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
 					style: { backgroundColor: n.isFocused || u ? "#28c840" : "#d1d1d1" },
 					title: n.isFullScreen ? "Exit Full Screen" : "Enter Full Screen",
 					children: u && /* @__PURE__ */ J(xt, {
@@ -501,7 +501,7 @@ function At({ windowId: e, onPointerDown: t }) {
 				})
 			]
 		}), x && n.appId === "calculator" ? /* @__PURE__ */ Y("div", {
-			className: "flex-1 flex items-center justify-between pl-6 h-full select-none",
+			className: "flex-1 flex items-center justify-between pl-16 h-full select-none",
 			children: [/* @__PURE__ */ J("div", {
 				onPointerDown: (e) => e.stopPropagation(),
 				children: /* @__PURE__ */ J("button", {
@@ -548,13 +548,13 @@ function At({ windowId: e, onPointerDown: t }) {
 					}, t))
 				})]
 			})]
-		}) : /* @__PURE__ */ Y(q, { children: [/* @__PURE__ */ J("div", {
-			className: "flex-1 flex items-center justify-center pointer-events-none",
+		}) : /* @__PURE__ */ J("div", {
+			className: "w-full flex items-center justify-center pointer-events-none",
 			children: !x && /* @__PURE__ */ J("span", {
 				className: L("text-[13px] font-medium truncate max-w-[220px]", n.isFocused ? "text-black/75 dark:text-white/80" : "text-black/35 dark:text-white/35"),
 				children: f(n.appId, n.title)
 			})
-		}), /* @__PURE__ */ J("div", { className: L(x ? "w-0" : "w-[72px]") })] })]
+		})]
 	});
 }
 function jt({ windowId: e, onPointerDown: t }) {
@@ -652,7 +652,7 @@ function Mt({ windowId: e, onPointerDown: t }) {
 			children: [
 				/* @__PURE__ */ J("button", {
 					onClick: () => a(e),
-					className: L("w-11 h-full flex items-center justify-center transition-colors", n.isFocused || f ? "hover:bg-black/10 dark:hover:bg-white/10 text-black/70 dark:text-white/70" : "text-black/30 dark:text-white/30 pointer-events-none"),
+					className: L("w-11 h-full flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95", n.isFocused || f ? "hover:bg-black/10 dark:hover:bg-white/10 text-black/70 dark:text-white/70" : "text-black/30 dark:text-white/30 pointer-events-none"),
 					children: /* @__PURE__ */ J(St, {
 						className: "w-3.5 h-3.5",
 						strokeWidth: 2
@@ -662,7 +662,7 @@ function Mt({ windowId: e, onPointerDown: t }) {
 					onClick: () => {
 						n.isFullScreen || n.isMaximized ? c(e) : s(e);
 					},
-					className: L("w-11 h-full flex items-center justify-center transition-colors", n.isFocused || f ? "hover:bg-black/10 dark:hover:bg-white/10 text-black/70 dark:text-white/70" : "text-black/30 dark:text-white/30 pointer-events-none"),
+					className: L("w-11 h-full flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95", n.isFocused || f ? "hover:bg-black/10 dark:hover:bg-white/10 text-black/70 dark:text-white/70" : "text-black/30 dark:text-white/30 pointer-events-none"),
 					title: n.isMaximized || n.isFullScreen ? "Restore" : "Fullscreen",
 					children: n.isMaximized || n.isFullScreen ? /* @__PURE__ */ J(gt, {
 						className: "w-3 h-3 rotate-180",
@@ -674,7 +674,7 @@ function Mt({ windowId: e, onPointerDown: t }) {
 				}),
 				/* @__PURE__ */ J("button", {
 					onClick: () => i(e),
-					className: L("w-11 h-full flex items-center justify-center transition-colors", n.isFocused || f ? "hover:bg-red-500 hover:text-white text-black/70 dark:text-white/70" : "text-black/30 dark:text-white/30 pointer-events-none"),
+					className: L("w-11 h-full flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95", n.isFocused || f ? "hover:bg-red-500 hover:text-white text-black/70 dark:text-white/70" : "text-black/30 dark:text-white/30 pointer-events-none"),
 					children: /* @__PURE__ */ J(B, {
 						className: "w-3.5 h-3.5",
 						strokeWidth: 2
@@ -782,7 +782,7 @@ function qt(e, t, n = 0, r = 0) {
 	Gt.forEach((i) => i(e, t, n, r));
 }
 function Jt(e, t, n = 0) {
-	let r = window.innerWidth, i = window.innerHeight, a = e <= 10, o = e >= r - 10, s = t <= n + 10, c = t >= i - 10;
+	let r = window.innerWidth, i = window.innerHeight, a = e <= 10, o = e >= r - 10, s = t <= (n > 0 ? 25 : 10), c = t >= i - 10;
 	return s && a ? "top-left" : s && o ? "top-right" : s ? "top" : a && c ? "bottom-left" : o && c ? "bottom-right" : a ? "left" : o ? "right" : null;
 }
 function Yt(e, t = 0, n = 0) {
@@ -906,14 +906,14 @@ function Qt({ windowId: e, x: t, y: n, width: r, height: i }) {
 			let y = u ? -(_ - Math.min(200, _)) : 0, b = u ? s - Math.min(200, _) : s - _, x = m, S = u ? c - Math.min(200, v) : c - h - v, C = s - _, w = c - h - v;
 			if (!f.current) return;
 			let T = f.current.escaped, E = !T && !1, D = !T && !0, O = T ? -Infinity : y, k = T ? Infinity : b, A = T ? -Infinity : x, j = T ? Infinity : S, M = Zt(l, 0, C, O, k, !T, !T), N = Zt(p, x, w, A, j, E, D);
-			t.set(M), n.set(N), qt(a.clientY <= 10 ? "top" : Jt(a.clientX, a.clientY, m), !0, m, h);
+			t.set(M), n.set(N), qt(a.clientY <= 25 ? "top" : Jt(a.clientX, a.clientY, m), !0, m, h);
 		}, k = (r) => {
 			if (!f.current) return;
 			if (f.current.pendingRestore) {
 				f.current = null, window.removeEventListener("pointermove", O), window.removeEventListener("pointerup", k);
 				return;
 			}
-			let i = t.get(), c = n.get(), l = r.clientY <= 10 ? "top" : Jt(r.clientX, r.clientY, m), u = Yt(l, m, h);
+			let i = t.get(), c = n.get(), l = r.clientY <= 25 ? "top" : Jt(r.clientX, r.clientY, m), u = Yt(l, m, h);
 			u ? l === "top" ? s(e, u) : o(e, u) : a(e, i, c), qt(null, !1, m, h), f.current = null, window.removeEventListener("pointermove", O), window.removeEventListener("pointerup", k);
 		};
 		window.addEventListener("pointermove", O), window.addEventListener("pointerup", k);
@@ -1811,7 +1811,7 @@ function er({ appConfig: e, isRunning: t, hasMinimized: n, mouseX: r, onOpen: i,
 					}), m && /* @__PURE__ */ J("span", { className: "absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-[#11141B]" })]
 				})
 			}), /* @__PURE__ */ Y("div", {
-				className: "shrink-0 h-2.5 flex items-center justify-center gap-1",
+				className: "shrink-0 h-1.5 flex items-center justify-center gap-1 -mb-0.5",
 				children: [f && t && !n && /* @__PURE__ */ J("span", { className: "w-1.5 h-1.5 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.4)]" }), f && n && /* @__PURE__ */ J("span", { className: "w-1.5 h-1.5 rounded-full bg-white/60 shadow-[0_1px_2px_rgba(0,0,0,0.3)] border border-white/20" })]
 			})]
 		}), /* @__PURE__ */ J(Zn, { children: /* @__PURE__ */ Y(Qn, {
@@ -1834,7 +1834,7 @@ function er({ appConfig: e, isRunning: t, hasMinimized: n, mouseX: r, onOpen: i,
 function tr({ onOpenApp: e }) {
 	let t = I((e) => e.dockAppIds), n = I((e) => e.apps), r = I((e) => e.runningAppIds), i = I((e) => e.windows), a = I((e) => e.launchApp), o = I((e) => e.dockSize), s = I((e) => e.dockMagnification), c = Math.max(o * (1 + s), o + s * 54), l = c - o, u = ie(Infinity), d = t.map((e) => n[e]).filter(Boolean), f = r.filter((e) => !t.includes(e)).map((e) => n[e]).filter(Boolean), p = (e) => {
 		a(e);
-	}, m = Math.round(o * .28), h = Math.round(o * .47), g = Math.round(o * .28), _ = Math.round(o * .19);
+	}, m = Math.round(o * .28), h = Math.round(o * .47), g = Math.round(o * .12), _ = Math.round(o * .2);
 	return /* @__PURE__ */ Y("div", {
 		"data-dock": "true",
 		className: "relative overflow-visible",
@@ -2567,16 +2567,13 @@ function kr({ onOpenApp: e }) {
 						WebkitBackdropFilter: "blur(24px) saturate(180%)",
 						boxShadow: "0 2px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.25)"
 					},
-					children: E.map((t) => /* @__PURE__ */ Y("button", {
+					children: E.map((t) => /* @__PURE__ */ J("button", {
 						onClick: () => e(t),
-						className: "flex flex-col items-center gap-1.5",
-						children: [/* @__PURE__ */ J(z, {
+						className: "flex flex-col items-center justify-center transition-transform active:scale-95",
+						children: /* @__PURE__ */ J(z, {
 							appConfig: t,
 							size: 64
-						}), /* @__PURE__ */ J("span", {
-							className: "text-white/80 text-[10px] font-medium",
-							children: n(t.id, t.name)
-						})]
+						})
 					}, t.id))
 				})
 			}),
@@ -5492,13 +5489,13 @@ function ba(e) {
 //#endregion
 //#region src/components/widgets/WidgetRenderer.tsx
 var xa = {
-	ClockWidget: et(() => import("./ClockWidget-DPsX9WoQ.js").then((e) => ({ default: e.ClockWidget }))),
-	ClockDarkWidget: et(() => import("./ClockWidget-DPsX9WoQ.js").then((e) => ({ default: e.ClockDarkWidget }))),
-	ClockWorldWidget: et(() => import("./ClockWidget-DPsX9WoQ.js").then((e) => ({ default: e.ClockWorldWidget }))),
-	ClockDigitalWidget: et(() => import("./ClockWidget-DPsX9WoQ.js").then((e) => ({ default: e.ClockDigitalWidget }))),
-	ClockFlipWidget: et(() => import("./ClockWidget-DPsX9WoQ.js").then((e) => ({ default: e.ClockFlipWidget }))),
-	CalendarWidget: et(() => import("./CalendarWidget-C1EpmiVa.js").then((e) => ({ default: e.CalendarWidget }))),
-	CalendarTodayWidget: et(() => import("./CalendarWidget-C1EpmiVa.js").then((e) => ({ default: e.CalendarTodayWidget }))),
+	ClockWidget: et(() => import("./ClockWidget-BWd04cIW.js").then((e) => ({ default: e.ClockWidget }))),
+	ClockDarkWidget: et(() => import("./ClockWidget-BWd04cIW.js").then((e) => ({ default: e.ClockDarkWidget }))),
+	ClockWorldWidget: et(() => import("./ClockWidget-BWd04cIW.js").then((e) => ({ default: e.ClockWorldWidget }))),
+	ClockDigitalWidget: et(() => import("./ClockWidget-BWd04cIW.js").then((e) => ({ default: e.ClockDigitalWidget }))),
+	ClockFlipWidget: et(() => import("./ClockWidget-BWd04cIW.js").then((e) => ({ default: e.ClockFlipWidget }))),
+	CalendarWidget: et(() => import("./CalendarWidget-BKnrsMCT.js").then((e) => ({ default: e.CalendarWidget }))),
+	CalendarTodayWidget: et(() => import("./CalendarWidget-BKnrsMCT.js").then((e) => ({ default: e.CalendarTodayWidget }))),
 	WeatherWidget: et(() => import("./WeatherWidget-D4EQ_pKf.js").then((e) => ({ default: e.WeatherWidget }))),
 	NotesWidget: et(() => import("./NotesWidget-CWxNXfe-.js").then((e) => ({ default: e.NotesWidget })))
 };
@@ -6481,7 +6478,7 @@ function Ba({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 		layout: {
 			...F.layout,
 			desktopInsets: {
-				top: 28,
+				top: 30,
 				right: 0,
 				bottom: 0,
 				left: 0
@@ -6494,7 +6491,7 @@ function Ba({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 			window: {
 				...F.layout.window,
 				maximizeInsets: {
-					top: 28,
+					top: 30,
 					bottom: 0
 				}
 			}

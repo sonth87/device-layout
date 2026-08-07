@@ -1,10 +1,10 @@
-import { g as e, m as t } from "./MobileAppViewer-jN4DgJ6q.js";
+import { g as e, m as t } from "./MobileAppViewer-BXRRd3jj.js";
 import { t as n } from "./utils-B6YmNDS2.js";
 import { t as r } from "./createLucideIcon--WjuKCts.js";
 import { t as i } from "./plus-Dx6tdmvY.js";
 import { t as a } from "./search-BKG97C0x.js";
-import { t as o } from "./useTranslation-C5kXMUqi.js";
-import { n as s, r as c, t as l } from "./MobileSplitView-fdKTuHM9.js";
+import { t as o } from "./useTranslation-Cx98_kLA.js";
+import { n as s, r as c, t as l } from "./MobileSplitView-CO576Nkf.js";
 import { useEffect as u, useRef as d, useState as f } from "react";
 import { jsx as p, jsxs as m } from "react/jsx-runtime";
 var h = r("send", [["path", {

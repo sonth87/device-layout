@@ -54,7 +54,7 @@ type Getter = () => WindowSlice & {
 };
 
 function defaultRect(appConfig: AppConfig, overrides?: WindowOpenOptions): WindowRect {
-  const topInset = 28; // MenuBar height in macOS
+  const topInset = 30; // MenuBar height in macOS (plus 2px buffer)
   const bottomInset = 16;
 
   const winW = typeof window !== 'undefined' ? window.innerWidth : 1280;

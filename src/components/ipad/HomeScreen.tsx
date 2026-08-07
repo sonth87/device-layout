@@ -372,10 +372,9 @@ export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
             <button
               key={app.id}
               onClick={() => onOpenApp(app)}
-              className="flex flex-col items-center gap-1.5"
+              className="flex flex-col items-center justify-center transition-transform active:scale-95"
             >
               <AppIconImage appConfig={app} size={64} />
-              <span className="text-white/80 text-[10px] font-medium">{getAppName(app.id, app.name)}</span>
             </button>
           ))}
         </div>

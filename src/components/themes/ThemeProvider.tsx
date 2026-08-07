@@ -244,7 +244,7 @@ export function ThemeProvider({
       hasDock: false,
       layout: {
         ...themeConfig.layout,
-        desktopInsets: { top: 28, right: 0, bottom: 0, left: 0 },
+        desktopInsets: { top: 30, right: 0, bottom: 0, left: 0 },
         chrome: {
           ...themeConfig.layout.chrome,
           dockHeight: 0,
@@ -252,7 +252,7 @@ export function ThemeProvider({
         },
         window: {
           ...themeConfig.layout.window,
-          maximizeInsets: { top: 28, bottom: 0 },
+          maximizeInsets: { top: 30, bottom: 0 },
         },
       },
     };
