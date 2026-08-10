@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, _ as C, a as w, b as T, c as E, d as D, f as O, h as k, i as A, k as j, l as M, o as N, p as P, r as ee, s as F, t as te, u as ne, v as re, w as ie, x as ae, y as oe } from "./MobileAppViewer-BXRRd3jj.js";
-import { c as se, d as ce, l as le, s as ue, t as I, u as de } from "./store-C0-yHQqC.js";
+import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, _ as C, a as w, b as T, c as E, d as D, f as O, h as k, i as A, k as j, l as M, o as N, p as P, r as ee, s as F, t as te, u as ne, v as re, w as ie, x as ae, y as oe } from "./MobileAppViewer-dfrO3nzx.js";
+import { c as se, d as ce, l as le, s as ue, t as I, u as de } from "./store-D89CiGUZ.js";
 import { t as L } from "./utils-B6YmNDS2.js";
 import { t as R } from "./createLucideIcon--WjuKCts.js";
-import { a as fe, c as pe, d as me, f as he, g as ge, h as _e, i as ve, l as ye, m as be, n as xe, o as Se, p as z, r as Ce, s as we, t as Te, u as Ee } from "./update-actions-B9BD4jTM.js";
+import { a as fe, c as pe, d as me, f as he, g as ge, h as _e, i as ve, l as ye, m as be, n as xe, o as Se, p as z, r as Ce, s as we, t as Te, u as Ee } from "./update-actions-yGyhIwhS.js";
 import { t as De } from "./check-DoT5IS9-.js";
 import { t as Oe } from "./chevron-right-BcSxNxws.js";
 import { t as ke } from "./grid-3x3-CZiMuCC6.js";
@@ -14,7 +14,7 @@ import { t as Ye } from "./search-BKG97C0x.js";
 import { t as Xe } from "./sun-DdSv2tyc.js";
 import { t as Ze } from "./volume-2-DAfADR-a.js";
 import { t as B } from "./x-BYw6fhgP.js";
-import { t as V } from "./useTranslation-Cx98_kLA.js";
+import { t as V } from "./useTranslation-ByRogKHu.js";
 import * as H from "react";
 import Qe, { Suspense as $e, lazy as et, startTransition as tt, useCallback as U, useContext as nt, useEffect as W, useInsertionEffect as rt, useMemo as it, useRef as G, useState as K } from "react";
 import { Fragment as q, jsx as J, jsxs as Y } from "react/jsx-runtime";
@@ -934,17 +934,17 @@ function Qt({ windowId: e, x: t, y: n, width: r, height: i }) {
 //#endregion
 //#region src/components/window/useWindowResize.ts
 function $t({ windowId: e, x: t, y: n, width: r, height: i, minWidth: a = 320, minHeight: o = 240 }) {
-	let s = I((e) => e.resizeWindow), c = G(null);
-	return { getResizeHandler: U((l) => (u) => {
-		u.preventDefault(), u.stopPropagation(), u.currentTarget.setPointerCapture(u.pointerId);
-		let d = I.getState().windows[e], f = {
+	let s = I((e) => e.resizeWindow), { config: c } = T(), l = G(null);
+	return { getResizeHandler: U((u) => (d) => {
+		d.preventDefault(), d.stopPropagation(), d.currentTarget.setPointerCapture(d.pointerId);
+		let f = I.getState().windows[e], p = {
 			x: t.get(),
 			y: n.get(),
 			width: r.get(),
 			height: i.get()
 		};
-		if (d?.isFullScreen || d?.isMaximized) {
-			let a = d.prevRect ?? {
+		if (f?.isFullScreen || f?.isMaximized) {
+			let a = f.prevRect ?? {
 				x: Math.round((window.innerWidth - 800) / 2),
 				y: Math.round((window.innerHeight - 600) / 2),
 				width: 800,
@@ -953,26 +953,31 @@ function $t({ windowId: e, x: t, y: n, width: r, height: i, minWidth: a = 320, m
 			I.setState((t) => {
 				let n = t.windows[e];
 				n && (n.isFullScreen = !1, n.isMaximized = !1, n.rect = { ...a }, n.prevRect = null);
-			}), t.set(a.x), n.set(a.y), r.set(a.width), i.set(a.height), f = { ...a };
+			}), t.set(a.x), n.set(a.y), r.set(a.width), i.set(a.height), p = { ...a };
 		}
-		c.current = {
-			mouseX: u.clientX,
-			mouseY: u.clientY,
-			rect: f
+		l.current = {
+			mouseX: d.clientX,
+			mouseY: d.clientY,
+			rect: p
 		};
-		let p = (e) => {
-			if (!c.current) return;
-			let s = de(l, e.clientX - c.current.mouseX, e.clientY - c.current.mouseY, c.current.rect, a, o);
-			t.set(s.x), n.set(s.y), r.set(s.width), i.set(s.height);
-		}, m = () => {
-			c.current && (s(e, {
+		let m = (e) => {
+			if (!l.current) return;
+			let s = e.clientX - l.current.mouseX, d = e.clientY - l.current.mouseY, f = c.layout.window.dragTopInset, p = c.layout.chrome.taskbarHeight, m = {
+				minX: 0,
+				minY: f,
+				maxX: window.innerWidth,
+				maxY: window.innerHeight - p
+			}, h = de(u, s, d, l.current.rect, a, o, m);
+			t.set(h.x), n.set(h.y), r.set(h.width), i.set(h.height);
+		}, h = () => {
+			l.current && (s(e, {
 				x: t.get(),
 				y: n.get(),
 				width: r.get(),
 				height: i.get()
-			}), c.current = null, window.removeEventListener("pointermove", p), window.removeEventListener("pointerup", m));
+			}), l.current = null, window.removeEventListener("pointermove", m), window.removeEventListener("pointerup", h));
 		};
-		window.addEventListener("pointermove", p), window.addEventListener("pointerup", m);
+		window.addEventListener("pointermove", m), window.addEventListener("pointerup", h);
 	}, [
 		t,
 		n,
@@ -981,7 +986,9 @@ function $t({ windowId: e, x: t, y: n, width: r, height: i, minWidth: a = 320, m
 		e,
 		a,
 		o,
-		s
+		s,
+		c.layout.window.dragTopInset,
+		c.layout.chrome.taskbarHeight
 	]) };
 }
 //#endregion
@@ -1931,11 +1938,17 @@ function nr({ onClose: e, children: t, title: n, width: r = 288, height: i, bloc
 		m,
 		c
 	]), T = U((e) => {
-		y.current && h({
-			width: Math.max(s, y.current.w + (e.clientX - y.current.mx)),
-			height: Math.max(c, y.current.h + (e.clientY - y.current.my))
+		if (!y.current) return;
+		let t = window.innerWidth, n = window.innerHeight, r = f?.left ?? 0, i = f?.top ?? 0, a = Math.max(s, t - r), o = Math.max(c, n - i);
+		h({
+			width: Math.min(a, Math.max(s, y.current.w + (e.clientX - y.current.mx))),
+			height: Math.min(o, Math.max(c, y.current.h + (e.clientY - y.current.my)))
 		});
-	}, [s, c]), E = U(() => {
+	}, [
+		f,
+		s,
+		c
+	]), E = U(() => {
 		y.current = null;
 	}, []);
 	return typeof document > "u" ? null : at(/* @__PURE__ */ Y("div", {
@@ -5489,13 +5502,13 @@ function ba(e) {
 //#endregion
 //#region src/components/widgets/WidgetRenderer.tsx
 var xa = {
-	ClockWidget: et(() => import("./ClockWidget-BWd04cIW.js").then((e) => ({ default: e.ClockWidget }))),
-	ClockDarkWidget: et(() => import("./ClockWidget-BWd04cIW.js").then((e) => ({ default: e.ClockDarkWidget }))),
-	ClockWorldWidget: et(() => import("./ClockWidget-BWd04cIW.js").then((e) => ({ default: e.ClockWorldWidget }))),
-	ClockDigitalWidget: et(() => import("./ClockWidget-BWd04cIW.js").then((e) => ({ default: e.ClockDigitalWidget }))),
-	ClockFlipWidget: et(() => import("./ClockWidget-BWd04cIW.js").then((e) => ({ default: e.ClockFlipWidget }))),
-	CalendarWidget: et(() => import("./CalendarWidget-BKnrsMCT.js").then((e) => ({ default: e.CalendarWidget }))),
-	CalendarTodayWidget: et(() => import("./CalendarWidget-BKnrsMCT.js").then((e) => ({ default: e.CalendarTodayWidget }))),
+	ClockWidget: et(() => import("./ClockWidget-dNkYEhRC.js").then((e) => ({ default: e.ClockWidget }))),
+	ClockDarkWidget: et(() => import("./ClockWidget-dNkYEhRC.js").then((e) => ({ default: e.ClockDarkWidget }))),
+	ClockWorldWidget: et(() => import("./ClockWidget-dNkYEhRC.js").then((e) => ({ default: e.ClockWorldWidget }))),
+	ClockDigitalWidget: et(() => import("./ClockWidget-dNkYEhRC.js").then((e) => ({ default: e.ClockDigitalWidget }))),
+	ClockFlipWidget: et(() => import("./ClockWidget-dNkYEhRC.js").then((e) => ({ default: e.ClockFlipWidget }))),
+	CalendarWidget: et(() => import("./CalendarWidget-Dw7WzlOu.js").then((e) => ({ default: e.CalendarWidget }))),
+	CalendarTodayWidget: et(() => import("./CalendarWidget-Dw7WzlOu.js").then((e) => ({ default: e.CalendarTodayWidget }))),
 	WeatherWidget: et(() => import("./WeatherWidget-D4EQ_pKf.js").then((e) => ({ default: e.WeatherWidget }))),
 	NotesWidget: et(() => import("./NotesWidget-CWxNXfe-.js").then((e) => ({ default: e.NotesWidget })))
 };

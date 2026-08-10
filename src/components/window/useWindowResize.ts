@@ -6,6 +6,8 @@ import type { ResizeEdge } from '@/types/window';
 import { useStore } from '@/store';
 import { calcResizeDelta } from '@/lib/window-math';
 
+import { useTheme } from '@/hooks/useTheme';
+
 interface UseWindowResizeOptions {
   windowId: string;
   x: MotionValue<number>;
@@ -26,6 +28,7 @@ export function useWindowResize({
   minHeight = 240,
 }: UseWindowResizeOptions) {
   const resizeWindow = useStore((s) => s.resizeWindow);
+  const { config } = useTheme();
   const startRef = useRef<{
     mouseX: number;
     mouseY: number;
@@ -75,7 +78,20 @@ export function useWindowResize({
           if (!startRef.current) return;
           const dx = mv.clientX - startRef.current.mouseX;
           const dy = mv.clientY - startRef.current.mouseY;
-          const newRect = calcResizeDelta(edge, dx, dy, startRef.current.rect, minWidth, minHeight);
+
+          const dragTopInset = config.layout.window.dragTopInset;
+          const bottomInset = config.layout.chrome.taskbarHeight;
+          const vpW = window.innerWidth;
+          const vpH = window.innerHeight;
+
+          const bounds = {
+            minX: 0,
+            minY: dragTopInset,
+            maxX: vpW,
+            maxY: vpH - bottomInset,
+          };
+
+          const newRect = calcResizeDelta(edge, dx, dy, startRef.current.rect, minWidth, minHeight, bounds);
           x.set(newRect.x);
           y.set(newRect.y);
           width.set(newRect.width);
@@ -98,7 +114,7 @@ export function useWindowResize({
         window.addEventListener('pointermove', onMove);
         window.addEventListener('pointerup', onUp);
       },
-    [x, y, width, height, windowId, minWidth, minHeight, resizeWindow]
+    [x, y, width, height, windowId, minWidth, minHeight, resizeWindow, config.layout.window.dragTopInset, config.layout.chrome.taskbarHeight]
   );
 
   return { getResizeHandler };

@@ -52,52 +52,52 @@ var a = (e) => {
 ];
 function d(e, ...t) {
 	if (process.env.NODE_ENV !== "production") {
-		let n = u[e], r = A(n) ? n.apply(null, t) : n;
+		let n = u[e], r = M(n) ? n.apply(null, t) : n;
 		throw Error(`[Immer] ${r}`);
 	}
 	throw Error(`[Immer] minified error nr: ${e}. Full error at: https://bit.ly/3cXEKWf`);
 }
 var f = Object, p = f.getPrototypeOf, m = "constructor", h = "prototype", g = "configurable", _ = "enumerable", v = "writable", y = "value", b = (e) => !!e && !!e[l];
 function x(e) {
-	return e ? ne(e) || E(e) || !!e[c] || !!e[m]?.[c] || D(e) || O(e) : !1;
+	return e ? w(e) || k(e) || !!e[c] || !!e[m]?.[c] || A(e) || j(e) : !1;
 }
-var ee = f[h][m].toString(), te = /* @__PURE__ */ new WeakMap();
-function ne(e) {
-	if (!e || !k(e)) return !1;
+var S = f[h][m].toString(), C = /* @__PURE__ */ new WeakMap();
+function w(e) {
+	if (!e || !ne(e)) return !1;
 	let t = p(e);
 	if (t === null || t === f[h]) return !0;
 	let n = f.hasOwnProperty.call(t, m) && t[m];
 	if (n === Object) return !0;
-	if (!A(n)) return !1;
-	let r = te.get(n);
-	return r === void 0 && (r = Function.toString.call(n), te.set(n, r)), r === ee;
+	if (!M(n)) return !1;
+	let r = C.get(n);
+	return r === void 0 && (r = Function.toString.call(n), C.set(n, r)), r === S;
 }
-function S(e, t, n = !0) {
-	C(e) === 0 ? (n ? Reflect.ownKeys(e) : f.keys(e)).forEach((n) => {
+function T(e, t, n = !0) {
+	E(e) === 0 ? (n ? Reflect.ownKeys(e) : f.keys(e)).forEach((n) => {
 		t(n, e[n], e);
 	}) : e.forEach((n, r) => t(r, n, e));
 }
-function C(e) {
+function E(e) {
 	let t = e[l];
-	return t ? t.type_ : E(e) ? 1 : D(e) ? 2 : O(e) ? 3 : 0;
+	return t ? t.type_ : k(e) ? 1 : A(e) ? 2 : j(e) ? 3 : 0;
 }
-var re = (e, t, n = C(e)) => n === 2 ? e.has(t) : f[h].hasOwnProperty.call(e, t), w = (e, t, n = C(e)) => n === 2 ? e.get(t) : e[t], T = (e, t, n, r = C(e)) => {
+var ee = (e, t, n = E(e)) => n === 2 ? e.has(t) : f[h].hasOwnProperty.call(e, t), D = (e, t, n = E(e)) => n === 2 ? e.get(t) : e[t], O = (e, t, n, r = E(e)) => {
 	r === 2 ? e.set(t, n) : r === 3 ? e.add(n) : e[t] = n;
 };
-function ie(e, t) {
+function te(e, t) {
 	return e === t ? e !== 0 || 1 / e == 1 / t : e !== e && t !== t;
 }
-var E = Array.isArray, D = (e) => e instanceof Map, O = (e) => e instanceof Set, k = (e) => typeof e == "object", A = (e) => typeof e == "function", j = (e) => typeof e == "boolean";
-function ae(e) {
+var k = Array.isArray, A = (e) => e instanceof Map, j = (e) => e instanceof Set, ne = (e) => typeof e == "object", M = (e) => typeof e == "function", N = (e) => typeof e == "boolean";
+function re(e) {
 	let t = +e;
 	return Number.isInteger(t) && String(t) === e;
 }
-var M = (e) => e.copy_ || e.base_, N = (e) => e.modified_ ? e.copy_ : e.base_;
-function oe(e, t) {
-	if (D(e)) return new Map(e);
-	if (O(e)) return new Set(e);
-	if (E(e)) return Array[h].slice.call(e);
-	let n = ne(e);
+var P = (e) => e.copy_ || e.base_, F = (e) => e.modified_ ? e.copy_ : e.base_;
+function I(e, t) {
+	if (A(e)) return new Map(e);
+	if (j(e)) return new Set(e);
+	if (k(e)) return Array[h].slice.call(e);
+	let n = w(e);
 	if (t === !0 || t === "class_only" && !n) {
 		let t = f.getOwnPropertyDescriptors(e);
 		delete t[l];
@@ -119,29 +119,29 @@ function oe(e, t) {
 		return f.assign(r, e);
 	}
 }
-function P(e, t = !1) {
-	return I(e) || b(e) || !x(e) ? e : (C(e) > 1 && f.defineProperties(e, {
-		set: F,
-		add: F,
-		clear: F,
-		delete: F
-	}), f.freeze(e), t && S(e, (e, t) => {
-		P(t, !0);
+function L(e, t = !1) {
+	return z(e) || b(e) || !x(e) ? e : (E(e) > 1 && f.defineProperties(e, {
+		set: R,
+		add: R,
+		clear: R,
+		delete: R
+	}), f.freeze(e), t && T(e, (e, t) => {
+		L(t, !0);
 	}, !1), e);
 }
-function se() {
+function ie() {
 	d(2);
 }
-var F = { [y]: se };
-function I(e) {
-	return e === null || !k(e) || f.isFrozen(e);
-}
-var L = "MapSet", R = "Patches", ce = "ArrayMethods", le = {};
+var R = { [y]: ie };
 function z(e) {
-	let t = le[e];
+	return e === null || !ne(e) || f.isFrozen(e);
+}
+var B = "MapSet", V = "Patches", ae = "ArrayMethods", oe = {};
+function H(e) {
+	let t = oe[e];
 	return t || d(0, e), t;
 }
-var ue = (e) => !!le[e], B, de = () => B, fe = (e, t) => ({
+var se = (e) => !!oe[e], U, ce = () => U, le = (e, t) => ({
 	drafts_: [],
 	parent_: e,
 	immer_: t,
@@ -149,114 +149,114 @@ var ue = (e) => !!le[e], B, de = () => B, fe = (e, t) => ({
 	unfinalizedDrafts_: 0,
 	handledSet_: /* @__PURE__ */ new Set(),
 	processedForPatches_: /* @__PURE__ */ new Set(),
-	mapSetPlugin_: ue(L) ? z(L) : void 0,
-	arrayMethodsPlugin_: ue(ce) ? z(ce) : void 0
+	mapSetPlugin_: se(B) ? H(B) : void 0,
+	arrayMethodsPlugin_: se(ae) ? H(ae) : void 0
 });
-function pe(e, t) {
-	t && (e.patchPlugin_ = z(R), e.patches_ = [], e.inversePatches_ = [], e.patchListener_ = t);
+function ue(e, t) {
+	t && (e.patchPlugin_ = H(V), e.patches_ = [], e.inversePatches_ = [], e.patchListener_ = t);
 }
-function V(e) {
-	H(e), e.drafts_.forEach(he), e.drafts_ = null;
+function W(e) {
+	G(e), e.drafts_.forEach(fe), e.drafts_ = null;
 }
-function H(e) {
-	e === B && (B = e.parent_);
+function G(e) {
+	e === U && (U = e.parent_);
 }
-var me = (e) => B = fe(B, e);
-function he(e) {
+var de = (e) => U = le(U, e);
+function fe(e) {
 	let t = e[l];
 	t.type_ === 0 || t.type_ === 1 ? t.revoke_() : t.revoked_ = !0;
 }
-function ge(e, t) {
+function pe(e, t) {
 	t.unfinalizedDrafts_ = t.drafts_.length;
 	let n = t.drafts_[0];
 	if (e !== void 0 && e !== n) {
-		n[l].modified_ && (V(t), d(4)), x(e) && (e = _e(t, e));
+		n[l].modified_ && (W(t), d(4)), x(e) && (e = me(t, e));
 		let { patchPlugin_: r } = t;
 		r && r.generateReplacementPatches_(n[l].base_, e, t);
-	} else e = _e(t, n);
-	return ve(t, e, !0), V(t), t.patches_ && t.patchListener_(t.patches_, t.inversePatches_), e === s ? void 0 : e;
+	} else e = me(t, n);
+	return he(t, e, !0), W(t), t.patches_ && t.patchListener_(t.patches_, t.inversePatches_), e === s ? void 0 : e;
 }
-function _e(e, t) {
-	if (I(t)) return t;
+function me(e, t) {
+	if (z(t)) return t;
 	let n = t[l];
-	if (!n) return W(t, e.handledSet_, e);
-	if (!U(n, e)) return t;
+	if (!n) return q(t, e.handledSet_, e);
+	if (!K(n, e)) return t;
 	if (!n.modified_) return n.base_;
 	if (!n.finalized_) {
 		let { callbacks_: t } = n;
 		if (t) for (; t.length > 0;) t.pop()(e);
-		Ce(n, e);
+		be(n, e);
 	}
 	return n.copy_;
 }
-function ve(e, t, n = !1) {
-	!e.parent_ && e.immer_.autoFreeze_ && e.canAutoFreeze_ && P(t, n);
+function he(e, t, n = !1) {
+	!e.parent_ && e.immer_.autoFreeze_ && e.canAutoFreeze_ && L(t, n);
 }
-function ye(e) {
+function ge(e) {
 	e.finalized_ = !0, e.scope_.unfinalizedDrafts_--;
 }
-var U = (e, t) => e.scope_ === t, be = [];
-function xe(e, t, n, r) {
-	let i = M(e), a = e.type_;
-	if (r !== void 0 && w(i, r, a) === t) {
-		T(i, r, n, a);
+var K = (e, t) => e.scope_ === t, _e = [];
+function ve(e, t, n, r) {
+	let i = P(e), a = e.type_;
+	if (r !== void 0 && D(i, r, a) === t) {
+		O(i, r, n, a);
 		return;
 	}
 	if (!e.draftLocations_) {
 		let t = e.draftLocations_ = /* @__PURE__ */ new Map();
-		S(i, (e, n) => {
+		T(i, (e, n) => {
 			if (b(n)) {
 				let r = t.get(n) || [];
 				r.push(e), t.set(n, r);
 			}
 		});
 	}
-	let o = e.draftLocations_.get(t) ?? be;
-	for (let e of o) T(i, e, n, a);
+	let o = e.draftLocations_.get(t) ?? _e;
+	for (let e of o) O(i, e, n, a);
 }
-function Se(e, t, n) {
+function ye(e, t, n) {
 	e.callbacks_.push(function(r) {
 		let i = t;
-		if (!i || !U(i, r)) return;
+		if (!i || !K(i, r)) return;
 		r.mapSetPlugin_?.fixSetContents(i);
-		let a = N(i);
-		xe(e, i.draft_ ?? i, a, n), Ce(i, r);
+		let a = F(i);
+		ve(e, i.draft_ ?? i, a, n), be(i, r);
 	});
 }
-function Ce(e, t) {
+function be(e, t) {
 	if (e.modified_ && !e.finalized_ && (e.type_ === 3 || e.type_ === 1 && e.allIndicesReassigned_ || (e.assigned_?.size ?? 0) > 0)) {
 		let { patchPlugin_: n } = t;
 		if (n) {
 			let r = n.getPath(e);
 			r && n.generatePatches_(e, r, t);
 		}
-		ye(e);
+		ge(e);
 	}
 }
-function we(e, t, n) {
+function xe(e, t, n) {
 	let { scope_: r } = e;
 	if (b(n)) {
 		let i = n[l];
-		U(i, r) && i.callbacks_.push(function() {
-			Y(e), xe(e, n, N(i), t);
+		K(i, r) && i.callbacks_.push(function() {
+			Z(e), ve(e, n, F(i), t);
 		});
 	} else x(n) && e.callbacks_.push(function() {
-		let i = M(e);
-		e.type_ === 3 ? i.has(n) && W(n, r.handledSet_, r) : w(i, t, e.type_) === n && r.drafts_.length > 1 && (e.assigned_.get(t) ?? !1) === !0 && e.copy_ && W(w(e.copy_, t, e.type_), r.handledSet_, r);
+		let i = P(e);
+		e.type_ === 3 ? i.has(n) && q(n, r.handledSet_, r) : D(i, t, e.type_) === n && r.drafts_.length > 1 && (e.assigned_.get(t) ?? !1) === !0 && e.copy_ && q(D(e.copy_, t, e.type_), r.handledSet_, r);
 	});
 }
-function W(e, t, n) {
-	return !n.immer_.autoFreeze_ && n.unfinalizedDrafts_ < 1 || b(e) || t.has(e) || !x(e) || I(e) ? e : (t.add(e), S(e, (r, i) => {
+function q(e, t, n) {
+	return !n.immer_.autoFreeze_ && n.unfinalizedDrafts_ < 1 || b(e) || t.has(e) || !x(e) || z(e) ? e : (t.add(e), T(e, (r, i) => {
 		if (b(i)) {
 			let t = i[l];
-			U(t, n) && (T(e, r, N(t), e.type_), ye(t));
-		} else x(i) && W(i, t, n);
+			K(t, n) && (O(e, r, F(t), e.type_), ge(t));
+		} else x(i) && q(i, t, n);
 	}), e);
 }
-function Te(e, t) {
-	let n = E(e), r = {
+function Se(e, t) {
+	let n = k(e), r = {
 		type_: +!!n,
-		scope_: t ? t.scope_ : de(),
+		scope_: t ? t.scope_ : ce(),
 		modified_: !1,
 		finalized_: !1,
 		assigned_: void 0,
@@ -267,49 +267,49 @@ function Te(e, t) {
 		revoke_: null,
 		isManual_: !1,
 		callbacks_: void 0
-	}, i = r, a = G;
-	n && (i = [r], a = K);
+	}, i = r, a = J;
+	n && (i = [r], a = Y);
 	let { revoke: o, proxy: s } = Proxy.revocable(i, a);
 	return r.draft_ = s, r.revoke_ = o, [s, r];
 }
-var G = {
+var J = {
 	get(e, t) {
 		if (t === l) return e;
 		let n = e.scope_.arrayMethodsPlugin_, r = e.type_ === 1 && typeof t == "string";
 		if (r && n?.isArrayOperationMethod(t)) return n.createMethodInterceptor(e, t);
-		let i = M(e);
-		if (!re(i, t, e.type_)) return Ee(e, i, t);
+		let i = P(e);
+		if (!ee(i, t, e.type_)) return Ce(e, i, t);
 		let a = i[t];
-		if (e.finalized_ || !x(a) || r && e.operationMethod && n?.isMutatingArrayMethod(e.operationMethod) && ae(t)) return a;
-		if (a === q(e.base_, t)) {
-			Y(e);
-			let n = e.type_ === 1 ? +t : t, r = X(e.scope_, a, e, n);
+		if (e.finalized_ || !x(a) || r && e.operationMethod && n?.isMutatingArrayMethod(e.operationMethod) && re(t)) return a;
+		if (a === X(e.base_, t)) {
+			Z(e);
+			let n = e.type_ === 1 ? +t : t, r = De(e.scope_, a, e, n);
 			return e.copy_[n] = r;
 		}
 		return a;
 	},
 	has(e, t) {
-		return t in M(e);
+		return t in P(e);
 	},
 	ownKeys(e) {
-		return Reflect.ownKeys(M(e));
+		return Reflect.ownKeys(P(e));
 	},
 	set(e, t, n) {
-		let r = De(M(e), t);
+		let r = we(P(e), t);
 		if (r?.set) return r.set.call(e.draft_, n), !0;
 		if (!e.modified_) {
-			let r = q(M(e), t), i = r?.[l];
+			let r = X(P(e), t), i = r?.[l];
 			if (i && i.base_ === n) return e.copy_[t] = n, e.assigned_.set(t, !1), !0;
-			if (ie(n, r) && (n !== void 0 || re(e.base_, t, e.type_))) return !0;
-			Y(e), J(e);
+			if (te(n, r) && (n !== void 0 || ee(e.base_, t, e.type_))) return !0;
+			Z(e), Te(e);
 		}
-		return e.copy_[t] === n && (n !== void 0 || t in e.copy_) || Number.isNaN(n) && Number.isNaN(e.copy_[t]) ? !0 : (e.copy_[t] = n, e.assigned_.set(t, !0), we(e, t, n), !0);
+		return e.copy_[t] === n && (n !== void 0 || t in e.copy_) || Number.isNaN(n) && Number.isNaN(e.copy_[t]) ? !0 : (e.copy_[t] = n, e.assigned_.set(t, !0), xe(e, t, n), !0);
 	},
 	deleteProperty(e, t) {
-		return Y(e), q(e.base_, t) !== void 0 || t in e.base_ ? (e.assigned_.set(t, !1), J(e)) : e.assigned_.delete(t), e.copy_ && delete e.copy_[t], !0;
+		return Z(e), X(e.base_, t) !== void 0 || t in e.base_ ? (e.assigned_.set(t, !1), Te(e)) : e.assigned_.delete(t), e.copy_ && delete e.copy_[t], !0;
 	},
 	getOwnPropertyDescriptor(e, t) {
-		let n = M(e), r = Reflect.getOwnPropertyDescriptor(n, t);
+		let n = P(e), r = Reflect.getOwnPropertyDescriptor(n, t);
 		return r && {
 			[v]: !0,
 			[g]: e.type_ !== 1 || t !== "length",
@@ -326,28 +326,28 @@ var G = {
 	setPrototypeOf() {
 		d(12);
 	}
-}, K = {};
-for (let e in G) {
-	let t = G[e];
-	K[e] = function() {
+}, Y = {};
+for (let e in J) {
+	let t = J[e];
+	Y[e] = function() {
 		let e = arguments;
 		return e[0] = e[0][0], t.apply(this, e);
 	};
 }
-K.deleteProperty = function(e, t) {
-	return process.env.NODE_ENV !== "production" && isNaN(parseInt(t)) && d(13), K.set.call(this, e, t, void 0);
-}, K.set = function(e, t, n) {
-	return process.env.NODE_ENV !== "production" && t !== "length" && isNaN(parseInt(t)) && d(14), G.set.call(this, e[0], t, n, e[0]);
+Y.deleteProperty = function(e, t) {
+	return process.env.NODE_ENV !== "production" && isNaN(parseInt(t)) && d(13), Y.set.call(this, e, t, void 0);
+}, Y.set = function(e, t, n) {
+	return process.env.NODE_ENV !== "production" && t !== "length" && isNaN(parseInt(t)) && d(14), J.set.call(this, e[0], t, n, e[0]);
 };
-function q(e, t) {
+function X(e, t) {
 	let n = e[l];
-	return (n ? M(n) : e)[t];
+	return (n ? P(n) : e)[t];
 }
-function Ee(e, t, n) {
-	let r = De(t, n);
+function Ce(e, t, n) {
+	let r = we(t, n);
 	return r ? y in r ? r[y] : r.get?.call(e.draft_) : void 0;
 }
-function De(e, t) {
+function we(e, t) {
 	if (!(t in e)) return;
 	let n = p(e);
 	for (; n;) {
@@ -356,16 +356,16 @@ function De(e, t) {
 		n = p(n);
 	}
 }
-function J(e) {
-	e.modified_ || (e.modified_ = !0, e.parent_ && J(e.parent_));
+function Te(e) {
+	e.modified_ || (e.modified_ = !0, e.parent_ && Te(e.parent_));
 }
-function Y(e) {
-	e.copy_ ||= (e.assigned_ = /* @__PURE__ */ new Map(), oe(e.base_, e.scope_.immer_.useStrictShallowCopy_));
+function Z(e) {
+	e.copy_ ||= (e.assigned_ = /* @__PURE__ */ new Map(), I(e.base_, e.scope_.immer_.useStrictShallowCopy_));
 }
-var Oe = class {
+var Ee = class {
 	constructor(e) {
 		this.autoFreeze_ = !0, this.useStrictShallowCopy_ = !1, this.useStrictIteration_ = !1, this.produce = (e, t, n) => {
-			if (A(e) && !A(t)) {
+			if (M(e) && !M(t)) {
 				let n = t;
 				t = e;
 				let r = this;
@@ -373,20 +373,20 @@ var Oe = class {
 					return r.produce(e, (e) => t.call(this, e, ...i));
 				};
 			}
-			A(t) || d(6), n !== void 0 && !A(n) && d(7);
+			M(t) || d(6), n !== void 0 && !M(n) && d(7);
 			let r;
 			if (x(e)) {
-				let i = me(this), a = X(i, e, void 0), o = !0;
+				let i = de(this), a = De(i, e, void 0), o = !0;
 				try {
 					r = t(a), o = !1;
 				} finally {
-					o ? V(i) : H(i);
+					o ? W(i) : G(i);
 				}
-				return pe(i, n), ge(r, i);
-			} else if (!e || !k(e)) {
-				if (r = t(e), r === void 0 && (r = e), r === s && (r = void 0), this.autoFreeze_ && P(r, !0), n) {
+				return ue(i, n), pe(r, i);
+			} else if (!e || !ne(e)) {
+				if (r = t(e), r === void 0 && (r = e), r === s && (r = void 0), this.autoFreeze_ && L(r, !0), n) {
 					let t = [], i = [];
-					z(R).generateReplacementPatches_(e, r, {
+					H(V).generateReplacementPatches_(e, r, {
 						patches_: t,
 						inversePatches_: i
 					}), n(t, i);
@@ -394,7 +394,7 @@ var Oe = class {
 				return r;
 			} else d(1, e);
 		}, this.produceWithPatches = (e, t) => {
-			if (A(e)) return (t, ...n) => this.produceWithPatches(t, (t) => e(t, ...n));
+			if (M(e)) return (t, ...n) => this.produceWithPatches(t, (t) => e(t, ...n));
 			let n, r;
 			return [
 				this.produce(e, t, (e, t) => {
@@ -403,18 +403,18 @@ var Oe = class {
 				n,
 				r
 			];
-		}, j(e?.autoFreeze) && this.setAutoFreeze(e.autoFreeze), j(e?.useStrictShallowCopy) && this.setUseStrictShallowCopy(e.useStrictShallowCopy), j(e?.useStrictIteration) && this.setUseStrictIteration(e.useStrictIteration);
+		}, N(e?.autoFreeze) && this.setAutoFreeze(e.autoFreeze), N(e?.useStrictShallowCopy) && this.setUseStrictShallowCopy(e.useStrictShallowCopy), N(e?.useStrictIteration) && this.setUseStrictIteration(e.useStrictIteration);
 	}
 	createDraft(e) {
-		x(e) || d(8), b(e) && (e = ke(e));
-		let t = me(this), n = X(t, e, void 0);
-		return n[l].isManual_ = !0, H(t), n;
+		x(e) || d(8), b(e) && (e = Oe(e));
+		let t = de(this), n = De(t, e, void 0);
+		return n[l].isManual_ = !0, G(t), n;
 	}
 	finishDraft(e, t) {
 		let n = e && e[l];
 		(!n || !n.isManual_) && d(9);
 		let { scope_: r } = n;
-		return pe(r, t), ge(void 0, r);
+		return ue(r, t), pe(void 0, r);
 	}
 	setAutoFreeze(e) {
 		this.autoFreeze_ = e;
@@ -438,36 +438,36 @@ var Oe = class {
 			}
 		}
 		n > -1 && (t = t.slice(n + 1));
-		let r = z(R).applyPatches_;
+		let r = H(V).applyPatches_;
 		return b(e) ? r(e, t) : this.produce(e, (e) => r(e, t));
 	}
 };
-function X(e, t, n, r) {
-	let [i, a] = D(t) ? z(L).proxyMap_(t, n) : O(t) ? z(L).proxySet_(t, n) : Te(t, n);
-	return (n?.scope_ ?? de()).drafts_.push(i), a.callbacks_ = n?.callbacks_ ?? [], a.key_ = r, n && r !== void 0 ? Se(n, a, r) : a.callbacks_.push(function(e) {
+function De(e, t, n, r) {
+	let [i, a] = A(t) ? H(B).proxyMap_(t, n) : j(t) ? H(B).proxySet_(t, n) : Se(t, n);
+	return (n?.scope_ ?? ce()).drafts_.push(i), a.callbacks_ = n?.callbacks_ ?? [], a.key_ = r, n && r !== void 0 ? ye(n, a, r) : a.callbacks_.push(function(e) {
 		e.mapSetPlugin_?.fixSetContents(a);
 		let { patchPlugin_: t } = e;
 		a.modified_ && t && t.generatePatches_(a, [], e);
 	}), i;
 }
-function ke(e) {
-	return b(e) || d(10, e), Ae(e);
+function Oe(e) {
+	return b(e) || d(10, e), ke(e);
 }
-function Ae(e) {
-	if (!x(e) || I(e)) return e;
+function ke(e) {
+	if (!x(e) || z(e)) return e;
 	let t = e[l], n, r = !0;
 	if (t) {
 		if (!t.modified_) return t.base_;
-		t.finalized_ = !0, n = oe(e, t.scope_.immer_.useStrictShallowCopy_), r = t.scope_.immer_.shouldUseStrictIteration();
-	} else n = oe(e, !0);
-	return S(n, (e, t) => {
-		T(n, e, Ae(t));
+		t.finalized_ = !0, n = I(e, t.scope_.immer_.useStrictShallowCopy_), r = t.scope_.immer_.shouldUseStrictIteration();
+	} else n = I(e, !0);
+	return T(n, (e, t) => {
+		O(n, e, ke(t));
 	}, r), t && (t.finalized_ = !1), n;
 }
-var je = new Oe().produce, Me = (e) => (t, n, r) => (r.setState = (e, n, ...r) => t(typeof e == "function" ? je(e) : e, n, ...r), e(r.setState, n, r));
+var Ae = new Ee().produce, je = (e) => (t, n, r) => (r.setState = (e, n, ...r) => t(typeof e == "function" ? Ae(e) : e, n, ...r), e(r.setState, n, r));
 //#endregion
 //#region node_modules/.pnpm/zustand@5.0.13_@types+react@19.2.14_immer@11.1.8_react@19.2.4_use-sync-external-store@1.6.0_react@19.2.4_/node_modules/zustand/esm/middleware.mjs
-function Ne(e, t) {
+function Me(e, t) {
 	let n;
 	try {
 		n = e();
@@ -483,12 +483,12 @@ function Ne(e, t) {
 		removeItem: (e) => n.removeItem(e)
 	};
 }
-var Z = (e) => (t) => {
+var Ne = (e) => (t) => {
 	try {
 		let n = e(t);
 		return n instanceof Promise ? n : {
 			then(e) {
-				return Z(e)(n);
+				return Ne(e)(n);
 			},
 			catch(e) {
 				return this;
@@ -500,13 +500,13 @@ var Z = (e) => (t) => {
 				return this;
 			},
 			catch(t) {
-				return Z(t)(e);
+				return Ne(t)(e);
 			}
 		};
 	}
 }, Pe = (e, t) => (n, r, i) => {
 	let a = {
-		storage: Ne(() => window.localStorage),
+		storage: Me(() => window.localStorage),
 		partialize: (e) => e,
 		version: 0,
 		merge: (e, t) => ({
@@ -533,7 +533,7 @@ var Z = (e) => (t) => {
 		let e = ++s;
 		o = !1, c.forEach((e) => e(r() ?? p));
 		let t = a.onRehydrateStorage?.call(a, r() ?? p) || void 0;
-		return Z(u.getItem.bind(u))(a.name).then((e) => {
+		return Ne(u.getItem.bind(u))(a.name).then((e) => {
 			if (e) if (typeof e.version == "number" && e.version !== a.version) {
 				if (a.migrate) {
 					let t = a.migrate(e.state, e.version);
@@ -591,52 +591,52 @@ function Le(e, t, { minWidth: n = 320, minHeight: r = 240 } = {}) {
 		height: s
 	};
 }
-function Re(e, t, n, r, i = 320, a = 240) {
-	let { x: o, y: s, width: c, height: l } = r;
+function Re(e, t, n, r, i = 320, a = 240, o) {
+	let { x: s, y: c, width: l, height: u } = r, d = o?.minX ?? -Infinity, f = o?.minY ?? -Infinity, p = o?.maxX ?? Infinity, m = o?.maxY ?? Infinity, h = r.x + r.width, g = r.y + r.height, _ = Math.max(0, p - r.x), v = Math.min(i, _), y = Math.max(0, h - d), b = Math.min(i, y), x = Math.max(0, m - r.y), S = Math.min(a, x), C = Math.max(0, g - f), w = Math.min(a, C);
 	switch (e) {
 		case "e":
-			c = Math.max(i, c + t);
+			l = Math.min(_, Math.max(v, r.width + t));
 			break;
 		case "w": {
-			let e = Math.max(i, c - t);
-			o = r.x + (r.width - e), c = e;
+			let e = Math.min(y, Math.max(b, r.width - t));
+			s = h - e, l = e;
 			break;
 		}
 		case "s":
-			l = Math.max(a, l + n);
+			u = Math.min(x, Math.max(S, r.height + n));
 			break;
 		case "n": {
-			let e = Math.max(a, l - n);
-			s = r.y + (r.height - e), l = e;
+			let e = Math.min(C, Math.max(w, r.height - n));
+			c = g - e, u = e;
 			break;
 		}
 		case "se":
-			c = Math.max(i, c + t), l = Math.max(a, l + n);
+			l = Math.min(_, Math.max(v, r.width + t)), u = Math.min(x, Math.max(S, r.height + n));
 			break;
 		case "sw": {
-			let e = Math.max(i, c - t);
-			o = r.x + (r.width - e), c = e, l = Math.max(a, l + n);
+			let e = Math.min(y, Math.max(b, r.width - t));
+			s = h - e, l = e, u = Math.min(x, Math.max(S, r.height + n));
 			break;
 		}
 		case "ne": {
-			c = Math.max(i, c + t);
-			let e = Math.max(a, l - n);
-			s = r.y + (r.height - e), l = e;
+			l = Math.min(_, Math.max(v, r.width + t));
+			let e = Math.min(C, Math.max(w, r.height - n));
+			c = g - e, u = e;
 			break;
 		}
 		case "nw": {
-			let e = Math.max(i, c - t);
-			o = r.x + (r.width - e), c = e;
-			let u = Math.max(a, l - n);
-			s = r.y + (r.height - u), l = u;
+			let e = Math.min(y, Math.max(b, r.width - t));
+			s = h - e, l = e;
+			let i = Math.min(C, Math.max(w, r.height - n));
+			c = g - i, u = i;
 			break;
 		}
 	}
 	return {
-		x: o,
-		y: s,
-		width: c,
-		height: l
+		x: s,
+		y: c,
+		width: l,
+		height: u
 	};
 }
 var ze = {
@@ -2783,7 +2783,7 @@ function ot(e, t) {
 }
 //#endregion
 //#region src/store/index.ts
-var st = o()(Me(Pe((e, t) => {
+var st = o()(je(Pe((e, t) => {
 	let n = e, r = t;
 	return {
 		...Ve(n, r),
@@ -2796,7 +2796,7 @@ var st = o()(Me(Pe((e, t) => {
 	};
 }, {
 	name: "desktop-layout-store",
-	storage: Ne(() => typeof window > "u" ? {
+	storage: Me(() => typeof window > "u" ? {
 		getItem: () => null,
 		setItem: () => {},
 		removeItem: () => {}

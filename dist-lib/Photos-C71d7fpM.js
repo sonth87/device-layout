@@ -4,7 +4,7 @@ import { t as n } from "./grid-3x3-CZiMuCC6.js";
 import { t as r } from "./heart-4TAFDJLs.js";
 import { t as i } from "./list-Dn-fquzI.js";
 import { t as a } from "./search-BKG97C0x.js";
-import { t as o } from "./useTranslation-Cx98_kLA.js";
+import { t as o } from "./useTranslation-ByRogKHu.js";
 import { t as s } from "./useAppLayout-DfaXs-1a.js";
 import { t as c } from "./ui-D0242z7L.js";
 import { useMemo as l, useRef as u, useState as d } from "react";

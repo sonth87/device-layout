@@ -133,12 +133,18 @@ export function FloatingWindow({
   const onResizePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (!resizeStart.current) return;
+      const vpW = window.innerWidth;
+      const vpH = window.innerHeight;
+      const left = anchor?.left ?? 0;
+      const top = anchor?.top ?? 0;
+      const maxW = Math.max(minWidth, vpW - left);
+      const maxH = Math.max(minHeight, vpH - top);
       setSize({
-        width: Math.max(minWidth, resizeStart.current.w + (e.clientX - resizeStart.current.mx)),
-        height: Math.max(minHeight, resizeStart.current.h + (e.clientY - resizeStart.current.my)),
+        width: Math.min(maxW, Math.max(minWidth, resizeStart.current.w + (e.clientX - resizeStart.current.mx))),
+        height: Math.min(maxH, Math.max(minHeight, resizeStart.current.h + (e.clientY - resizeStart.current.my))),
       });
     },
-    [minWidth, minHeight],
+    [anchor, minWidth, minHeight],
   );
 
   const onResizePointerUp = useCallback(() => {

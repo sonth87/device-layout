@@ -14,11 +14,17 @@ export declare function snapIfClose(value: number, maxValue: number, zone?: numb
 /** Clamp value between min and max */
 export declare function clamp(value: number, min: number, max: number): number;
 export declare function fitWindowRectToViewport(rect: WindowRect, viewportRect: WindowRect, { minWidth, minHeight }?: FitWindowRectOptions): WindowRect;
+export interface ResizeBounds {
+    minX?: number;
+    minY?: number;
+    maxX?: number;
+    maxY?: number;
+}
 /**
  * Compute new WindowRect after a resize drag.
- * Clamps to provided minimum dimensions.
+ * Clamps to provided minimum dimensions and optional viewport bounds.
  */
-export declare function calcResizeDelta(edge: ResizeEdge, dx: number, dy: number, rect: WindowRect, minWidth?: number, minHeight?: number): WindowRect;
+export declare function calcResizeDelta(edge: ResizeEdge, dx: number, dy: number, rect: WindowRect, minWidth?: number, minHeight?: number, bounds?: ResizeBounds): WindowRect;
 /** Cursor CSS class per resize edge */
 export declare const EDGE_CURSORS: Record<ResizeEdge, string>;
 export {};
