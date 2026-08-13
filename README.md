@@ -4,7 +4,7 @@
 
 The core goal of this project is to provide a multi-window simulation environment where any added feature or module can be defined as an individual, isolated app running inside its own window. This architecture makes it highly suitable for deploying multi-functional applications (such as composite web dashboards or mock workspaces), or simply for fun! :D
 
-![Device Layout Screenshot](docs/image.png)
+![Device Layout Screenshot](https://raw.githubusercontent.com/sonth87/device-layout/main/docs/image.png)
 
 Built with Next.js 16, React 19, TypeScript, Tailwind CSS v4, Zustand, and Motion.
 
@@ -276,11 +276,11 @@ Dock, menubar, tooltips, and panel overlays use a composited glass effect built 
 
 #### Full Minimal Simple Mode (`isSimpleMode={true}`)
 
-![Full Minimal Simple Mode](docs/simple.png)
+![Full Minimal Simple Mode](https://raw.githubusercontent.com/sonth87/device-layout/main/docs/simple.png)
 
 #### Modular Simple Mode with Custom Config
 
-![Modular Simple Mode Playground](docs/simple-with-config.png)
+![Modular Simple Mode Playground](https://raw.githubusercontent.com/sonth87/device-layout/main/docs/simple-with-config.png)
 
 </details>
 

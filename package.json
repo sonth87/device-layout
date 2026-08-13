@@ -1,7 +1,28 @@
 {
   "name": "@sonth87/device-layout",
-  "version": "0.5.17",
-  "private": true,
+  "version": "0.5.20",
+  "description": "A browser-based multi-window desktop OS simulator supporting macOS, Windows 11, iPadOS, iOS, and Android themes.",
+  "homepage": "https://device-layout.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sonth87/device-layout.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sonth87/device-layout/issues"
+  },
+  "keywords": [
+    "desktop-simulator",
+    "os-simulator",
+    "window-manager",
+    "macos",
+    "windows11",
+    "react",
+    "nextjs",
+    "device-layout"
+  ],
+  "author": "sonth87",
+  "license": "MIT",
+  "private": false,
   "type": "module",
   "main": "./dist-lib/index.js",
   "types": "./dist-lib/lib.d.ts",
@@ -21,8 +42,10 @@
     "build": "node scripts/generate-live-thumbnails.js && NODE_OPTIONS='--max-old-space-size=4096' next build",
     "build:lib": "vite build",
     "tag": "node scripts/release-tag.js",
-    "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset version && pnpm build:lib && changeset publish"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
@@ -65,6 +88,7 @@
     "zustand": "^5.0.13"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.31.1",
     "@tailwindcss/postcss": "^4.2.4",
     "@tailwindcss/vite": "^4.3.2",
     "@types/node": "^20",
