@@ -39,6 +39,10 @@ yarn add @sonth87/device-layout
 
 Mount the `<DeviceLayout />` component in your React / Next.js application and import its stylesheet:
 
+### 1. Full Desktop OS Mode (Default)
+
+Provides a complete OS desktop environment with multi-window support, Dock, Top MenuBar, Wallpapers, Widgets, and System Apps:
+
 ```tsx
 import { DeviceLayout } from "@sonth87/device-layout";
 import "@sonth87/device-layout/style.css";
@@ -52,6 +56,70 @@ export default function DesktopPage() {
   );
 }
 ```
+
+![Full Desktop OS Mode](https://raw.githubusercontent.com/sonth87/device-layout/main/docs/image.png)
+
+### 2. Simple Mode (Minimal / Kiosk / Embedded)
+
+Simple Mode provides a lightweight layout for kiosks, embedded environments, or custom web shells. It supports both a full minimal preset (`isSimpleMode={true}`) and granular feature flag configuration (`isSimpleMode={SimpleModeFeatures}`).
+
+#### A. Full Minimal Mode (`isSimpleMode={true}`)
+
+Omits all default apps, dock, desktop widgets, wallpaper images, and presents a 100% minimal container:
+
+```tsx
+import { DeviceLayout } from "@sonth87/device-layout";
+import "@sonth87/device-layout/style.css";
+import { myCustomApps } from "./apps";
+
+export default function MinimalDesktopPage() {
+  return (
+    <div className="w-screen h-screen overflow-hidden">
+      <DeviceLayout
+        colorScheme="dark"
+        isSimpleMode={true}
+        apps={myCustomApps}
+      />
+    </div>
+  );
+}
+```
+
+![Full Minimal Simple Mode](https://raw.githubusercontent.com/sonth87/device-layout/main/docs/simple.png)
+
+#### B. Modular Mode with Custom Config (`isSimpleMode={SimpleModeFeatures}`)
+
+Pass a `SimpleModeFeatures` configuration object to selectively enable or disable wallpapers, desktop context menu, clock/spotlight, dock, widgets, or specific system apps:
+
+```tsx
+import { DeviceLayout } from "@sonth87/device-layout";
+import "@sonth87/device-layout/style.css";
+import { myCustomApps } from "./apps";
+
+export default function ModularSimplePage() {
+  return (
+    <div className="w-screen h-screen overflow-hidden">
+      <DeviceLayout
+        colorScheme="dark"
+        isSimpleMode={{
+          wallpaper: true,
+          contextMenu: true,
+          wallpaperPicker: true,
+          iconGrid: true,
+          menuBar: { clock: true, spotlight: true, controlCenter: true },
+          widgets: true,
+          defaultApps: ["settings", "calculator", "notes"],
+        }}
+        apps={myCustomApps}
+      />
+    </div>
+  );
+}
+```
+
+![Modular Simple Mode with Custom Config](https://raw.githubusercontent.com/sonth87/device-layout/main/docs/simple-with-config.png)
+
+> **Note:** For a complete list of feature flags and API details, see the [Simple Mode Guide](docs/simple-mode.md).
 
 ---
 
@@ -159,34 +227,34 @@ export const analyticsAppConfig: AppConfig = {
 
 The `AppConfig` interface supports the following configuration properties:
 
-| Field | Type | Default | Description |
-|---|---|---|---|
-| `id` | `string` | **Required** | Unique identifier for the application |
-| `name` | `string` | **Required** | Display name shown in Dock, Desktop, Launcher, and MenuBar |
-| `icon` | `string \| ComponentType` | **Required** | App icon (`'lucide:IconName'`, image URL, SVG path, or React component) |
-| `render` | `ComponentType<AppContentProps>` | `undefined` | React component for external apps (receives `{ appId, windowId }`) |
-| `component` | `string` | `undefined` | Registry key for built-in library apps |
-| `defaultSize` | `{ width: number; height: number }` | `{ width: 800, height: 500 }` | Initial window size in pixels |
-| `minSize` | `{ width: number; height: number }` | `{ width: 320, height: 200 }` | Minimum window size constraints |
-| `defaultPosition` | `{ x: number; y: number }` | Centered | Initial top-left window coordinates |
-| `launchMode` | `'single' \| 'multi'` | `'single'` | `'single'` opens 1 window; `'multi'` opens a new window per launch |
-| `titleBarMode` | `'normal' \| 'transparent'` | `'normal'` | Window titlebar styling mode |
-| `hasMenuBar` | `boolean` | `true` | Show top menu bar (macOS) or in-window menu bar (Windows/iPad) |
-| `hasStatusBar` | `boolean` | `false` | Show bottom status bar in window chrome |
-| `menuBarMenus` | `MenuBarMenu[]` | `[]` | Top menu bar dropdown declarations (`File`, `Edit`, `View`...) |
-| `appNameMenuExtraItems` | `MenuBarItem[]` | `[]` | Extra items inserted into bold App Name dropdown menu |
-| `contextMenu` | `ContextMenuAction[]` | `[]` | Custom right-click actions on Dock/Desktop icon |
-| `iconColor` | `[string, string]` | `undefined` | Background gradient pair `[from, to]` for icon tile |
-| `iconTextColor` | `string` | `'#ffffff'` | Icon color inside icon tile |
-| `badge` | `string \| number` | `undefined` | Notification badge indicator on Dock icon |
-| `disabled` | `boolean` | `false` | Disable app launcher |
-| `category` | `string` | `'utilities'` | Logical app category grouping |
-| `mobileFullscreen` | `boolean` | `true` | Force fullscreen mode on mobile OS themes (iOS / Android) |
-| `iframeUrl` | `string` | `undefined` | URL to load inside built-in iframe container |
-| `mdxSlug` | `string` | `undefined` | Slug mapping to `/content/*.mdx` for built-in MDX pages |
-| `appSettings` | `string` | `undefined` | Key in AppSettingsRegistry to render panel in System Settings |
-| `widgets` | `WidgetDefinition[]` | `[]` | Desktop widgets provided by this app |
-| `locale` | `AppLocale` | `undefined` | Per-app multi-language translation dictionaries |
+| Field                   | Type                                | Default                       | Description                                                             |
+| ----------------------- | ----------------------------------- | ----------------------------- | ----------------------------------------------------------------------- |
+| `id`                    | `string`                            | **Required**                  | Unique identifier for the application                                   |
+| `name`                  | `string`                            | **Required**                  | Display name shown in Dock, Desktop, Launcher, and MenuBar              |
+| `icon`                  | `string \| ComponentType`           | **Required**                  | App icon (`'lucide:IconName'`, image URL, SVG path, or React component) |
+| `render`                | `ComponentType<AppContentProps>`    | `undefined`                   | React component for external apps (receives `{ appId, windowId }`)      |
+| `component`             | `string`                            | `undefined`                   | Registry key for built-in library apps                                  |
+| `defaultSize`           | `{ width: number; height: number }` | `{ width: 800, height: 500 }` | Initial window size in pixels                                           |
+| `minSize`               | `{ width: number; height: number }` | `{ width: 320, height: 200 }` | Minimum window size constraints                                         |
+| `defaultPosition`       | `{ x: number; y: number }`          | Centered                      | Initial top-left window coordinates                                     |
+| `launchMode`            | `'single' \| 'multi'`               | `'single'`                    | `'single'` opens 1 window; `'multi'` opens a new window per launch      |
+| `titleBarMode`          | `'normal' \| 'transparent'`         | `'normal'`                    | Window titlebar styling mode                                            |
+| `hasMenuBar`            | `boolean`                           | `true`                        | Show top menu bar (macOS) or in-window menu bar (Windows/iPad)          |
+| `hasStatusBar`          | `boolean`                           | `false`                       | Show bottom status bar in window chrome                                 |
+| `menuBarMenus`          | `MenuBarMenu[]`                     | `[]`                          | Top menu bar dropdown declarations (`File`, `Edit`, `View`...)          |
+| `appNameMenuExtraItems` | `MenuBarItem[]`                     | `[]`                          | Extra items inserted into bold App Name dropdown menu                   |
+| `contextMenu`           | `ContextMenuAction[]`               | `[]`                          | Custom right-click actions on Dock/Desktop icon                         |
+| `iconColor`             | `[string, string]`                  | `undefined`                   | Background gradient pair `[from, to]` for icon tile                     |
+| `iconTextColor`         | `string`                            | `'#ffffff'`                   | Icon color inside icon tile                                             |
+| `badge`                 | `string \| number`                  | `undefined`                   | Notification badge indicator on Dock icon                               |
+| `disabled`              | `boolean`                           | `false`                       | Disable app launcher                                                    |
+| `category`              | `string`                            | `'utilities'`                 | Logical app category grouping                                           |
+| `mobileFullscreen`      | `boolean`                           | `true`                        | Force fullscreen mode on mobile OS themes (iOS / Android)               |
+| `iframeUrl`             | `string`                            | `undefined`                   | URL to load inside built-in iframe container                            |
+| `mdxSlug`               | `string`                            | `undefined`                   | Slug mapping to `/content/*.mdx` for built-in MDX pages                 |
+| `appSettings`           | `string`                            | `undefined`                   | Key in AppSettingsRegistry to render panel in System Settings           |
+| `widgets`               | `WidgetDefinition[]`                | `[]`                          | Desktop widgets provided by this app                                    |
+| `locale`                | `AppLocale`                         | `undefined`                   | Per-app multi-language translation dictionaries                         |
 
 ---
 
@@ -271,7 +339,6 @@ Dock, menubar, tooltips, and panel overlays use a composited glass effect built 
 - URL-encoded window state — reload and all windows reopen at the same position
 - **Modular Simple Mode** — a highly customizable layout-only configuration with fine-grained feature flags (`wallpaper`, `contextMenu`, `wallpaperPicker`, `menuBar`, `widgets`, `dock`, `defaultApps`, `allowedOSThemes`). Supports full minimal mode (`isSimpleMode={true}`) or custom modular presets. See **[docs/simple-mode.md](docs/simple-mode.md)** for full reference.
 
-<details>
 <summary><strong>View Simple Mode Screenshots</strong></summary>
 
 #### Full Minimal Simple Mode (`isSimpleMode={true}`)
@@ -281,8 +348,6 @@ Dock, menubar, tooltips, and panel overlays use a composited glass effect built 
 #### Modular Simple Mode with Custom Config
 
 ![Modular Simple Mode Playground](https://raw.githubusercontent.com/sonth87/device-layout/main/docs/simple-with-config.png)
-
-</details>
 
 ---
 

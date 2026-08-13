@@ -1001,8 +1001,8 @@ function n() {
 				music: "appNameMusic",
 				calendar: "appNameCalendar",
 				messages: "appNameMessages"
-			}[e.toLowerCase()];
-			return n ? r[n] : t;
+			}[(e || "").toLowerCase()];
+			return (n ? r[n] : t) || t || e || "";
 		},
 		getWidgetName: (e, t) => {
 			let n = {
@@ -1014,8 +1014,8 @@ function n() {
 				"notes-preview": "widgetNotes",
 				"calendar-today": "widgetCalendarToday",
 				"calendar-mini": "widgetCalendarMonth"
-			}[e];
-			return n ? r[n] : t;
+			}[e || ""];
+			return (n ? r[n] : t) || t || e || "";
 		},
 		getWidgetDescription: (e, t) => {
 			let n = {
@@ -1027,8 +1027,8 @@ function n() {
 				"notes-preview": "descWidgetNotes",
 				"calendar-today": "descWidgetCalendarToday",
 				"calendar-mini": "descWidgetCalendarMonth"
-			}[e];
-			return n ? r[n] : t;
+			}[e || ""];
+			return (n ? r[n] : t) || t || e || "";
 		}
 	};
 }

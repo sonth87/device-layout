@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as te, s as ne, t as re, u as ie, v as ae, w as oe, x as F, y as se } from "./MobileAppViewer--uPQfRwG.js";
+import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as te, s as ne, t as re, u as ie, v as ae, w as oe, x as F, y as se } from "./MobileAppViewer-8e_XmN3y.js";
 import { c as ce, d as le, l as ue, s as de, t as I, u as fe } from "./store-D89CiGUZ.js";
 import { t as L } from "./utils-B6YmNDS2.js";
 import { t as R } from "./createLucideIcon--WjuKCts.js";
-import { a as pe, c as me, d as he, f as ge, g as _e, h as ve, i as ye, l as be, m as xe, n as Se, o as Ce, p as z, r as we, s as Te, t as Ee, u as De } from "./update-actions-DnUl4HWm.js";
+import { a as pe, c as me, d as he, f as ge, g as _e, h as ve, i as ye, l as be, m as xe, n as Se, o as Ce, p as z, r as we, s as Te, t as Ee, u as De } from "./update-actions-DyEsIOop.js";
 import { t as Oe } from "./check-DoT5IS9-.js";
 import { t as ke } from "./chevron-right-BcSxNxws.js";
 import { t as Ae } from "./grid-3x3-CZiMuCC6.js";
@@ -14,7 +14,7 @@ import { t as Xe } from "./search-BKG97C0x.js";
 import { t as Ze } from "./sun-DdSv2tyc.js";
 import { t as Qe } from "./volume-2-DAfADR-a.js";
 import { t as B } from "./x-BYw6fhgP.js";
-import { t as V } from "./useTranslation-ByRogKHu.js";
+import { t as V } from "./useTranslation-Bv2toWXP.js";
 import * as H from "react";
 import $e, { Suspense as et, lazy as tt, startTransition as nt, useCallback as U, useContext as rt, useEffect as W, useInsertionEffect as it, useMemo as at, useRef as G, useState as K } from "react";
 import { Fragment as q, jsx as J, jsxs as Y } from "react/jsx-runtime";
@@ -5376,11 +5376,11 @@ function ba(e) {
 //#endregion
 //#region src/components/widgets/WidgetRenderer.tsx
 var xa = {
-	ClockWidget: tt(() => import("./ClockWidget-dNkYEhRC.js").then((e) => ({ default: e.ClockWidget }))),
-	ClockDarkWidget: tt(() => import("./ClockWidget-dNkYEhRC.js").then((e) => ({ default: e.ClockDarkWidget }))),
-	ClockWorldWidget: tt(() => import("./ClockWidget-dNkYEhRC.js").then((e) => ({ default: e.ClockWorldWidget }))),
-	ClockDigitalWidget: tt(() => import("./ClockWidget-dNkYEhRC.js").then((e) => ({ default: e.ClockDigitalWidget }))),
-	ClockFlipWidget: tt(() => import("./ClockWidget-dNkYEhRC.js").then((e) => ({ default: e.ClockFlipWidget }))),
+	ClockWidget: tt(() => import("./ClockWidget-CHUsD9ak.js").then((e) => ({ default: e.ClockWidget }))),
+	ClockDarkWidget: tt(() => import("./ClockWidget-CHUsD9ak.js").then((e) => ({ default: e.ClockDarkWidget }))),
+	ClockWorldWidget: tt(() => import("./ClockWidget-CHUsD9ak.js").then((e) => ({ default: e.ClockWorldWidget }))),
+	ClockDigitalWidget: tt(() => import("./ClockWidget-CHUsD9ak.js").then((e) => ({ default: e.ClockDigitalWidget }))),
+	ClockFlipWidget: tt(() => import("./ClockWidget-CHUsD9ak.js").then((e) => ({ default: e.ClockFlipWidget }))),
 	CalendarWidget: tt(() => import("./CalendarWidget-Dw7WzlOu.js").then((e) => ({ default: e.CalendarWidget }))),
 	CalendarTodayWidget: tt(() => import("./CalendarWidget-Dw7WzlOu.js").then((e) => ({ default: e.CalendarTodayWidget }))),
 	WeatherWidget: tt(() => import("./WeatherWidget-D4EQ_pKf.js").then((e) => ({ default: e.WeatherWidget }))),

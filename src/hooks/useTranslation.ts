@@ -1069,8 +1069,8 @@ export function useTranslation() {
       calendar: 'appNameCalendar',
       messages: 'appNameMessages',
     };
-    const key = map[id.toLowerCase()];
-    return key ? t[key] : defaultName;
+    const key = map[(id || '').toLowerCase()];
+    return (key ? t[key] : defaultName) || defaultName || id || '';
   };
 
   const getWidgetName = (widgetId: string, defaultName: string) => {
@@ -1084,8 +1084,8 @@ export function useTranslation() {
       'calendar-today': 'widgetCalendarToday',
       'calendar-mini': 'widgetCalendarMonth',
     };
-    const key = map[widgetId];
-    return key ? t[key] : defaultName;
+    const key = map[widgetId || ''];
+    return (key ? t[key] : defaultName) || defaultName || widgetId || '';
   };
 
   const getWidgetDescription = (widgetId: string, defaultDesc: string) => {
@@ -1099,8 +1099,8 @@ export function useTranslation() {
       'calendar-today': 'descWidgetCalendarToday',
       'calendar-mini': 'descWidgetCalendarMonth',
     };
-    const key = map[widgetId];
-    return key ? t[key] : defaultDesc;
+    const key = map[widgetId || ''];
+    return (key ? t[key] : defaultDesc) || defaultDesc || widgetId || '';
   };
 
   return { t, language, getAppName, getWidgetName, getWidgetDescription };
