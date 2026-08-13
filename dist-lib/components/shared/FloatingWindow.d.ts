@@ -14,9 +14,8 @@ export interface FloatingWindowProps {
      */
     height?: number;
     /**
-     * Chặn tương tác với mọi thứ phía sau (nền desktop mờ + không click xuyên qua được) —
-     * đúng hành vi macOS "About This Mac". Đặt `false` cho cửa sổ tiện ích muốn giữ mở song
-     * song khi vẫn thao tác app khác (vd cửa sổ xem log). Default: true.
+     * Chặn tương tác với mọi thứ phía sau (nền desktop mờ + không click xuyên qua được).
+     * Đặt `true` nếu muốn tạo modal chặn click phía sau. Default: false.
      */
     blocking?: boolean;
     /** Cho kéo-giãn từ góc dưới-phải. Default: false (giữ nguyên kích thước cố định, đúng

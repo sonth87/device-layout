@@ -1,15 +1,15 @@
-import { o as e, x as t } from "./MobileAppViewer-dfrO3nzx.js";
+import { S as e, o as t } from "./MobileAppViewer-BnD-f7Mh.js";
 import { t as n } from "./store-D89CiGUZ.js";
 import { t as r } from "./utils-B6YmNDS2.js";
 import { t as i } from "./createLucideIcon--WjuKCts.js";
-import { d as a, f as o, g as s, n as c, p as l, r as u } from "./update-actions-yGyhIwhS.js";
+import { d as a, f as o, g as s, n as c, p as l, r as u } from "./update-actions-Bb08kzyb.js";
 import { t as d } from "./settings-B5duO7Zc.js";
 import { n as f } from "./music-D8WdwHqS.js";
 import { t as p } from "./refresh-cw-BNk9TuR7.js";
 import { t as m } from "./useTranslation-ByRogKHu.js";
 import { n as h, t as g } from "./holidays-service-CqYEsHC1.js";
 import { t as _ } from "./useAppLayout-DfaXs-1a.js";
-import { n as v, r as y, t as b } from "./MobileSplitView-Cjlq2GwA.js";
+import { n as v, r as y, t as b } from "./MobileSplitView-DNuzvU1t.js";
 import { a as x, i as S, n as C, r as w, t as T } from "./ui-D0242z7L.js";
 import { Suspense as E, lazy as D, useCallback as O, useEffect as k, useRef as A, useState as j } from "react";
 import { Fragment as M, jsx as N, jsxs as P } from "react/jsx-runtime";
@@ -480,26 +480,26 @@ function K() {
 				})
 			})
 		}
-	], z = e(), B = H.filter((e) => z.allowedOSThemes.includes(e));
+	], z = t(), B = H.filter((e) => z.allowedOSThemes.includes(e));
 	return /* @__PURE__ */ P("div", {
 		className: "space-y-6",
 		children: [
 			B.length > 1 && /* @__PURE__ */ N(x, {
 				title: E.osTheme,
-				children: O ? /* @__PURE__ */ N(S, { children: B.map((e) => /* @__PURE__ */ N(w, {
-					label: t[e].name,
-					active: i === e,
-					onPress: () => c(e)
-				}, e)) }) : /* @__PURE__ */ N(T, {
+				children: O ? /* @__PURE__ */ N(S, { children: B.map((t) => /* @__PURE__ */ N(w, {
+					label: e[t].name,
+					active: i === t,
+					onPress: () => c(t)
+				}, t)) }) : /* @__PURE__ */ N(T, {
 					narrow: 2,
 					medium: 3,
 					wide: 3,
 					gap: "12px",
-					children: B.map((e) => {
-						let n = t[e];
+					children: B.map((t) => {
+						let n = e[t];
 						return /* @__PURE__ */ P("button", {
-							onClick: () => c(e),
-							className: r("rounded-xl border-2 p-3 text-left transition-all", i === e ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20" : "border-transparent bg-white hover:border-black/10 dark:bg-white/5 dark:hover:border-white/10"),
+							onClick: () => c(t),
+							className: r("rounded-xl border-2 p-3 text-left transition-all", i === t ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20" : "border-transparent bg-white hover:border-black/10 dark:bg-white/5 dark:hover:border-white/10"),
 							children: [/* @__PURE__ */ N("p", {
 								className: "text-sm font-semibold text-black/90 dark:text-white/90",
 								children: n.name
@@ -507,7 +507,7 @@ function K() {
 								className: "mt-1 text-xs text-black/50 dark:text-white/50 leading-5",
 								children: n.description
 							})]
-						}, e);
+						}, t);
 					})
 				})
 			}),
