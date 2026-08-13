@@ -287,15 +287,15 @@ export function FloatingWindow({
             {/* Đóng — nút duy nhất có tác dụng */}
             <button
               onClick={onClose}
-              className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100"
+              className="w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100"
               style={{ backgroundColor: '#ff5f57' }}
               title="Close"
             >
-              {hovering && <X className="w-2 h-2 text-red-900/80" strokeWidth={3} />}
+              {hovering && <X className="w-2.5 h-2.5 text-red-950 dark:text-red-950/90" strokeWidth={3.5} />}
             </button>
             {/* Thu nhỏ/phóng to — chỉ trang trí */}
-            <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: '#d1d1d1' }} />
-            <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: '#d1d1d1' }} />
+            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#d1d1d1' }} />
+            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#d1d1d1' }} />
           </div>
           {title && (
             <span className="flex-1 text-center text-[12px] font-medium text-black/60 dark:text-white/60 select-none">

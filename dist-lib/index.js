@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as te, s as ne, t as re, u as ie, v as ae, w as oe, x as F, y as se } from "./MobileAppViewer-BnD-f7Mh.js";
+import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as te, s as ne, t as re, u as ie, v as ae, w as oe, x as F, y as se } from "./MobileAppViewer--uPQfRwG.js";
 import { c as ce, d as le, l as ue, s as de, t as I, u as fe } from "./store-D89CiGUZ.js";
 import { t as L } from "./utils-B6YmNDS2.js";
 import { t as R } from "./createLucideIcon--WjuKCts.js";
-import { a as pe, c as me, d as he, f as ge, g as _e, h as ve, i as ye, l as be, m as xe, n as Se, o as Ce, p as z, r as we, s as Te, t as Ee, u as De } from "./update-actions-Bb08kzyb.js";
+import { a as pe, c as me, d as he, f as ge, g as _e, h as ve, i as ye, l as be, m as xe, n as Se, o as Ce, p as z, r as we, s as Te, t as Ee, u as De } from "./update-actions-DnUl4HWm.js";
 import { t as Oe } from "./check-DoT5IS9-.js";
 import { t as ke } from "./chevron-right-BcSxNxws.js";
 import { t as Ae } from "./grid-3x3-CZiMuCC6.js";
@@ -471,32 +471,32 @@ function jt({ windowId: e, onPointerDown: t }) {
 			children: [
 				/* @__PURE__ */ J("button", {
 					onClick: () => i(e),
-					className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
+					className: "w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
 					style: { backgroundColor: n.isFocused || u ? "#ff5f57" : "#d1d1d1" },
 					title: "Close",
 					children: u && /* @__PURE__ */ J(B, {
-						className: "w-2 h-2 text-red-900/80",
-						strokeWidth: 3
+						className: "w-2.5 h-2.5 text-red-950 dark:text-red-950/90",
+						strokeWidth: 3.5
 					})
 				}),
 				/* @__PURE__ */ J("button", {
 					onClick: () => a(e),
-					className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
+					className: "w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
 					style: { backgroundColor: n.isFocused || u ? "#febc2e" : "#d1d1d1" },
 					title: "Minimize",
 					children: u && /* @__PURE__ */ J(Ct, {
-						className: "w-2 h-2 text-yellow-900/80",
-						strokeWidth: 3
+						className: "w-2.5 h-2.5 text-yellow-950 dark:text-yellow-950/90",
+						strokeWidth: 3.5
 					})
 				}),
 				/* @__PURE__ */ J("button", {
 					onClick: () => s(e),
-					className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
+					className: "w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
 					style: { backgroundColor: n.isFocused || u ? "#28c840" : "#d1d1d1" },
 					title: n.isFullScreen ? "Exit Full Screen" : "Enter Full Screen",
 					children: u && /* @__PURE__ */ J(St, {
-						className: "w-1.5 h-1.5 text-green-900/80",
-						strokeWidth: 3
+						className: "w-2 h-2 text-green-950 dark:text-green-950/90",
+						strokeWidth: 3.5
 					})
 				})
 			]
@@ -4396,20 +4396,20 @@ function Xi() {
 						children: [
 							/* @__PURE__ */ J("button", {
 								onClick: () => n(!1),
-								className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100",
+								className: "w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100",
 								style: { backgroundColor: "#ff5f57" },
 								title: "Close",
 								children: y && /* @__PURE__ */ J(B, {
-									className: "w-2 h-2 text-red-900/80",
-									strokeWidth: 3
+									className: "w-2.5 h-2.5 text-red-950 dark:text-red-950/90",
+									strokeWidth: 3.5
 								})
 							}),
 							/* @__PURE__ */ J("div", {
-								className: "w-3.5 h-3.5 rounded-full",
+								className: "w-4 h-4 rounded-full",
 								style: { backgroundColor: "#d1d1d1" }
 							}),
 							/* @__PURE__ */ J("div", {
-								className: "w-3.5 h-3.5 rounded-full",
+								className: "w-4 h-4 rounded-full",
 								style: { backgroundColor: "#d1d1d1" }
 							})
 						]

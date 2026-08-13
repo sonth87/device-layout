@@ -90,16 +90,16 @@ export function ViewOptionsDialog() {
           <div className="flex items-center gap-2" onPointerDown={(e) => e.stopPropagation()}>
             <button
               onClick={() => setOpen(false)}
-              className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100"
+              className="w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100"
               style={{ backgroundColor: '#ff5f57' }}
               title="Close"
             >
               {hovering && (
-                <X className="w-2 h-2 text-red-900/80" strokeWidth={3} />
+                <X className="w-2.5 h-2.5 text-red-950 dark:text-red-950/90" strokeWidth={3.5} />
               )}
             </button>
-            <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: '#d1d1d1' }} />
-            <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: '#d1d1d1' }} />
+            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#d1d1d1' }} />
+            <div className="w-4 h-4 rounded-full" style={{ backgroundColor: '#d1d1d1' }} />
           </div>
 
           <span className="text-[13px] font-semibold text-black/80 dark:text-white/80 absolute left-1/2 -translate-x-1/2">

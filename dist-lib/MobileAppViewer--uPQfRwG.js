@@ -6819,20 +6819,20 @@ function sp({ onClose: e, children: t, title: n, width: r = 288, height: i, bloc
 						children: [
 							/* @__PURE__ */ P("button", {
 								onClick: e,
-								className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100",
+								className: "w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100",
 								style: { backgroundColor: "#ff5f57" },
 								title: "Close",
 								children: x && /* @__PURE__ */ P(ae, {
-									className: "w-2 h-2 text-red-900/80",
-									strokeWidth: 3
+									className: "w-2.5 h-2.5 text-red-950 dark:text-red-950/90",
+									strokeWidth: 3.5
 								})
 							}),
 							/* @__PURE__ */ P("div", {
-								className: "w-3.5 h-3.5 rounded-full",
+								className: "w-4 h-4 rounded-full",
 								style: { backgroundColor: "#d1d1d1" }
 							}),
 							/* @__PURE__ */ P("div", {
-								className: "w-3.5 h-3.5 rounded-full",
+								className: "w-4 h-4 rounded-full",
 								style: { backgroundColor: "#d1d1d1" }
 							})
 						]
@@ -7269,7 +7269,7 @@ var bp = class extends le {
 }, xp = {
 	Finder: O(() => import("./Finder-DJygekTm.js").then((e) => ({ default: e.Finder }))),
 	Terminal: O(() => import("./Terminal-C2CuIdJz.js").then((e) => ({ default: e.Terminal }))),
-	Settings: O(() => import("./Settings-BbFGiW_J.js").then((e) => ({ default: e.Settings }))),
+	Settings: O(() => import("./Settings-DA7MWSja.js").then((e) => ({ default: e.Settings }))),
 	Browser: O(() => import("./Browser-k4U85Ofm.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: O(() => import("./TextEditor-Dqf2M5zg.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: O(() => import("./Clock-DvrMiNWe.js").then((e) => ({ default: e.Clock }))),
@@ -7278,7 +7278,7 @@ var bp = class extends le {
 	Photos: O(() => import("./Photos-C71d7fpM.js").then((e) => ({ default: e.Photos }))),
 	Music: O(() => import("./Music-BAQ-tBn8.js").then((e) => ({ default: e.Music }))),
 	Calendar: O(() => import("./Calendar-CeVNloWX.js").then((e) => ({ default: e.Calendar }))),
-	Messages: O(() => import("./Messages-D8XRIOh0.js").then((e) => ({ default: e.Messages }))),
+	Messages: O(() => import("./Messages-C9dyqgJw.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: O(() => import("./IframeApp-SD4EaVy3.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: O(() => import("./MdxApp-DcW8GOzC.js").then((e) => ({ default: e.MdxApp })))
 };

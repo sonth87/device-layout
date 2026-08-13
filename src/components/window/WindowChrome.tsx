@@ -110,36 +110,36 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
         {/* Close */}
         <button
           onClick={() => closeWindow(windowId)}
-          className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90"
+          className="w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90"
           style={{ backgroundColor: (win.isFocused || hovering) ? '#ff5f57' : '#d1d1d1' }}
           title="Close"
         >
           {hovering && (
-            <X className="w-2 h-2 text-red-900/80" strokeWidth={3} />
+            <X className="w-2.5 h-2.5 text-red-950 dark:text-red-950/90" strokeWidth={3.5} />
           )}
         </button>
 
         {/* Minimize */}
         <button
           onClick={() => minimizeWindow(windowId)}
-          className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90"
+          className="w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90"
           style={{ backgroundColor: (win.isFocused || hovering) ? '#febc2e' : '#d1d1d1' }}
           title="Minimize"
         >
           {hovering && (
-            <Minus className="w-2 h-2 text-yellow-900/80" strokeWidth={3} />
+            <Minus className="w-2.5 h-2.5 text-yellow-950 dark:text-yellow-950/90" strokeWidth={3.5} />
           )}
         </button>
 
         {/* Fullscreen / Green */}
         <button
           onClick={() => toggleFullScreen(windowId)}
-          className="w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90"
+          className="w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90"
           style={{ backgroundColor: (win.isFocused || hovering) ? '#28c840' : '#d1d1d1' }}
           title={win.isFullScreen ? 'Exit Full Screen' : 'Enter Full Screen'}
         >
           {hovering && (
-            <Maximize2 className="w-1.5 h-1.5 text-green-900/80" strokeWidth={3} />
+            <Maximize2 className="w-2 h-2 text-green-950 dark:text-green-950/90" strokeWidth={3.5} />
           )}
         </button>
       </div>
