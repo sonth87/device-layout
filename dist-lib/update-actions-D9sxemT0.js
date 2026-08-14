@@ -1,4 +1,4 @@
-import { _ as e, h as t } from "./MobileAppViewer-Ctl_i24n.js";
+import { _ as e, h as t } from "./MobileAppViewer-Drq22dqr.js";
 import { a as n, f as r, i, n as a, o, r as s, t as c } from "./store-DNT7LGUT.js";
 import { t as l } from "./utils-B6YmNDS2.js";
 import { t as u } from "./createLucideIcon--WjuKCts.js";
@@ -318,11 +318,11 @@ var re = u("app-window", [
 	StickyNote: ne
 };
 function F({ appConfig: e, size: t = 56, className: n = "", fill: r = !1 }) {
-	let [i, a] = b(!1), o = e.iconColor?.[0] ?? "#0a84ff", s = e.iconColor?.[1] ?? "#0055d4", c = e.iconTextColor ?? "#ffffff", l = Math.round(t * .5);
+	let [i, a] = b(!1), o = e.iconColor?.[0] ?? "#0a84ff", s = e.iconColor?.[1] ?? "#0055d4", c = e.iconTextColor ?? "#ffffff", u = Math.round(t * .785), d = Math.round(t * .643), f = l(n, "flex items-center justify-center shrink-0 overflow-hidden! rounded-[var(--radius-icon)]!");
 	if (typeof e.icon != "string") {
-		let i = e.icon;
-		return /* @__PURE__ */ S("div", {
-			className: `flex items-center justify-center shrink-0 ${n}`,
+		let n = e.icon;
+		return e.rawIcon || e.fullBleedIcon ? /* @__PURE__ */ S("div", {
+			className: f,
 			style: {
 				width: r ? "100%" : t,
 				height: r ? "100%" : t,
@@ -331,10 +331,28 @@ function F({ appConfig: e, size: t = 56, className: n = "", fill: r = !1 }) {
 				boxShadow: `0 ${Math.round(t * .02)}px ${Math.round(t * .08)}px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)`,
 				overflow: "hidden"
 			},
-			children: /* @__PURE__ */ S(i, {
+			children: /* @__PURE__ */ S(n, {
 				style: {
-					width: r ? "50%" : l,
-					height: r ? "50%" : l,
+					width: "100%",
+					height: "100%",
+					color: c
+				},
+				strokeWidth: 1.7
+			})
+		}) : /* @__PURE__ */ S("div", {
+			className: f,
+			style: {
+				width: r ? "100%" : t,
+				height: r ? "100%" : t,
+				background: `linear-gradient(145deg, ${o}, ${s})`,
+				borderRadius: "var(--radius-icon)",
+				boxShadow: `0 ${Math.round(t * .02)}px ${Math.round(t * .08)}px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)`,
+				overflow: "hidden"
+			},
+			children: /* @__PURE__ */ S(n, {
+				style: {
+					width: r ? "78.5%" : u,
+					height: r ? "78.5%" : u,
 					color: c
 				},
 				strokeWidth: 1.7
@@ -342,9 +360,9 @@ function F({ appConfig: e, size: t = 56, className: n = "", fill: r = !1 }) {
 		});
 	}
 	if (e.icon.startsWith("lucide:")) {
-		let i = P[e.icon.replace("lucide:", "")];
+		let n = P[e.icon.replace("lucide:", "")];
 		return /* @__PURE__ */ S("div", {
-			className: `flex items-center justify-center shrink-0 ${n}`,
+			className: f,
 			style: {
 				width: r ? "100%" : t,
 				height: r ? "100%" : t,
@@ -353,17 +371,17 @@ function F({ appConfig: e, size: t = 56, className: n = "", fill: r = !1 }) {
 				boxShadow: `0 ${Math.round(t * .02)}px ${Math.round(t * .08)}px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)`,
 				overflow: "hidden"
 			},
-			children: i ? /* @__PURE__ */ S(i, {
+			children: n ? /* @__PURE__ */ S(n, {
 				style: {
-					width: r ? "50%" : l,
-					height: r ? "50%" : l,
+					width: r ? "64.3%" : d,
+					height: r ? "64.3%" : d,
 					color: c
 				},
 				strokeWidth: 1.7
 			}) : /* @__PURE__ */ S("span", {
 				style: {
 					color: c,
-					fontSize: r ? "35%" : l * .65,
+					fontSize: r ? "35%" : d * .65,
 					fontWeight: 700
 				},
 				children: e.name.charAt(0)
@@ -371,7 +389,7 @@ function F({ appConfig: e, size: t = 56, className: n = "", fill: r = !1 }) {
 		});
 	}
 	return i ? /* @__PURE__ */ S("div", {
-		className: `flex items-center justify-center shrink-0 ${n}`,
+		className: f,
 		style: {
 			width: r ? "100%" : t,
 			height: r ? "100%" : t,
@@ -388,19 +406,24 @@ function F({ appConfig: e, size: t = 56, className: n = "", fill: r = !1 }) {
 			},
 			children: e.name.charAt(0)
 		})
-	}) : /* @__PURE__ */ S("img", {
-		src: e.icon,
-		alt: e.name,
-		width: t,
-		height: t,
-		className: `object-contain ${n}`,
+	}) : /* @__PURE__ */ S("div", {
+		className: f,
 		style: {
 			width: r ? "100%" : t,
 			height: r ? "100%" : t,
+			background: `linear-gradient(145deg, ${o}, ${s})`,
 			borderRadius: "var(--radius-icon)",
+			boxShadow: `0 ${Math.round(t * .02)}px ${Math.round(t * .08)}px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)`,
 			overflow: "hidden"
 		},
-		onError: () => a(!0)
+		children: /* @__PURE__ */ S("img", {
+			src: e.icon,
+			alt: e.name,
+			width: t,
+			height: t,
+			className: "w-full h-full object-contain",
+			onError: () => a(!0)
+		})
 	});
 }
 //#endregion

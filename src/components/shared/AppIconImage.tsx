@@ -9,6 +9,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import type { AppConfig } from '@/types/app';
+import { cn } from '@/lib/utils';
 
 const LUCIDE_MAP: Record<string, LucideIcon> = {
   Folder, SquareTerminal, Settings, Globe, FileText,
@@ -26,8 +27,8 @@ interface AppIconImageProps {
 
 /**
  * Renders app icon: SVG/PNG image → Lucide icon → letter fallback.
- * Border radius is driven by the `--radius-icon` CSS variable so all themes
- * stay consistent without any JS calculation.
+ * Border radius and overflow clipping are strictly enforced with !important
+ * to ensure no user styles can override the system squircle icon layout.
  */
 export function AppIconImage({ appConfig, size = 56, className = '', fill = false }: AppIconImageProps) {
   const [imgFailed, setImgFailed] = useState(false);
@@ -35,14 +36,47 @@ export function AppIconImage({ appConfig, size = 56, className = '', fill = fals
   const fromColor = appConfig.iconColor?.[0] ?? '#0a84ff';
   const toColor = appConfig.iconColor?.[1] ?? '#0055d4';
   const textColor = appConfig.iconTextColor ?? '#ffffff';
-  const iconSize = Math.round(size * 0.5);
+  const customIconSize = Math.round(size * 0.785); // 44px for size=56
+  const lucideIconSize = Math.round(size * 0.643); // 36px for size=56
 
-  // Custom React Component icon with gradient background
+  const containerClassName = cn(
+    className,
+    'flex items-center justify-center shrink-0 overflow-hidden! rounded-[var(--radius-icon)]!'
+  );
+
+  // Custom React Component icon
   if (typeof appConfig.icon !== 'string') {
     const CustomIcon = appConfig.icon;
+    const isRaw = appConfig.rawIcon || appConfig.fullBleedIcon;
+
+    if (isRaw) {
+      return (
+        <div
+          className={containerClassName}
+          style={{
+            width: fill ? '100%' : size,
+            height: fill ? '100%' : size,
+            background: `linear-gradient(145deg, ${fromColor}, ${toColor})`,
+            borderRadius: 'var(--radius-icon)',
+            boxShadow: `0 ${Math.round(size * 0.02)}px ${Math.round(size * 0.08)}px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)`,
+            overflow: 'hidden',
+          }}
+        >
+          <CustomIcon
+            style={{
+              width: '100%',
+              height: '100%',
+              color: textColor,
+            }}
+            strokeWidth={1.7}
+          />
+        </div>
+      );
+    }
+
     return (
       <div
-        className={`flex items-center justify-center shrink-0 ${className}`}
+        className={containerClassName}
         style={{
           width: fill ? '100%' : size,
           height: fill ? '100%' : size,
@@ -54,8 +88,8 @@ export function AppIconImage({ appConfig, size = 56, className = '', fill = fals
       >
         <CustomIcon
           style={{
-            width: fill ? '50%' : iconSize,
-            height: fill ? '50%' : iconSize,
+            width: fill ? '78.5%' : customIconSize,
+            height: fill ? '78.5%' : customIconSize,
             color: textColor,
           }}
           strokeWidth={1.7}
@@ -71,7 +105,7 @@ export function AppIconImage({ appConfig, size = 56, className = '', fill = fals
 
     return (
       <div
-        className={`flex items-center justify-center shrink-0 ${className}`}
+        className={containerClassName}
         style={{
           width: fill ? '100%' : size,
           height: fill ? '100%' : size,
@@ -84,14 +118,14 @@ export function AppIconImage({ appConfig, size = 56, className = '', fill = fals
         {LucideComp ? (
           <LucideComp
             style={{
-              width: fill ? '50%' : iconSize,
-              height: fill ? '50%' : iconSize,
+              width: fill ? '64.3%' : lucideIconSize,
+              height: fill ? '64.3%' : lucideIconSize,
               color: textColor,
             }}
             strokeWidth={1.7}
           />
         ) : (
-          <span style={{ color: textColor, fontSize: fill ? '35%' : iconSize * 0.65, fontWeight: 700 }}>
+          <span style={{ color: textColor, fontSize: fill ? '35%' : lucideIconSize * 0.65, fontWeight: 700 }}>
             {appConfig.name.charAt(0)}
           </span>
         )}
@@ -102,28 +136,34 @@ export function AppIconImage({ appConfig, size = 56, className = '', fill = fals
   // SVG/PNG image (priority)
   if (!imgFailed) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={appConfig.icon}
-        alt={appConfig.name}
-        width={size}
-        height={size}
-        className={`object-contain ${className}`}
+      <div
+        className={containerClassName}
         style={{
           width: fill ? '100%' : size,
           height: fill ? '100%' : size,
+          background: `linear-gradient(145deg, ${fromColor}, ${toColor})`,
           borderRadius: 'var(--radius-icon)',
+          boxShadow: `0 ${Math.round(size * 0.02)}px ${Math.round(size * 0.08)}px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)`,
           overflow: 'hidden',
         }}
-        onError={() => setImgFailed(true)}
-      />
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={appConfig.icon}
+          alt={appConfig.name}
+          width={size}
+          height={size}
+          className="w-full h-full object-contain"
+          onError={() => setImgFailed(true)}
+        />
+      </div>
     );
   }
 
   // Gradient + letter fallback
   return (
     <div
-      className={`flex items-center justify-center shrink-0 ${className}`}
+      className={containerClassName}
       style={{
         width: fill ? '100%' : size,
         height: fill ? '100%' : size,

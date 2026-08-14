@@ -7,8 +7,8 @@ interface AppIconImageProps {
 }
 /**
  * Renders app icon: SVG/PNG image → Lucide icon → letter fallback.
- * Border radius is driven by the `--radius-icon` CSS variable so all themes
- * stay consistent without any JS calculation.
+ * Border radius and overflow clipping are strictly enforced with !important
+ * to ensure no user styles can override the system squircle icon layout.
  */
 export declare function AppIconImage({ appConfig, size, className, fill }: AppIconImageProps): import("react/jsx-runtime").JSX.Element;
 export {};

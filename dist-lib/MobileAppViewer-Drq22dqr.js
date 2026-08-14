@@ -7269,7 +7269,7 @@ var bp = class extends le {
 }, xp = {
 	Finder: O(() => import("./Finder-CO1FM3SV.js").then((e) => ({ default: e.Finder }))),
 	Terminal: O(() => import("./Terminal-CA5QC5sM.js").then((e) => ({ default: e.Terminal }))),
-	Settings: O(() => import("./Settings-YQhIciL6.js").then((e) => ({ default: e.Settings }))),
+	Settings: O(() => import("./Settings-ChjzBILc.js").then((e) => ({ default: e.Settings }))),
 	Browser: O(() => import("./Browser-Cqx-QULu.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: O(() => import("./TextEditor-DJzPRB4L.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: O(() => import("./Clock-BrbKfQs4.js").then((e) => ({ default: e.Clock }))),
@@ -7278,7 +7278,7 @@ var bp = class extends le {
 	Photos: O(() => import("./Photos-DRqXRCfu.js").then((e) => ({ default: e.Photos }))),
 	Music: O(() => import("./Music-D3LXNgae.js").then((e) => ({ default: e.Music }))),
 	Calendar: O(() => import("./Calendar-BbtTFHjA.js").then((e) => ({ default: e.Calendar }))),
-	Messages: O(() => import("./Messages-DLvXC0Mk.js").then((e) => ({ default: e.Messages }))),
+	Messages: O(() => import("./Messages-gQlIDB1W.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: O(() => import("./IframeApp-BiNTRAoe.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: O(() => import("./MdxApp-DGr6t_nf.js").then((e) => ({ default: e.MdxApp })))
 };

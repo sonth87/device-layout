@@ -55,6 +55,10 @@ export interface AppConfig {
   iconColor?: [string, string];
   /** Text/icon color inside icon background (default white) */
   iconTextColor?: string;
+  /** If true, renders custom React Component icon as full-bleed 100% without gradient wrapper or inner scaling */
+  rawIcon?: boolean;
+  /** Alias for rawIcon */
+  fullBleedIcon?: boolean;
   /** Key matching a lazy import in AppRegistry (built-in apps) */
   component?: string;
   /**
