@@ -9,7 +9,7 @@
 @custom-variant glass-on ([data-glass="true"] &);
 
 /* ── Dark mode: class-based (toggled via .dark on <html>) ── */
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:is(.dark, .dark *));
 
 /* ── Shared design tokens ───────────────────────────────── */
 :root {
