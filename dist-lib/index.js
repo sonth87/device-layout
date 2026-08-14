@@ -1338,7 +1338,8 @@ function ln() {
 		o
 	]), W(() => {
 		if (!i) return;
-		let t = new URLSearchParams();
+		let t = new URLSearchParams(window.location.search);
+		t.delete("w");
 		for (let n of Object.values(e)) {
 			let e = sn(n);
 			e && t.append("w", e);

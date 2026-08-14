@@ -12,9 +12,11 @@ Every app is declared as a plain `AppConfig` object in `src/config/apps.config.t
 interface AppConfig {
   id: string                     // unique identifier — used in URL params and store keys
   name: string                   // display name (dock tooltip, window title, About dialog)
-  icon: string                   // 'lucide:IconName' | '/path/to/icon.svg' | emoji string
-  iconColor?: [string, string]   // gradient [from, to] for lucide/emoji icon background
+  icon: string | ComponentType<any> // 'lucide:IconName' | '/path/to/icon.svg' | React Component
+  iconColor?: [string, string]   // gradient [from, to] for icon background (default: ['#0a84ff', '#0055d4'])
   iconTextColor?: string         // icon foreground color (default: white)
+  rawIcon?: boolean              // if true, renders custom SVG component full-bleed (100%) without inner scaling
+  fullBleedIcon?: boolean        // alias for rawIcon
   component?: string             // key in AppRegistry (built-in apps)
   render?: ComponentType<AppContentProps>  // external component — takes priority over 'component'
   disabled?: boolean             // hide from dock, desktop, and spotlight
@@ -52,8 +54,54 @@ interface AppConfig {
 | `hasMenuBar` | `false` |
 | `hasStatusBar` | `false` |
 | `iconTextColor` | `'#ffffff'` |
+| `rawIcon` | `false` |
 | `minSize` | no constraint |
 | `defaultPosition` | centered on screen |
+
+---
+
+## App Icon Configuration & Sizing Rules
+
+`AppIconImage` handles app icon rendering across Desktop, Dock, Taskbar, App Drawer, and Spotlight.
+
+### Icon Format Support & Inner Sizing
+
+1. **Lucide Icons (`icon: 'lucide:IconName'`)**:
+   - Rendered centered over the background gradient.
+   - Inner symbol size: **`64.3%`** of icon container (`36px` inside default `56px` tile).
+
+2. **Custom Component SVG Icons (`icon: MySvgComponent`)**:
+   - **Default Mode (`rawIcon: false`)**: Inner SVG symbol rendered centered at **`78.5%`** of container (`44px` inside default `56px` tile) over the gradient background.
+   - **Full-Bleed Mode (`rawIcon: true` or `fullBleedIcon: true`)**: Component SVG fills **`100%`** (`56px × 56px`) of the container tile.
+
+3. **Image Paths (`icon: '/icons/app.svg'` or `icon: '/icons/app.png'`)**:
+   - Rendered filled inside the gradient background container.
+
+### Enforced OS System Layout Constraints (`!important`)
+
+To guarantee a unified OS desktop aesthetic across all themes:
+- **Mandatory Squircle Clipping**: Every app icon container strictly enforces `rounded-[var(--radius-icon)]!` and `overflow-hidden!`. Host applications or custom icon components cannot override these rules. Any non-square shape (circles, triangles, transparent SVGs) will be cleanly clipped to the OS squircle.
+- **Mandatory Background Gradient**: Every app icon container is backed by `linear-gradient(145deg, iconColor[0], iconColor[1])`. If an icon is a transparent SVG or non-square shape, the gradient container fills the standard OS tile shape underneath.
+
+```tsx
+// Example 1: Full-bleed custom SVG component (100% size, clipped by OS squircle)
+{
+  id: 'my-app',
+  name: 'My App',
+  icon: MyCustomIcon,
+  rawIcon: true, // 100% full-bleed inside OS squircle container
+  render: MyApp,
+}
+
+// Example 2: Symbol component over custom gradient background (78.5% / 44px inner size)
+{
+  id: 'my-app',
+  name: 'My App',
+  icon: MySymbolIcon,
+  iconColor: ['#2563eb', '#1d4ed8'],
+  render: MyApp,
+}
+```
 
 ---
 

@@ -76,7 +76,8 @@ export function useWindowUrlSync() {
   useEffect(() => {
     if (!urlHydrated) return;
 
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(window.location.search);
+    params.delete('w');
     for (const win of Object.values(windows)) {
       const param = encodeWindowToParam(win);
       if (param) params.append('w', param);
