@@ -788,7 +788,7 @@ function Ve(e, t) {
 		enterFullScreen(t) {
 			e((e) => {
 				let n = e.windows[t];
-				!n || n.isFullScreen || (n.prevRect ||= { ...n.rect }, n.isMaximized = !1, n.isFullScreen = !0);
+				!n || n.isFullScreen || (n.prevRect ||= { ...n.rect }, n.isMaximized = !1, n.isFullScreen = !0, e.fullscreenChromeRevealed = !1);
 			});
 		},
 		exitFullScreen(t) {
@@ -820,7 +820,13 @@ function Ve(e, t) {
 		resizeWindow(t, n, r = !1) {
 			e((e) => {
 				let i = e.windows[t];
-				i && (i.isFullScreen || i.isMaximized ? (i.isFullScreen = !1, i.isMaximized = !1, i.prevRect = null) : r ? i.prevRect ||= { ...i.rect } : i.prevRect = null, i.rect = n);
+				i && (!i.isFullScreen && !i.isMaximized && (r ? i.prevRect ||= { ...i.rect } : i.prevRect = null), i.rect = n);
+			});
+		},
+		syncWindowRect(t, n) {
+			e((e) => {
+				let r = e.windows[t];
+				r && (r.rect = n);
 			});
 		},
 		setWindowTitle(t, n) {

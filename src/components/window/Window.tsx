@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, animate } from 'motion/react';
 import { useStore } from '@/store';
 import { useTheme } from '@/hooks/useTheme';
@@ -38,23 +38,57 @@ export function Window({ windowId }: WindowProps) {
     return () => window.removeEventListener('keydown', handler);
   }, [win?.isFullScreen, win?.isFocused, windowId, exitFullScreen]);
 
+  // Peek-hint bar: slides in when cursor is within 50px of top edge (fullscreen only).
+  // Disappears once the title bar chrome is revealed.
+  const [peekHintNear, setPeekHintNear] = useState(false);
+  const chromeRevealedRef = useRef(fullscreenChromeRevealed);
+  useEffect(() => { chromeRevealedRef.current = fullscreenChromeRevealed; }, [fullscreenChromeRevealed]);
+  useEffect(() => {
+    if (!win?.isFullScreen) { setPeekHintNear(false); return; }
+    const PROXIMITY = 50;
+    const handleMove = (e: MouseEvent) => {
+      setPeekHintNear(e.clientY < PROXIMITY && !chromeRevealedRef.current);
+    };
+    document.addEventListener('mousemove', handleMove);
+    return () => document.removeEventListener('mousemove', handleMove);
+  }, [win?.isFullScreen]);
+  // Hide hint immediately when chrome reveals
+  useEffect(() => {
+    if (fullscreenChromeRevealed) setPeekHintNear(false);
+  }, [fullscreenChromeRevealed]);
+
   const mx = useMotionValue(win?.isFullScreen ? 0 : (win?.rect.x ?? 100));
   const my = useMotionValue(win?.isFullScreen ? 0 : (win?.rect.y ?? 100));
   const mw = useMotionValue(win?.isFullScreen ? (typeof window !== 'undefined' ? window.innerWidth : 800) : (win?.rect.width ?? 800));
   const mh = useMotionValue(win?.isFullScreen ? (typeof window !== 'undefined' ? window.innerHeight : 600) : (win?.rect.height ?? 600));
 
-  // Animate rect changes (maximize/restore/fullscreen) with spring
+  // Animate rect changes (maximize/restore/fullscreen) with spring.
+  // Fullscreen snaps instantly (no spring) — avoids the transform-stale-closure bug
+  // where switching style branches from {x:mx} to {inset:0,x:0} while mx was still
+  // animating caused Framer Motion to keep applying the old translateX/Y over inset:0.
   useEffect(() => {
     if (!win) return;
+    const vw = typeof window !== 'undefined' ? window.innerWidth : 800;
+    const vh = typeof window !== 'undefined' ? window.innerHeight : 600;
     const targetX = win.isFullScreen ? 0 : win.rect.x;
     const targetY = win.isFullScreen ? 0 : win.rect.y;
-    const targetW = win.isFullScreen ? (typeof window !== 'undefined' ? window.innerWidth : 800) : win.rect.width;
-    const targetH = win.isFullScreen ? (typeof window !== 'undefined' ? window.innerHeight : 600) : win.rect.height;
+    const targetW = win.isFullScreen ? vw : win.rect.width;
+    const targetH = win.isFullScreen ? vh : win.rect.height;
 
-    animate(mx, targetX, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
-    animate(my, targetY, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
-    animate(mw, targetW, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
-    animate(mh, targetH, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
+    if (win.isFullScreen) {
+      // Snap immediately — no spring when entering fullscreen.
+      // This is crucial: mx/my must be at 0 before inset:0 takes effect,
+      // otherwise the Framer Motion transform still translates the window.
+      mx.set(targetX);
+      my.set(targetY);
+      mw.set(targetW);
+      mh.set(targetH);
+    } else {
+      animate(mx, targetX, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
+      animate(my, targetY, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
+      animate(mw, targetW, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
+      animate(mh, targetH, { type: 'spring', stiffness: 400, damping: 35, mass: 0.8 });
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [win?.rect.x, win?.rect.y, win?.rect.width, win?.rect.height, win?.isFullScreen]);
 
@@ -83,12 +117,16 @@ export function Window({ windowId }: WindowProps) {
         exit: { scale: 0.88, opacity: 0, transition: { duration: 0.15 } },
       }}
       style={
-        (win.isFullScreen && config.hasMenuBar) || isMobile
+        isMobile
           ? {
-              position: 'absolute', inset: 0, x: 0, y: 0, width: '100%', height: '100%',
-              zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: win.isFullScreen ? 0 : 'var(--radius-window)',
+              position: 'absolute', inset: 0, zIndex: win.zIndex,
+              transformOrigin: 'bottom center', borderRadius: 'var(--radius-window)',
             }
-          : { position: 'absolute', x: mx, y: my, width: mw, height: mh, zIndex: win.zIndex, transformOrigin: 'bottom center', borderRadius: (win.isFullScreen || win.isMaximized) ? 0 : 'var(--radius-window)' }
+          : {
+              position: 'absolute', x: mx, y: my, width: mw, height: mh,
+              zIndex: win.zIndex, transformOrigin: 'bottom center',
+              borderRadius: (win.isFullScreen || win.isMaximized) ? 0 : 'var(--radius-window)',
+            }
       }
       className={cn(
         'flex flex-col overflow-hidden',
@@ -107,20 +145,6 @@ export function Window({ windowId }: WindowProps) {
         // Bring to front on any click
         focusWindow(windowId);
         if (win?.appId) setActiveApp(win.appId);
-        // stopPropagation() CHỈ khi window CHƯA focused — không phải mọi lúc. Trước đây gọi vô
-        // điều kiện (không có lý do rõ trong lịch sử/comment, chỉ đi kèm focusWindow/setActiveApp
-        // — IconGrid.tsx's marquee-select đã tự loại trừ click trong window qua
-        // target.closest('[id^="window-"]'), không cần stopPropagation() để tránh việc đó) —
-        // nhưng nó chặn luôn NATIVE pointerdown nổi bọt tới document, nơi mọi component Radix
-        // dùng chung (Select, DropdownMenu, Popover...) lắng nghe qua DismissableLayer để tự đóng
-        // khi click ra ngoài. Vì bubble bị chặn, dropdown/menu KHÔNG BAO GIỜ tự đóng khi user
-        // click bất kỳ đâu trong window đang mở nó — kể cả cùng window (bug thật phát hiện qua
-        // sky-app's VoicePicker dropdown, 2026-07-23). Chỉ cần chặn ở lần click ĐẦU TIÊN lúc
-        // window còn chưa active (để không có side-effect lạ nào khác từ việc window "vừa được
-        // focus" cũng đồng thời bị hiểu là click-outside bởi 1 lớp Radix nào đó đang mở từ TRƯỚC
-        // — ví dụ mở Select ở window A rồi click sang window B để focus B, click đó không nên bị
-        // Select ở A tính là "click outside" 2 lần cho 2 mục đích khác nhau cùng lúc); mọi
-        // click SAU khi đã focused thì để native event nổi bọt bình thường.
         if (!win.isFocused) e.stopPropagation();
       }}
     >
@@ -133,19 +157,34 @@ export function Window({ windowId }: WindowProps) {
           (not a flex member) so it doesn't push window content down when revealed. */}
       {/* Chrome (title bar) — normal flex-column member when floating, maximized, or non-macOS theme.
           In true macOS fullscreen it's hidden by default but slides down as an absolute overlay. */}
-      {(!win.isFullScreen || !config.hasMenuBar) && (
+      {!win.isFullScreen && (
         <div className={cn(appConfig?.titleBarMode === 'transparent' ? 'absolute top-0 inset-x-0 z-20' : 'relative')}>
           <WindowChrome windowId={windowId} onPointerDown={onDragStart} />
         </div>
       )}
-      {win.isFullScreen && config.hasMenuBar && (
+      {win.isFullScreen && (
         <motion.div
           className="absolute top-0 inset-x-0 z-20"
-          animate={{ y: fullscreenChromeRevealed ? 28 : '-100%' }}
+          animate={{ y: fullscreenChromeRevealed ? (config.hasMenuBar ? 28 : 0) : '-100%' }}
           transition={{ type: 'spring', stiffness: 380, damping: 30, mass: 0.8 }}
         >
           <WindowChrome windowId={windowId} onPointerDown={onDragStart} />
         </motion.div>
+      )}
+
+      {/* Subtle peek-hint bar: visible only when fullscreen chrome is hidden.
+          A thin translucent strip at the top edge gives users a visual affordance
+          to discover that hovering near the top reveals the title bar. */}
+      {win.isFullScreen && (
+        <motion.div
+          className="absolute top-0 inset-x-0 z-10 h-2.5 pointer-events-none backdrop-blur-sm"
+          initial={{ y: '-100%' }}
+          animate={{ y: peekHintNear ? '0%' : '-100%' }}
+          transition={{ type: 'spring', stiffness: 500, damping: 40, mass: 0.5 }}
+          style={{
+            background: 'linear-gradient(to bottom, rgba(128,128,128,0.3) 0%, transparent 100%)',
+          }}
+        />
       )}
 
       {/* Optional per-window top menu bar — only for themes WITHOUT a global

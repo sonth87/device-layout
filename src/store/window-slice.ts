@@ -42,6 +42,7 @@ export interface WindowSlice {
   focusWindow: (id: string) => void;
   moveWindow: (id: string, x: number, y: number) => void;
   resizeWindow: (id: string, rect: WindowRect, savePrev?: boolean) => void;
+  syncWindowRect: (id: string, rect: WindowRect) => void;
   setWindowTitle: (id: string, title: string) => void;
   hydrateWindows: (windows: WindowState[]) => void;
 }
@@ -291,6 +292,7 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
         }
         win.isMaximized = false;
         win.isFullScreen = true;
+        state.fullscreenChromeRevealed = false;
       });
     },
 
@@ -340,19 +342,30 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
       set((state) => {
         const win = state.windows[id];
         if (win) {
-          if (win.isFullScreen || win.isMaximized) {
-            win.isFullScreen = false;
-            win.isMaximized = false;
-            win.prevRect = null;
-          } else if (savePrev) {
-            if (!win.prevRect) {
-              win.prevRect = { ...win.rect };
+          if (!win.isFullScreen && !win.isMaximized) {
+            // Only touch prevRect when NOT in a fullscreen/maximized state.
+            // When isFullScreen/isMaximized, rect is managed externally (WindowManager sync)
+            // and those flags must NOT be cleared here.
+            if (savePrev) {
+              if (!win.prevRect) win.prevRect = { ...win.rect };
+            } else {
+              win.prevRect = null;
             }
-          } else {
-            win.prevRect = null;
           }
           win.rect = rect;
         }
+      });
+    },
+
+    /**
+     * Update only win.rect without touching any flags (isFullScreen, isMaximized, prevRect).
+     * Used by WindowManager to keep the rect in sync when viewport changes while
+     * window is in fullscreen/maximized mode — calling resizeWindow would have cleared the flags.
+     */
+    syncWindowRect(id, rect) {
+      set((state) => {
+        const win = state.windows[id];
+        if (win) win.rect = rect;
       });
     },
 

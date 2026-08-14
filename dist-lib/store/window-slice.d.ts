@@ -36,6 +36,7 @@ export interface WindowSlice {
     focusWindow: (id: string) => void;
     moveWindow: (id: string, x: number, y: number) => void;
     resizeWindow: (id: string, rect: WindowRect, savePrev?: boolean) => void;
+    syncWindowRect: (id: string, rect: WindowRect) => void;
     setWindowTitle: (id: string, title: string) => void;
     hydrateWindows: (windows: WindowState[]) => void;
 }

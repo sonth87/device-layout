@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { X, Minus, Maximize2, Square, Copy, Calculator as CalcIcon, Check, ChevronDown, Sidebar } from 'lucide-react';
+import { X, Minus, Maximize2, Minimize2, Square, Copy, Calculator as CalcIcon, Check, ChevronDown, Sidebar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
@@ -83,7 +83,7 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
       data-windowchrome="true"
       className={cn(
         'flex items-center gap-0 h-(--window-chrome-height) px-4 shrink-0',
-        'select-none cursor-move z-30',
+        'select-none cursor-default z-30',
         isTransparent
           ? 'bg-transparent border-b-0'
           : cn(
@@ -139,7 +139,9 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
           title={win.isFullScreen ? 'Exit Full Screen' : 'Enter Full Screen'}
         >
           {hovering && (
-            <Maximize2 className="w-2 h-2 text-green-950 dark:text-green-950/90" strokeWidth={3.5} />
+            (win.isFullScreen || win.isMaximized)
+              ? <Minimize2 className="w-2 h-2 text-green-950 dark:text-green-950/90" strokeWidth={3.5} />
+              : <Maximize2 className="w-2 h-2 text-green-950 dark:text-green-950/90" strokeWidth={3.5} />
           )}
         </button>
       </div>
@@ -290,7 +292,7 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
         isTransparent
           ? 'bg-transparent border-b-0'
           : 'bg-neutral-100/98 dark:bg-[#151821]/98 border-b border-black/8 dark:border-white/8',
-        'select-none cursor-move',
+        'select-none cursor-default',
       )}
       onPointerDown={onPointerDown}
       onClick={(e) => { e.stopPropagation(); }}
@@ -375,8 +377,10 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
         </button>
         <button
           onClick={() => {
-            if (win.isFullScreen || win.isMaximized) {
+            if (win.isFullScreen) {
               exitFullScreen(windowId);
+            } else if (win.isMaximized) {
+              toggleMaximize(windowId, viewportRect);
             } else {
               enterFullScreen(windowId);
             }

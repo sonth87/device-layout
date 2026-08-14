@@ -1,21 +1,22 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { MenuBar } from '@/components/menubar/MenuBar';
 import { Dock } from '@/components/dock/Dock';
 import { GlobalAboutDialog } from '@/components/shared/AboutDialog';
 import { useStore } from '@/store';
 import { useWallpaperLuminance } from '@/hooks/useWallpaperLuminance';
+import { useFullscreenPeek } from '@/hooks/useFullscreenPeek';
 import type { AppConfig } from '@/types/app';
 
-const PEEK_ZONE = 20; // px from top/bottom edge to trigger menu bar / dock reveal
+const PEEK_ZONE = 6; // px from top edge to trigger menu bar / dock reveal in fullscreen
 // Total slide distance: dock height (≈80px) + offset bottom (16px) + a little extra
 const DOCK_HIDE_Y = 120;
 const MENU_BAR_HEIGHT = 28; // matches --menubar-height; slide distance when hidden
 const WINDOW_CHROME_HEIGHT = 44; // matches --window-chrome-height
 const DOCK_AUTO_HIDE_DELAY_MS = 1500;
-const MENU_BAR_AUTO_HIDE_DELAY_MS = 650; // mouse leaves fullscreen top menu area -> re-hide after this
+const MENU_BAR_AUTO_HIDE_DELAY_MS = 400; // mouse leaves fullscreen top menu area -> re-hide after this
 
 interface ChromeProps {
   onOpenApp: (app: AppConfig) => void;
@@ -119,56 +120,14 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false, fall
     };
   }, [dockAutoHide, dockHovered, isSimpleMode]);
 
-  // Menu bar (+ the fullscreen window's own title bar, see Window.tsx) only
-  // auto-hides in true fullscreen. Reveal on hover near the top edge;
-  // re-hide shortly after the pointer leaves the menu bar strip (not just the
-  // peek zone — once revealed, the bar itself extends past PEEK_ZONE). Lives
-  // in the store (not local state) so Window.tsx's title bar can read the
-  // same value and slide in lockstep.
+  // Menu bar (+ the fullscreen window's own title bar) only auto-hides in true
+  // fullscreen. The shared useFullscreenPeek hook drives fullscreenChromeRevealed
+  // in the store; both MacOS menu bar and Window.tsx title bar read it in lockstep.
   const menuBarRevealed = useStore((s) => s.fullscreenChromeRevealed);
-  const setMenuBarRevealed = useStore((s) => s.setFullscreenChromeRevealed);
   const menuBarVisible = !isFullScreenActive || menuBarRevealed;
-
-  useEffect(() => {
-    if (!hasFullScreen) {
-      setMenuBarRevealed(false);
-      return;
-    }
-    let hideTimer: ReturnType<typeof setTimeout> | null = null;
-    let revealTimer: ReturnType<typeof setTimeout> | null = null;
-    const handlePeek = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      const isInsideMenuBar = target?.closest('[data-menubar="true"]');
-      const isInsideWindowChrome = target?.closest('[data-windowchrome="true"]');
-      const isInsideDropdown = target?.closest('[data-menu-portal="true"]') || target?.closest('[data-radix-popper-content-wrapper]');
-
-      if (e.clientY <= PEEK_ZONE) {
-        // Delay reveal by 0.5s when hovering near top edge
-        if (!revealTimer) {
-          revealTimer = setTimeout(() => {
-            setMenuBarRevealed(true);
-            revealTimer = null;
-          }, 500);
-        }
-        if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-      } else if (isInsideMenuBar || isInsideWindowChrome || isInsideDropdown) {
-        // Keep revealed when inside menu bar or dropdowns
-        if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
-      } else {
-        // Start hide timer when leaving
-        if (revealTimer) { clearTimeout(revealTimer); revealTimer = null; }
-        if (!hideTimer) {
-          hideTimer = setTimeout(() => setMenuBarRevealed(false), MENU_BAR_AUTO_HIDE_DELAY_MS);
-        }
-      }
-    };
-    document.addEventListener('mousemove', handlePeek);
-    return () => {
-      document.removeEventListener('mousemove', handlePeek);
-      if (hideTimer) clearTimeout(hideTimer);
-      if (revealTimer) clearTimeout(revealTimer);
-    };
-  }, [hasFullScreen, setMenuBarRevealed]);
+  // macOS extends the safe zone to include [data-menubar] elements in addition
+  // to [data-windowchrome] — handled inside the hook for both.
+  useFullscreenPeek();
 
   return (
     <>

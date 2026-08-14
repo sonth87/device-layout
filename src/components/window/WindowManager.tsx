@@ -16,6 +16,7 @@ export function WindowManager() {
   const windows = useStore((s) => s.windows);
   const apps = useStore((s) => s.apps);
   const resizeWindow = useStore((s) => s.resizeWindow);
+  const syncWindowRect = useStore((s) => s.syncWindowRect);
   const exitFullScreen = useStore((s) => s.exitFullScreen);
   const allowDragOutOfBounds = useStore((s) => s.allowDragOutOfBounds);
   const viewport = useViewportSize();
@@ -34,14 +35,14 @@ export function WindowManager() {
       if (!appConfig) continue;
 
       let nextRect;
-      if (win.isFullScreen && config.hasMenuBar) {
+      if (win.isFullScreen) {
         nextRect = {
           x: 0,
           y: 0,
           width: viewport.width,
           height: viewport.height,
         };
-      } else if (win.isMaximized || win.isFullScreen) {
+      } else if (win.isMaximized) {
         nextRect = viewportRect;
       } else {
         const minW = appConfig.minSize?.width ?? 320;
@@ -79,13 +80,20 @@ export function WindowManager() {
         nextRect.width !== win.rect.width ||
         nextRect.height !== win.rect.height
       ) {
-        resizeWindow(win.id, nextRect);
+        // Use syncWindowRect for fullscreen/maximized windows so we never accidentally
+        // clear the isFullScreen / isMaximized flags (resizeWindow clears them).
+        if (win.isFullScreen || win.isMaximized) {
+          syncWindowRect(win.id, nextRect);
+        } else {
+          resizeWindow(win.id, nextRect);
+        }
       }
     }
   }, [
     apps,
     windows,
     resizeWindow,
+    syncWindowRect,
     allowDragOutOfBounds,
     viewport.width,
     viewport.height,
