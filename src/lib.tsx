@@ -97,7 +97,7 @@ export function DeviceLayout({
   menuBarExtras,
   macOSAppleIcon,
   windowsStartIcon,
-}: DeviceLayoutProps) {
+}: DeviceLayoutProps): React.ReactNode {
   const catalog = buildWallpaperCatalog(wallpapers, liveWallpapers, allowLiveWallpapers);
   return (
     <AssetBaseProvider value={assetBaseUrl}>

@@ -47,7 +47,7 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
     /** Custom icon for Windows Start button (replaces the Windows SVG logo) */
     windowsStartIcon?: React.ReactNode;
 }
-export declare function DeviceLayout({ assetBaseUrl, apps, defaultApps, builtInApps, onImportWallpaper, wallpapers, liveWallpapers, allowLiveWallpapers, updateActions, isSimpleMode, colorScheme, osTheme, fallbackMenuBarAppId, resolveEditContextMenuItems, menuBarExtras, macOSAppleIcon, windowsStartIcon, }: DeviceLayoutProps): import("react/jsx-runtime").JSX.Element;
+export declare function DeviceLayout({ assetBaseUrl, apps, defaultApps, builtInApps, onImportWallpaper, wallpapers, liveWallpapers, allowLiveWallpapers, updateActions, isSimpleMode, colorScheme, osTheme, fallbackMenuBarAppId, resolveEditContextMenuItems, menuBarExtras, macOSAppleIcon, windowsStartIcon, }: DeviceLayoutProps): React.ReactNode;
 export type { ThemeProviderProps } from './components/themes/ThemeProvider';
 export type { AppConfig, AppContentProps, AppInstance, MenuBarMenu, MenuBarItem, ContextMenuAction } from './types/app';
 /**
