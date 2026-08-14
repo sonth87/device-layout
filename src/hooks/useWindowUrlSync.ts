@@ -78,7 +78,8 @@ export function useWindowUrlSync() {
 
     const params = new URLSearchParams();
     for (const win of Object.values(windows)) {
-      params.append('w', encodeWindowToParam(win));
+      const param = encodeWindowToParam(win);
+      if (param) params.append('w', param);
     }
 
     const newUrl = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ''}`;

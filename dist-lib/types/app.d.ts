@@ -72,6 +72,8 @@ export interface AppConfig {
         width: number;
         height: number;
     };
+    defaultMaximized?: boolean;
+    defaultFullscreen?: boolean;
     contextMenu?: ContextMenuAction[];
     hasMenuBar?: boolean;
     hasStatusBar?: boolean;

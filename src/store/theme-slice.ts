@@ -51,7 +51,16 @@ export function createThemeSlice(set: Setter, get?: Getter): ThemeSlice {
     },
 
     setColorScheme(scheme) {
-      set((state) => { state.colorScheme = scheme; });
+      set((state) => {
+        state.colorScheme = scheme;
+        if (scheme === 'auto') {
+          if (typeof window !== 'undefined') {
+            state.resolvedColorScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+        } else {
+          state.resolvedColorScheme = scheme;
+        }
+      });
     },
 
     setGlassEnabled(enabled) {

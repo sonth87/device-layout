@@ -80,7 +80,7 @@ function UpdateStatusInitializer() {
 }
 
 export function DeviceLayout({
-  assetBaseUrl = '',
+  assetBaseUrl = 'https://device-layout.vercel.app',
   apps,
   defaultApps,
   builtInApps,

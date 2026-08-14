@@ -17,6 +17,14 @@ export function useAssetBase(): string {
 }
 
 export function resolveAssetUrl(base: string, path: string): string {
-  if (!base) return path;
-  return `${base.replace(/\/$/, '')}${path}`;
+  if (!base || !path) return path ?? '';
+  if (
+    path.startsWith('http://') ||
+    path.startsWith('https://') ||
+    path.startsWith('data:') ||
+    path.startsWith('blob:')
+  ) {
+    return path;
+  }
+  return `${base.replace(/\/$/, '')}${path.startsWith('/') ? '' : '/'}${path}`;
 }

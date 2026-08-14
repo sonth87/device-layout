@@ -1,4 +1,4 @@
-import { t as e } from "./useAppTranslation-Bw8OYmig.js";
+import { t as e } from "./useAppTranslation-Cq8IGQmx.js";
 import { useState as t } from "react";
 import { jsx as n, jsxs as r } from "react/jsx-runtime";
 //#region src/components/apps/TextEditor.tsx

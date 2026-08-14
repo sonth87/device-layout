@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as te, s as ne, t as re, u as ie, v as ae, w as oe, x as F, y as se } from "./MobileAppViewer-8e_XmN3y.js";
-import { c as ce, d as le, l as ue, s as de, t as I, u as fe } from "./store-D89CiGUZ.js";
+import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as te, s as ne, t as re, u as ie, v as ae, w as oe, x as F, y as se } from "./MobileAppViewer-Ctl_i24n.js";
+import { c as ce, d as le, l as ue, s as de, t as I, u as fe } from "./store-DNT7LGUT.js";
 import { t as L } from "./utils-B6YmNDS2.js";
 import { t as R } from "./createLucideIcon--WjuKCts.js";
-import { a as pe, c as me, d as he, f as ge, g as _e, h as ve, i as ye, l as be, m as xe, n as Se, o as Ce, p as z, r as we, s as Te, t as Ee, u as De } from "./update-actions-DyEsIOop.js";
+import { a as pe, c as me, d as he, f as ge, g as _e, h as ve, i as ye, l as be, m as xe, n as Se, o as Ce, p as z, r as we, s as Te, t as Ee, u as De } from "./update-actions-1-wgq7aa.js";
 import { t as Oe } from "./check-DoT5IS9-.js";
 import { t as ke } from "./chevron-right-BcSxNxws.js";
 import { t as Ae } from "./grid-3x3-CZiMuCC6.js";
@@ -14,7 +14,7 @@ import { t as Xe } from "./search-BKG97C0x.js";
 import { t as Ze } from "./sun-DdSv2tyc.js";
 import { t as Qe } from "./volume-2-DAfADR-a.js";
 import { t as B } from "./x-BYw6fhgP.js";
-import { t as V } from "./useTranslation-Bv2toWXP.js";
+import { t as V } from "./useTranslation-CPcDMIDQ.js";
 import * as H from "react";
 import $e, { Suspense as et, lazy as tt, startTransition as nt, useCallback as U, useContext as rt, useEffect as W, useInsertionEffect as it, useMemo as at, useRef as G, useState as K } from "react";
 import { Fragment as q, jsx as J, jsxs as Y } from "react/jsx-runtime";
@@ -1238,6 +1238,7 @@ function on() {
 //#endregion
 //#region src/lib/url-codec.ts
 function sn(e) {
+	if (!e || !e.appId || e.appId === "undefined" || e.appId === "null") return "";
 	let t = !!e.isMinimized | (e.isMaximized ? 2 : 0) | (e.isFullScreen ? 4 : 0) | (e.isFocused ? 8 : 0), n = [
 		Math.round(e.rect.x),
 		Math.round(e.rect.y),
@@ -1259,7 +1260,9 @@ function sn(e) {
 function cn(e) {
 	let t = e.split(":");
 	if (t.length < 2) return null;
-	let n = t[0], r = t[1], i = t[2], a = t[3], o = r.split(",").map(Number);
+	let n = t[0];
+	if (!n || n === "undefined" || n === "null") return null;
+	let r = t[1], i = t[2], a = t[3], o = r.split(",").map(Number);
 	if (o.length !== 4 || o.some(isNaN)) return null;
 	let [s, c, l, u] = o, d = i ? parseInt(i, 10) : 0, f = null;
 	if (a) {
@@ -1336,7 +1339,10 @@ function ln() {
 	]), W(() => {
 		if (!i) return;
 		let t = new URLSearchParams();
-		for (let n of Object.values(e)) t.append("w", sn(n));
+		for (let n of Object.values(e)) {
+			let e = sn(n);
+			e && t.append("w", e);
+		}
 		let n = `${window.location.pathname}${t.toString() ? `?${t.toString()}` : ""}`;
 		n !== window.location.href.replace(window.location.origin, "") && window.history.replaceState(null, "", n);
 	}, [e, i]);
@@ -5376,13 +5382,13 @@ function ba(e) {
 //#endregion
 //#region src/components/widgets/WidgetRenderer.tsx
 var xa = {
-	ClockWidget: tt(() => import("./ClockWidget-CHUsD9ak.js").then((e) => ({ default: e.ClockWidget }))),
-	ClockDarkWidget: tt(() => import("./ClockWidget-CHUsD9ak.js").then((e) => ({ default: e.ClockDarkWidget }))),
-	ClockWorldWidget: tt(() => import("./ClockWidget-CHUsD9ak.js").then((e) => ({ default: e.ClockWorldWidget }))),
-	ClockDigitalWidget: tt(() => import("./ClockWidget-CHUsD9ak.js").then((e) => ({ default: e.ClockDigitalWidget }))),
-	ClockFlipWidget: tt(() => import("./ClockWidget-CHUsD9ak.js").then((e) => ({ default: e.ClockFlipWidget }))),
-	CalendarWidget: tt(() => import("./CalendarWidget-Dw7WzlOu.js").then((e) => ({ default: e.CalendarWidget }))),
-	CalendarTodayWidget: tt(() => import("./CalendarWidget-Dw7WzlOu.js").then((e) => ({ default: e.CalendarTodayWidget }))),
+	ClockWidget: tt(() => import("./ClockWidget-BgWzjnjM.js").then((e) => ({ default: e.ClockWidget }))),
+	ClockDarkWidget: tt(() => import("./ClockWidget-BgWzjnjM.js").then((e) => ({ default: e.ClockDarkWidget }))),
+	ClockWorldWidget: tt(() => import("./ClockWidget-BgWzjnjM.js").then((e) => ({ default: e.ClockWorldWidget }))),
+	ClockDigitalWidget: tt(() => import("./ClockWidget-BgWzjnjM.js").then((e) => ({ default: e.ClockDigitalWidget }))),
+	ClockFlipWidget: tt(() => import("./ClockWidget-BgWzjnjM.js").then((e) => ({ default: e.ClockFlipWidget }))),
+	CalendarWidget: tt(() => import("./CalendarWidget-DlWy3AHG.js").then((e) => ({ default: e.CalendarWidget }))),
+	CalendarTodayWidget: tt(() => import("./CalendarWidget-DlWy3AHG.js").then((e) => ({ default: e.CalendarTodayWidget }))),
 	WeatherWidget: tt(() => import("./WeatherWidget-D4EQ_pKf.js").then((e) => ({ default: e.WeatherWidget }))),
 	NotesWidget: tt(() => import("./NotesWidget-CWxNXfe-.js").then((e) => ({ default: e.NotesWidget })))
 };
@@ -6492,7 +6498,7 @@ function Ua() {
 		e && e.checkUpdate().then(ge.getState().setStatus).catch(() => {});
 	}, [e]), null;
 }
-function Wa({ assetBaseUrl: e = "", apps: t, defaultApps: n, builtInApps: r, onImportWallpaper: i, wallpapers: a, liveWallpapers: o, allowLiveWallpapers: s = !0, updateActions: c, isSimpleMode: l, colorScheme: u, osTheme: d, fallbackMenuBarAppId: f, resolveEditContextMenuItems: p, menuBarExtras: m, macOSAppleIcon: h, windowsStartIcon: g }) {
+function Wa({ assetBaseUrl: e = "https://device-layout.vercel.app", apps: t, defaultApps: n, builtInApps: r, onImportWallpaper: i, wallpapers: a, liveWallpapers: o, allowLiveWallpapers: s = !0, updateActions: c, isSimpleMode: l, colorScheme: u, osTheme: d, fallbackMenuBarAppId: f, resolveEditContextMenuItems: p, menuBarExtras: m, macOSAppleIcon: h, windowsStartIcon: g }) {
 	return /* @__PURE__ */ J(pe, {
 		value: e,
 		children: /* @__PURE__ */ J(me, {

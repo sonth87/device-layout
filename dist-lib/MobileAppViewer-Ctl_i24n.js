@@ -1,5 +1,5 @@
 import { C as e, E as t, O as n, S as r, T as i, a, b as o, c as s, d as c, f as l, g as u, i as d, l as f, m as p, n as m, o as h, p as g, r as _, s as v, t as y, u as b, v as x } from "./Combination-dkRdWOFm.js";
-import { t as S } from "./store-D89CiGUZ.js";
+import { t as S } from "./store-DNT7LGUT.js";
 import { t as C } from "./utils-B6YmNDS2.js";
 import { t as w } from "./createLucideIcon--WjuKCts.js";
 import { t as T } from "./chevron-right-BcSxNxws.js";
@@ -9,7 +9,7 @@ import { t as ne } from "./search-BKG97C0x.js";
 import { t as re } from "./sun-DdSv2tyc.js";
 import { t as ie } from "./volume-2-DAfADR-a.js";
 import { t as ae } from "./x-BYw6fhgP.js";
-import { t as oe } from "./useTranslation-Bv2toWXP.js";
+import { t as oe } from "./useTranslation-CPcDMIDQ.js";
 import { t as se } from "./AppViewport-BDJLAndL.js";
 import * as E from "react";
 import { Children as ce, Component as le, Fragment as ue, Suspense as de, createContext as D, createElement as fe, forwardRef as pe, isValidElement as me, lazy as O, useCallback as k, useContext as A, useEffect as j, useId as he, useInsertionEffect as ge, useLayoutEffect as _e, useMemo as ve, useRef as M, useState as N } from "react";
@@ -7267,20 +7267,20 @@ var bp = class extends le {
 		}, this.state.retryCount);
 	}
 }, xp = {
-	Finder: O(() => import("./Finder-8dnByWJG.js").then((e) => ({ default: e.Finder }))),
-	Terminal: O(() => import("./Terminal-DigPw92-.js").then((e) => ({ default: e.Terminal }))),
-	Settings: O(() => import("./Settings-BH28sCYV.js").then((e) => ({ default: e.Settings }))),
-	Browser: O(() => import("./Browser-k4U85Ofm.js").then((e) => ({ default: e.Browser }))),
-	TextEditor: O(() => import("./TextEditor-Dqf2M5zg.js").then((e) => ({ default: e.TextEditor }))),
-	Clock: O(() => import("./Clock-C6QjrZW_.js").then((e) => ({ default: e.Clock }))),
-	Calculator: O(() => import("./Calculator-D4H8Ag4S.js").then((e) => ({ default: e.Calculator }))),
-	Notes: O(() => import("./Notes-DGQqFyEA.js").then((e) => ({ default: e.Notes }))),
-	Photos: O(() => import("./Photos-BVefyk-r.js").then((e) => ({ default: e.Photos }))),
-	Music: O(() => import("./Music-BEcIgE-y.js").then((e) => ({ default: e.Music }))),
-	Calendar: O(() => import("./Calendar-GAgk_G_G.js").then((e) => ({ default: e.Calendar }))),
-	Messages: O(() => import("./Messages-BJqQLqXl.js").then((e) => ({ default: e.Messages }))),
-	IframeApp: O(() => import("./IframeApp-SD4EaVy3.js").then((e) => ({ default: e.IframeApp }))),
-	MdxApp: O(() => import("./MdxApp-DcW8GOzC.js").then((e) => ({ default: e.MdxApp })))
+	Finder: O(() => import("./Finder-CO1FM3SV.js").then((e) => ({ default: e.Finder }))),
+	Terminal: O(() => import("./Terminal-CA5QC5sM.js").then((e) => ({ default: e.Terminal }))),
+	Settings: O(() => import("./Settings-YQhIciL6.js").then((e) => ({ default: e.Settings }))),
+	Browser: O(() => import("./Browser-Cqx-QULu.js").then((e) => ({ default: e.Browser }))),
+	TextEditor: O(() => import("./TextEditor-DJzPRB4L.js").then((e) => ({ default: e.TextEditor }))),
+	Clock: O(() => import("./Clock-BrbKfQs4.js").then((e) => ({ default: e.Clock }))),
+	Calculator: O(() => import("./Calculator-_iWAyMhI.js").then((e) => ({ default: e.Calculator }))),
+	Notes: O(() => import("./Notes-CQ_zys-9.js").then((e) => ({ default: e.Notes }))),
+	Photos: O(() => import("./Photos-DRqXRCfu.js").then((e) => ({ default: e.Photos }))),
+	Music: O(() => import("./Music-D3LXNgae.js").then((e) => ({ default: e.Music }))),
+	Calendar: O(() => import("./Calendar-BbtTFHjA.js").then((e) => ({ default: e.Calendar }))),
+	Messages: O(() => import("./Messages-DLvXC0Mk.js").then((e) => ({ default: e.Messages }))),
+	IframeApp: O(() => import("./IframeApp-BiNTRAoe.js").then((e) => ({ default: e.IframeApp }))),
+	MdxApp: O(() => import("./MdxApp-DGr6t_nf.js").then((e) => ({ default: e.MdxApp })))
 };
 function Sp() {
 	return /* @__PURE__ */ P("div", {

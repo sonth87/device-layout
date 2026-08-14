@@ -716,8 +716,8 @@ function Ve(e, t) {
 					prevRect: r?.prevRect ?? null,
 					zIndex: e.zCounter,
 					isMinimized: !1,
-					isMaximized: r?.isMaximized ?? !1,
-					isFullScreen: r?.isFullScreen ?? !1,
+					isMaximized: r?.isMaximized ?? n.defaultMaximized ?? !1,
+					isFullScreen: r?.isFullScreen ?? n.defaultFullscreen ?? !1,
 					isFocused: !0,
 					title: n.name,
 					hasMenuBar: n.hasMenuBar ?? !1,
@@ -2085,7 +2085,7 @@ function qe(e, t) {
 		},
 		setColorScheme(t) {
 			e((e) => {
-				e.colorScheme = t;
+				e.colorScheme = t, t === "auto" ? typeof window < "u" && (e.resolvedColorScheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : e.resolvedColorScheme = t;
 			});
 		},
 		setGlassEnabled(t) {
