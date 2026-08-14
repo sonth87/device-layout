@@ -28,6 +28,13 @@ export function useWindowUrlSync() {
     const params = new URLSearchParams(window.location.search);
     const wParams = params.getAll('w');
 
+    // Wait until all custom app IDs specified in 'w' params exist in the registered apps store
+    const missingApp = wParams.some((param) => {
+      const decoded = decodeWindowFromParam(param);
+      return decoded && !apps[decoded.appId];
+    });
+    if (missingApp) return;
+
     let focusedWindowId: string | null = null;
 
     for (const param of wParams) {

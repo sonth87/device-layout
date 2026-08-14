@@ -1,6 +1,6 @@
 {
   "name": "@sonth87/device-layout",
-  "version": "0.5.33",
+  "version": "0.5.34",
   "description": "A browser-based multi-window desktop OS simulator supporting macOS, Windows 11, iPadOS, iOS, and Android themes.",
   "homepage": "https://device-layout.vercel.app",
   "repository": {

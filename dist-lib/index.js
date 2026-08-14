@@ -1298,7 +1298,12 @@ function ln() {
 	let e = I((e) => e.windows), t = I((e) => e.apps), n = I((e) => e.openWindow), r = I((e) => e.focusWindow), i = I((e) => e.urlHydrated), a = I((e) => e.setUrlHydrated), { config: o } = F();
 	W(() => {
 		if (i || Object.keys(t).length === 0) return;
-		let e = new URLSearchParams(window.location.search).getAll("w"), s = null;
+		let e = new URLSearchParams(window.location.search).getAll("w");
+		if (e.some((e) => {
+			let n = cn(e);
+			return n && !t[n.appId];
+		})) return;
+		let s = null;
 		for (let r of e) {
 			let e = cn(r);
 			if (!e) continue;
