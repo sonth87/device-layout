@@ -6498,34 +6498,35 @@ function Ua() {
 		e && e.checkUpdate().then(ge.getState().setStatus).catch(() => {});
 	}, [e]), null;
 }
-function Wa({ assetBaseUrl: e = "https://device-layout.vercel.app", apps: t, defaultApps: n, builtInApps: r, onImportWallpaper: i, wallpapers: a, liveWallpapers: o, allowLiveWallpapers: s = !0, updateActions: c, isSimpleMode: l, colorScheme: u, osTheme: d, fallbackMenuBarAppId: f, resolveEditContextMenuItems: p, menuBarExtras: m, macOSAppleIcon: h, windowsStartIcon: g }) {
+function Wa(e) {
+	let { assetBaseUrl: t = "https://device-layout.vercel.app", apps: n, defaultApps: r, builtInApps: i, onImportWallpaper: a, wallpapers: o, liveWallpapers: s, allowLiveWallpapers: c = !0, updateActions: l, isSimpleMode: u, colorScheme: d, osTheme: f, fallbackMenuBarAppId: p, resolveEditContextMenuItems: m, menuBarExtras: h, macOSAppleIcon: g, windowsStartIcon: _ } = e;
 	return /* @__PURE__ */ J(pe, {
-		value: e,
+		value: t,
 		children: /* @__PURE__ */ J(me, {
-			value: be(a, o, s),
+			value: be(o, s, c),
 			children: /* @__PURE__ */ J(ye, {
-				value: i ?? null,
+				value: a ?? null,
 				children: /* @__PURE__ */ J(Ee, {
-					value: c ?? null,
+					value: l ?? null,
 					children: /* @__PURE__ */ J(E, {
-						value: m ?? [],
+						value: h ?? [],
 						children: /* @__PURE__ */ Y(T, {
 							config: {
-								macOSAppleIcon: h,
-								windowsStartIcon: g
+								macOSAppleIcon: g,
+								windowsStartIcon: _
 							},
 							children: [/* @__PURE__ */ J(Ua, {}), /* @__PURE__ */ J(Ba, {
-								apps: t,
-								defaultApps: n,
-								builtInApps: r,
-								isSimpleMode: l,
-								colorScheme: u,
-								osTheme: d,
-								fallbackMenuBarAppId: f,
-								wallpapers: a,
-								liveWallpapers: o,
-								allowLiveWallpapers: s,
-								resolveEditContextMenuItems: p
+								apps: n,
+								defaultApps: r,
+								builtInApps: i,
+								isSimpleMode: u,
+								colorScheme: d,
+								osTheme: f,
+								fallbackMenuBarAppId: p,
+								wallpapers: o,
+								liveWallpapers: s,
+								allowLiveWallpapers: c,
+								resolveEditContextMenuItems: m
 							})]
 						})
 					})

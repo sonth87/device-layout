@@ -21,9 +21,25 @@ import { MenuBarExtrasProvider, type MenuBarExtraItem } from '@/lib/menu-bar-ext
 import { CustomOSIconProvider } from '@/contexts/CustomOSIconContext';
 import type { WallpaperConfig } from '@/types/desktop';
 import type { SimpleModeProp } from '@/types/simple-mode';
-import './app/globals.css';
+import type { ColorScheme, OSTheme } from '@/types/theme';
+import type { ResolveEditContextMenuItems } from '@/components/desktop/EditContextMenu';
+import type { AppConfig } from '@/types/app';
 
 export interface DeviceLayoutProps extends ThemeProviderProps {
+  /** List of host applications to register and render on desktop/dock */
+  apps?: AppConfig[];
+  /** Controls which built-in default apps (Finder, Notes, Calculator...) to register (boolean | string[]). */
+  defaultApps?: boolean | string[];
+  /** Alias for defaultApps (e.g. builtInApps={false}). */
+  builtInApps?: boolean;
+  /** Enables Simple Mode layout (boolean or detailed SimpleModeFeatures object). */
+  isSimpleMode?: SimpleModeProp;
+  /** Sets or overrides active color scheme ('dark' | 'light' | 'auto'). */
+  colorScheme?: ColorScheme;
+  /** Sets or overrides the active OS theme / platform ('macos' | 'windows' | 'ipad' | 'iphone' | 'android'). */
+  osTheme?: OSTheme;
+  /** App ID to display in top MenuBar when no window is selected/focused. Default: null */
+  fallbackMenuBarAppId?: string | null;
   /** Base URL prefix for static assets (wallpapers, icons). Default: '' (root-relative paths). */
   assetBaseUrl?: string;
   /**
@@ -53,8 +69,6 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
    * action rows (e.g. a host with no updater, like a web build).
    */
   updateActions?: UpdateActions;
-  /** Enables Simple Mode layout (boolean or detailed SimpleModeFeatures object). */
-  isSimpleMode?: SimpleModeProp;
   /**
    * Icon trạng thái host đăng ký trên menu bar, cạnh đồng hồ hệ thống — giống "menu bar
    * extras" của macOS thật (icon app nền như Dropbox/1Password). Bấm vào hiện popover
@@ -65,6 +79,8 @@ export interface DeviceLayoutProps extends ThemeProviderProps {
   macOSAppleIcon?: React.ReactNode;
   /** Custom icon for Windows Start button (replaces the Windows SVG logo) */
   windowsStartIcon?: React.ReactNode;
+  /** Host TOÀN QUYỀN can thiệp danh sách item của context menu Copy/Paste tự vẽ */
+  resolveEditContextMenuItems?: ResolveEditContextMenuItems;
 }
 
 /** Fetches update status once on mount so SidebarItem's badge (Settings.tsx)
@@ -79,25 +95,26 @@ function UpdateStatusInitializer() {
   return null;
 }
 
-export function DeviceLayout({
-  assetBaseUrl = 'https://device-layout.vercel.app',
-  apps,
-  defaultApps,
-  builtInApps,
-  onImportWallpaper,
-  wallpapers,
-  liveWallpapers,
-  allowLiveWallpapers = true,
-  updateActions,
-  isSimpleMode,
-  colorScheme,
-  osTheme,
-  fallbackMenuBarAppId,
-  resolveEditContextMenuItems,
-  menuBarExtras,
-  macOSAppleIcon,
-  windowsStartIcon,
-}: DeviceLayoutProps): React.ReactNode {
+export function DeviceLayout(props: DeviceLayoutProps) {
+  const {
+    assetBaseUrl = 'https://device-layout.vercel.app',
+    apps,
+    defaultApps,
+    builtInApps,
+    onImportWallpaper,
+    wallpapers,
+    liveWallpapers,
+    allowLiveWallpapers = true,
+    updateActions,
+    isSimpleMode,
+    colorScheme,
+    osTheme,
+    fallbackMenuBarAppId,
+    resolveEditContextMenuItems,
+    menuBarExtras,
+    macOSAppleIcon,
+    windowsStartIcon,
+  } = props;
   const catalog = buildWallpaperCatalog(wallpapers, liveWallpapers, allowLiveWallpapers);
   return (
     <AssetBaseProvider value={assetBaseUrl}>
