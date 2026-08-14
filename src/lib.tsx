@@ -24,6 +24,7 @@ import type { SimpleModeProp } from '@/types/simple-mode';
 import type { ColorScheme, OSTheme } from '@/types/theme';
 import type { ResolveEditContextMenuItems } from '@/components/desktop/EditContextMenu';
 import type { AppConfig } from '@/types/app';
+import './app/globals.css';
 
 export interface DeviceLayoutProps extends ThemeProviderProps {
   /** List of host applications to register and render on desktop/dock */
