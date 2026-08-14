@@ -471,7 +471,7 @@ function jt({ windowId: e, onPointerDown: t }) {
 			children: [
 				/* @__PURE__ */ J("button", {
 					onClick: () => i(e),
-					className: "w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
+					className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
 					style: { backgroundColor: n.isFocused || u ? "#ff5f57" : "#d1d1d1" },
 					title: "Close",
 					children: u && /* @__PURE__ */ J(B, {
@@ -481,7 +481,7 @@ function jt({ windowId: e, onPointerDown: t }) {
 				}),
 				/* @__PURE__ */ J("button", {
 					onClick: () => a(e),
-					className: "w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
+					className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
 					style: { backgroundColor: n.isFocused || u ? "#febc2e" : "#d1d1d1" },
 					title: "Minimize",
 					children: u && /* @__PURE__ */ J(Ct, {
@@ -491,7 +491,7 @@ function jt({ windowId: e, onPointerDown: t }) {
 				}),
 				/* @__PURE__ */ J("button", {
 					onClick: () => s(e),
-					className: "w-4 h-4 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
+					className: "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-all duration-100 hover:brightness-90 active:brightness-75 active:scale-90",
 					style: { backgroundColor: n.isFocused || u ? "#28c840" : "#d1d1d1" },
 					title: n.isFullScreen ? "Exit Full Screen" : "Enter Full Screen",
 					children: u && /* @__PURE__ */ J(St, {
