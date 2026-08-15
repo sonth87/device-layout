@@ -64,6 +64,7 @@ function WindowChromeMacOS({ windowId, onPointerDown }: WindowChromeProps) {
   }, [calcMenuOpen]);
 
   if (!win) return null;
+  if (!config) return null;
 
   const isTransparent = appConfig?.titleBarMode === 'transparent';
 
@@ -273,6 +274,7 @@ function WindowChromeWindows({ windowId, onPointerDown }: WindowChromeProps) {
   }, [calcMenuOpen]);
 
   if (!win) return null;
+  if (!config) return null;
 
   const isTransparent = appConfig?.titleBarMode === 'transparent';
 

@@ -236,7 +236,10 @@ export function ThemeProvider({
   const showsDesktopIconGrid = activeOSTheme !== 'ipad' && activeOSTheme !== 'iphone' && activeOSTheme !== 'android';
   const isMobile = activeOSTheme === 'iphone' || activeOSTheme === 'android';
   
-  let themeConfig = THEMES_CONFIG[activeOSTheme];
+  // Guard against invalid/stale osTheme values from localStorage (e.g. if the
+  // key was renamed between versions). getThemeCssVars accesses .layout
+  // unconditionally so undefined here causes an immediate crash.
+  let themeConfig = THEMES_CONFIG[activeOSTheme] ?? THEMES_CONFIG['macos'];
   if (features.isSimpleModeActive && activeOSTheme === 'macos' && !features.dock) {
     // Override macOS layout parameters in simple mode to remove Dock bottom insets if dock is hidden
     themeConfig = {

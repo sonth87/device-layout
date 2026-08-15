@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as te, s as ne, t as re, u as ie, v as ae, w as oe, x as F, y as se } from "./MobileAppViewer-8sWgnhGz.js";
+import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as te, s as ne, t as re, u as ie, v as ae, w as oe, x as F, y as se } from "./MobileAppViewer-BTU3wt33.js";
 import { c as ce, d as le, l as ue, s as de, t as I, u as fe } from "./store-Bjl9rhnp.js";
 import { t as L } from "./utils-B6YmNDS2.js";
 import { t as R } from "./createLucideIcon--WjuKCts.js";
-import { a as pe, c as me, d as he, f as ge, g as _e, h as ve, i as ye, l as be, m as xe, n as Se, o as Ce, p as z, r as we, s as Te, t as Ee, u as De } from "./update-actions-Zxg_iYqy.js";
+import { a as pe, c as me, d as he, f as ge, g as _e, h as ve, i as ye, l as be, m as xe, n as Se, o as Ce, p as z, r as we, s as Te, t as Ee, u as De } from "./update-actions-D4jy9gCp.js";
 import { t as Oe } from "./check-DoT5IS9-.js";
 import { t as ke } from "./chevron-right-BcSxNxws.js";
 import { t as Ae } from "./grid-3x3-CZiMuCC6.js";
@@ -465,7 +465,7 @@ function Mt({ windowId: e, onPointerDown: t }) {
 			y.current && !y.current.contains(e.target) && v(!1);
 		};
 		return document.addEventListener("mousedown", e), () => document.removeEventListener("mousedown", e);
-	}, [_]), !n) return null;
+	}, [_]), !n || !c) return null;
 	let x = r?.titleBarMode === "transparent", { top: S, bottom: C } = c.layout.window.maximizeInsets, w = {
 		x: 0,
 		y: S,
@@ -599,7 +599,7 @@ function Pt({ windowId: e, onPointerDown: t }) {
 			b.current && !b.current.contains(e.target) && y(!1);
 		};
 		return document.addEventListener("mousedown", e), () => document.removeEventListener("mousedown", e);
-	}, [v]), !n) return null;
+	}, [v]), !n || !l) return null;
 	let S = r?.titleBarMode === "transparent", { top: C, bottom: w } = l.layout.window.maximizeInsets, T = {
 		x: 0,
 		y: C,
@@ -6426,7 +6426,7 @@ function Wa({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 	]);
 	let N = U((e) => {
 		h(e);
-	}, [h]), ee = M === "macos" || M === "ipad", P = M !== "ipad" && M !== "iphone" && M !== "android", te = M === "iphone" || M === "android", ne = x[M];
+	}, [h]), ee = M === "macos" || M === "ipad", P = M !== "ipad" && M !== "iphone" && M !== "android", te = M === "iphone" || M === "android", ne = x[M] ?? x.macos;
 	return A.isSimpleModeActive && M === "macos" && !A.dock && (ne = {
 		...ne,
 		hasDock: !1,

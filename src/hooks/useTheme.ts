@@ -8,7 +8,10 @@ export function useTheme() {
   const resolvedColorScheme = useStore((s) => s.resolvedColorScheme);
   const glassEnabled = useStore((s) => s.glassEnabled);
 
-  const config = THEMES_CONFIG[osTheme];
+  // Fallback to macos if osTheme is somehow invalid (e.g. during hydration or
+  // corrupted localStorage). THEMES_CONFIG[undefined] would be undefined and
+  // cause config.layout crashes downstream.
+  const config = THEMES_CONFIG[osTheme] ?? THEMES_CONFIG['macos'];
 
   return {
     osTheme,
@@ -20,3 +23,4 @@ export function useTheme() {
     isMobile: osTheme === 'iphone' || osTheme === 'android',
   };
 }
+

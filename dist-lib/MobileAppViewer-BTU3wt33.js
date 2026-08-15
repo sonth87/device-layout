@@ -5752,7 +5752,7 @@ var Wd = {
 //#endregion
 //#region src/hooks/useTheme.ts
 function Gd() {
-	let e = S((e) => e.osTheme), t = S((e) => e.resolvedColorScheme), n = S((e) => e.glassEnabled), r = Wd[e];
+	let e = S((e) => e.osTheme), t = S((e) => e.resolvedColorScheme), n = S((e) => e.glassEnabled), r = Wd[e] ?? Wd.macos;
 	return {
 		osTheme: e,
 		colorScheme: t,
@@ -7269,7 +7269,7 @@ var bp = class extends le {
 }, xp = {
 	Finder: O(() => import("./Finder-FaI3AT8q.js").then((e) => ({ default: e.Finder }))),
 	Terminal: O(() => import("./Terminal-BwN90jdW.js").then((e) => ({ default: e.Terminal }))),
-	Settings: O(() => import("./Settings-Dfv_L-Lu.js").then((e) => ({ default: e.Settings }))),
+	Settings: O(() => import("./Settings-BvevvVw7.js").then((e) => ({ default: e.Settings }))),
 	Browser: O(() => import("./Browser-T9OgMFUY.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: O(() => import("./TextEditor-bj3b3vEJ.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: O(() => import("./Clock-BIO93FX_.js").then((e) => ({ default: e.Clock }))),
@@ -7278,7 +7278,7 @@ var bp = class extends le {
 	Photos: O(() => import("./Photos-BWODuGJy.js").then((e) => ({ default: e.Photos }))),
 	Music: O(() => import("./Music-wdYygF1V.js").then((e) => ({ default: e.Music }))),
 	Calendar: O(() => import("./Calendar-BuLUmLQH.js").then((e) => ({ default: e.Calendar }))),
-	Messages: O(() => import("./Messages-CSFrGoM9.js").then((e) => ({ default: e.Messages }))),
+	Messages: O(() => import("./Messages-CGRnj0KV.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: O(() => import("./IframeApp-D71vzfCe.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: O(() => import("./MdxApp-BEZAxMDB.js").then((e) => ({ default: e.MdxApp })))
 };

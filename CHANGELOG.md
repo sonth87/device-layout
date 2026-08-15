@@ -1,5 +1,18 @@
 # @sonth87/device-layout
 
+## 0.5.37
+
+### Patch Changes
+
+- fix: prevent crash when osTheme from localStorage is invalid or stale
+
+  Adds `?? THEMES_CONFIG['macos']` fallback in `ThemeProvider` and
+  `useTheme` so a corrupted/renamed persisted osTheme no longer causes
+  `Cannot read properties of undefined (reading 'layout')` crashes.
+
+  Also adds `if (!config) return null` guard in `WindowChromeMacOS` and
+  `WindowChromeWindows` as a belt-and-suspenders defensive check.
+
 ## 0.5.36
 
 ### Patch Changes
