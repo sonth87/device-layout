@@ -1,0 +1,183 @@
+---
+title: <DeviceLayout /> Props Reference
+description: Detailed prop reference, usage explanations, and TypeScript declarations for the root desktop container component.
+---
+
+# `<DeviceLayout />` Root Component Props
+
+`DeviceLayout` is the root React component exported by `@sonth87/device-layout`. It initializes the window manager, renders the OS theme chrome, top menu bar, taskbar, dock, desktop backgrounds, and handles host app mounting.
+
+```tsx
+import { DeviceLayout, type DeviceLayoutProps } from '@sonth87/device-layout';
+import '@sonth87/device-layout/style.css';
+```
+
+---
+
+## 📋 Comprehensive Props Summary
+
+| Prop Name | Type | Default | Description |
+|---|---|---|---|
+| [`apps`](#1-apps) | `AppConfig[]` | `[]` | List of host applications to register and render on desktop & dock. |
+| [`colorScheme`](#2-colorscheme) | `'dark' \| 'light' \| 'auto'` | `'dark'` | Force dark or light mode, or follow system theme preference. |
+| [`osTheme`](#3-ostheme) | `'macos' \| 'windows' \| 'ipad' \| 'iphone' \| 'android'` | `'macos'` | Desktop OS visual theme and layout model. |
+| [`isSimpleMode`](#4-issimplemode) | `boolean \| SimpleModeFeatures` | `false` | Minimal kiosk mode (`true`) or granular feature flag object. |
+| [`defaultApps`](#5-defaultapps) | `boolean \| string[]` | `true` | Controls system default apps (Settings, Finder, Calculator, Notes). |
+| [`fallbackMenuBarAppId`](#6-fallbackmenubarappid) | `string \| null` | `null` | App ID to display in top menu bar when no window is focused. |
+| [`assetBaseUrl`](#7-assetbaseurl) | `string` | `''` | Base URL prefix for static assets (wallpapers, default icons). |
+| [`resolveEditContextMenuItems`](#8-resolveeditcontextmenuitems) | `ResolveEditContextMenuItems` | `undefined` | Callback to inspect/customize right-click Cut/Copy/Paste menu items. |
+| [`menuBarExtras`](#9-menubarextras) | `MenuBarExtraItem[]` | `[]` | System tray / menu bar extra icons rendered near system clock. |
+| [`macOSAppleIcon`](#10-macosappleicon) | `React.ReactNode` | `undefined` | Custom React node/SVG replacing the Apple logo in macOS theme. |
+| [`windowsStartIcon`](#11-windowsstarticon) | `React.ReactNode` | `undefined` | Custom React node/SVG replacing the Start button logo in Windows 11 theme. |
+| [`onImportWallpaper`](#12-onimportwallpaper) | `ImportWallpaperFn` | `undefined` | Handler for "Add a Photo" in wallpaper picker. |
+| [`wallpapers`](#13-wallpapers) | `WallpaperConfig[]` | `undefined` | Custom picture wallpapers list. |
+| [`liveWallpapers`](#14-livewallpapers) | `WallpaperConfig[]` | `undefined` | Custom video/animated wallpapers list. |
+
+---
+
+## 🔍 Detailed Prop Breakdown & Usage Examples
+
+### 1. `apps`
+- **Type**: `AppConfig[]`
+- **Default**: `[]`
+- **Purpose**: Defines the array of host applications to display in the desktop icon grid, dock bar, or launcher.
+- **Example**:
+```tsx
+const customApps: AppConfig[] = [
+  {
+    id: 'analytics',
+    name: 'Realtime Analytics',
+    icon: 'lucide:BarChart3',
+    render: ({ appId, windowId }) => <AnalyticsDashboard appId={appId} windowId={windowId} />,
+    defaultSize: { width: 900, height: 600 },
+    hasMenuBar: true,
+  },
+];
+
+<DeviceLayout apps={customApps} />
+```
+
+---
+
+### 2. `colorScheme`
+- **Type**: `'dark' | 'light' | 'auto'`
+- **Default**: `'dark'`
+- **Purpose**: Sets the desktop's color mode. `'auto'` follows the host operating system's prefers-color-scheme setting.
+- **Example**:
+```tsx
+<DeviceLayout colorScheme="dark" />
+```
+
+---
+
+### 3. `osTheme`
+- **Type**: `'macos' | 'windows' | 'ipad' | 'iphone' | 'android'`
+- **Default**: `'macos'`
+- **Purpose**: Controls which operating system visual theme and layout mechanics to simulate:
+  - `'macos'`: Top global menu bar, bottom glass dock, macOS traffic light buttons.
+  - `'windows'`: Bottom taskbar, window titlebar inline menu, Windows 11 window controls.
+  - `'ipad'`: Tablet layout with top bar, floating dock, and iPad window frames.
+  - `'iphone'` / `'android'`: Fullscreen mobile viewer layout with mobile bottom sheet menus.
+- **Example**:
+```tsx
+<DeviceLayout osTheme="windows" />
+```
+
+---
+
+### 4. `isSimpleMode`
+- **Type**: `boolean | SimpleModeFeatures`
+- **Default**: `false`
+- **Purpose**: Used for kiosk displays, embedded wrappers, or minimalist web shells:
+  - `isSimpleMode={true}`: Full minimal preset (solid wallpaper, no dock, no desktop widgets, no system apps).
+  - `isSimpleMode={{ dock: false, wallpaper: true, menuBar: { clock: true } }}`: Granular feature flags.
+- **Example**:
+```tsx
+<DeviceLayout
+  isSimpleMode={{
+    dock: false,
+    wallpaper: false,
+    menuBar: { clock: true, spotlight: false, controlCenter: false },
+  }}
+/>
+```
+
+---
+
+### 5. `defaultApps`
+- **Type**: `boolean | string[]`
+- **Default**: `true`
+- **Purpose**: Controls whether system default apps (Settings, Calculator, Notes, Finder, Photos) are registered.
+  - `true`: Registers all default system apps.
+  - `false`: Omits all default system apps.
+  - `['settings', 'calculator']`: Registers only the specified system apps.
+- **Example**:
+```tsx
+<DeviceLayout defaultApps={['settings', 'calculator']} />
+```
+
+---
+
+### 6. `fallbackMenuBarAppId`
+- **Type**: `string | null`
+- **Default**: `null`
+- **Purpose**: Specifies an app ID whose `menuBarMenus` should remain visible in macOS top global menu bar when no window is focused (desktop background active).
+- **Example**:
+```tsx
+<DeviceLayout fallbackMenuBarAppId="my-system-app" />
+```
+
+---
+
+### 7. `resolveEditContextMenuItems`
+- **Type**: `ResolveEditContextMenuItems`
+- **Default**: `undefined`
+- **Purpose**: Callback function allowing host apps to inspect or customize right-click Cut/Copy/Paste/Undo/Redo items on specific HTML target elements.
+- **Example**:
+```tsx
+<DeviceLayout
+  resolveEditContextMenuItems={(defaultItems, info) => {
+    // Only customize right-click inside #my-custom-editor
+    if (!info.target.closest('#my-custom-editor')) return defaultItems;
+
+    return [
+      ...defaultItems,
+      { key: 'custom-action', label: 'Insert Timestamp', onSelect: () => insertTime() },
+    ];
+  }}
+/>
+```
+
+---
+
+### 8. `menuBarExtras`
+- **Type**: `MenuBarExtraItem[]`
+- **Default**: `[]`
+- **Purpose**: Registers system tray icons near the top-right clock (like macOS menu bar extras or Windows system tray icons).
+- **Example**:
+```tsx
+const systemTrayExtras: MenuBarExtraItem[] = [
+  {
+    id: 'vpn-status',
+    icon: 'lucide:ShieldCheck',
+    title: 'VPN Connected',
+    content: <div className="p-3 text-xs">VPN: Connected to Tokyo-01</div>,
+  },
+];
+
+<DeviceLayout menuBarExtras={systemTrayExtras} />
+```
+
+---
+
+### 9. `macOSAppleIcon` & `windowsStartIcon`
+- **Type**: `React.ReactNode`
+- **Default**: `undefined`
+- **Purpose**: Allows branding customization by replacing the default Apple logo or Windows Start logo with your own company logo.
+- **Example**:
+```tsx
+<DeviceLayout
+  macOSAppleIcon={<MyCompanyLogo className="w-4 h-4 text-white" />}
+  windowsStartIcon={<MyCompanyLogo className="w-5 h-5 text-blue-400" />}
+/>
+```

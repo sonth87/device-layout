@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { MenuBar } from '@/components/menubar/MenuBar';
 import { Dock } from '@/components/dock/Dock';
 import { GlobalAboutDialog } from '@/components/shared/AboutDialog';
+import { WindowChrome } from '@/components/window/WindowChrome';
 import { useStore } from '@/store';
 import { useWallpaperLuminance } from '@/hooks/useWallpaperLuminance';
 import { useFullscreenPeek } from '@/hooks/useFullscreenPeek';
@@ -129,10 +130,69 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false, fall
   // to [data-windowchrome] — handled inside the hook for both.
   useFullscreenPeek();
 
+  // Fullscreen window: find the focused (or topmost) fullscreen window so we
+  // can render its title bar at the correct global z-level (above the chrome
+  // overlay wrapper which otherwise clips it).
+  const fullscreenWindowId = useStore((s) => {
+    const wins = Object.values(s.windows).filter((w) => w.isFullScreen && !w.isMinimized);
+    if (wins.length === 0) return null;
+    // Prefer the focused one; fall back to the one with the highest z-index.
+    const focused = wins.find((w) => w.isFocused);
+    return (focused ?? wins.reduce((a, b) => (a.zIndex > b.zIndex ? a : b))).id;
+  });
+
+  // Peek-hint proximity state (cursor within 50px of top, but chrome not yet revealed).
+  const [peekHintNear, setPeekHintNear] = useState(false);
+  const chromeRevealedRef = useRef(menuBarRevealed);
+  useEffect(() => { chromeRevealedRef.current = menuBarRevealed; }, [menuBarRevealed]);
+  useEffect(() => {
+    if (!isFullScreenActive) { setPeekHintNear(false); return; }
+    const PROXIMITY = 50;
+    const handleMove = (e: MouseEvent) => {
+      setPeekHintNear(e.clientY < PROXIMITY && !chromeRevealedRef.current);
+    };
+    document.addEventListener('mousemove', handleMove);
+    return () => document.removeEventListener('mousemove', handleMove);
+  }, [isFullScreenActive]);
+  useEffect(() => {
+    if (menuBarRevealed) setPeekHintNear(false);
+  }, [menuBarRevealed]);
+
   return (
     <>
       {/* About dialog — listens globally for action:about events */}
       <GlobalAboutDialog />
+
+      {/* Peek-hint strip — slides down from the very top when cursor hovers near
+          the edge in fullscreen but chrome not yet revealed. Rendered at z-[50]
+          (above the z-40 MenuBar) so it's always visible regardless of window
+          stacking. pointer-events-none so it never blocks clicks. */}
+      {isFullScreenActive && (
+        <motion.div
+          className="absolute top-0 inset-x-0 z-[50] h-2.5 pointer-events-none backdrop-blur-sm"
+          initial={{ y: '-100%' }}
+          animate={{ y: peekHintNear ? '0%' : '-100%' }}
+          transition={{ type: 'spring', stiffness: 500, damping: 40, mass: 0.5 }}
+          style={{
+            background: 'linear-gradient(to bottom, rgba(128,128,128,0.35) 0%, transparent 100%)',
+          }}
+        />
+      )}
+
+      {/* Fullscreen window title bar — rendered here at z-[35] so it sits above
+          the chrome-overlay wrapper (which has no explicit z-index) but below
+          the MenuBar (z-40). Slides down from above together with the MenuBar
+          when fullscreenChromeRevealed becomes true.
+          When NOT in fullscreen, Window.tsx renders the chrome as usual. */}
+      {isFullScreenActive && fullscreenWindowId && (
+        <motion.div
+          className="absolute top-0 inset-x-0 z-[35] pointer-events-auto"
+          animate={{ y: menuBarRevealed ? MENU_BAR_HEIGHT : '-100%' }}
+          transition={{ type: 'spring', stiffness: 380, damping: 30, mass: 0.8 }}
+        >
+          <WindowChrome windowId={fullscreenWindowId} onPointerDown={() => {}} />
+        </motion.div>
+      )}
 
       {/* Menubar — on top, full width; auto-hides in true fullscreen */}
       <motion.div

@@ -1,0 +1,42 @@
+---
+title: Installation & Requirements
+description: Package installation, peer dependencies, and CSS stylesheet imports.
+---
+
+# Installation & Requirements
+
+## Requirements
+
+- **React**: `^18.0.0` or `^19.0.0`
+- **React DOM**: `^18.0.0` or `^19.0.0`
+- **Framework**: Next.js (App Router or Pages Router), Vite, Remix, or any React SPA bundler.
+- **Node.js**: `^18.17.0` or `>= 20.0.0`
+
+---
+
+## Installation Commands
+
+```bash
+npm install @sonth87/device-layout
+```
+
+### Peer Dependencies
+
+The library packages its compiled CSS via Tailwind CSS v4 and exports icons via `lucide-react`. Ensure `lucide-react` and `zustand` are installed if you plan to use custom hooks directly:
+
+```bash
+npm install lucide-react zustand
+```
+
+---
+
+## CSS Stylesheet Import
+
+You **must** import the library's compiled stylesheet once at your application's entry point:
+
+```tsx
+import "@sonth87/device-layout/style.css";
+```
+
+> [!NOTE]
+> The library ships pre-compiled CSS. Your host application does **not** need Tailwind CSS configured in order to consume `@sonth87/device-layout`. However, custom app components rendered inside window containers can use any styling engine (Tailwind, CSS Modules, Styled Components, Emotion).

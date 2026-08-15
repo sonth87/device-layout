@@ -1,0 +1,9 @@
+{
+  "title": "API Reference",
+  "pages": [
+    "device-layout",
+    "app-config",
+    "simple-mode",
+    "hooks"
+  ]
+}

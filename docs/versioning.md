@@ -31,7 +31,11 @@ Whenever completing a feature, bug fix, or refactor:
 3. **Re-build ESM Library Bundle**:
    - Run `pnpm build:lib` to re-compile the distribution bundle and TypeScript declaration files into `dist-lib/`.
 
+> [!NOTE]
+> **Documentation Exception**: Do NOT bump `version` in `package.json` or run `pnpm build:lib` when ONLY modifying End-User Documentation, Markdown files, or documentation site components (`docs/`, `content/`, etc.) without any code changes to the library itself (`src/lib.tsx`, `src/components/`, etc.).
+
 4. **Verification**:
+
    - Run `pnpm build` to verify Next.js production build and TypeScript typechecking pass with zero errors.
 
 ---

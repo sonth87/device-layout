@@ -1,0 +1,166 @@
+---
+title: AppConfig Specification & Usage
+description: Complete field-by-field reference for defining host applications, menu structures, and window options.
+---
+
+# `AppConfig` Specification
+
+The `AppConfig` interface defines an application entry registered by the host application into `@sonth87/device-layout`.
+
+```typescript
+import type {
+  AppConfig,
+  AppContentProps,
+  MenuBarMenu,
+  MenuBarItem,
+  ContextMenuAction
+} from '@sonth87/device-layout';
+```
+
+---
+
+## 📋 Field Reference Table
+
+| Field Name | Type | Required | Description |
+|---|---|---|---|
+| [`id`](#1-id) | `string` | **Yes** | Unique application identifier string (e.g. `'my-editor'`). |
+| [`name`](#2-name) | `string` | **Yes** | Display title shown in window header, dock tooltip, and launchers. |
+| [`icon`](#3-icon) | `string \| ComponentType` | **Yes** | App icon: `'lucide:IconName'`, image URL (`'/icon.svg'`), or React SVG component. |
+| [`render`](#4-render) | `ComponentType<AppContentProps>` | **Host Apps** | Custom React component rendered inside the window container. |
+| [`defaultSize`](#5-defaultsize) | `{ width: number; height: number }` | No | Initial window dimensions in pixels (e.g. `{ width: 800, height: 600 }`). |
+| [`minSize`](#6-minsize) | `{ width: number; height: number }` | No | Minimum window resize boundary in pixels. |
+| [`defaultPosition`](#7-defaultposition) | `{ x: number; y: number }` | No | Initial window positioning coordinates on desktop canvas. |
+| [`defaultMaximized`](#8-defaultmaximized) | `boolean` | No | Automatically maximize window upon launch. |
+| [`hasMenuBar`](#9-hasmenubar) | `boolean` | No | Enables top menu bar integration for this app. |
+| [`menuBarMenus`](#10-menubarmenus) | `MenuBarMenu[]` | No | Array of top menu bar structures (`File`, `Edit`, `View`, `Help`). |
+| [`appNameDropdownItems`](#11-appnamedropdownitems) | `MenuBarItem[]` | No | Custom menu items under the bold App Name dropdown (e.g. `Preferences...`). |
+| [`contextMenu`](#12-contextmenu) | `ContextMenuAction[]` | No | Right-click options on Dock icon or Desktop shortcut. |
+| [`badge`](#13-badge) | `string \| number` | No | Notification counter or status badge text rendered over Dock icon. |
+| [`launchMode`](#14-launchmode) | `'single' \| 'multi'` | No | `'single'` focuses existing window; `'multi'` opens multiple windows. |
+| [`category`](#15-category) | `string` | No | Logical category group string (e.g. `'Developer'`, `'Analytics'`). |
+| [`disabled`](#16-disabled) | `boolean` | No | Grays out app icon and disables launching. |
+| [`mobileFullscreen`](#17-mobilefullscreen) | `boolean` | No | Forces window to open fullscreen when running iOS/Android mobile themes. |
+
+---
+
+## 🔍 Detailed Field Breakdown & Code Examples
+
+### 1. `id` & `name`
+- `id` must be unique across all registered apps.
+- `name` is the user-facing title rendered in the window titlebar, Dock tooltips, and Spotlight search.
+
+---
+
+### 2. `icon` & Styling Options
+Icons can be declared in 3 ways:
+1. **Lucide Icon Identifier**: `"lucide:FileCode"` or `"lucide:Sliders"`
+2. **Static Asset URL**: `"/icons/my-app.svg"` or `"/icons/logo.png"`
+3. **Custom React SVG Component**: `MyCustomIcon`
+
+Optional icon background styling fields:
+- `iconColor`: `['#3B82F6', '#1E40AF']` (CSS linear gradient pair `[from, to]`).
+- `iconTextColor`: `'#FFFFFF'` (Text/glyph color inside gradient).
+- `rawIcon`: `true` (Renders custom React SVG component full-bleed without gradient container).
+
+---
+
+### 3. `render` (Host Component Entrypoint)
+- **Signature**: `ComponentType<{ appId: string; windowId: string }>`
+- **Description**: The React component that renders the actual app UI inside the window container.
+- **Example**:
+```tsx
+const EditorApp: React.FC<AppContentProps> = ({ appId, windowId }) => {
+  return (
+    <div className="p-4 bg-slate-950 text-slate-100 h-full overflow-auto">
+      <h2>App ID: {appId}</h2>
+      <p>Window ID: {windowId}</p>
+    </div>
+  );
+};
+```
+
+---
+
+### 4. `menuBarMenus` (Unified Menu System)
+Declares top menu bar items. The library renders these automatically in whichever presentation matches the active OS theme (macOS Global Menu Bar, Windows Titlebar Strip, or Touch Bottom Sheet).
+
+```tsx
+const menuBarMenus: MenuBarMenu[] = [
+  {
+    label: 'File',
+    items: [
+      { key: 'new-doc', label: 'New Document', shortcut: '⌘N', action: 'file:new' },
+      { key: 'open-recent', label: 'Open Recent', children: [
+          { key: 'file-1', label: 'project.json', action: 'file:open:project.json' },
+          { key: 'file-2', label: 'notes.txt', action: 'file:open:notes.txt' },
+        ]
+      },
+      { key: 'sep-1', label: '', separator: true },
+      { key: 'export-pdf', label: 'Export to PDF...', shortcut: '⌘E', action: 'file:export' },
+    ],
+  },
+  {
+    label: 'View',
+    items: [
+      { key: 'toggle-sidebar', label: 'Show Sidebar', checked: true, action: 'view:toggleSidebar' },
+    ],
+  },
+];
+```
+
+Handling menu clicks inside your app:
+```tsx
+import { useMenuAction } from '@sonth87/device-layout';
+
+// Inside your app component:
+useMenuAction(appId, (action) => {
+  if (action === 'file:new') {
+    // Handle file creation
+  }
+});
+```
+
+---
+
+### 5. `contextMenu` (Right-Click Dock & Desktop Menu)
+Defines context menu items displayed when right-clicking the app's Dock icon or Desktop shortcut:
+
+```tsx
+const contextMenu: ContextMenuAction[] = [
+  { key: 'new-tab', label: 'New Window', action: 'openNewWindow' },
+  { key: 'clear-cache', label: 'Clear Cache', action: 'clearCache' },
+];
+```
+
+---
+
+## 🚀 Complete `AppConfig` Code Example
+
+```tsx
+import type { AppConfig } from '@sonth87/device-layout';
+import { MyEditorComponent } from './MyEditorComponent';
+
+export const codeEditorAppConfig: AppConfig = {
+  id: 'code-editor',
+  name: 'Code Editor Pro',
+  icon: 'lucide:FileCode',
+  iconColor: ['#0284C7', '#0369A1'],
+  render: MyEditorComponent,
+  defaultSize: { width: 850, height: 550 },
+  minSize: { width: 450, height: 300 },
+  launchMode: 'multi',
+  hasMenuBar: true,
+  badge: 3, // Notification counter
+  menuBarMenus: [
+    {
+      label: 'File',
+      items: [
+        { key: 'save', label: 'Save', shortcut: '⌘S', action: 'saveFile' },
+      ],
+    },
+  ],
+  contextMenu: [
+    { key: 'new-file', label: 'New Quick File', action: 'quickFile' },
+  ],
+};
+```

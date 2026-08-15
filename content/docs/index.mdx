@@ -1,0 +1,53 @@
+---
+title: Introduction
+description: Overview of @sonth87/device-layout - a multi-window desktop OS simulator library for React and Next.js.
+---
+
+# Device Layout
+
+**`@sonth87/device-layout`** is a browser-based multi-window desktop OS simulator library designed to replicate the visual appearance and interaction model of popular desktop and mobile operating systems (macOS, Windows 11, iPadOS, iOS, Android).
+
+It acts as a **desktop-shell container** for host applications — rendering desktop backgrounds, dock bars, top menu bars, taskbars, and window management controls while allowing host applications to inject their own custom React components as isolated windowed apps.
+
+<LiveDesktopDemo />
+
+---
+
+## Key Use Cases
+
+- **Multi-Window Web Dashboards**: Combine analytics, monitoring tools, or modular workspaces into a desktop environment running inside a web browser.
+- **Embedded Web Shells & Kiosks**: Restrict standard OS features using **Simple Mode** to build customized, minimal web shells with zero window chrome or restricted toolbars.
+- **Interactive Demos & Workspaces**: Provide interactive product walkthroughs in a familiar desktop environment (macOS or Windows 11 themes).
+- **Electron Shell Applications**: Package multi-functional desktop applications where each module runs as an isolated windowed container.
+
+---
+
+## Core Capabilities
+
+- 🎨 **5 OS Themes**: macOS, Windows 11, iPadOS, iOS, Android.
+- 🪟 **Window Management**: Dragging, resizing, z-ordering, snapping, minimizing, maximizing, fullscreen mode.
+- ⚡ **Simple Mode**: Modular feature-flags (`isSimpleMode`) allowing host apps to toggle Dock, Wallpapers, Context Menus, System Apps, or Menu Bar widgets independently.
+- 🍔 **Unified Menu System**: Declare `menuBarMenus` once; the library renders them automatically as macOS Global Top Menu, Windows Under-Titlebar Strip, or Touch Bottom Sheet without host platform branching.
+- 🖱️ **Edit Context Menu**: Smart right-click Cut/Copy/Paste/Undo/Redo menu for inputs, textareas, images, and contenteditable targets.
+
+---
+
+## Architecture at a Glance
+
+The host application owns its business logic and component registry, while `@sonth87/device-layout` manages the window layout container.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ Host Application                                        │
+│  - Owns business logic, state, and permissions          │
+│  - Maps internal modules to AppConfig[]                 │
+└───────────────────────────┬─────────────────────────────┘
+                            │ (AppConfig[] props in)
+                            ▼
+┌─────────────────────────────────────────────────────────┐
+│ @sonth87/device-layout                                  │
+│  - Renders Desktop / Dock / Top MenuBar / Taskbar       │
+│  - Manages Window positions, sizes, and z-index        │
+│  - Emits CustomEvents for menu/context actions          │
+└─────────────────────────────────────────────────────────┘
+```

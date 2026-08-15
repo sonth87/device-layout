@@ -1,0 +1,49 @@
+---
+title: Programmatic Window Control
+description: How to open, close, minimize, or focus windows programmatically in host apps.
+---
+
+# Programmatic Window Control
+
+Host applications often need to launch new app windows, focus existing windows, or trigger window layout operations programmatically from external buttons, notification toasts, or global shortcuts.
+
+---
+
+## Using Zustand Store Actions
+
+The library exports `useStore`, allowing access to internal window manager actions:
+
+```tsx
+import { useStore } from '@sonth87/device-layout';
+
+export function ExternalTriggerButton() {
+  const openApp = useStore((state) => state.openApp);
+  const closeWindow = useStore((state) => state.closeWindow);
+
+  const handleLaunch = () => {
+    // Programmatically open an app window by appId
+    openApp('my-dashboard-id');
+  };
+
+  return (
+    <button
+      onClick={handleLaunch}
+      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500"
+    >
+      Launch Analytics Dashboard
+    </button>
+  );
+}
+```
+
+---
+
+## Available Store Window Actions
+
+| Action | Signature | Description |
+|---|---|---|
+| `openApp` | `(appId: string) => void` | Launches a new window for the specified app or brings existing window to focus. |
+| `closeWindow` | `(windowId: string) => void` | Closes a specific window instance by window ID. |
+| `minimizeWindow` | `(windowId: string) => void` | Minimizes a window to the Dock / Taskbar. |
+| `maximizeWindow` | `(windowId: string) => void` | Toggles maximized state for a window. |
+| `focusWindow` | `(windowId: string) => void` | Brings window to top z-index focus. |

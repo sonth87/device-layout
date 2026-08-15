@@ -1,0 +1,9 @@
+{
+  "title": "Core Guides",
+  "pages": [
+    "adding-apps",
+    "integration-modes",
+    "programmatic-control",
+    "electron"
+  ]
+}

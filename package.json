@@ -39,6 +39,7 @@
   "scripts": {
     "dev": "node scripts/generate-live-thumbnails.js && NODE_OPTIONS='--max-old-space-size=4096' next dev",
     "dev:simple": "node scripts/generate-live-thumbnails.js && NODE_OPTIONS='--max-old-space-size=4096' next dev & sleep 2 && open http://localhost:3000/simple",
+    "dev:docs": "node scripts/generate-live-thumbnails.js && NODE_OPTIONS='--max-old-space-size=4096' next dev -p 3100 & sleep 2 && open http://localhost:3100/docs",
     "build": "node scripts/generate-live-thumbnails.js && NODE_OPTIONS='--max-old-space-size=4096' next build",
     "build:lib": "vite build",
     "tag": "node scripts/release-tag.js",
@@ -75,6 +76,9 @@
     "@tiptap/starter-kit": "^3.28.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "fumadocs-core": "^16.14.4",
+    "fumadocs-mdx": "^15.2.3",
+    "fumadocs-ui": "^16.14.4",
     "immer": "^11.1.7",
     "lucide-react": "^1.14.0",
     "motion": "^12.38.0",

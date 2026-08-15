@@ -1,0 +1,99 @@
+---
+title: Quickstart
+description: Get up and running with @sonth87/device-layout in 5 minutes.
+---
+
+# Quickstart
+
+This guide demonstrates how to install and mount `@sonth87/device-layout` in a React or Next.js application.
+
+---
+
+## Step 1: Install Package
+
+Install the library along with its peer dependencies:
+
+```bash
+npm install @sonth87/device-layout
+# or
+pnpm add @sonth87/device-layout
+# or
+yarn add @sonth87/device-layout
+```
+
+---
+
+## Step 2: Define your Host Application
+
+Create a custom React component for your application. Your component receives `{ appId, windowId }` as props:
+
+```tsx
+// src/apps/MyDashboardApp.tsx
+export function MyDashboardApp({ appId, windowId }: { appId: string; windowId: string }) {
+  return (
+    <div className="p-6 text-slate-100 bg-slate-900 h-full overflow-auto">
+      <h2 className="text-xl font-bold mb-2">My Host Dashboard</h2>
+      <p className="text-slate-400 text-sm">
+        Running inside window <code className="bg-slate-800 px-1 py-0.5 rounded">{windowId}</code>
+      </p>
+    </div>
+  );
+}
+```
+
+---
+
+## Step 3: Register `AppConfig` and Mount Component
+
+Import `<DeviceLayout />` and its CSS stylesheet in your main page component:
+
+### Full Desktop OS Mode
+
+```tsx
+// src/app/page.tsx
+import { DeviceLayout, AppConfig } from "@sonth87/device-layout";
+import "@sonth87/device-layout/style.css";
+import { MyDashboardApp } from "@/apps/MyDashboardApp";
+
+const customApps: AppConfig[] = [
+  {
+    id: "my-dashboard",
+    name: "Analytics Dashboard",
+    icon: "lucide:LayoutDashboard",
+    render: MyDashboardApp,
+    defaultSize: { width: 900, height: 600 },
+    minSize: { width: 400, height: 300 },
+    hasMenuBar: true,
+  },
+];
+
+export default function Page() {
+  return (
+    <div className="w-screen h-screen overflow-hidden">
+      <DeviceLayout
+        colorScheme="dark"
+        osTheme="macos"
+        apps={customApps}
+      />
+    </div>
+  );
+}
+```
+
+---
+
+## Step 4: Simple Minimal / Kiosk Mode
+
+If you are embedding the desktop shell inside a web app wrapper or kiosk display where you want to restrict standard desktop features (e.g. disable Dock or Wallpapers), pass `isSimpleMode={true}` or a custom `SimpleModeFeatures` object:
+
+```tsx
+<DeviceLayout
+  colorScheme="dark"
+  isSimpleMode={{
+    dock: false,
+    wallpaper: false,
+    menuBar: { clock: true, spotlight: false, controlCenter: false },
+  }}
+  apps={customApps}
+/>
+```

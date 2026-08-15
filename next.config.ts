@@ -1,5 +1,8 @@
 import type { NextConfig } from 'next';
 import withPWAInit from '@ducanh2912/next-pwa';
+import { createMDX } from 'fumadocs-mdx/next';
+
+const withMDX = createMDX();
 
 const withPWA = withPWAInit({
   dest: 'public',
@@ -47,4 +50,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA(nextConfig);
+export default withPWA(withMDX(nextConfig));

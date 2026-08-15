@@ -1,0 +1,76 @@
+---
+title: Electron Packaging Guide
+description: Integrating @sonth87/device-layout inside Electron desktop apps.
+---
+
+# Electron Integration Guide
+
+`@sonth87/device-layout` can be packaged inside an Electron main window container to create a multi-window desktop shell application.
+
+---
+
+## Architecture Pattern
+
+In Electron applications, `@sonth87/device-layout` renders inside the Renderer Process (`index.html` window). Each host app running inside a window container can communicate with Electron's Main Process via preload IPC scripts:
+
+```
+┌───────────────────────────────────────────────────────────┐
+│ Electron Renderer Process (BrowserWindow)                │
+│                                                           │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │ @sonth87/device-layout                              │  │
+│  │                                                     │  │
+│  │  [ Window 1: Camera App ] -> window.electronAPI.cam │  │
+│  │  [ Window 2: File Browser] -> window.electronAPI.fs │  │
+│  └─────────────────────────────────────────────────────┘  │
+└──────────────────────────────┬────────────────────────────┘
+                               │ IPC Bridge (contextBridge)
+                               ▼
+┌───────────────────────────────────────────────────────────┐
+│ Electron Main Process (Node.js Environment)               │
+│  - Native File System, Hardware Access, System Trays      │
+└───────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Preload IPC Setup
+
+In your Electron preload script (`preload.js`):
+
+```js
+const { contextBridge, ipcRenderer } = require('electron');
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  openNativeFile: (path) => ipcRenderer.invoke('dialog:openFile', path),
+  onMenuTrigger: (callback) => ipcRenderer.on('native-menu-click', callback),
+});
+```
+
+---
+
+## Host App IPC Consumption
+
+Inside a host app component rendered by `@sonth87/device-layout`:
+
+```tsx
+export function NativeFileBrowserApp({ appId }: { appId: string }) {
+  const handleOpenFile = async () => {
+    if (window.electronAPI) {
+      const fileContent = await window.electronAPI.openNativeFile();
+      console.log('Opened native file:', fileContent);
+    }
+  };
+
+  return (
+    <div className="p-4 bg-slate-900 text-white h-full">
+      <button
+        onClick={handleOpenFile}
+        className="px-3 py-1.5 bg-indigo-600 rounded hover:bg-indigo-500 text-sm"
+      >
+        Open System File...
+      </button>
+    </div>
+  );
+}
+```

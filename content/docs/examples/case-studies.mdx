@@ -1,0 +1,148 @@
+---
+title: Real-World Case Studies & Architectural Scenarios
+description: Real-world implementation examples for Multi-Window Analytics Dashboards, Embedded Kiosk Web Shells, AI Workspaces, and Electron Packaging.
+---
+
+# Real-World Case Studies & Architecture Patterns
+
+This document explores complete real-world implementation patterns for embedding `@sonth87/device-layout` into production host applications.
+
+---
+
+## 📊 Case Study 1: Multi-Window Analytics Dashboard
+
+### Objective
+A enterprise web dashboard that combines real-time server monitoring, live video camera feeds, database query consoles, and system log viewers into an interactive multi-window desktop interface.
+
+### Key Architecture Decisions
+- **OS Theme**: `'macos'` for a clean desktop feel.
+- **Top MenuBar**: Registered `menuBarMenus` for global actions (`Refresh All`, `Export Metrics`, `Reset Layout`).
+- **Launch Mode**: `launchMode: 'multi'` for Log Viewer (allows viewing multiple log files side-by-side).
+
+```tsx
+// src/dashboards/EnterpriseDashboard.tsx
+import { DeviceLayout, AppConfig } from '@sonth87/device-layout';
+import '@sonth87/device-layout/style.css';
+import { ServerMonitorApp } from './apps/ServerMonitorApp';
+import { LogViewerApp } from './apps/LogViewerApp';
+import { CameraFeedApp } from './apps/CameraFeedApp';
+
+const dashboardApps: AppConfig[] = [
+  {
+    id: 'server-monitor',
+    name: 'Server Monitor',
+    icon: 'lucide:Activity',
+    render: ServerMonitorApp,
+    defaultSize: { width: 900, height: 550 },
+    hasMenuBar: true,
+    launchMode: 'single',
+  },
+  {
+    id: 'log-viewer',
+    name: 'Log Stream',
+    icon: 'lucide:Terminal',
+    render: LogViewerApp,
+    defaultSize: { width: 700, height: 400 },
+    launchMode: 'multi', // Allows multiple log windows open side-by-side
+  },
+  {
+    id: 'camera-feed',
+    name: 'Camera Grid',
+    icon: 'lucide:Camera',
+    render: CameraFeedApp,
+    defaultSize: { width: 800, height: 600 },
+    launchMode: 'single',
+  },
+];
+
+export default function EnterpriseDashboardPage() {
+  return (
+    <div className="w-screen h-screen overflow-hidden">
+      <DeviceLayout
+        colorScheme="dark"
+        osTheme="macos"
+        apps={dashboardApps}
+      />
+    </div>
+  );
+}
+```
+
+---
+
+## 🖥️ Case Study 2: Embedded Kiosk Web Shell
+
+### Objective
+A dedicated point-of-sale (POS) or security monitor kiosk running on a touch screen display where users must not access system settings, change wallpapers, or switch OS themes.
+
+### Key Architecture Decisions
+- **Simple Mode**: `isSimpleMode={true}`.
+- **System Apps**: `defaultApps={false}`.
+- **Touch Optimization**: Clean status bar with clock only.
+
+```tsx
+// src/kiosk/KioskShell.tsx
+import { DeviceLayout, AppConfig } from '@sonth87/device-layout';
+import '@sonth87/device-layout/style.css';
+import { PosTerminalApp } from './apps/PosTerminalApp';
+
+const kioskApps: AppConfig[] = [
+  {
+    id: 'pos-terminal',
+    name: 'POS Checkout',
+    icon: 'lucide:ShoppingCart',
+    render: PosTerminalApp,
+    defaultSize: { width: 1024, height: 768 },
+    defaultMaximized: true,
+  },
+];
+
+export default function KioskShellPage() {
+  return (
+    <div className="w-screen h-screen overflow-hidden">
+      <DeviceLayout
+        colorScheme="dark"
+        isSimpleMode={{
+          dock: false,
+          wallpaper: false,
+          widgets: false,
+          contextMenu: false,
+          defaultApps: false,
+          menuBar: { clock: true, spotlight: false, controlCenter: false },
+        }}
+        apps={kioskApps}
+      />
+    </div>
+  );
+}
+```
+
+---
+
+## 🤖 Case Study 3: AI Agent & Prompt Workspace
+
+### Objective
+An interactive AI workspace where each AI agent (Coder, Writer, Researcher) operates inside its own window, with a global menu bar for switching LLM models and running workflows.
+
+### Key Architecture Decisions
+- **Programmatic Control**: Use `useStore((state) => state.openApp)` to open agent windows when triggered from an external AI prompt bar.
+- **Custom Context Menu**: Extend edit context menu using `resolveEditContextMenuItems` to add AI prompt actions (e.g. "Explain Code", "Summarize Text").
+
+```tsx
+<DeviceLayout
+  colorScheme="dark"
+  osTheme="macos"
+  apps={aiAgentApps}
+  resolveEditContextMenuItems={(defaultItems, info) => {
+    if (!info.hasSelection) return defaultItems;
+    return [
+      ...defaultItems,
+      {
+        key: 'ai-explain',
+        label: '✨ Ask AI to Explain',
+        onSelect: () => triggerAiExplain(info.target),
+      },
+    ];
+  }}
+/>
+```

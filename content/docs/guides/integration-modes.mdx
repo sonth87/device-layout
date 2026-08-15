@@ -1,0 +1,104 @@
+---
+title: Integration Modes & Fine-Tuning
+description: Deep dive into Full OS Mode, Simple Kiosk Mode, Hybrid Mode, theme compositors, custom fonts, and styling fine-tuning.
+---
+
+# Integration Modes & Fine-Tuning
+
+`@sonth87/device-layout` supports three primary architectural integration modes depending on your host application's requirements.
+
+---
+
+## 🎭 The 3 Integration Modes
+
+### Mode 1: Full Desktop OS Simulator Mode
+- **Use Case**: Multi-window web dashboards, interactive product walk-throughs, simulated desktop workspaces.
+- **Features**: Full OS chrome, macOS top global menu bar or Windows 11 taskbar, floating Dock, wallpaper selector, desktop widget gallery, built-in system apps (Settings, Calculator, Notes, Photos).
+- **Configuration**:
+```tsx
+<DeviceLayout
+  colorScheme="dark"
+  osTheme="macos"
+  apps={myApps}
+/>
+```
+
+---
+
+### Mode 2: Minimal Kiosk & Web Shell Mode
+- **Use Case**: Embedded kiosk displays, single-purpose web shells, restricted administration panels.
+- **Features**: Zero dock, flat solid color background, zero desktop widgets, zero default system apps, clean status bar.
+- **Configuration**:
+```tsx
+<DeviceLayout
+  colorScheme="dark"
+  isSimpleMode={true}
+  apps={myApps}
+/>
+```
+
+---
+
+### Mode 3: Modular Hybrid Mode (Custom Feature Flags)
+- **Use Case**: Web dashboards that want dynamic wallpapers and custom top status bars without floating dock or system apps.
+- **Features**: Selective feature flag toggles via `isSimpleMode={SimpleModeFeatures}`.
+- **Configuration**:
+```tsx
+<DeviceLayout
+  colorScheme="dark"
+  isSimpleMode={{
+    wallpaper: true,
+    wallpaperPicker: true,
+    dock: false,
+    widgets: false,
+    defaultApps: false,
+    menuBar: {
+      clock: true,
+      spotlight: false,
+      controlCenter: false,
+    },
+  }}
+  apps={myApps}
+/>
+```
+
+---
+
+## 🎨 Fine-Tuning & Styling Customization
+
+### 1. Custom OS Theme Restricting
+Restrict allowed OS themes in Settings so end users cannot switch to unsupported themes:
+
+```tsx
+<DeviceLayout
+  isSimpleMode={{
+    allowedOSThemes: ['macos', 'windows'], // Restrict to macOS & Windows only
+  }}
+/>
+```
+
+---
+
+### 2. Branding Customization (Logos & Asset Prefix)
+Replace default OS logos with your host company branding:
+
+```tsx
+<DeviceLayout
+  macOSAppleIcon={<MyBrandLogo className="w-4 h-4 text-white" />}
+  windowsStartIcon={<MyBrandLogo className="w-5 h-5 text-blue-400" />}
+  assetBaseUrl="https://cdn.mycompany.com/assets"
+/>
+```
+
+---
+
+### 3. Glassmorphism & Liquid Glass Controls
+The library utilizes backdrop filter blurs for window headers, dock, and menu bars. You can fine-tune background colors using standard CSS variables in your host application:
+
+```css
+/* In your host app's CSS */
+:root {
+  --accent-color: #3B82F6; /* Custom system accent color */
+  --win-accent: #0067C0;
+}
+```

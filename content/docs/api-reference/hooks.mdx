@@ -1,0 +1,151 @@
+---
+title: Exported Hooks & Custom Events Reference
+description: Comprehensive reference for React hooks and CustomEvent subscribers exported by @sonth87/device-layout.
+---
+
+# Exported React Hooks & Custom Events
+
+`@sonth87/device-layout` exports specialized React hooks allowing host applications to handle menu bar actions, context menu clicks, window events, and inspect normalized desktop state.
+
+```typescript
+import {
+  useMenuAction,
+  useContextAction,
+  useStore,
+  useSimpleModeFeatures
+} from '@sonth87/device-layout';
+```
+
+---
+
+## 1. `useMenuAction`
+
+### Signature
+```typescript
+function useMenuAction(
+  appId: string,
+  handler: (action: string, windowId?: string) => void,
+  windowId?: string
+): void
+```
+
+### Purpose
+Subscribes your React component to menu item clicks dispatched via top global menu bars or window titlebar menus (`app:menu:action`).
+
+### Parameters
+- `appId` (`string`): The unique ID of the application listening for menu events.
+- `handler` (`(action: string, windowId?: string) => void`): Callback function triggered when a menu item is clicked. Receives the `action` string declared in `MenuBarItem`.
+- `windowId` (`string`, optional): Specific window instance ID. If provided, the handler only triggers when the menu item from that specific window is clicked.
+
+### Example
+```tsx
+import { useMenuAction } from '@sonth87/device-layout';
+
+export function DocumentEditor({ appId, windowId }: { appId: string; windowId: string }) {
+  useMenuAction(
+    appId,
+    (action) => {
+      switch (action) {
+        case 'file:save':
+          console.log('Saving document...');
+          break;
+        case 'file:export-pdf':
+          console.log('Exporting PDF...');
+          break;
+      }
+    },
+    windowId // Optional: scope listener to this window instance
+  );
+
+  return <div className="p-4 bg-slate-900 text-white h-full">Editor Body</div>;
+}
+```
+
+---
+
+## 2. `useContextAction`
+
+### Signature
+```typescript
+function useContextAction(
+  appId: string,
+  handler: (action: string) => void
+): void
+```
+
+### Purpose
+Subscribes your React component to right-click context menu clicks (`app:context:action`) triggered on Dock icons or Desktop shortcuts.
+
+### Parameters
+- `appId` (`string`): The application ID.
+- `handler` (`(action: string) => void`): Callback receiving the action identifier defined in `contextMenu: ContextMenuAction[]`.
+
+### Example
+```tsx
+import { useContextAction } from '@sonth87/device-layout';
+
+export function TerminalApp({ appId }: { appId: string }) {
+  useContextAction(appId, (action) => {
+    if (action === 'openNewWindow') {
+      console.log('Right-click context menu clicked: Open New Window');
+    }
+  });
+
+  return <div className="p-4 bg-black text-green-400 font-mono h-full">Terminal</div>;
+}
+```
+
+---
+
+## 3. `useStore` (Desktop Store Access)
+
+### Purpose
+Provides reactive or imperative access to the internal Zustand store managing window instances, z-index ordering, dock items, wallpapers, and OS themes.
+
+> [!IMPORTANT]
+> **Performance Rule**: Always use `useShallow` when selecting objects or arrays from `useStore` to prevent unnecessary component re-renders.
+
+### Example: Programmatically Launching / Closing Windows
+```tsx
+import { useStore } from '@sonth87/device-layout';
+
+export function HostToolbar() {
+  // Imperative action calls
+  const openApp = useStore((state) => state.openApp);
+  const closeWindow = useStore((state) => state.closeWindow);
+
+  return (
+    <div className="flex gap-2 p-2 bg-slate-800">
+      <button
+        onClick={() => openApp('realtime-analytics')}
+        className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-500"
+      >
+        Open Analytics
+      </button>
+    </div>
+  );
+}
+```
+
+---
+
+## 4. `useSimpleModeFeatures`
+
+### Purpose
+Returns the normalized `NormalizedSimpleModeFeatures` object resolving active feature flags when running inside Simple Mode.
+
+### Example
+```tsx
+import { useSimpleModeFeatures } from '@sonth87/device-layout';
+
+export function CustomWidget() {
+  const { isSimpleModeActive, dock, wallpaper } = useSimpleModeFeatures();
+
+  return (
+    <div className="p-2 text-xs text-slate-300">
+      Mode: {isSimpleModeActive ? 'Simple Mode' : 'Full OS Mode'}
+      Dock Visible: {dock ? 'Yes' : 'No'}
+    </div>
+  );
+}
+```

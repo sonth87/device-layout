@@ -1,0 +1,124 @@
+---
+title: Simple Mode (`isSimpleMode`) Reference
+description: Detailed option reference, preset modes, and live interactive configurator for Simple Mode.
+---
+
+# Simple Mode (`isSimpleMode`)
+
+**Simple Mode** provides a clean, modular desktop simulator layout for embedded environments, web app wrappers, or kiosk displays where you want to customize or restrict standard desktop OS features.
+
+---
+
+## 🎛️ Live Interactive Configurator
+
+Use the interactive tool below to toggle feature flags and instantly generate copyable TSX code for your project:
+
+<SimpleModeBuilder />
+
+---
+
+## 📋 `SimpleModeFeatures` Options Reference
+
+| Option Name | Type | Default in Simple Mode | Purpose & Behavior |
+|---|---|---|---|
+| [`wallpaper`](#1-wallpaper) | `boolean` | `false` | Renders dynamic picture/video wallpapers instead of flat solid color background. |
+| [`allowLiveWallpapers`](#2-allowlivewallpapers) | `boolean` | `true` | Show/hide the "Live Wallpapers" video section in the Wallpaper picker. |
+| [`contextMenu`](#3-contextmenu) | `boolean` | `false` | Enable/disable right-click context menu on desktop background & icons. |
+| [`wallpaperPicker`](#4-wallpaperpicker) | `boolean` | `false` | Enables floating Wallpaper Picker modal when Settings app is omitted. |
+| [`iconGrid`](#5-icongrid) | `boolean` | `false` | Show/hide app icons arranged directly on desktop background canvas. |
+| [`dock`](#6-dock) | `boolean` | `false` | Show/hide the bottom Dock bar. |
+| [`menuBar`](#7-menubar) | `boolean \| object` | `{ appNameMenu: true }` | Sub-feature toggles for top MenuBar (clock, spotlight, control center, etc.). |
+| [`widgets`](#8-widgets) | `boolean \| object` | `false` | Show/hide desktop widgets and widget gallery editing panel. |
+| [`defaultApps`](#9-defaultapps) | `boolean \| string[]` | `false` | Auto-registers built-in system apps (Settings, Finder, Calculator, Notes). |
+| [`allowedOSThemes`](#10-allowedosthemes) | `OSTheme[]` | `['macos']` | Restricts allowed OS themes (hides selector in Settings if length $\le$ 1). |
+| [`allowDarkModeToggle`](#11-allowdarkmodetoggle) | `boolean` | `true` | Enables/disables Dark/Light theme switching in Settings. |
+
+---
+
+## 🔍 Detailed Feature Option Explanations
+
+### 1. `wallpaper`
+- **Type**: `boolean`
+- **Default**: `false` in simple mode, `true` in full mode.
+- **Description**: When set to `false`, replaces dynamic image/video wallpapers with a sleek, flat solid color background (`bg-slate-950`). Useful for high-performance kiosk screens.
+
+---
+
+### 2. `dock`
+- **Type**: `boolean`
+- **Default**: `false` in simple mode.
+- **Description**: Controls whether the bottom Dock / Taskbar is visible. Set to `false` if your host application launches windows programmatically or from an external navigation bar.
+
+---
+
+### 3. `menuBar`
+- **Type**: `boolean | { clock?: boolean; spotlight?: boolean; controlCenter?: boolean; appleMenu?: boolean; appNameMenu?: boolean; appSwitcher?: boolean; extras?: boolean }`
+- **Default**: `{ appNameMenu: true, extras: true }`
+- **Description**: Provides fine-grained control over individual icons rendered in the top menu bar:
+  - `clock`: Shows system date and time in the top-right corner.
+  - `spotlight`: Shows the magnifying glass search trigger button.
+  - `controlCenter`: Shows the Control Center toggle icon.
+  - `appleMenu`: Shows the Apple logo dropdown menu (macOS theme).
+  - `appNameMenu`: Shows active app title menu.
+  - `extras`: Shows host-registered system tray icons (`menuBarExtras`).
+
+```tsx
+isSimpleMode={{
+  menuBar: {
+    clock: true,
+    spotlight: false,
+    controlCenter: false,
+    appleMenu: false,
+  },
+}}
+```
+
+---
+
+### 4. `defaultApps`
+- **Type**: `boolean | string[]`
+- **Default**: `false` in simple mode.
+- **Description**: Controls system default app registration:
+  - `false`: 0 built-in default apps (clean slate for 100% custom host apps).
+  - `true`: Registers all built-in apps (Settings, Finder, Calculator, Notes, Photos).
+  - `['settings', 'calculator']`: Registers only the specified built-in app IDs.
+
+---
+
+### 5. `allowedOSThemes`
+- **Type**: `OSTheme[]` (e.g. `['macos']` or `['macos', 'windows']`)
+- **Default**: `['macos']` in simple mode.
+- **Description**: Limits which OS themes the end user can switch to in Settings -> Appearance. If an array with only 1 item is passed, the OS Theme selector in Settings is automatically hidden.
+
+---
+
+## 🚀 Common Preset Configurations
+
+### Preset A: 100% Minimal Embedded Kiosk
+No dock, no wallpaper images, no default system apps, clean status bar:
+
+```tsx
+<DeviceLayout
+  colorScheme="dark"
+  isSimpleMode={true}
+  apps={myApps}
+/>
+```
+
+### Preset B: Wallpaper & Context Menu Kiosk
+Enables wallpapers and right-click desktop context menu without dock or system apps:
+
+```tsx
+<DeviceLayout
+  colorScheme="dark"
+  isSimpleMode={{
+    wallpaper: true,
+    contextMenu: true,
+    wallpaperPicker: true,
+    dock: false,
+    defaultApps: false,
+    menuBar: { clock: true },
+  }}
+  apps={myApps}
+/>
+```
