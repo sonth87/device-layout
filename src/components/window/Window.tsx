@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { motion, useMotionValue, animate } from 'motion/react';
 import { useStore } from '@/store';
 import { useTheme } from '@/hooks/useTheme';
@@ -22,7 +22,6 @@ export function Window({ windowId }: WindowProps) {
   const focusWindow = useStore((s) => s.focusWindow);
   const setActiveApp = useStore((s) => s.setActiveApp);
   const exitFullScreen = useStore((s) => s.exitFullScreen);
-  const fullscreenChromeRevealed = useStore((s) => s.fullscreenChromeRevealed);
   const apps = useStore((s) => s.apps);
   const { isFloating, isMobile, config } = useTheme();
 
@@ -38,24 +37,6 @@ export function Window({ windowId }: WindowProps) {
     return () => window.removeEventListener('keydown', handler);
   }, [win?.isFullScreen, win?.isFocused, windowId, exitFullScreen]);
 
-  // Peek-hint bar: slides in when cursor is within 50px of top edge (fullscreen only).
-  // Disappears once the title bar chrome is revealed.
-  const [peekHintNear, setPeekHintNear] = useState(false);
-  const chromeRevealedRef = useRef(fullscreenChromeRevealed);
-  useEffect(() => { chromeRevealedRef.current = fullscreenChromeRevealed; }, [fullscreenChromeRevealed]);
-  useEffect(() => {
-    if (!win?.isFullScreen) { setPeekHintNear(false); return; }
-    const PROXIMITY = 50;
-    const handleMove = (e: MouseEvent) => {
-      setPeekHintNear(e.clientY < PROXIMITY && !chromeRevealedRef.current);
-    };
-    document.addEventListener('mousemove', handleMove);
-    return () => document.removeEventListener('mousemove', handleMove);
-  }, [win?.isFullScreen]);
-  // Hide hint immediately when chrome reveals
-  useEffect(() => {
-    if (fullscreenChromeRevealed) setPeekHintNear(false);
-  }, [fullscreenChromeRevealed]);
 
   const mx = useMotionValue(win?.isFullScreen ? 0 : (win?.rect.x ?? 100));
   const my = useMotionValue(win?.isFullScreen ? 0 : (win?.rect.y ?? 100));
@@ -161,30 +142,6 @@ export function Window({ windowId }: WindowProps) {
         <div className={cn(appConfig?.titleBarMode === 'transparent' ? 'absolute top-0 inset-x-0 z-20' : 'relative')}>
           <WindowChrome windowId={windowId} onPointerDown={onDragStart} />
         </div>
-      )}
-      {win.isFullScreen && (
-        <motion.div
-          className="absolute top-0 inset-x-0 z-20"
-          animate={{ y: fullscreenChromeRevealed ? (config.hasMenuBar ? 28 : 0) : '-100%' }}
-          transition={{ type: 'spring', stiffness: 380, damping: 30, mass: 0.8 }}
-        >
-          <WindowChrome windowId={windowId} onPointerDown={onDragStart} />
-        </motion.div>
-      )}
-
-      {/* Subtle peek-hint bar: visible only when fullscreen chrome is hidden.
-          A thin translucent strip at the top edge gives users a visual affordance
-          to discover that hovering near the top reveals the title bar. */}
-      {win.isFullScreen && (
-        <motion.div
-          className="absolute top-0 inset-x-0 z-10 h-2.5 pointer-events-none backdrop-blur-sm"
-          initial={{ y: '-100%' }}
-          animate={{ y: peekHintNear ? '0%' : '-100%' }}
-          transition={{ type: 'spring', stiffness: 500, damping: 40, mass: 0.5 }}
-          style={{
-            background: 'linear-gradient(to bottom, rgba(128,128,128,0.3) 0%, transparent 100%)',
-          }}
-        />
       )}
 
       {/* Optional per-window top menu bar — only for themes WITHOUT a global

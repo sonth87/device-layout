@@ -11,8 +11,8 @@ import * as __fd_glob_8 from "../content/docs/api-reference/hooks.mdx?collection
 import * as __fd_glob_7 from "../content/docs/api-reference/device-layout.mdx?collection=docs"
 import * as __fd_glob_6 from "../content/docs/api-reference/app-config.mdx?collection=docs"
 import * as __fd_glob_5 from "../content/docs/index.mdx?collection=docs"
-import { default as __fd_glob_4 } from "../content/docs/examples/meta.json?collection=docs"
-import { default as __fd_glob_3 } from "../content/docs/guides/meta.json?collection=docs"
+import { default as __fd_glob_4 } from "../content/docs/guides/meta.json?collection=docs"
+import { default as __fd_glob_3 } from "../content/docs/examples/meta.json?collection=docs"
 import { default as __fd_glob_2 } from "../content/docs/getting-started/meta.json?collection=docs"
 import { default as __fd_glob_1 } from "../content/docs/api-reference/meta.json?collection=docs"
 import { default as __fd_glob_0 } from "../content/docs/meta.json?collection=docs"
@@ -24,4 +24,4 @@ const create = server<typeof Config, import("fumadocs-mdx/runtime/types").Intern
   }
 }>();
 
-export const docs = await create.docs("docs", "content/docs", {"meta.json": __fd_glob_0, "api-reference/meta.json": __fd_glob_1, "getting-started/meta.json": __fd_glob_2, "guides/meta.json": __fd_glob_3, "examples/meta.json": __fd_glob_4, }, {"index.mdx": __fd_glob_5, "api-reference/app-config.mdx": __fd_glob_6, "api-reference/device-layout.mdx": __fd_glob_7, "api-reference/hooks.mdx": __fd_glob_8, "api-reference/simple-mode.mdx": __fd_glob_9, "examples/case-studies.mdx": __fd_glob_10, "getting-started/installation.mdx": __fd_glob_11, "getting-started/quickstart.mdx": __fd_glob_12, "guides/adding-apps.mdx": __fd_glob_13, "guides/electron.mdx": __fd_glob_14, "guides/integration-modes.mdx": __fd_glob_15, "guides/programmatic-control.mdx": __fd_glob_16, });
+export const docs = await create.docs("docs", "content/docs", {"meta.json": __fd_glob_0, "api-reference/meta.json": __fd_glob_1, "getting-started/meta.json": __fd_glob_2, "examples/meta.json": __fd_glob_3, "guides/meta.json": __fd_glob_4, }, {"index.mdx": __fd_glob_5, "api-reference/app-config.mdx": __fd_glob_6, "api-reference/device-layout.mdx": __fd_glob_7, "api-reference/hooks.mdx": __fd_glob_8, "api-reference/simple-mode.mdx": __fd_glob_9, "examples/case-studies.mdx": __fd_glob_10, "getting-started/installation.mdx": __fd_glob_11, "getting-started/quickstart.mdx": __fd_glob_12, "guides/adding-apps.mdx": __fd_glob_13, "guides/electron.mdx": __fd_glob_14, "guides/integration-modes.mdx": __fd_glob_15, "guides/programmatic-control.mdx": __fd_glob_16, });
