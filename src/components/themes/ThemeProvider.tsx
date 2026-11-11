@@ -269,7 +269,7 @@ export function ThemeProvider({
     <SimpleModeProvider features={features}>
       <div
         className={cn(
-          "w-full h-full overflow-hidden relative select-none",
+          "w-full h-full overflow-clip relative select-none",
           resolvedColorScheme === 'dark' && 'dark'
         )}
         data-os-theme={activeOSTheme}
@@ -312,7 +312,7 @@ export function ThemeProvider({
           )}>
             <div
               className={cn(
-                "relative overflow-hidden",
+                "relative overflow-clip",
                 !isRealMobile && "shadow-2xl ring-1 ring-white/10"
               )}
               style={{
@@ -346,7 +346,7 @@ export function ThemeProvider({
         ) : (
           <>
             {/* Desktop canvas — NEVER remounts, preserves WindowManager + useWindowUrlSync state */}
-            <div className="absolute inset-0">
+            <div className="absolute inset-0 overflow-clip">
               <Wallpaper>
                 {features.widgets.showWidgets && <WidgetLayer />}
                 {(showsDesktopIconGrid && (!features.isSimpleModeActive || features.iconGrid)) && (
@@ -365,7 +365,7 @@ export function ThemeProvider({
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeOSTheme}
-                className="absolute inset-0 pointer-events-none"
+                className="absolute inset-0 overflow-clip pointer-events-none"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}

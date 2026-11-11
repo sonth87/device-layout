@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as te, s as ne, t as re, u as ie, v as ae, w as oe, x as F, y as se } from "./MobileAppViewer-BTU3wt33.js";
+import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as te, s as ne, t as re, u as ie, v as ae, w as oe, x as F, y as se } from "./MobileAppViewer-C9wM691c.js";
 import { c as ce, d as le, l as ue, s as de, t as I, u as fe } from "./store-Bjl9rhnp.js";
 import { t as L } from "./utils-B6YmNDS2.js";
 import { t as R } from "./createLucideIcon--WjuKCts.js";
-import { a as pe, c as me, d as he, f as ge, g as _e, h as ve, i as ye, l as be, m as xe, n as Se, o as Ce, p as z, r as we, s as Te, t as Ee, u as De } from "./update-actions-D4jy9gCp.js";
+import { a as pe, c as me, d as he, f as ge, g as _e, h as ve, i as ye, l as be, m as xe, n as Se, o as Ce, p as z, r as we, s as Te, t as Ee, u as De } from "./update-actions-DSrGHzDf.js";
 import { t as Oe } from "./check-DoT5IS9-.js";
 import { t as ke } from "./chevron-right-BcSxNxws.js";
 import { t as Ae } from "./grid-3x3-CZiMuCC6.js";
@@ -1410,7 +1410,7 @@ function dn() {
 	]);
 	let s = Object.keys(e);
 	return /* @__PURE__ */ Y("div", {
-		className: "absolute inset-0 pointer-events-none overflow-hidden z-20",
+		className: "absolute inset-0 pointer-events-none overflow-clip z-20",
 		children: [/* @__PURE__ */ J(sn, {}), /* @__PURE__ */ J(v, { children: s.map((e) => /* @__PURE__ */ J(nn, { windowId: e }, e)) })]
 	});
 }
@@ -2071,62 +2071,60 @@ function Sr({ onOpenApp: e, onSpotlight: t, isSimpleMode: n = !1, fallbackMenuBa
 		let e = new URLSearchParams(window.location.search), t = !1, n = !1;
 		for (let r of e.getAll("w")) {
 			let e = parseInt(r.split(":")[2] ?? "0", 10);
-			e & 2 && (t = !0), e & 4 && (n = !0);
+			e & 1 || (e & 2 && (t = !0), e & 4 && (n = !0));
 		}
 		l({
 			hasMaximized: t,
 			hasFullScreen: n
 		});
 	}, []);
-	let u = I((e) => e.urlHydrated), d = s || !u && c.hasFullScreen, f = I((e) => e.dockAutoHide), p = o || d || f || c.hasMaximized && !u, [m, h] = K(!1), [g, _] = K(!1), v = !p || m || g, b = G(null);
+	let u = I((e) => e.urlHydrated), d = s || !u && c.hasFullScreen, f = I((e) => e.dockAutoHide), p = o || d || f || c.hasMaximized && !u, [m, h] = K(!1), [g, _] = K(!1), v = G(g), b = G(null), x = !p || m || g, S = G(null);
 	W(() => {
 		u && p && h(!1);
 	}, [u, p]), W(() => {
 		if (!p || n) {
-			h(!1);
-			return;
-		}
-		let e = null, t = (t) => {
-			let n = t.clientY >= window.innerHeight - vr, r = !0;
-			if (n && b.current) {
-				let { left: e, right: n } = b.current.getBoundingClientRect();
-				r = t.clientX >= e - 24 && t.clientX <= n + 24;
-			}
-			n && r || g ? (h(!0), e &&= (clearTimeout(e), null)) : e ||= setTimeout(() => h(!1), xr);
-		};
-		return document.addEventListener("mousemove", t), () => {
-			document.removeEventListener("mousemove", t), e && clearTimeout(e);
-		};
-	}, [
-		p,
-		g,
-		n
-	]);
-	let x = I((e) => e.fullscreenChromeRevealed), S = !d || x;
-	_r();
-	let C = I((e) => {
-		let t = Object.values(e.windows).filter((e) => e.isFullScreen && !e.isMinimized);
-		return t.length === 0 ? null : (t.find((e) => e.isFocused) ?? t.reduce((e, t) => e.zIndex > t.zIndex ? e : t)).id;
-	}), [w, T] = K(!1), E = G(x);
-	return W(() => {
-		E.current = x;
-	}, [x]), W(() => {
-		if (!d) {
-			T(!1);
+			h(!1), b.current &&= (clearTimeout(b.current), null);
 			return;
 		}
 		let e = (e) => {
-			T(e.clientY < 50 && !E.current);
+			let t = e.clientY >= window.innerHeight - vr, n = !0;
+			if (t && S.current) {
+				let { left: t, right: r } = S.current.getBoundingClientRect();
+				n = e.clientX >= t - 24 && e.clientX <= r + 24;
+			}
+			t && n || v.current ? (h(!0), b.current &&= (clearTimeout(b.current), null)) : b.current ||= setTimeout(() => {
+				h(!1), b.current = null;
+			}, xr);
+		};
+		return document.addEventListener("mousemove", e), () => {
+			document.removeEventListener("mousemove", e), b.current &&= (clearTimeout(b.current), null);
+		};
+	}, [p, n]);
+	let C = I((e) => e.fullscreenChromeRevealed), w = !d || C;
+	_r();
+	let T = I((e) => {
+		let t = Object.values(e.windows).filter((e) => e.isFullScreen && !e.isMinimized);
+		return t.length === 0 ? null : (t.find((e) => e.isFocused) ?? t.reduce((e, t) => e.zIndex > t.zIndex ? e : t)).id;
+	}), [E, D] = K(!1), O = G(C);
+	return W(() => {
+		O.current = C;
+	}, [C]), W(() => {
+		if (!d) {
+			D(!1);
+			return;
+		}
+		let e = (e) => {
+			D(e.clientY < 50 && !O.current);
 		};
 		return document.addEventListener("mousemove", e), () => document.removeEventListener("mousemove", e);
 	}, [d]), W(() => {
-		x && T(!1);
-	}, [x]), /* @__PURE__ */ Y(q, { children: [
+		C && D(!1);
+	}, [C]), /* @__PURE__ */ Y(q, { children: [
 		/* @__PURE__ */ J(ar, {}),
 		d && /* @__PURE__ */ J(y.div, {
 			className: "absolute top-0 inset-x-0 z-[50] h-2.5 pointer-events-none backdrop-blur-sm",
 			initial: { y: "-100%" },
-			animate: { y: w ? "0%" : "-100%" },
+			animate: { y: E ? "0%" : "-100%" },
 			transition: {
 				type: "spring",
 				stiffness: 500,
@@ -2135,9 +2133,10 @@ function Sr({ onOpenApp: e, onSpotlight: t, isSimpleMode: n = !1, fallbackMenuBa
 			},
 			style: { background: "linear-gradient(to bottom, rgba(128,128,128,0.35) 0%, transparent 100%)" }
 		}),
-		d && C && /* @__PURE__ */ J(y.div, {
+		d && T && /* @__PURE__ */ J(y.div, {
 			className: "absolute top-0 inset-x-0 z-[35] pointer-events-auto",
-			animate: { y: x ? br : "-100%" },
+			initial: { y: "-100%" },
+			animate: { y: C ? br : "-100%" },
 			transition: {
 				type: "spring",
 				stiffness: 380,
@@ -2145,13 +2144,13 @@ function Sr({ onOpenApp: e, onSpotlight: t, isSimpleMode: n = !1, fallbackMenuBa
 				mass: .8
 			},
 			children: /* @__PURE__ */ J(Nt, {
-				windowId: C,
+				windowId: T,
 				onPointerDown: () => {}
 			})
 		}),
 		/* @__PURE__ */ J(y.div, {
 			className: "absolute top-0 inset-x-0 z-40 pointer-events-none",
-			animate: { y: S ? 0 : -28 },
+			animate: { y: w ? 0 : -28 },
 			transition: {
 				type: "spring",
 				stiffness: 380,
@@ -2164,24 +2163,30 @@ function Sr({ onOpenApp: e, onSpotlight: t, isSimpleMode: n = !1, fallbackMenuBa
 					onSpotlight: t,
 					isSimpleMode: n,
 					fallbackMenuBarAppId: r,
-					forceDark: s
+					forceDark: d
 				})
 			})
 		}),
 		a && /* @__PURE__ */ J(y.div, {
 			className: "absolute inset-x-0 z-40 flex justify-center pointer-events-none",
 			style: { bottom: "var(--dock-offset-bottom)" },
-			animate: { y: v ? 0 : yr },
+			animate: { y: x ? 0 : yr },
 			transition: {
 				type: "spring",
 				stiffness: 380,
 				damping: 30,
 				mass: .8
 			},
-			onMouseEnter: () => _(!0),
-			onMouseLeave: () => _(!1),
+			onMouseEnter: () => {
+				v.current = !0, _(!0), b.current &&= (clearTimeout(b.current), null);
+			},
+			onMouseLeave: () => {
+				v.current = !1, _(!1), p && !n && (b.current && clearTimeout(b.current), b.current = setTimeout(() => {
+					h(!1), b.current = null;
+				}, xr));
+			},
 			children: /* @__PURE__ */ J("div", {
-				ref: b,
+				ref: S,
 				className: "pointer-events-auto",
 				children: /* @__PURE__ */ J(rr, { onOpenApp: e })
 			})
@@ -4752,7 +4757,7 @@ function ia({ children: e }) {
 			})
 		}) })] }) : x(),
 		/* @__PURE__ */ J("div", {
-			className: "absolute inset-0 pointer-events-none overflow-hidden",
+			className: "absolute inset-0 pointer-events-none overflow-clip",
 			children: e
 		}),
 		/* @__PURE__ */ J(ea, {}),
@@ -6454,7 +6459,7 @@ function Wa({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 	}), /* @__PURE__ */ J(C, {
 		features: A,
 		children: /* @__PURE__ */ J("div", {
-			className: L("w-full h-full overflow-hidden relative select-none", f === "dark" && "dark"),
+			className: L("w-full h-full overflow-clip relative select-none", f === "dark" && "dark"),
 			"data-os-theme": M,
 			"data-glass": g ? "true" : "false",
 			style: Va(ne),
@@ -6473,7 +6478,7 @@ function Wa({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 					te ? /* @__PURE__ */ J("div", {
 						className: L("absolute inset-0 flex items-center justify-center", O ? "bg-transparent" : "bg-black/60"),
 						children: /* @__PURE__ */ Y("div", {
-							className: L("relative overflow-hidden", !O && "shadow-2xl ring-1 ring-white/10"),
+							className: L("relative overflow-clip", !O && "shadow-2xl ring-1 ring-white/10"),
 							style: {
 								height: O ? "100%" : "min(calc(100dvh - 32px), 926px)",
 								width: O ? "100%" : "min(calc((min(calc(100dvh - 32px), 926px)) * 0.4612676056338028), 100vw)",
@@ -6493,7 +6498,7 @@ function Wa({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 						})
 					}) : /* @__PURE__ */ Y(q, { children: [
 						/* @__PURE__ */ J("div", {
-							className: "absolute inset-0",
+							className: "absolute inset-0 overflow-clip",
 							children: /* @__PURE__ */ Y(ia, { children: [
 								A.widgets.showWidgets && /* @__PURE__ */ J(ka, {}),
 								P && (!A.isSimpleModeActive || A.iconGrid) && /* @__PURE__ */ J(ba, { onOpenApp: N }, "icon-grid"),
@@ -6504,7 +6509,7 @@ function Wa({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 						/* @__PURE__ */ J(v, {
 							mode: "wait",
 							children: /* @__PURE__ */ Y(y.div, {
-								className: "absolute inset-0 pointer-events-none",
+								className: "absolute inset-0 overflow-clip pointer-events-none",
 								initial: { opacity: 0 },
 								animate: { opacity: 1 },
 								exit: { opacity: 0 },

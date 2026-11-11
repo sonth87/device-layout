@@ -175,7 +175,7 @@ export function Wallpaper({ children }: WallpaperProps) {
       )}
 
       {/* Render children inside sibling overlay */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-clip">
         {children}
       </div>
 

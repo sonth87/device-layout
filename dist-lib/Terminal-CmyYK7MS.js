@@ -80,7 +80,10 @@ function l({ windowId: l, appId: u }) {
 	}, [f.welcome]);
 	let [h, g] = i(""), [_, v] = i("/Users/user"), [y, b] = i([]), [x, S] = i(-1), C = r(null), w = r(null), T = e();
 	n(() => {
-		C.current?.scrollIntoView({ behavior: "smooth" });
+		C.current?.scrollIntoView({
+			behavior: "smooth",
+			block: "nearest"
+		});
 	}, [p]);
 	let E = (e) => {
 		let t = e.trim();
