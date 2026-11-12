@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState, useMemo } from 'react';
+import { useEffect, useCallback, useState, useMemo, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useStore } from '@/store';
 import { APPS_CONFIG } from '@/config/apps.config';
@@ -69,6 +69,32 @@ export interface ThemeProviderProps {
   resolveEditContextMenuItems?: ResolveEditContextMenuItems;
 }
 
+const SYNCED_PROPS_STORAGE_KEY = 'desktop-layout-synced-props';
+
+interface SyncedThemeProps {
+  osTheme?: OSTheme;
+  colorScheme?: ColorScheme;
+}
+
+function readSyncedThemeProps(): SyncedThemeProps {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = window.localStorage.getItem(SYNCED_PROPS_STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as SyncedThemeProps) : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeSyncedThemeProps(next: SyncedThemeProps): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(SYNCED_PROPS_STORAGE_KEY, JSON.stringify(next));
+  } catch {
+    // Ignore storage write errors
+  }
+}
+
 /**
  * ThemeProvider — single root component.
  *
@@ -94,17 +120,44 @@ export function ThemeProvider({
   const resolvedColorScheme = useStore((s) => s.resolvedColorScheme);
   const resolveColorScheme = useStore((s) => s.resolveColorScheme);
 
-  useEffect(() => {
-    if (osThemeProp && osThemeProp !== osTheme) {
-      setOSTheme(osThemeProp);
-    }
-  }, [osThemeProp, osTheme, setOSTheme]);
+  const prevOsThemePropRef = useRef<OSTheme | undefined>(osThemeProp);
+  const prevColorSchemePropRef = useRef<ColorScheme | undefined>(colorSchemeProp);
+  const didMountOsThemeRef = useRef(false);
+  const didMountColorSchemeRef = useRef(false);
 
   useEffect(() => {
-    if (colorSchemeProp && colorSchemeProp !== colorScheme) {
-      setColorScheme(colorSchemeProp);
+    const synced = readSyncedThemeProps();
+    const isInitialMount = !didMountOsThemeRef.current;
+    didMountOsThemeRef.current = true;
+
+    const propChangedAtRuntime = !isInitialMount && prevOsThemePropRef.current !== osThemeProp;
+    const propChangedAcrossMount = isInitialMount && synced.osTheme !== osThemeProp;
+    prevOsThemePropRef.current = osThemeProp;
+
+    if (propChangedAtRuntime || propChangedAcrossMount) {
+      writeSyncedThemeProps({ ...synced, osTheme: osThemeProp });
+      if (osThemeProp && osThemeProp !== useStore.getState().osTheme) {
+        setOSTheme(osThemeProp);
+      }
     }
-  }, [colorSchemeProp, colorScheme, setColorScheme]);
+  }, [osThemeProp, setOSTheme]);
+
+  useEffect(() => {
+    const synced = readSyncedThemeProps();
+    const isInitialMount = !didMountColorSchemeRef.current;
+    didMountColorSchemeRef.current = true;
+
+    const propChangedAtRuntime = !isInitialMount && prevColorSchemePropRef.current !== colorSchemeProp;
+    const propChangedAcrossMount = isInitialMount && synced.colorScheme !== colorSchemeProp;
+    prevColorSchemePropRef.current = colorSchemeProp;
+
+    if (propChangedAtRuntime || propChangedAcrossMount) {
+      writeSyncedThemeProps({ ...synced, colorScheme: colorSchemeProp });
+      if (colorSchemeProp && colorSchemeProp !== useStore.getState().colorScheme) {
+        setColorScheme(colorSchemeProp);
+      }
+    }
+  }, [colorSchemeProp, setColorScheme]);
   const registerApps = useStore((s) => s.registerApps);
   const launchApp = useStore((s) => s.launchApp);
   const glassEnabled = useStore((s) => s.glassEnabled);

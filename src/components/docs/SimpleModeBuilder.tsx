@@ -199,7 +199,7 @@ export function SimpleModeBuilder() {
         {/* Right Live Preview Canvas */}
         <div className="lg:col-span-8 h-[400px] border border-slate-800 rounded-xl overflow-hidden relative shadow-inner bg-slate-950">
           <DeviceLayout
-            key={`${osTheme}-${colorScheme}-${isSimpleModeActive}-${dock}-${wallpaper}-${clock}-${spotlight}-${controlCenter}`}
+            key={`${isSimpleModeActive}-${dock}-${wallpaper}-${clock}-${spotlight}-${controlCenter}`}
             colorScheme={colorScheme}
             osTheme={osTheme}
             apps={sampleApps}

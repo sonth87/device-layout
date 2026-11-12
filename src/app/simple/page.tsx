@@ -236,7 +236,7 @@ export default function SimpleDesktopPage() {
       {/* Main Viewport rendering ThemeProvider in Simple Mode */}
       <main className="flex-1 relative overflow-hidden">
         <ThemeProvider
-          key={JSON.stringify(simpleModeConfig) + colorScheme}
+          key={JSON.stringify(simpleModeConfig)}
           apps={customApps}
           isSimpleMode={simpleModeConfig}
         />
