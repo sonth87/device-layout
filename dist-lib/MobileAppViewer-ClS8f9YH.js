@@ -7269,7 +7269,7 @@ var bp = class extends le {
 }, xp = {
 	Finder: O(() => import("./Finder-FaI3AT8q.js").then((e) => ({ default: e.Finder }))),
 	Terminal: O(() => import("./Terminal-CmyYK7MS.js").then((e) => ({ default: e.Terminal }))),
-	Settings: O(() => import("./Settings-BqvtsR87.js").then((e) => ({ default: e.Settings }))),
+	Settings: O(() => import("./Settings-CPeiaoOW.js").then((e) => ({ default: e.Settings }))),
 	Browser: O(() => import("./Browser-T9OgMFUY.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: O(() => import("./TextEditor-bj3b3vEJ.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: O(() => import("./Clock-BIO93FX_.js").then((e) => ({ default: e.Clock }))),
@@ -7278,7 +7278,7 @@ var bp = class extends le {
 	Photos: O(() => import("./Photos-BWODuGJy.js").then((e) => ({ default: e.Photos }))),
 	Music: O(() => import("./Music-wdYygF1V.js").then((e) => ({ default: e.Music }))),
 	Calendar: O(() => import("./Calendar-BuLUmLQH.js").then((e) => ({ default: e.Calendar }))),
-	Messages: O(() => import("./Messages-DXqPhldr.js").then((e) => ({ default: e.Messages }))),
+	Messages: O(() => import("./Messages-OtascVDa.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: O(() => import("./IframeApp-D71vzfCe.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: O(() => import("./MdxApp-BEZAxMDB.js").then((e) => ({ default: e.MdxApp })))
 };
@@ -7423,11 +7423,11 @@ var Ep = D(null);
 function Dp() {
 	return A(Ep);
 }
-function Op({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }) {
-	let r = S((e) => e.windows), i = S((e) => e.apps), a = S((e) => e.closeWindow), [o, s] = N(!1), [c, l] = N(!1), u = Object.values(r).filter((e) => !e.isMinimized).sort((e, t) => t.zIndex - e.zIndex), d = u[0] ?? null, f = k(() => {
-		d && a(d.id);
-	}, [d, a]), p = d ? i[d.appId] : null, m = Ud(), h = ud(0), g = pd(h, [0, -220], [1, .75]), _ = pd(h, [0, -220], [0, 48]);
-	return /* @__PURE__ */ P(pl, { children: d && p && /* @__PURE__ */ F(ld.div, {
+function Op({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20, useSafeArea: r = !1 }) {
+	let i = S((e) => e.windows), a = S((e) => e.apps), o = S((e) => e.closeWindow), [s, c] = N(!1), [l, u] = N(!1), d = Object.values(i).filter((e) => !e.isMinimized).sort((e, t) => t.zIndex - e.zIndex), f = d[0] ?? null, p = k(() => {
+		f && o(f.id);
+	}, [f, o]), m = f ? a[f.appId] : null, h = Ud(), g = ud(0), _ = pd(g, [0, -220], [1, .75]), v = pd(g, [0, -220], [0, 48]);
+	return /* @__PURE__ */ P(pl, { children: f && m && /* @__PURE__ */ F(ld.div, {
 		initial: {
 			scale: .88,
 			opacity: 0
@@ -7447,14 +7447,14 @@ function Op({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }
 		},
 		className: "absolute inset-0 z-[500] bg-white dark:bg-neutral-900 flex flex-col overflow-hidden",
 		style: {
-			paddingTop: e,
-			scale: g,
-			y: h,
-			borderRadius: _,
+			paddingTop: r ? "env(safe-area-inset-top, 0px)" : e,
+			scale: _,
+			y: g,
+			borderRadius: v,
 			transformOrigin: "center bottom"
 		},
 		drag: "y",
-		dragControls: m,
+		dragControls: h,
 		dragListener: !1,
 		dragConstraints: {
 			top: -220,
@@ -7465,7 +7465,7 @@ function Op({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }
 			bottom: 0
 		},
 		onDragEnd: (e, t) => {
-			t.offset.y < -85 && u.forEach((e) => a(e.id)), Bd(h, 0, {
+			t.offset.y < -85 && d.forEach((e) => o(e.id)), Bd(g, 0, {
 				type: "spring",
 				stiffness: 300,
 				damping: 30
@@ -7474,7 +7474,7 @@ function Op({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }
 		children: [
 			/* @__PURE__ */ P(pl, {
 				initial: !1,
-				children: !o && /* @__PURE__ */ F(ld.div, {
+				children: !s && /* @__PURE__ */ F(ld.div, {
 					initial: {
 						height: 0,
 						opacity: 0
@@ -7491,7 +7491,7 @@ function Op({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }
 					className: "flex items-center gap-2 px-3 border-b border-black/8 dark:border-white/8 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl shrink-0 overflow-hidden",
 					children: [
 						/* @__PURE__ */ P("button", {
-							onClick: f,
+							onClick: p,
 							className: "flex items-center gap-0.5 text-blue-500 active:opacity-60 transition-opacity",
 							children: /* @__PURE__ */ P("svg", {
 								className: "w-5 h-5",
@@ -7508,10 +7508,10 @@ function Op({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }
 						}),
 						/* @__PURE__ */ P("span", {
 							className: "flex-1 text-center text-[15px] font-semibold text-black dark:text-white truncate",
-							children: p.name
+							children: m.name
 						}),
-						p.menuBarMenus && p.menuBarMenus.length > 0 ? /* @__PURE__ */ P("button", {
-							onClick: () => l(!0),
+						m.menuBarMenus && m.menuBarMenus.length > 0 ? /* @__PURE__ */ P("button", {
+							onClick: () => u(!0),
 							className: "w-5 h-5 flex items-center justify-center text-blue-500 active:opacity-60 transition-opacity",
 							children: /* @__PURE__ */ P(Yd, { className: "w-5 h-5" })
 						}) : /* @__PURE__ */ P("div", { className: "w-5" })
@@ -7521,27 +7521,30 @@ function Op({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20 }
 			/* @__PURE__ */ P("div", {
 				className: "flex-1 overflow-hidden",
 				children: /* @__PURE__ */ P(Ep.Provider, {
-					value: s,
+					value: c,
 					children: /* @__PURE__ */ P(Cp, {
-						appId: d.appId,
-						windowId: d.id
+						appId: f.appId,
+						windowId: f.id
 					})
 				})
 			}),
-			p.menuBarMenus && p.menuBarMenus.length > 0 && /* @__PURE__ */ P(wp, {
-				menus: p.menuBarMenus,
-				appId: d.appId,
-				open: c,
-				onClose: () => l(!1)
+			m.menuBarMenus && m.menuBarMenus.length > 0 && /* @__PURE__ */ P(wp, {
+				menus: m.menuBarMenus,
+				appId: f.appId,
+				open: l,
+				onClose: () => u(!1)
 			}),
-			/* @__PURE__ */ P("div", { style: { height: t + n } }),
-			/* @__PURE__ */ P("div", {
-				onPointerDown: (e) => m.start(e),
+			r ? /* @__PURE__ */ P("div", {
+				className: "shrink-0",
+				style: { height: "env(safe-area-inset-bottom, 0px)" }
+			}) : /* @__PURE__ */ P("div", { style: { height: t + n } }),
+			!r && /* @__PURE__ */ P("div", {
+				onPointerDown: (e) => h.start(e),
 				className: "absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-10 flex items-center justify-center z-[1000] pointer-events-auto cursor-grab active:cursor-grabbing",
 				children: /* @__PURE__ */ P("div", { className: "w-32 h-1.5 bg-black/30 dark:bg-white/35 hover:bg-black/50 dark:hover:bg-white/50 rounded-full" })
 			})
 		]
-	}, d.id) });
+	}, f.id) });
 }
 //#endregion
 export { ar as A, Bd as C, pl as D, ld as E, nl as O, Wd as S, ud as T, Zd as _, gp as a, Kd as b, up as c, np as d, Uf as f, Qd as g, ef as h, vp as i, B as j, J as k, dp as l, tf as m, Dp as n, _p as o, nf as p, Cp as r, mp as s, Op as t, sp as u, Xd as v, pd as w, Gd as x, qd as y };

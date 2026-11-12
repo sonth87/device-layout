@@ -1,5 +1,17 @@
 # @sonth87/device-layout
 
+## 0.5.39
+
+### Patch Changes
+
+- fix(mobile): home screen showed no apps when the host registers its own `apps`
+
+  `IPhoneHomeScreen` snapshotted the app list in a `useState` initializer during the first render — before `ThemeProvider`'s `registerApps()` effect ran — so hosts using `builtInApps={false}` (or any custom `apps`) that loaded straight into the iPhone theme kept the built-in IDs, none of which existed after registration, and rendered an empty grid. The grid now reconciles with the registered apps (keeps the user's arrangement, drops removed apps, appends new ones).
+
+- fix(mobile): no simulated phone chrome when running full-bleed on a real phone
+
+  When the iPhone/Android theme is shown on a real phone (mobile UA or viewport ≤ 768px), the simulated status bar (clock, Dynamic Island, signal/battery), bottom dock and fake home indicator are no longer drawn — the device provides its own. Home screen and the open-app viewer use `env(safe-area-inset-*)` instead of the fixed status bar / dock spacers. On Android the app grid replaces the bottom nav as the entry point to apps.
+
 ## 0.5.38
 
 ### Patch Changes

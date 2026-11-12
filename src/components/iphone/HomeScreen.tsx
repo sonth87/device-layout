@@ -13,6 +13,11 @@ interface HomeScreenProps {
   statusBarHeight: number;
   navBarHeight: number;
   homeIndicatorHeight: number;
+  /**
+   * Running full-bleed on a real phone: the device draws its own status bar and
+   * home indicator, so offset content by the CSS safe-area insets instead.
+   */
+  useSafeArea?: boolean;
 }
 
 const COLS = 4;
@@ -61,6 +66,7 @@ export function IPhoneHomeScreen({
   statusBarHeight,
   navBarHeight,
   homeIndicatorHeight,
+  useSafeArea = false,
 }: HomeScreenProps) {
   const apps = useStore((s) => s.apps);
   const { getAppName } = useTranslation();
@@ -83,6 +89,52 @@ export function IPhoneHomeScreen({
 
   const [previewList, setPreviewList] =
     useState<(string | null)[]>(orderedAppIds);
+
+  // Keep the grid in sync with the registered apps. The initial snapshot above
+  // is taken during the first render — before ThemeProvider's registerApps()
+  // effect runs — so a host that passes its own `apps` (e.g. builtInApps={false})
+  // would otherwise be left with the built-in IDs, none of which exist anymore,
+  // and the home screen renders empty. Preserve the user's arrangement for apps
+  // that still exist, drop removed ones, and append newly registered apps.
+  const enabledAppIdsKey = Object.values(apps)
+    .filter((a) => !a.disabled)
+    .map((a) => a.id)
+    .join("\u0000");
+  useEffect(() => {
+    const enabledIds = enabledAppIdsKey ? enabledAppIdsKey.split("\u0000") : [];
+    const enabledSet = new Set(enabledIds);
+    setOrderedAppIds((prev) => {
+      const kept = prev.map((id) => (id && enabledSet.has(id) ? id : null));
+      const present = new Set(kept.filter(Boolean));
+      const missing = enabledIds.filter((id) => !present.has(id));
+      if (missing.length === 0 && kept.every((id, i) => id === prev[i])) {
+        return prev;
+      }
+      // Fill freed slots first, then extend with new pages as needed.
+      const next = [...kept];
+      for (const id of missing) {
+        const slot = next.indexOf(null);
+        if (slot === -1) next.push(id);
+        else next[slot] = id;
+      }
+      // Trim trailing empty pages, keeping at least one page.
+      let last = -1;
+      for (let i = next.length - 1; i >= 0; i--) {
+        if (next[i] !== null) {
+          last = i;
+          break;
+        }
+      }
+      const pageCount = Math.max(1, Math.ceil((last + 1) / PAGE_SIZE));
+      const trimmed = next.slice(0, pageCount * PAGE_SIZE);
+      while (trimmed.length < pageCount * PAGE_SIZE) trimmed.push(null);
+      return trimmed;
+    });
+  }, [enabledAppIdsKey]);
+
+  useEffect(() => {
+    setPreviewList(orderedAppIds);
+  }, [orderedAppIds]);
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
   const [isHoldingIcon, setIsHoldingIcon] = useState(false);
   const [pointerPos, setPointerPos] = useState({ x: 0, y: 0 });
@@ -332,12 +384,17 @@ export function IPhoneHomeScreen({
   };
 
   const bottomPad = navBarHeight + homeIndicatorHeight + 32;
+  const withInset = (px: number, side: "top" | "bottom") =>
+    useSafeArea ? `calc(env(safe-area-inset-${side}, 0px) + ${px}px)` : px;
 
   return (
     <div
       ref={containerRef}
       className="absolute inset-0 overflow-hidden"
-      style={{ paddingTop: statusBarHeight + 12, paddingBottom: bottomPad }}
+      style={{
+        paddingTop: withInset(statusBarHeight + 12, "top"),
+        paddingBottom: withInset(bottomPad, "bottom"),
+      }}
       onPointerDown={onBgPointerDown}
       onPointerUp={onBgPointerUp}
       onPointerCancel={onBgPointerUp}
@@ -408,7 +465,10 @@ export function IPhoneHomeScreen({
       {/* Page dots */}
       <div
         className="absolute inset-x-0 flex justify-center items-center gap-1.5"
-        style={{ bottom: navBarHeight + homeIndicatorHeight + 6, height: 16 }}
+        style={{
+          bottom: withInset(navBarHeight + homeIndicatorHeight + 6, "bottom"),
+          height: 16,
+        }}
       >
         {Array.from({ length: totalPages }).map((_, i) => (
           <button

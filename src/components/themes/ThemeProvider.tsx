@@ -390,8 +390,8 @@ export function ThemeProvider({
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {activeOSTheme === 'iphone' && <IPhoneChrome onOpenApp={handleOpenApp} />}
-                  {activeOSTheme === 'android' && <AndroidChrome onOpenApp={handleOpenApp} />}
+                  {activeOSTheme === 'iphone' && <IPhoneChrome onOpenApp={handleOpenApp} isRealDevice={isRealMobile} />}
+                  {activeOSTheme === 'android' && <AndroidChrome onOpenApp={handleOpenApp} isRealDevice={isRealMobile} />}
                 </motion.div>
               </AnimatePresence>
             </div>

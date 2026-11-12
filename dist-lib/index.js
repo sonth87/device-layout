@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as P, p as F, r as I, s as ee, t as te, u as ne, v as re, w as ie, x as L, y as ae } from "./MobileAppViewer-C9wM691c.js";
+import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as P, p as F, r as I, s as ee, t as te, u as ne, v as re, w as ie, x as L, y as ae } from "./MobileAppViewer-ClS8f9YH.js";
 import { c as oe, d as se, l as ce, s as le, t as R, u as ue } from "./store-Bjl9rhnp.js";
 import { t as z } from "./utils-B6YmNDS2.js";
 import { t as B } from "./createLucideIcon--WjuKCts.js";
-import { a as de, c as fe, d as pe, f as me, g as he, h as ge, i as _e, l as ve, m as ye, n as be, o as xe, p as V, r as Se, s as Ce, t as we, u as Te } from "./update-actions-DSrGHzDf.js";
+import { a as de, c as fe, d as pe, f as me, g as he, h as ge, i as _e, l as ve, m as ye, n as be, o as xe, p as V, r as Se, s as Ce, t as we, u as Te } from "./update-actions-CX7JBBdW.js";
 import { t as Ee } from "./check-DoT5IS9-.js";
 import { t as De } from "./chevron-right-BcSxNxws.js";
 import { t as Oe } from "./grid-3x3-CZiMuCC6.js";
@@ -2965,161 +2965,184 @@ var Br = 4, Vr = 6, Z = Br * Vr, Hr = 600, Ur = (e, t, n) => {
 	}
 	return r;
 };
-function Wr({ onOpenApp: e, statusBarHeight: t, navBarHeight: n, homeIndicatorHeight: r }) {
-	let i = R((e) => e.apps), { getAppName: a } = H(), [o, s] = q(0), [c, l] = q(!1), [u, d] = q(() => {
+function Wr({ onOpenApp: e, statusBarHeight: t, navBarHeight: n, homeIndicatorHeight: r, useSafeArea: i = !1 }) {
+	let a = R((e) => e.apps), { getAppName: o } = H(), [s, c] = q(0), [l, u] = q(!1), [d, f] = q(() => {
 		let e = R.getState().apps, t = Object.values(e).filter((e) => !e.disabled).map((e) => e.id), n = Math.max(1, Math.ceil(t.length / Z)), r = [...t];
 		for (; r.length < n * Z;) r.push(null);
 		return r;
-	}), [f, p] = q(u), [m, h] = q(null), [g, _] = q(!1), [v, b] = q({
+	}), [p, m] = q(d), h = Object.values(a).filter((e) => !e.disabled).map((e) => e.id).join("\0");
+	G(() => {
+		let e = h ? h.split("\0") : [], t = new Set(e);
+		f((n) => {
+			let r = n.map((e) => e && t.has(e) ? e : null), i = new Set(r.filter(Boolean)), a = e.filter((e) => !i.has(e));
+			if (a.length === 0 && r.every((e, t) => e === n[t])) return n;
+			let o = [...r];
+			for (let e of a) {
+				let t = o.indexOf(null);
+				t === -1 ? o.push(e) : o[t] = e;
+			}
+			let s = -1;
+			for (let e = o.length - 1; e >= 0; e--) if (o[e] !== null) {
+				s = e;
+				break;
+			}
+			let c = Math.max(1, Math.ceil((s + 1) / Z)), l = o.slice(0, c * Z);
+			for (; l.length < c * Z;) l.push(null);
+			return l;
+		});
+	}, [h]), G(() => {
+		m(d);
+	}, [d]);
+	let [g, _] = q(null), [v, b] = q(!1), [x, S] = q({
 		x: 0,
 		y: 0
-	}), x = K(null), [S, C] = q(393), w = K(0), T = K(o), E = K(u), D = K(f), O = K(m);
+	}), C = K(null), [w, T] = q(393), E = K(0), D = K(s), O = K(d), k = K(p), A = K(g);
 	G(() => {
-		T.current = o;
-	}, [o]), G(() => {
-		E.current = u;
-	}, [u]), G(() => {
-		D.current = f;
-	}, [f]), G(() => {
-		O.current = m;
-	}, [m]), G(() => {
-		if (!x.current) return;
+		D.current = s;
+	}, [s]), G(() => {
+		O.current = d;
+	}, [d]), G(() => {
+		k.current = p;
+	}, [p]), G(() => {
+		A.current = g;
+	}, [g]), G(() => {
+		if (!C.current) return;
 		let e = new ResizeObserver((e) => {
-			for (let t of e) C(t.contentRect.width || 393);
+			for (let t of e) T(t.contentRect.width || 393);
 		});
-		return e.observe(x.current), () => e.disconnect();
+		return e.observe(C.current), () => e.disconnect();
 	}, []);
-	let k = m ? f : u, A = Math.max(1, Math.ceil(k.length / Z));
-	m && (A += 1);
-	let j = [];
-	for (let e = 0; e < A * Z; e += Z) {
-		let t = k.slice(e, e + Z);
+	let j = g ? p : d, M = Math.max(1, Math.ceil(j.length / Z));
+	g && (M += 1);
+	let N = [];
+	for (let e = 0; e < M * Z; e += Z) {
+		let t = j.slice(e, e + Z);
 		for (; t.length < Z;) t.push(null);
-		j.push(t);
+		N.push(t);
 	}
-	let M = W((e) => {
-		e !== T.current && s(e);
-	}, []), N = K(null), P = () => {
-		N.current = setTimeout(() => l(!0), Hr);
-	}, F = () => {
-		N.current && clearTimeout(N.current);
-	}, I = () => {
-		c && l(!1);
-	}, ee = (e, t) => {
-		h(e), _(!0);
+	let P = W((e) => {
+		e !== D.current && c(e);
+	}, []), F = K(null), I = () => {
+		F.current = setTimeout(() => u(!0), Hr);
+	}, ee = () => {
+		F.current && clearTimeout(F.current);
+	}, te = () => {
+		l && u(!1);
+	}, ne = (e, t) => {
+		_(e), b(!0);
 		let n = "touches" in t ? t.touches[0].clientX : t.clientX, r = "touches" in t ? t.touches[0].clientY : t.clientY;
-		b({
+		S({
 			x: n,
 			y: r
 		});
 	};
 	W(() => {
-		if (!m) return;
-		let e = [...f], t = -1;
+		if (!g) return;
+		let e = [...p], t = -1;
 		for (let n = e.length - 1; n >= 0; n--) if (e[n] !== null) {
 			t = n;
 			break;
 		}
 		let n = Math.max(1, Math.ceil((t + 1) / Z)), r = e.slice(0, n * Z);
-		d(r), p(r), o >= n && s(n - 1), h(null), _(!1);
-	}, [m, o]), G(() => {
-		if (!m) return;
+		f(r), m(r), s >= n && c(n - 1), _(null), b(!1);
+	}, [g, s]), G(() => {
+		if (!g) return;
 		let e = (e) => {
-			b({
+			S({
 				x: e.clientX,
 				y: e.clientY
 			});
-			let t = T.current, n = O.current;
+			let t = D.current, n = A.current;
 			if (!n) return;
-			let r = x.current?.querySelectorAll(".grid")?.[t];
+			let r = C.current?.querySelectorAll(".grid")?.[t];
 			if (r) {
 				let i = r.getBoundingClientRect(), a = e.clientX - i.left, o = e.clientY - i.top, s = Math.floor(a / (i.width / Br)), c = Math.floor(o / (i.height / Vr));
 				if (s >= 0 && s < Br && c >= 0 && c < Vr) {
-					let e = c * Br + s, r = t * Z + e, i = [...E.current], a = i.indexOf(n);
+					let e = c * Br + s, r = t * Z + e, i = [...O.current], a = i.indexOf(n);
 					if (a !== -1 && r !== a) {
 						if (r >= i.length) {
 							let e = (t + 1) * Z;
 							for (; i.length < e;) i.push(null);
 						}
 						let e = Ur(i, a, r);
-						E.current = e, D.current = e, p(e), d(e);
+						O.current = e, k.current = e, m(e), f(e);
 					}
 				}
 			}
-			let i = x.current?.getBoundingClientRect();
+			let i = C.current?.getBoundingClientRect();
 			if (i) {
 				let t = e.clientX, n = Date.now();
-				if (n - w.current > 1200) {
-					let e = T.current;
-					t < i.left + 36 && e > 0 ? (M(e - 1), w.current = n) : t > i.right - 36 && (M(e + 1), w.current = n);
+				if (n - E.current > 1200) {
+					let e = D.current;
+					t < i.left + 36 && e > 0 ? (P(e - 1), E.current = n) : t > i.right - 36 && (P(e + 1), E.current = n);
 				}
 			}
 		}, t = () => {
-			let e = [...D.current], t = T.current, n = -1;
+			let e = [...k.current], t = D.current, n = -1;
 			for (let t = e.length - 1; t >= 0; t--) if (e[t] !== null) {
 				n = t;
 				break;
 			}
 			let r = Math.max(1, Math.ceil((n + 1) / Z)), i = e.slice(0, r * Z);
-			d(i), p(i), t >= r && s(r - 1), h(null), _(!1);
+			f(i), m(i), t >= r && c(r - 1), _(null), b(!1);
 		};
 		return window.addEventListener("pointermove", e), window.addEventListener("pointerup", t), () => {
 			window.removeEventListener("pointermove", e), window.removeEventListener("pointerup", t);
 		};
-	}, [m, M]);
-	let te = (e, t) => {
-		let n = t.offset.x, r = t.velocity.x, i = o, a = S / 4;
-		n < -a || r < -300 ? i = Math.min(A - 1, o + 1) : (n > a || r > 300) && (i = Math.max(0, o - 1)), M(i);
-	}, ne = n + r + 32;
+	}, [g, P]);
+	let re = (e, t) => {
+		let n = t.offset.x, r = t.velocity.x, i = s, a = w / 4;
+		n < -a || r < -300 ? i = Math.min(M - 1, s + 1) : (n > a || r > 300) && (i = Math.max(0, s - 1)), P(i);
+	}, ie = n + r + 32, L = (e, t) => i ? `calc(env(safe-area-inset-${t}, 0px) + ${e}px)` : e;
 	return /* @__PURE__ */ X("div", {
-		ref: x,
+		ref: C,
 		className: "absolute inset-0 overflow-hidden",
 		style: {
-			paddingTop: t + 12,
-			paddingBottom: ne
+			paddingTop: L(t + 12, "top"),
+			paddingBottom: L(ie, "bottom")
 		},
-		onPointerDown: P,
-		onPointerUp: F,
-		onPointerCancel: F,
-		onClick: I,
+		onPointerDown: I,
+		onPointerUp: ee,
+		onPointerCancel: ee,
+		onClick: te,
 		children: [
 			/* @__PURE__ */ Y("div", {
 				className: "h-full w-full overflow-hidden",
 				children: /* @__PURE__ */ Y(y.div, {
-					drag: !g && "x",
+					drag: !v && "x",
 					dragDirectionLock: !0,
 					dragConstraints: {
-						left: -(A - 1) * S,
+						left: -(M - 1) * w,
 						right: 0
 					},
-					animate: { x: -o * S },
+					animate: { x: -s * w },
 					transition: {
 						type: "spring",
 						stiffness: 300,
 						damping: 30
 					},
-					onDragEnd: te,
+					onDragEnd: re,
 					className: "flex h-full w-full cursor-grab active:cursor-grabbing",
-					children: j.map((t, n) => /* @__PURE__ */ Y("div", {
+					children: N.map((t, n) => /* @__PURE__ */ Y("div", {
 						className: "h-full shrink-0 grid px-4",
 						style: {
 							gridTemplateColumns: `repeat(${Br}, 1fr)`,
 							gridTemplateRows: `repeat(${Vr}, 1fr)`,
 							gap: "16px 8px",
-							width: S
+							width: w
 						},
 						children: t.map((t, n) => {
 							if (t) {
-								let r = i[t];
+								let r = a[t];
 								if (r) return /* @__PURE__ */ Y(Gr, {
 									app: r,
 									index: n,
-									jiggling: c,
-									activeDragId: m,
-									onPointerDownStart: () => _(!0),
-									onPointerDownEnd: () => _(!1),
+									jiggling: l,
+									activeDragId: g,
+									onPointerDownStart: () => b(!0),
+									onPointerDownEnd: () => b(!1),
 									onOpen: e,
-									onDragStart: ee
+									onDragStart: ne
 								}, r.id);
 							}
 							return /* @__PURE__ */ X("div", {
@@ -3139,31 +3162,31 @@ function Wr({ onOpenApp: e, statusBarHeight: t, navBarHeight: n, homeIndicatorHe
 			/* @__PURE__ */ Y("div", {
 				className: "absolute inset-x-0 flex justify-center items-center gap-1.5",
 				style: {
-					bottom: n + r + 6,
+					bottom: L(n + r + 6, "bottom"),
 					height: 16
 				},
-				children: Array.from({ length: A }).map((e, t) => /* @__PURE__ */ Y("button", {
+				children: Array.from({ length: M }).map((e, t) => /* @__PURE__ */ Y("button", {
 					onClick: (e) => {
-						e.stopPropagation(), M(t);
+						e.stopPropagation(), P(t);
 					},
-					className: z("rounded-full transition-all duration-200", t === o ? "w-4 h-1.5 bg-white" : "w-1.5 h-1.5 bg-white/50")
+					className: z("rounded-full transition-all duration-200", t === s ? "w-4 h-1.5 bg-white" : "w-1.5 h-1.5 bg-white/50")
 				}, t))
 			}),
-			m && i[m] && /* @__PURE__ */ X("div", {
+			g && a[g] && /* @__PURE__ */ X("div", {
 				className: "fixed pointer-events-none z-[99999] flex flex-col items-center gap-1.5 select-none",
 				style: {
-					left: v.x - 30,
-					top: v.y - 30,
+					left: x.x - 30,
+					top: x.y - 30,
 					width: 60,
 					transform: "scale(1.15)",
 					filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.3))"
 				},
 				children: [/* @__PURE__ */ Y(V, {
-					appConfig: i[m],
+					appConfig: a[g],
 					size: 60
 				}), /* @__PURE__ */ Y("span", {
 					className: "text-white text-[11px] font-semibold text-center leading-tight drop-shadow-md max-w-[64px] truncate",
-					children: a(m, i[m].name)
+					children: o(g, a[g].name)
 				})]
 			})
 		]
@@ -3271,32 +3294,34 @@ function Kr() {
 	}, []), /* @__PURE__ */ Y(J, { children: e });
 }
 var qr = 50, Jr = 72, Yr = 20;
-function Xr({ onOpenApp: e }) {
-	let [t, n] = q(!1), [r, i] = q(!1), a = K(null), o = R((e) => e.windows), s = Object.values(o).some((e) => !e.isMinimized);
+function Xr({ onOpenApp: e, isRealDevice: t = !1 }) {
+	let [n, r] = q(!1), [i, a] = q(!1), o = K(null), s = R((e) => e.windows), c = Object.values(s).some((e) => !e.isMinimized);
 	return Ir({
 		onSwipeUp: () => {
-			s || n(!1);
+			c || r(!1);
 		},
 		onSwipeDown: () => {
-			s || i(!0);
+			c || a(!0);
 		}
-	}, a), /* @__PURE__ */ X("div", {
-		ref: a,
+	}, o), /* @__PURE__ */ X("div", {
+		ref: o,
 		className: "absolute inset-0",
 		children: [
-			/* @__PURE__ */ Y(v, { children: t && /* @__PURE__ */ Y(Er, { onUnlock: () => n(!1) }) }),
+			/* @__PURE__ */ Y(v, { children: n && /* @__PURE__ */ Y(Er, { onUnlock: () => r(!1) }) }),
 			/* @__PURE__ */ Y(Wr, {
 				onOpenApp: e,
-				statusBarHeight: qr,
-				navBarHeight: Jr,
-				homeIndicatorHeight: Yr
+				statusBarHeight: t ? 0 : qr,
+				navBarHeight: t ? 0 : Jr,
+				homeIndicatorHeight: t ? 0 : Yr,
+				useSafeArea: t
 			}),
 			/* @__PURE__ */ Y(te, {
 				statusBarHeight: qr,
 				navBarHeight: Jr,
-				homeIndicatorHeight: Yr
+				homeIndicatorHeight: Yr,
+				useSafeArea: t
 			}),
-			/* @__PURE__ */ X("div", {
+			!t && /* @__PURE__ */ X("div", {
 				className: "absolute top-0 inset-x-0 z-40 grid pointer-events-none",
 				style: {
 					height: qr,
@@ -3322,10 +3347,10 @@ function Xr({ onOpenApp: e }) {
 				]
 			}),
 			/* @__PURE__ */ Y(Fr, {
-				open: r,
-				onClose: () => i(!1)
+				open: i,
+				onClose: () => a(!1)
 			}),
-			!s && /* @__PURE__ */ X("div", {
+			!c && !t && /* @__PURE__ */ X("div", {
 				className: "absolute bottom-0 inset-x-0 z-40",
 				style: { height: 92 },
 				children: [/* @__PURE__ */ Y(Rr, {
@@ -4123,20 +4148,27 @@ function ai() {
 	}, []), /* @__PURE__ */ Y(J, { children: e });
 }
 var oi = 32, si = 76, ci = 0;
-function li({ onOpenApp: e }) {
-	let [t, n] = q(!1), [r, i] = q(!1), a = K(null), o = R((e) => e.windows), s = Object.values(o).some((e) => !e.isMinimized);
+function li({ onOpenApp: e, isRealDevice: t = !1 }) {
+	let [n, r] = q(!1), [i, a] = q(!1), o = K(null), s = R((e) => e.windows), c = Object.values(s).some((e) => !e.isMinimized);
 	return Ir({
 		onSwipeUp: () => {
-			s || n(!0);
+			c || r(!0);
 		},
 		onSwipeDown: () => {
-			s || i(!0);
+			c || a(!0);
 		}
-	}, a), /* @__PURE__ */ X("div", {
-		ref: a,
+	}, o), /* @__PURE__ */ X("div", {
+		ref: o,
 		className: "absolute inset-0",
 		children: [
-			/* @__PURE__ */ X("div", {
+			t && /* @__PURE__ */ Y(Wr, {
+				onOpenApp: e,
+				statusBarHeight: 0,
+				navBarHeight: 0,
+				homeIndicatorHeight: 0,
+				useSafeArea: !0
+			}),
+			!t && /* @__PURE__ */ X("div", {
 				className: "absolute top-0 inset-x-0 z-40 flex items-center justify-between px-4 text-white text-[13px] font-semibold tabular-nums pointer-events-none",
 				style: { height: oi },
 				children: [/* @__PURE__ */ Y(ai, {}), /* @__PURE__ */ X("div", {
@@ -4151,9 +4183,10 @@ function li({ onOpenApp: e }) {
 			/* @__PURE__ */ Y(te, {
 				statusBarHeight: oi,
 				navBarHeight: si,
-				homeIndicatorHeight: ci
+				homeIndicatorHeight: ci,
+				useSafeArea: t
 			}),
-			!s && /* @__PURE__ */ Y("div", {
+			!c && !t && /* @__PURE__ */ Y("div", {
 				className: "absolute bottom-0 inset-x-0 z-40",
 				children: /* @__PURE__ */ Y(Rr, {
 					onOpenApp: e,
@@ -4161,15 +4194,15 @@ function li({ onOpenApp: e }) {
 				})
 			}),
 			/* @__PURE__ */ Y(ri, {
-				open: t,
-				onClose: () => n(!1),
+				open: n,
+				onClose: () => r(!1),
 				onOpenApp: (t) => {
-					e(t), n(!1);
+					e(t), r(!1);
 				}
 			}),
 			/* @__PURE__ */ Y(ii, {
-				open: r,
-				onClose: () => i(!1)
+				open: i,
+				onClose: () => a(!1)
 			})
 		]
 	});
@@ -6511,7 +6544,13 @@ function qa({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 									animate: { opacity: 1 },
 									exit: { opacity: 0 },
 									transition: { duration: .2 },
-									children: [I === "iphone" && /* @__PURE__ */ Y(Xr, { onOpenApp: ee }), I === "android" && /* @__PURE__ */ Y(li, { onOpenApp: ee })]
+									children: [I === "iphone" && /* @__PURE__ */ Y(Xr, {
+										onOpenApp: ee,
+										isRealDevice: M
+									}), I === "android" && /* @__PURE__ */ Y(li, {
+										onOpenApp: ee,
+										isRealDevice: M
+									})]
 								}, I)
 							})]
 						})

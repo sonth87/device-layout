@@ -19,9 +19,14 @@ interface MobileAppViewerProps {
   statusBarHeight: number;
   navBarHeight: number;
   homeIndicatorHeight?: number;
+  /**
+   * Running full-bleed on a real phone: skip the simulated status bar / dock
+   * spacers and the fake home-indicator pill, and respect the device safe area.
+   */
+  useSafeArea?: boolean;
 }
 
-export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHeight = 20 }: MobileAppViewerProps) {
+export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHeight = 20, useSafeArea = false }: MobileAppViewerProps) {
   const windows = useStore((s) => s.windows);
   const apps = useStore((s) => s.apps);
   const closeWindow = useStore((s) => s.closeWindow);
@@ -58,7 +63,7 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
           transition={{ type: 'spring', stiffness: 380, damping: 36 }}
           className="absolute inset-0 z-[500] bg-white dark:bg-neutral-900 flex flex-col overflow-hidden"
           style={{
-            paddingTop: statusBarHeight,
+            paddingTop: useSafeArea ? 'env(safe-area-inset-top, 0px)' : statusBarHeight,
             scale,
             y: dragY,
             borderRadius,
@@ -129,15 +134,19 @@ export function MobileAppViewer({ statusBarHeight, navBarHeight, homeIndicatorHe
             />
           )}
 
-          <div style={{ height: navBarHeight + homeIndicatorHeight }} />
+          {useSafeArea ? (
+            <div className="shrink-0" style={{ height: 'env(safe-area-inset-bottom, 0px)' }} />
+          ) : (
+            <div style={{ height: navBarHeight + homeIndicatorHeight }} />
+          )}
 
-          {/* Home Indicator Gesture Bar acting as Drag Handle */}
-          <div
+          {/* Home Indicator Gesture Bar acting as Drag Handle (the real device has its own) */}
+          {!useSafeArea && <div
             onPointerDown={(e) => dragControls.start(e)}
             className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-10 flex items-center justify-center z-[1000] pointer-events-auto cursor-grab active:cursor-grabbing"
           >
             <div className="w-32 h-1.5 bg-black/30 dark:bg-white/35 hover:bg-black/50 dark:hover:bg-white/50 rounded-full" />
-          </div>
+          </div>}
         </motion.div>
       )}
     </AnimatePresence>

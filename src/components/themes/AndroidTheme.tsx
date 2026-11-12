@@ -6,6 +6,7 @@ import { NavBar } from '@/components/dock/NavBar';
 import { AndroidAppDrawer } from '@/components/android/AppDrawer';
 import { AndroidQuickSettings } from '@/components/android/QuickSettings';
 import { MobileAppViewer } from '@/components/mobile/MobileAppViewer';
+import { IPhoneHomeScreen } from '@/components/iphone/HomeScreen';
 import { useSwipeGesture } from '@/hooks/useSwipeGesture';
 import { useStore } from '@/store';
 import type { AppConfig } from '@/types/app';
@@ -27,9 +28,15 @@ const HOME_IND = 0; // Android has no home indicator
 
 interface ChromeProps {
   onOpenApp: (app: AppConfig) => void;
+  /**
+   * Rendering full-bleed on a real phone (or a narrow viewport). The device
+   * already has its own status bar, so the simulated status bar and bottom nav
+   * are not drawn; apps are listed on a home-screen grid instead.
+   */
+  isRealDevice?: boolean;
 }
 
-export function AndroidChrome({ onOpenApp }: ChromeProps) {
+export function AndroidChrome({ onOpenApp, isRealDevice = false }: ChromeProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [quickSettingsOpen, setQuickSettingsOpen] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
@@ -50,8 +57,19 @@ export function AndroidChrome({ onOpenApp }: ChromeProps) {
 
   return (
     <div ref={frameRef} className="absolute inset-0">
+      {/* Without the bottom nav, a home-screen grid is the entry point to apps */}
+      {isRealDevice && (
+        <IPhoneHomeScreen
+          onOpenApp={onOpenApp}
+          statusBarHeight={0}
+          navBarHeight={0}
+          homeIndicatorHeight={0}
+          useSafeArea
+        />
+      )}
+
       {/* Status bar */}
-      <div
+      {!isRealDevice && <div
         className="absolute top-0 inset-x-0 z-40 flex items-center justify-between px-4 text-white text-[13px] font-semibold tabular-nums pointer-events-none"
         style={{ height: STATUS_H }}
       >
@@ -61,17 +79,18 @@ export function AndroidChrome({ onOpenApp }: ChromeProps) {
           <Wifi className="w-[17px] h-[17px]" />
           <Battery className="w-[20px] h-[20px]" />
         </div>
-      </div>
+      </div>}
 
       {/* Full-screen app viewer */}
       <MobileAppViewer
         statusBarHeight={STATUS_H}
         navBarHeight={NAVBAR_H}
         homeIndicatorHeight={HOME_IND}
+        useSafeArea={isRealDevice}
       />
 
       {/* Bottom nav (hidden when app is open) */}
-      {!hasOpenWindow && (
+      {!hasOpenWindow && !isRealDevice && (
         <div className="absolute bottom-0 inset-x-0 z-40">
           <NavBar onOpenApp={onOpenApp} navBarHeight={NAVBAR_H} />
         </div>

@@ -30,9 +30,15 @@ const HOME_IND = 20;   // px — home indicator pill area
 
 interface ChromeProps {
   onOpenApp: (app: AppConfig) => void;
+  /**
+   * Rendering full-bleed on a real phone (or a narrow viewport). The device
+   * already has its own status bar / notch / home indicator, so the simulated
+   * status bar (clock + Dynamic Island) and bottom dock are not drawn.
+   */
+  isRealDevice?: boolean;
 }
 
-export function IPhoneChrome({ onOpenApp }: ChromeProps) {
+export function IPhoneChrome({ onOpenApp, isRealDevice = false }: ChromeProps) {
   const [locked, setLocked] = useState(false);
   const [controlCenterOpen, setControlCenterOpen] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
@@ -61,9 +67,10 @@ export function IPhoneChrome({ onOpenApp }: ChromeProps) {
       {/* Wallpaper-level content (home screen) */}
       <IPhoneHomeScreen
         onOpenApp={onOpenApp}
-        statusBarHeight={STATUS_H}
-        navBarHeight={NAVBAR_H}
-        homeIndicatorHeight={HOME_IND}
+        statusBarHeight={isRealDevice ? 0 : STATUS_H}
+        navBarHeight={isRealDevice ? 0 : NAVBAR_H}
+        homeIndicatorHeight={isRealDevice ? 0 : HOME_IND}
+        useSafeArea={isRealDevice}
       />
 
       {/* Full-screen app viewer — slides over home screen */}
@@ -71,10 +78,11 @@ export function IPhoneChrome({ onOpenApp }: ChromeProps) {
         statusBarHeight={STATUS_H}
         navBarHeight={NAVBAR_H}
         homeIndicatorHeight={HOME_IND}
+        useSafeArea={isRealDevice}
       />
 
       {/* Status bar — 3 columns so center is always clear of DynamicIsland */}
-      <div
+      {!isRealDevice && <div
         className="absolute top-0 inset-x-0 z-40 grid pointer-events-none"
         style={{ height: STATUS_H, gridTemplateColumns: '1fr auto 1fr' }}
       >
@@ -92,13 +100,13 @@ export function IPhoneChrome({ onOpenApp }: ChromeProps) {
           <Wifi className="w-[18px] h-[18px]" />
           <Battery className="w-[22px] h-[22px]" />
         </div>
-      </div>
+      </div>}
 
       {/* Control center */}
       <IPhoneControlCenter open={controlCenterOpen} onClose={() => setControlCenterOpen(false)} />
 
       {/* Bottom dock + home indicator (hidden when app is open) */}
-      {!hasOpenWindow && (
+      {!hasOpenWindow && !isRealDevice && (
         <div className="absolute bottom-0 inset-x-0 z-40" style={{ height: NAVBAR_H + HOME_IND }}>
           <NavBar onOpenApp={onOpenApp} navBarHeight={NAVBAR_H} />
           {/* Home indicator pill */}
