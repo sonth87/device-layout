@@ -58,6 +58,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false, fall
     let hasFull = false;
     for (const p of params.getAll('w')) {
       const flags = parseInt(p.split(':')[2] ?? '0', 10);
+      if (flags & 1) continue;
       if (flags & 2) hasMax = true;
       if (flags & 4) hasFull = true;
     }
@@ -73,6 +74,8 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false, fall
 
   const [dockRevealed, setDockRevealed] = useState(false);
   const [dockHovered, setDockHovered] = useState(false);
+  const dockHoveredRef = useRef(dockHovered);
+  const dockHideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dockVisible = !dockAutoHide || dockRevealed || dockHovered;
   // Ref to the dock element so we can read its horizontal bounds for the peek zone
   const dockRef = useRef<HTMLDivElement>(null);
@@ -88,9 +91,12 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false, fall
   useEffect(() => {
     if (!dockAutoHide || isSimpleMode) {
       setDockRevealed(false);
+      if (dockHideTimerRef.current) {
+        clearTimeout(dockHideTimerRef.current);
+        dockHideTimerRef.current = null;
+      }
       return;
     }
-    let hideTimer: ReturnType<typeof setTimeout> | null = null;
     const handlePeek = (e: MouseEvent) => {
       const isNearBottom = e.clientY >= window.innerHeight - PEEK_ZONE;
 
@@ -102,24 +108,30 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false, fall
         isOverDock = e.clientX >= left - H_PAD && e.clientX <= right + H_PAD;
       }
 
-      if ((isNearBottom && isOverDock) || dockHovered) {
+      if ((isNearBottom && isOverDock) || dockHoveredRef.current) {
         setDockRevealed(true);
-        if (hideTimer) {
-          clearTimeout(hideTimer);
-          hideTimer = null;
+        if (dockHideTimerRef.current) {
+          clearTimeout(dockHideTimerRef.current);
+          dockHideTimerRef.current = null;
         }
       } else {
-        if (!hideTimer) {
-          hideTimer = setTimeout(() => setDockRevealed(false), DOCK_AUTO_HIDE_DELAY_MS);
+        if (!dockHideTimerRef.current) {
+          dockHideTimerRef.current = setTimeout(() => {
+            setDockRevealed(false);
+            dockHideTimerRef.current = null;
+          }, DOCK_AUTO_HIDE_DELAY_MS);
         }
       }
     };
     document.addEventListener('mousemove', handlePeek);
     return () => {
       document.removeEventListener('mousemove', handlePeek);
-      if (hideTimer) clearTimeout(hideTimer);
+      if (dockHideTimerRef.current) {
+        clearTimeout(dockHideTimerRef.current);
+        dockHideTimerRef.current = null;
+      }
     };
-  }, [dockAutoHide, dockHovered, isSimpleMode]);
+  }, [dockAutoHide, isSimpleMode]);
 
   // Menu bar (+ the fullscreen window's own title bar) only auto-hides in true
   // fullscreen. The shared useFullscreenPeek hook drives fullscreenChromeRevealed
@@ -187,6 +199,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false, fall
       {isFullScreenActive && fullscreenWindowId && (
         <motion.div
           className="absolute top-0 inset-x-0 z-[35] pointer-events-auto"
+          initial={{ y: '-100%' }}
           animate={{ y: menuBarRevealed ? MENU_BAR_HEIGHT : '-100%' }}
           transition={{ type: 'spring', stiffness: 380, damping: 30, mass: 0.8 }}
         >
@@ -205,7 +218,7 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false, fall
             onSpotlight={onSpotlight}
             isSimpleMode={isSimpleMode}
             fallbackMenuBarAppId={fallbackMenuBarAppId}
-            forceDark={hasFullScreen}
+            forceDark={isFullScreenActive}
           />
         </div>
       </motion.div>
@@ -217,8 +230,25 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false, fall
           style={{ bottom: 'var(--dock-offset-bottom)' }}
           animate={{ y: dockVisible ? 0 : DOCK_HIDE_Y }}
           transition={{ type: 'spring', stiffness: 380, damping: 30, mass: 0.8 }}
-          onMouseEnter={() => setDockHovered(true)}
-          onMouseLeave={() => setDockHovered(false)}
+          onMouseEnter={() => {
+            dockHoveredRef.current = true;
+            setDockHovered(true);
+            if (dockHideTimerRef.current) {
+              clearTimeout(dockHideTimerRef.current);
+              dockHideTimerRef.current = null;
+            }
+          }}
+          onMouseLeave={() => {
+            dockHoveredRef.current = false;
+            setDockHovered(false);
+            if (dockAutoHide && !isSimpleMode) {
+              if (dockHideTimerRef.current) clearTimeout(dockHideTimerRef.current);
+              dockHideTimerRef.current = setTimeout(() => {
+                setDockRevealed(false);
+                dockHideTimerRef.current = null;
+              }, DOCK_AUTO_HIDE_DELAY_MS);
+            }
+          }}
         >
           <div ref={dockRef} className="pointer-events-auto">
             <Dock onOpenApp={onOpenApp} />

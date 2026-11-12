@@ -54,7 +54,7 @@ export function Messages() {
   const selected = convos.find((c) => c.id === selectedId);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [selected?.messages.length]);
 
   const send = () => {

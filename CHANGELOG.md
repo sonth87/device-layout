@@ -1,5 +1,15 @@
 # @sonth87/device-layout
 
+## 0.5.38
+
+### Patch Changes
+
+- fix(macos): prevent entire UI from shifting up and Dock appearing below after reloading (F5) in fullscreen mode
+
+  Previously, when the Dock auto-hid in fullscreen mode via `translateY(120px)`, its transformed box overflowed the unclipped chrome overlay and inflated the root container's `scrollHeight`. Because `overflow-hidden` still permits programmatic scrolling (`scrollIntoView` / `focus`), reloading with an active fullscreen window could scroll the root container down by the Dock overflow distance — pushing the fullscreen window, MenuBar, and fullscreen title bar above the viewport while exposing the hidden Dock at the bottom.
+
+  Replaced `overflow-hidden` with `overflow-clip` across the root and viewport overlay layers (`ThemeProvider`, `Wallpaper`, `WindowManager`, `/desktop`) so off-screen chrome animations never create scrollable overflow, and fixed Dock hover-leave timer cleanup in `MacOSTheme`.
+
 ## 0.5.37
 
 ### Patch Changes

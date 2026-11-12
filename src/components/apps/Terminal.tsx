@@ -129,7 +129,7 @@ export function Terminal({ windowId, appId }: AppContentProps) {
   const storeSnapshot = useStore();
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [history]);
 
   const runCommand = (raw: string) => {
