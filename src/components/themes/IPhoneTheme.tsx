@@ -45,15 +45,19 @@ export function IPhoneChrome({ onOpenApp, isRealDevice = false }: ChromeProps) {
   const windows = useStore((s) => s.windows);
   const hasOpenWindow = Object.values(windows).some((w) => !w.isMinimized);
 
+  // On a real phone, vertical swipes belong to the browser/OS (scroll, pull to
+  // refresh, the device's own Control Center) — don't open the simulated one.
   useSwipeGesture(
-    {
-      onSwipeUp: () => {
-        if (!hasOpenWindow) setLocked(false);
-      },
-      onSwipeDown: () => {
-        if (!hasOpenWindow) setControlCenterOpen(true);
-      },
-    },
+    isRealDevice
+      ? {}
+      : {
+          onSwipeUp: () => {
+            if (!hasOpenWindow) setLocked(false);
+          },
+          onSwipeDown: () => {
+            if (!hasOpenWindow) setControlCenterOpen(true);
+          },
+        },
     frameRef,
   );
 
@@ -103,7 +107,9 @@ export function IPhoneChrome({ onOpenApp, isRealDevice = false }: ChromeProps) {
       </div>}
 
       {/* Control center */}
-      <IPhoneControlCenter open={controlCenterOpen} onClose={() => setControlCenterOpen(false)} />
+      {!isRealDevice && (
+        <IPhoneControlCenter open={controlCenterOpen} onClose={() => setControlCenterOpen(false)} />
+      )}
 
       {/* Bottom dock + home indicator (hidden when app is open) */}
       {!hasOpenWindow && !isRealDevice && (

@@ -7,6 +7,7 @@ import { GlassFilter } from '@/components/liquid-glass/GlassFilter';
 import { WindowManager } from '@/components/window/WindowManager';
 import { MacOSChrome } from './MacOSTheme';
 import { IPadChrome } from './IPadTheme';
+import { useBrowserChromeColor } from '@/hooks/useBrowserChromeColor';
 import { IPhoneChrome } from './IPhoneTheme';
 import { WindowsChrome } from './WindowsTheme';
 import { AndroidChrome } from './AndroidTheme';
@@ -168,6 +169,7 @@ export function ThemeProvider({
   const [spotlightOpen, setSpotlightOpen] = useState(false);
   const [appSwitcherOpen, setAppSwitcherOpen] = useState(false);
   const [isRealMobile, setIsRealMobile] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   // Normalize simple mode feature flags
   const features = useMemo(() => resolveSimpleModeFeatures(isSimpleMode, osTheme), [isSimpleMode, osTheme]);
@@ -179,6 +181,12 @@ export function ThemeProvider({
       );
       const isNarrow = window.innerWidth <= 768;
       setIsRealMobile(isMobileUA || isNarrow);
+      // iPadOS Safari reports a desktop (Macintosh) UA, so also detect touch-first input.
+      setIsTouchDevice(
+        isMobileUA ||
+        window.matchMedia('(pointer: coarse)').matches ||
+        (/Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1)
+      );
     };
 
     checkMobile();
@@ -288,6 +296,7 @@ export function ThemeProvider({
   const isMacLike = activeOSTheme === 'macos' || activeOSTheme === 'ipad';
   const showsDesktopIconGrid = activeOSTheme !== 'ipad' && activeOSTheme !== 'iphone' && activeOSTheme !== 'android';
   const isMobile = activeOSTheme === 'iphone' || activeOSTheme === 'android';
+  useBrowserChromeColor(isRealMobile && isMobile);
   
   // Guard against invalid/stale osTheme values from localStorage (e.g. if the
   // key was renamed between versions). getThemeCssVars accesses .layout
@@ -425,7 +434,7 @@ export function ThemeProvider({
                 transition={{ duration: 0.2 }}
               >
                 {activeOSTheme === 'macos'   && <MacOSChrome isSimpleMode={features.isSimpleModeActive} fallbackMenuBarAppId={fallbackMenuBarAppId} onOpenApp={handleOpenApp} onSpotlight={features.menuBar.spotlight ? () => setSpotlightOpen(true) : undefined} onAppSwitcher={features.menuBar.appSwitcher ? () => setAppSwitcherOpen(true) : undefined} />}
-                {activeOSTheme === 'ipad'    && <IPadChrome    onOpenApp={handleOpenApp} />}
+                {activeOSTheme === 'ipad'    && <IPadChrome    onOpenApp={handleOpenApp} isRealDevice={isTouchDevice} />}
                 {activeOSTheme === 'windows' && <WindowsChrome onOpenApp={handleOpenApp} />}
               </motion.div>
             </AnimatePresence>

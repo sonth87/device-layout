@@ -1,5 +1,17 @@
 # @sonth87/device-layout
 
+## 0.5.40
+
+### Patch Changes
+
+- fix(mobile): swiping on a real phone/tablet no longer opens the simulated Control Center
+
+  The iPhone, Android and iPad chromes listened for vertical swipes to open the simulated Control Center / Quick Settings / app drawer / lock screen — on iPad even on `window`, so a swipe inside any app triggered it. On a real touch device those swipes belong to the browser and the apps, so the gestures (and the simulated Control Center) are disabled there. iPadOS Safari (which reports a Macintosh UA) is detected via `pointer: coarse` / `maxTouchPoints`.
+
+- fix(mobile): browser status bar and toolbar areas no longer render as white bands
+
+  New internal `useBrowserChromeColor` hook: on a real phone in the iPhone/Android theme it sets the `<html>`/`<body>` background and `<meta name="theme-color">` to the open app's header colour, or to the sampled top colour of the wallpaper on the home screen, so the browser tints its own bars to match. Previous values are restored on unmount.
+
 ## 0.5.39
 
 ### Patch Changes

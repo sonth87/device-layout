@@ -43,15 +43,19 @@ export function AndroidChrome({ onOpenApp, isRealDevice = false }: ChromeProps) 
   const windows = useStore((s) => s.windows);
   const hasOpenWindow = Object.values(windows).some((w) => !w.isMinimized);
 
+  // On a real phone, vertical swipes belong to the browser/OS — the app grid
+  // replaces the drawer and the device has its own quick settings.
   useSwipeGesture(
-    {
-      onSwipeUp: () => {
-        if (!hasOpenWindow) setDrawerOpen(true);
-      },
-      onSwipeDown: () => {
-        if (!hasOpenWindow) setQuickSettingsOpen(true);
-      },
-    },
+    isRealDevice
+      ? {}
+      : {
+          onSwipeUp: () => {
+            if (!hasOpenWindow) setDrawerOpen(true);
+          },
+          onSwipeDown: () => {
+            if (!hasOpenWindow) setQuickSettingsOpen(true);
+          },
+        },
     frameRef,
   );
 

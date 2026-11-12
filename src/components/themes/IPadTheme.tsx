@@ -12,16 +12,25 @@ import type { AppConfig } from '@/types/app';
 
 interface ChromeProps {
   onOpenApp: (app: AppConfig) => void;
+  /**
+   * Running on a real touch device: swipes belong to the browser/OS and to the
+   * apps themselves, so they must not open the simulated Control Center / lock.
+   */
+  isRealDevice?: boolean;
 }
 
-export function IPadChrome({ onOpenApp }: ChromeProps) {
+export function IPadChrome({ onOpenApp, isRealDevice = false }: ChromeProps) {
   const [locked, setLocked] = useState(false);
   const [controlCenterOpen, setControlCenterOpen] = useState(false);
 
-  useSwipeGesture({
-    onSwipeUp: () => setLocked(false),
-    onSwipeDown: () => setControlCenterOpen(true),
-  });
+  useSwipeGesture(
+    isRealDevice
+      ? {}
+      : {
+          onSwipeUp: () => setLocked(false),
+          onSwipeDown: () => setControlCenterOpen(true),
+        },
+  );
 
   return (
     <>
