@@ -120,11 +120,15 @@ export function createWindowSlice(set: Setter, get: Getter): WindowSlice {
         const minimizedWin = appWindows.find((w) => w.isMinimized);
         if (minimizedWin) {
           get().restoreWindow(minimizedWin.id);
+          get().focusWindow(minimizedWin.id);
           return minimizedWin.id;
         }
       }
 
       if (appConfig.launchMode !== 'multi' && appWindows[0]) {
+        if (appWindows[0].isMinimized) {
+          get().restoreWindow(appWindows[0].id);
+        }
         get().focusWindow(appWindows[0].id);
         return appWindows[0].id;
       }

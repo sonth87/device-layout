@@ -11,7 +11,6 @@ interface DockProps {
 }
 
 export function Dock({ onOpenApp }: DockProps) {
-  void onOpenApp;
   const dockAppIds = useStore((s) => s.dockAppIds);
   const apps = useStore((s) => s.apps);
   const runningAppIds = useStore((s) => s.runningAppIds);
@@ -37,7 +36,11 @@ export function Dock({ onOpenApp }: DockProps) {
     .filter(Boolean) as AppConfig[];
 
   const handleDockClick = (app: AppConfig) => {
-    launchApp(app);
+    if (onOpenApp) {
+      onOpenApp(app);
+    } else {
+      launchApp(app);
+    }
   };
 
   const gap = Math.round(dockSize * 0.28);

@@ -62,9 +62,15 @@ export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
 
   // Initialize main desktop grid slots (excluding dock apps)
   const [orderedMainAppIds, setOrderedMainAppIds] = useState<(string | null)[]>(() => {
-    const appsMap = useStore.getState().apps;
+    const state = useStore.getState();
+    const appsMap = state.apps;
     const allApps = Object.values(appsMap).filter((a) => !a.disabled);
-    const mainAppsList = allApps.slice(DOCK_COUNT).map((a) => a.id);
+    const dockIds = new Set(
+      state.dockAppIds.length > 0
+        ? state.dockAppIds
+        : allApps.slice(0, DOCK_COUNT).map((a) => a.id)
+    );
+    const mainAppsList = allApps.filter((a) => !dockIds.has(a.id)).map((a) => a.id);
     const totalPages = Math.max(1, Math.ceil(mainAppsList.length / PAGE_SIZE));
     const list: (string | null)[] = [...mainAppsList];
     while (list.length < totalPages * PAGE_SIZE) {
@@ -103,9 +109,6 @@ export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
     resizeObserver.observe(containerRef.current);
     return () => resizeObserver.disconnect();
   }, []);
-
-  const appList = Object.values(apps).filter((a) => !a.disabled);
-  const dockApps = appList.slice(0, DOCK_COUNT);
 
   const activeList = activeDragId ? previewList : orderedMainAppIds;
   let totalPages = Math.max(1, Math.ceil(activeList.length / PAGE_SIZE));
@@ -356,29 +359,6 @@ export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
           ))}
         </div>
       )}
-
-      {/* iPad Dock */}
-      <div className="absolute bottom-3 inset-x-6 z-10 pointer-events-auto">
-        <div
-          className="rounded-3xl px-6 py-3 flex items-center justify-around"
-          style={{
-            background: 'rgba(255,255,255,0.18)',
-            backdropFilter: 'blur(24px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-            boxShadow: '0 2px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.25)',
-          }}
-        >
-          {dockApps.map((app) => (
-            <button
-              key={app.id}
-              onClick={() => onOpenApp(app)}
-              className="flex flex-col items-center justify-center transition-transform active:scale-95"
-            >
-              <AppIconImage appConfig={app} size={64} />
-            </button>
-          ))}
-        </div>
-      </div>
  
       {/* Drag Overlay Clone */}
       {activeDragId && apps[activeDragId] && (

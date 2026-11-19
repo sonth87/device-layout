@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as F, s as te, t as I, u as ne, v as re, w as ie, x as L, y as ae } from "./MobileAppViewer-ClS8f9YH.js";
-import { c as oe, d as se, l as ce, s as le, t as R, u as ue } from "./store-Bjl9rhnp.js";
+import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as F, s as te, t as I, u as ne, v as re, w as ie, x as L, y as ae } from "./MobileAppViewer-BMMn2PLj.js";
+import { c as oe, d as se, l as ce, s as le, t as R, u as ue } from "./store-DbBTbrkn.js";
 import { t as z } from "./utils-B6YmNDS2.js";
 import { t as B } from "./createLucideIcon--WjuKCts.js";
-import { a as de, c as fe, d as pe, f as me, g as he, h as ge, i as _e, l as ve, m as ye, n as be, o as xe, p as V, r as Se, s as Ce, t as we, u as Te } from "./update-actions-CX7JBBdW.js";
+import { a as de, c as fe, d as pe, f as me, g as he, h as ge, i as _e, l as ve, m as ye, n as be, o as xe, p as V, r as Se, s as Ce, t as we, u as Te } from "./update-actions-BHssxDVj.js";
 import { t as Ee } from "./check-DoT5IS9-.js";
 import { t as De } from "./chevron-right-BcSxNxws.js";
 import { t as Oe } from "./grid-3x3-CZiMuCC6.js";
@@ -14,7 +14,7 @@ import { t as Je } from "./search-BKG97C0x.js";
 import { t as Ye } from "./sun-DdSv2tyc.js";
 import { t as Xe } from "./volume-2-DAfADR-a.js";
 import { t as Ze } from "./x-BYw6fhgP.js";
-import { t as H } from "./useTranslation-BpGBgycp.js";
+import { t as H } from "./useTranslation-W6S-A2xQ.js";
 import * as U from "react";
 import Qe, { Suspense as $e, lazy as et, startTransition as tt, useCallback as W, useContext as nt, useEffect as G, useInsertionEffect as rt, useMemo as it, useRef as K, useState as q } from "react";
 import { Fragment as J, jsx as Y, jsxs as X } from "react/jsx-runtime";
@@ -1854,8 +1854,8 @@ function tr({ appConfig: e, isRunning: t, hasMinimized: n, mouseX: r, onOpen: i,
 //#endregion
 //#region src/components/dock/Dock.tsx
 function nr({ onOpenApp: e }) {
-	let t = R((e) => e.dockAppIds), n = R((e) => e.apps), r = R((e) => e.runningAppIds), i = R((e) => e.windows), a = R((e) => e.launchApp), o = R((e) => e.dockSize), s = R((e) => e.dockMagnification), c = Math.max(o * (1 + s), o + s * 54), l = c - o, u = S(Infinity), d = t.map((e) => n[e]).filter(Boolean), f = r.filter((e) => !t.includes(e)).map((e) => n[e]).filter(Boolean), p = (e) => {
-		a(e);
+	let t = R((e) => e.dockAppIds), n = R((e) => e.apps), r = R((e) => e.runningAppIds), i = R((e) => e.windows), a = R((e) => e.launchApp), o = R((e) => e.dockSize), s = R((e) => e.dockMagnification), c = Math.max(o * (1 + s), o + s * 54), l = c - o, u = S(Infinity), d = t.map((e) => n[e]).filter(Boolean), f = r.filter((e) => !t.includes(e)).map((e) => n[e]).filter(Boolean), p = (t) => {
+		e ? e(t) : a(t);
 	}, m = Math.round(o * .28), h = Math.round(o * .47), g = Math.round(o * .12), _ = Math.round(o * .2);
 	return /* @__PURE__ */ X("div", {
 		"data-dock": "true",
@@ -2355,9 +2355,9 @@ var Dr = 6, Or = 4, kr = Dr * Or, Ar = 6, jr = 600, Mr = (e, t, n) => {
 };
 function Nr({ onOpenApp: e }) {
 	let t = R((e) => e.apps), { getAppName: n } = H(), [r, i] = q(0), [a, o] = q(!1), [s, c] = q(() => {
-		let e = R.getState().apps, t = Object.values(e).filter((e) => !e.disabled).slice(Ar).map((e) => e.id), n = Math.max(1, Math.ceil(t.length / kr)), r = [...t];
-		for (; r.length < n * kr;) r.push(null);
-		return r;
+		let e = R.getState(), t = e.apps, n = Object.values(t).filter((e) => !e.disabled), r = new Set(e.dockAppIds.length > 0 ? e.dockAppIds : n.slice(0, Ar).map((e) => e.id)), i = n.filter((e) => !r.has(e.id)).map((e) => e.id), a = Math.max(1, Math.ceil(i.length / kr)), o = [...i];
+		for (; o.length < a * kr;) o.push(null);
+		return o;
 	}), [l, u] = q(s), [d, f] = q(null), [p, m] = q(!1), [h, g] = q({
 		x: 0,
 		y: 0
@@ -2377,23 +2377,23 @@ function Nr({ onOpenApp: e }) {
 		});
 		return e.observe(_.current), () => e.disconnect();
 	}, []);
-	let E = Object.values(t).filter((e) => !e.disabled).slice(0, Ar), D = d ? l : s, O = Math.max(1, Math.ceil(D.length / kr));
-	d && (O += 1);
-	let k = [];
-	for (let e = 0; e < O * kr; e += kr) {
-		let t = D.slice(e, e + kr);
+	let E = d ? l : s, D = Math.max(1, Math.ceil(E.length / kr));
+	d && (D += 1);
+	let O = [];
+	for (let e = 0; e < D * kr; e += kr) {
+		let t = E.slice(e, e + kr);
 		for (; t.length < kr;) t.push(null);
-		k.push(t);
+		O.push(t);
 	}
-	let A = W((e) => {
+	let k = W((e) => {
 		e !== S.current && i(e);
-	}, []), j = K(null), M = () => {
-		j.current = setTimeout(() => o(!0), jr);
+	}, []), A = K(null), j = () => {
+		A.current = setTimeout(() => o(!0), jr);
+	}, M = () => {
+		A.current && clearTimeout(A.current);
 	}, N = () => {
-		j.current && clearTimeout(j.current);
-	}, ee = () => {
 		a && o(!1);
-	}, P = (e, t) => {
+	}, ee = (e, t) => {
 		f(e), m(!0);
 		let n = "touches" in t ? t.touches[0].clientX : t.clientX, r = "touches" in t ? t.touches[0].clientY : t.clientY;
 		g({
@@ -2430,7 +2430,7 @@ function Nr({ onOpenApp: e }) {
 				let t = e.clientX, n = Date.now();
 				if (n - x.current > 1200) {
 					let e = S.current;
-					t < i.left + 50 && e > 0 ? (A(e - 1), x.current = n) : t > i.right - 50 && (A(e + 1), x.current = n);
+					t < i.left + 50 && e > 0 ? (k(e - 1), x.current = n) : t > i.right - 50 && (k(e + 1), x.current = n);
 				}
 			}
 		}, t = () => {
@@ -2445,13 +2445,13 @@ function Nr({ onOpenApp: e }) {
 		return window.addEventListener("pointermove", e), window.addEventListener("pointerup", t), () => {
 			window.removeEventListener("pointermove", e), window.removeEventListener("pointerup", t);
 		};
-	}, [d, A]), /* @__PURE__ */ X("div", {
+	}, [d, k]), /* @__PURE__ */ X("div", {
 		ref: _,
 		className: "absolute inset-0 flex flex-col overflow-hidden px-6 pt-12 pb-36 pointer-events-auto",
-		onPointerDown: M,
-		onPointerUp: N,
-		onPointerCancel: N,
-		onClick: ee,
+		onPointerDown: j,
+		onPointerUp: M,
+		onPointerCancel: M,
+		onClick: N,
 		children: [
 			/* @__PURE__ */ Y("div", {
 				className: "flex-1 overflow-hidden",
@@ -2459,7 +2459,7 @@ function Nr({ onOpenApp: e }) {
 					drag: !p && "x",
 					dragDirectionLock: !0,
 					dragConstraints: {
-						left: -(O - 1) * v,
+						left: -(D - 1) * v,
 						right: 0
 					},
 					animate: { x: -r * v },
@@ -2470,10 +2470,10 @@ function Nr({ onOpenApp: e }) {
 					},
 					onDragEnd: (e, t) => {
 						let n = t.offset.x, i = t.velocity.x, a = r, o = v / 4;
-						n < -o || i < -300 ? a = Math.min(O - 1, r + 1) : (n > o || i > 300) && (a = Math.max(0, r - 1)), A(a);
+						n < -o || i < -300 ? a = Math.min(D - 1, r + 1) : (n > o || i > 300) && (a = Math.max(0, r - 1)), k(a);
 					},
 					className: "flex h-full w-full cursor-grab active:cursor-grabbing",
-					children: k.map((n, r) => /* @__PURE__ */ Y("div", {
+					children: O.map((n, r) => /* @__PURE__ */ Y("div", {
 						className: "h-full shrink-0 grid gap-x-4 gap-y-6",
 						style: {
 							gridTemplateColumns: `repeat(${Dr}, 1fr)`,
@@ -2491,7 +2491,7 @@ function Nr({ onOpenApp: e }) {
 									onPointerDownStart: () => m(!0),
 									onPointerDownEnd: () => m(!1),
 									onOpen: e,
-									onDragStart: P
+									onDragStart: ee
 								}, i.id);
 							}
 							return /* @__PURE__ */ X("div", {
@@ -2508,34 +2508,14 @@ function Nr({ onOpenApp: e }) {
 					}, r))
 				})
 			}),
-			O > 1 && /* @__PURE__ */ Y("div", {
+			D > 1 && /* @__PURE__ */ Y("div", {
 				className: "flex justify-center gap-2 py-2",
-				children: Array.from({ length: O }).map((e, t) => /* @__PURE__ */ Y("button", {
+				children: Array.from({ length: D }).map((e, t) => /* @__PURE__ */ Y("button", {
 					onClick: (e) => {
-						e.stopPropagation(), A(t);
+						e.stopPropagation(), k(t);
 					},
 					className: z("rounded-full transition-all duration-200", t === r ? "w-5 h-2 bg-white" : "w-2 h-2 bg-white/50")
 				}, t))
-			}),
-			/* @__PURE__ */ Y("div", {
-				className: "absolute bottom-3 inset-x-6 z-10 pointer-events-auto",
-				children: /* @__PURE__ */ Y("div", {
-					className: "rounded-3xl px-6 py-3 flex items-center justify-around",
-					style: {
-						background: "rgba(255,255,255,0.18)",
-						backdropFilter: "blur(24px) saturate(180%)",
-						WebkitBackdropFilter: "blur(24px) saturate(180%)",
-						boxShadow: "0 2px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.25)"
-					},
-					children: E.map((t) => /* @__PURE__ */ Y("button", {
-						onClick: () => e(t),
-						className: "flex flex-col items-center justify-center transition-transform active:scale-95",
-						children: /* @__PURE__ */ Y(V, {
-							appConfig: t,
-							size: 64
-						})
-					}, t.id))
-				})
 			}),
 			d && t[d] && /* @__PURE__ */ X("div", {
 				className: "fixed pointer-events-none z-[99999] flex flex-col items-center gap-2 select-none",
@@ -2645,8 +2625,40 @@ function Pr({ app: e, index: t, jiggling: n, activeDragId: r, onPointerDownStart
 	});
 }
 //#endregion
+//#region src/components/ipad/IPadDock.tsx
+function Fr({ onOpenApp: e }) {
+	let t = R((e) => e.dockAppIds), n = R((e) => e.apps), r = R((e) => e.runningAppIds), i = R((e) => e.windows), a = R((e) => e.launchApp), { getAppName: o } = H(), s = Object.values(n).filter((e) => !e.disabled), c = t.length > 0 ? t.map((e) => n[e]).filter(Boolean) : s.slice(0, 6), l = (t) => {
+		e ? e(t) : a(t);
+	};
+	return /* @__PURE__ */ Y("div", {
+		className: "rounded-3xl px-6 py-2.5 flex items-center justify-around gap-4",
+		style: {
+			background: "rgba(255, 255, 255, 0.22)",
+			backdropFilter: "blur(24px) saturate(180%)",
+			WebkitBackdropFilter: "blur(24px) saturate(180%)",
+			boxShadow: "0 2px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.25)"
+		},
+		children: c.map((e) => {
+			let t = r.includes(e.id), n = Object.values(i).some((t) => t.appId === e.id && t.isMinimized);
+			return /* @__PURE__ */ X("button", {
+				onClick: () => l(e),
+				className: "relative flex flex-col items-center justify-center transition-transform active:scale-95 group cursor-pointer",
+				"aria-label": o(e.id, e.name),
+				children: [
+					/* @__PURE__ */ Y(V, {
+						appConfig: e,
+						size: 64
+					}),
+					t && !n && /* @__PURE__ */ Y("span", { className: "absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.4)]" }),
+					n && /* @__PURE__ */ Y("span", { className: "absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-white/60 shadow-[0_1px_2px_rgba(0,0,0,0.3)] border border-white/20" })
+				]
+			}, e.id);
+		})
+	});
+}
+//#endregion
 //#region src/components/iphone/ControlCenter.tsx
-function Fr({ open: e, onClose: t }) {
+function Ir({ open: e, onClose: t }) {
 	let n = R((e) => e.colorScheme), r = R((e) => e.setColorScheme);
 	R((e) => e.glassEnabled), R((e) => e.setGlassEnabled);
 	let [i, a] = q(80), [o, s] = q(65), [c, l] = q([
@@ -2793,7 +2805,7 @@ function Fr({ open: e, onClose: t }) {
 }
 //#endregion
 //#region src/hooks/useSwipeGesture.ts
-function Ir(e, t) {
+function Lr(e, t) {
 	let { onSwipeUp: n, onSwipeDown: r, onSwipeLeft: i, onSwipeRight: a, threshold: o = 50, velocityThreshold: s = .2 } = e, c = K(null);
 	G(() => {
 		let e = t?.current ?? window;
@@ -2831,9 +2843,9 @@ function Ir(e, t) {
 }
 //#endregion
 //#region src/components/themes/IPadTheme.tsx
-function Lr({ onOpenApp: e, isRealDevice: t = !1 }) {
-	let [n, r] = q(!1), [i, a] = q(!1);
-	return Ir(t ? {} : {
+function Rr({ onOpenApp: e, isRealDevice: t = !1 }) {
+	let [n, r] = q(!1), [i, a] = q(!1), o = R((e) => e.windows), s = Object.values(o).some((e) => !e.isMinimized), c = Object.values(o).some((e) => e.isFullScreen && !e.isMinimized);
+	return Lr(t ? {} : {
 		onSwipeUp: () => r(!1),
 		onSwipeDown: () => a(!0)
 	}), /* @__PURE__ */ X(J, { children: [
@@ -2849,8 +2861,44 @@ function Lr({ onOpenApp: e, isRealDevice: t = !1 }) {
 				children: [/* @__PURE__ */ Y(N, { className: "w-3.5 h-3.5" }), /* @__PURE__ */ Y(w, { className: "w-4 h-4" })]
 			})]
 		}),
-		/* @__PURE__ */ Y(Nr, { onOpenApp: e }),
-		/* @__PURE__ */ Y(Fr, {
+		/* @__PURE__ */ Y(v, { children: !s && /* @__PURE__ */ Y(y.div, {
+			initial: {
+				scale: 1,
+				opacity: 1
+			},
+			exit: {
+				scale: .94,
+				opacity: 0
+			},
+			transition: { duration: .2 },
+			className: "absolute inset-0 z-10",
+			children: /* @__PURE__ */ Y(Nr, { onOpenApp: e })
+		}, "ipad-home-screen") }),
+		/* @__PURE__ */ Y(v, { children: !c && /* @__PURE__ */ Y(y.div, {
+			initial: {
+				y: 100,
+				opacity: 0
+			},
+			animate: {
+				y: 0,
+				opacity: 1
+			},
+			exit: {
+				y: 100,
+				opacity: 0
+			},
+			transition: {
+				type: "spring",
+				stiffness: 380,
+				damping: 30
+			},
+			className: "absolute bottom-3 inset-x-6 z-40 flex justify-center pointer-events-none",
+			children: /* @__PURE__ */ Y("div", {
+				className: "pointer-events-auto",
+				children: /* @__PURE__ */ Y(Fr, { onOpenApp: e })
+			})
+		}, "ipad-dock") }),
+		/* @__PURE__ */ Y(Ir, {
 			open: i,
 			onClose: () => a(!1)
 		}),
@@ -2862,9 +2910,9 @@ function Lr({ onOpenApp: e, isRealDevice: t = !1 }) {
 }
 //#endregion
 //#region src/hooks/useBrowserChromeColor.ts
-var Rr = "#000000", zr = "#ffffff", Br = "#171717", Vr = /* @__PURE__ */ new Map();
-function Hr(e) {
-	let t = Vr.get(e);
+var zr = "#000000", Br = "#ffffff", Vr = "#171717", Hr = /* @__PURE__ */ new Map();
+function Ur(e) {
+	let t = Hr.get(e);
 	return t ? Promise.resolve(t) : new Promise((t) => {
 		let n = new Image();
 		n.crossOrigin = "anonymous", n.onload = () => {
@@ -2872,33 +2920,33 @@ function Hr(e) {
 				let r = document.createElement("canvas");
 				r.width = 32, r.height = 8;
 				let i = r.getContext("2d");
-				if (!i) return t(Rr);
+				if (!i) return t(zr);
 				let a = Math.max(1, Math.round(n.naturalHeight * .08));
 				i.drawImage(n, 0, 0, n.naturalWidth, a, 0, 0, 32, 8);
 				let o = i.getImageData(0, 0, 32, 8).data, s = 0, c = 0, l = 0, u = o.length / 4;
 				for (let e = 0; e < o.length; e += 4) s += o[e], c += o[e + 1], l += o[e + 2];
 				let d = (e) => Math.round(e / u).toString(16).padStart(2, "0"), f = `#${d(s)}${d(c)}${d(l)}`;
-				Vr.set(e, f), t(f);
+				Hr.set(e, f), t(f);
 			} catch {
-				t(Rr);
+				t(zr);
 			}
-		}, n.onerror = () => t(Rr), n.src = e;
+		}, n.onerror = () => t(zr), n.src = e;
 	});
 }
-function Ur(e) {
-	let t = R((e) => Object.values(e.windows).some((e) => !e.isMinimized)), n = R((e) => e.resolvedColorScheme), r = wr(), i = Ce(), [a, o] = q(Rr), s = r.kind === "color" ? "" : r.thumbnail || r.url || "", c = s ? xe(i, s) : "";
+function Wr(e) {
+	let t = R((e) => Object.values(e.windows).some((e) => !e.isMinimized)), n = R((e) => e.resolvedColorScheme), r = wr(), i = Ce(), [a, o] = q(zr), s = r.kind === "color" ? "" : r.thumbnail || r.url || "", c = s ? xe(i, s) : "";
 	G(() => {
 		if (!e) return;
 		if (r.kind === "color") {
-			o(r.colorHex || Rr);
+			o(r.colorHex || zr);
 			return;
 		}
 		if (!c) {
-			o(Rr);
+			o(zr);
 			return;
 		}
 		let t = !1;
-		return Hr(c).then((e) => {
+		return Ur(c).then((e) => {
 			t || o(e);
 		}), () => {
 			t = !0;
@@ -2909,7 +2957,7 @@ function Ur(e) {
 		r.colorHex,
 		c
 	]);
-	let l = t ? n === "dark" ? Br : zr : a;
+	let l = t ? n === "dark" ? Vr : Br : a;
 	G(() => {
 		if (!e) return;
 		let t = document.documentElement, n = document.body, r = t.style.backgroundColor, i = n.style.backgroundColor, a = document.querySelector("meta[name=\"theme-color\"]"), o = !a;
@@ -2922,7 +2970,7 @@ function Ur(e) {
 }
 //#endregion
 //#region src/components/dock/NavBar.tsx
-function Wr({ onOpenApp: e, navBarHeight: t = 72 }) {
+function Gr({ onOpenApp: e, navBarHeight: t = 72 }) {
 	let n = R((e) => e.dockAppIds).slice(0, 4), r = R((e) => e.apps), i = R((e) => e.runningAppIds), { getAppName: a } = H(), o = n.map((e) => r[e]).filter(Boolean);
 	return /* @__PURE__ */ Y("div", {
 		className: "flex items-center justify-around px-6",
@@ -2945,7 +2993,7 @@ function Wr({ onOpenApp: e, navBarHeight: t = 72 }) {
 }
 //#endregion
 //#region src/components/iphone/DynamicIsland.tsx
-function Gr({ onClick: e }) {
+function Kr({ onClick: e }) {
 	let [t, n] = q("compact"), r = R((e) => e.notifications).find((e) => !e.read);
 	return /* @__PURE__ */ Y("div", {
 		className: "cursor-pointer",
@@ -3013,7 +3061,7 @@ function Gr({ onClick: e }) {
 }
 //#endregion
 //#region src/components/iphone/HomeScreen.tsx
-var Kr = 4, qr = 6, Z = Kr * qr, Jr = 600, Yr = (e, t, n) => {
+var qr = 4, Jr = 6, Z = qr * Jr, Yr = 600, Xr = (e, t, n) => {
 	let r = [...e], i = r[t];
 	if (r[t] = null, e[n] === null) return r[n] = i, r;
 	if (t > n) {
@@ -3025,7 +3073,7 @@ var Kr = 4, qr = 6, Z = Kr * qr, Jr = 600, Yr = (e, t, n) => {
 	}
 	return r;
 };
-function Xr({ onOpenApp: e, statusBarHeight: t, navBarHeight: n, homeIndicatorHeight: r, useSafeArea: i = !1 }) {
+function Zr({ onOpenApp: e, statusBarHeight: t, navBarHeight: n, homeIndicatorHeight: r, useSafeArea: i = !1 }) {
 	let a = R((e) => e.apps), { getAppName: o } = H(), [s, c] = q(0), [l, u] = q(!1), [d, f] = q(() => {
 		let e = R.getState().apps, t = Object.values(e).filter((e) => !e.disabled).map((e) => e.id), n = Math.max(1, Math.ceil(t.length / Z)), r = [...t];
 		for (; r.length < n * Z;) r.push(null);
@@ -3083,7 +3131,7 @@ function Xr({ onOpenApp: e, statusBarHeight: t, navBarHeight: n, homeIndicatorHe
 	let ee = W((e) => {
 		e !== D.current && c(e);
 	}, []), P = K(null), F = () => {
-		P.current = setTimeout(() => u(!0), Jr);
+		P.current = setTimeout(() => u(!0), Yr);
 	}, te = () => {
 		P.current && clearTimeout(P.current);
 	}, I = () => {
@@ -3116,15 +3164,15 @@ function Xr({ onOpenApp: e, statusBarHeight: t, navBarHeight: n, homeIndicatorHe
 			if (!n) return;
 			let r = C.current?.querySelectorAll(".grid")?.[t];
 			if (r) {
-				let i = r.getBoundingClientRect(), a = e.clientX - i.left, o = e.clientY - i.top, s = Math.floor(a / (i.width / Kr)), c = Math.floor(o / (i.height / qr));
-				if (s >= 0 && s < Kr && c >= 0 && c < qr) {
-					let e = c * Kr + s, r = t * Z + e, i = [...O.current], a = i.indexOf(n);
+				let i = r.getBoundingClientRect(), a = e.clientX - i.left, o = e.clientY - i.top, s = Math.floor(a / (i.width / qr)), c = Math.floor(o / (i.height / Jr));
+				if (s >= 0 && s < qr && c >= 0 && c < Jr) {
+					let e = c * qr + s, r = t * Z + e, i = [...O.current], a = i.indexOf(n);
 					if (a !== -1 && r !== a) {
 						if (r >= i.length) {
 							let e = (t + 1) * Z;
 							for (; i.length < e;) i.push(null);
 						}
-						let e = Yr(i, a, r);
+						let e = Xr(i, a, r);
 						O.current = e, k.current = e, m(e), f(e);
 					}
 				}
@@ -3186,15 +3234,15 @@ function Xr({ onOpenApp: e, statusBarHeight: t, navBarHeight: n, homeIndicatorHe
 					children: N.map((t, n) => /* @__PURE__ */ Y("div", {
 						className: "h-full shrink-0 grid px-4",
 						style: {
-							gridTemplateColumns: `repeat(${Kr}, 1fr)`,
-							gridTemplateRows: `repeat(${qr}, 1fr)`,
+							gridTemplateColumns: `repeat(${qr}, 1fr)`,
+							gridTemplateRows: `repeat(${Jr}, 1fr)`,
 							gap: "16px 8px",
 							width: w
 						},
 						children: t.map((t, n) => {
 							if (t) {
 								let r = a[t];
-								if (r) return /* @__PURE__ */ Y(Zr, {
+								if (r) return /* @__PURE__ */ Y(Qr, {
 									app: r,
 									index: n,
 									jiggling: l,
@@ -3252,7 +3300,7 @@ function Xr({ onOpenApp: e, statusBarHeight: t, navBarHeight: n, homeIndicatorHe
 		]
 	});
 }
-function Zr({ app: e, index: t, jiggling: n, activeDragId: r, onPointerDownStart: i, onPointerDownEnd: a, onOpen: o, onDragStart: s }) {
+function Qr({ app: e, index: t, jiggling: n, activeDragId: r, onPointerDownStart: i, onPointerDownEnd: a, onOpen: o, onDragStart: s }) {
 	let { getAppName: c } = H(), l = c(e.id, e.name), u = K(null), d = K(!1), f = K({
 		x: 0,
 		y: 0
@@ -3262,7 +3310,7 @@ function Zr({ app: e, index: t, jiggling: n, activeDragId: r, onPointerDownStart
 			y: t.clientY
 		}, p.current = !1, d.current = !1, i(), u.current = setTimeout(() => {
 			d.current = !0, p.current || (p.current = !0, s(e.id, t.nativeEvent));
-		}, Jr);
+		}, Yr);
 	}, h = (t) => {
 		p.current || (f.current.x !== 0 || f.current.y !== 0) && Math.hypot(t.clientX - f.current.x, t.clientY - f.current.y) > 5 && (u.current && clearTimeout(u.current), p.current = !0, s(e.id, t.nativeEvent));
 	}, g = () => {
@@ -3341,7 +3389,7 @@ function Zr({ app: e, index: t, jiggling: n, activeDragId: r, onPointerDownStart
 }
 //#endregion
 //#region src/components/themes/IPhoneTheme.tsx
-function Qr() {
+function $r() {
 	let [e, t] = q("");
 	return G(() => {
 		let e = () => t((/* @__PURE__ */ new Date()).toLocaleTimeString([], {
@@ -3353,10 +3401,10 @@ function Qr() {
 		return () => clearInterval(n);
 	}, []), /* @__PURE__ */ Y(J, { children: e });
 }
-var $r = 50, ei = 72, ti = 20;
-function ni({ onOpenApp: e, isRealDevice: t = !1 }) {
+var ei = 50, ti = 72, ni = 20;
+function ri({ onOpenApp: e, isRealDevice: t = !1 }) {
 	let [n, r] = q(!1), [i, a] = q(!1), o = K(null), s = R((e) => e.windows), c = Object.values(s).some((e) => !e.isMinimized);
-	return Ir(t ? {} : {
+	return Lr(t ? {} : {
 		onSwipeUp: () => {
 			c || r(!1);
 		},
@@ -3368,33 +3416,33 @@ function ni({ onOpenApp: e, isRealDevice: t = !1 }) {
 		className: "absolute inset-0",
 		children: [
 			/* @__PURE__ */ Y(v, { children: n && /* @__PURE__ */ Y(Er, { onUnlock: () => r(!1) }) }),
-			/* @__PURE__ */ Y(Xr, {
+			/* @__PURE__ */ Y(Zr, {
 				onOpenApp: e,
-				statusBarHeight: t ? 0 : $r,
-				navBarHeight: t ? 0 : ei,
-				homeIndicatorHeight: t ? 0 : ti,
+				statusBarHeight: t ? 0 : ei,
+				navBarHeight: t ? 0 : ti,
+				homeIndicatorHeight: t ? 0 : ni,
 				useSafeArea: t
 			}),
 			/* @__PURE__ */ Y(I, {
-				statusBarHeight: $r,
-				navBarHeight: ei,
-				homeIndicatorHeight: ti,
+				statusBarHeight: ei,
+				navBarHeight: ti,
+				homeIndicatorHeight: ni,
 				useSafeArea: t
 			}),
 			!t && /* @__PURE__ */ X("div", {
 				className: "absolute top-0 inset-x-0 z-40 grid pointer-events-none",
 				style: {
-					height: $r,
+					height: ei,
 					gridTemplateColumns: "1fr auto 1fr"
 				},
 				children: [
 					/* @__PURE__ */ Y("div", {
 						className: "flex items-start pt-3.5 pl-5 text-white text-[15px] font-semibold tabular-nums",
-						children: /* @__PURE__ */ Y(Qr, {})
+						children: /* @__PURE__ */ Y($r, {})
 					}),
 					/* @__PURE__ */ Y("div", {
 						className: "flex items-start justify-center pt-1.5",
-						children: /* @__PURE__ */ Y(Gr, {})
+						children: /* @__PURE__ */ Y(Kr, {})
 					}),
 					/* @__PURE__ */ X("div", {
 						className: "flex items-start justify-end pt-3.5 pr-5 gap-2 text-white",
@@ -3406,19 +3454,19 @@ function ni({ onOpenApp: e, isRealDevice: t = !1 }) {
 					})
 				]
 			}),
-			!t && /* @__PURE__ */ Y(Fr, {
+			!t && /* @__PURE__ */ Y(Ir, {
 				open: i,
 				onClose: () => a(!1)
 			}),
 			!c && !t && /* @__PURE__ */ X("div", {
 				className: "absolute bottom-0 inset-x-0 z-40",
 				style: { height: 92 },
-				children: [/* @__PURE__ */ Y(Wr, {
+				children: [/* @__PURE__ */ Y(Gr, {
 					onOpenApp: e,
-					navBarHeight: ei
+					navBarHeight: ti
 				}), /* @__PURE__ */ Y("div", {
 					className: "flex items-center justify-center",
-					style: { height: ti },
+					style: { height: ni },
 					children: /* @__PURE__ */ Y("div", { className: "w-32 h-1 bg-white/40 rounded-full" })
 				})]
 			})
@@ -3427,7 +3475,7 @@ function ni({ onOpenApp: e, isRealDevice: t = !1 }) {
 }
 //#endregion
 //#region src/components/windows/StartMenu.tsx
-var ri = [
+var ii = [
 	{
 		label: "Welcome.txt",
 		subtitle: "Just now",
@@ -3444,7 +3492,7 @@ var ri = [
 		icon: "📝"
 	}
 ];
-function ii({ open: e, onClose: t, onOpenApp: n }) {
+function ai({ open: e, onClose: t, onOpenApp: n }) {
 	let [r, i] = q(""), a = R((e) => e.apps), o = R((e) => e.dockAppIds), { t: s, getAppName: c } = H(), l = o.map((e) => a[e]).filter(Boolean), u = Object.values(a).filter((e) => !e.disabled), d = r ? u.filter((e) => c(e.id, e.name).toLowerCase().includes(r.toLowerCase())) : [], f = (e) => {
 		n(e), t();
 	};
@@ -3546,7 +3594,7 @@ function ii({ open: e, onClose: t, onOpenApp: n }) {
 					children: "Recommended"
 				}), /* @__PURE__ */ Y("div", {
 					className: "grid grid-cols-3 gap-1",
-					children: ri.map((e) => /* @__PURE__ */ X("button", {
+					children: ii.map((e) => /* @__PURE__ */ X("button", {
 						className: "flex items-center gap-2.5 p-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-left",
 						children: [/* @__PURE__ */ Y("span", {
 							className: "text-2xl w-8 text-center shrink-0",
@@ -3586,7 +3634,7 @@ function ii({ open: e, onClose: t, onOpenApp: n }) {
 }
 //#endregion
 //#region src/components/windows/SystemTray.tsx
-function ai({ open: e, onClose: t }) {
+function oi({ open: e, onClose: t }) {
 	let n = R((e) => e.notifications), r = R((e) => e.dismissNotification), i = n.filter((e) => !e.read), [a, o] = q([
 		{
 			id: "wifi",
@@ -3695,10 +3743,10 @@ function ai({ open: e, onClose: t }) {
 			}),
 			/* @__PURE__ */ X("div", {
 				className: "px-5 py-3 border-b border-black/8 dark:border-white/8 space-y-2.5",
-				children: [/* @__PURE__ */ Y(oi, {
+				children: [/* @__PURE__ */ Y(si, {
 					icon: /* @__PURE__ */ Y(Xe, { className: "w-3.5 h-3.5" }),
 					defaultValue: 75
-				}), /* @__PURE__ */ Y(oi, {
+				}), /* @__PURE__ */ Y(si, {
 					icon: /* @__PURE__ */ Y(Ye, { className: "w-3.5 h-3.5" }),
 					defaultValue: 80
 				})]
@@ -3760,7 +3808,7 @@ function ai({ open: e, onClose: t }) {
 		]
 	})] }) });
 }
-function oi({ icon: e, defaultValue: t }) {
+function si({ icon: e, defaultValue: t }) {
 	let [n, r] = q(t);
 	return /* @__PURE__ */ X("div", {
 		className: "flex items-center gap-2.5",
@@ -3786,19 +3834,19 @@ function oi({ icon: e, defaultValue: t }) {
 }
 //#endregion
 //#region src/components/dock/Taskbar.tsx
-function si({ onOpenApp: e }) {
+function ci({ onOpenApp: e }) {
 	let { windowsStartIcon: t } = M(), [n, r] = q(!1), [i, a] = q(!1), o = R((e) => e.dockAppIds), s = R((e) => e.apps), c = R((e) => e.runningAppIds), l = R((e) => e.launchApp), u = R((e) => e.restoreWindow), d = R((e) => e.focusWindow), f = R((e) => e.windows), { t: p, getAppName: m } = H(), h = o.map((e) => s[e]).filter(Boolean), g = (e) => {
 		l(e);
 	};
 	return /* @__PURE__ */ X(J, { children: [
-		/* @__PURE__ */ Y(ii, {
+		/* @__PURE__ */ Y(ai, {
 			open: n,
 			onClose: () => r(!1),
 			onOpenApp: (t) => {
 				e(t), r(!1);
 			}
 		}),
-		/* @__PURE__ */ Y(ai, {
+		/* @__PURE__ */ Y(oi, {
 			open: i,
 			onClose: () => a(!1)
 		}),
@@ -3932,18 +3980,18 @@ function si({ onOpenApp: e }) {
 }
 //#endregion
 //#region src/components/themes/WindowsTheme.tsx
-function ci({ onOpenApp: e }) {
+function li({ onOpenApp: e }) {
 	return gr(), /* @__PURE__ */ Y(J, { children: /* @__PURE__ */ Y("div", {
 		className: "absolute bottom-0 inset-x-0 z-40 pointer-events-none",
 		children: /* @__PURE__ */ Y("div", {
 			className: "pointer-events-auto",
-			children: /* @__PURE__ */ Y(si, { onOpenApp: e })
+			children: /* @__PURE__ */ Y(ci, { onOpenApp: e })
 		})
 	}) });
 }
 //#endregion
 //#region src/components/android/AppDrawer.tsx
-function li({ open: e, onClose: t, onOpenApp: n }) {
+function ui({ open: e, onClose: t, onOpenApp: n }) {
 	let [r, i] = q(""), a = R((e) => e.apps), { t: o, getAppName: s } = H(), c = Object.values(a).filter((e) => !e.disabled), l = r ? c.filter((e) => s(e.id, e.name).toLowerCase().includes(r.toLowerCase())) : c, u = (e) => {
 		n(e), t();
 	};
@@ -4021,7 +4069,7 @@ function li({ open: e, onClose: t, onOpenApp: n }) {
 }
 //#endregion
 //#region src/components/android/QuickSettings.tsx
-function ui({ open: e, onClose: t }) {
+function di({ open: e, onClose: t }) {
 	let n = R((e) => e.notifications), r = R((e) => e.dismissNotification), i = R((e) => e.colorScheme), a = R((e) => e.setColorScheme), [o, s] = q(!1), [c, l] = q(70), [u, d] = q([
 		{
 			id: "wifi",
@@ -4195,7 +4243,7 @@ function ui({ open: e, onClose: t }) {
 }
 //#endregion
 //#region src/components/themes/AndroidTheme.tsx
-function di() {
+function fi() {
 	let [e, t] = q("");
 	return G(() => {
 		let e = () => t((/* @__PURE__ */ new Date()).toLocaleTimeString([], {
@@ -4207,10 +4255,10 @@ function di() {
 		return () => clearInterval(n);
 	}, []), /* @__PURE__ */ Y(J, { children: e });
 }
-var fi = 32, pi = 76, mi = 0;
-function hi({ onOpenApp: e, isRealDevice: t = !1 }) {
+var pi = 32, mi = 76, hi = 0;
+function gi({ onOpenApp: e, isRealDevice: t = !1 }) {
 	let [n, r] = q(!1), [i, a] = q(!1), o = K(null), s = R((e) => e.windows), c = Object.values(s).some((e) => !e.isMinimized);
-	return Ir(t ? {} : {
+	return Lr(t ? {} : {
 		onSwipeUp: () => {
 			c || r(!0);
 		},
@@ -4221,7 +4269,7 @@ function hi({ onOpenApp: e, isRealDevice: t = !1 }) {
 		ref: o,
 		className: "absolute inset-0",
 		children: [
-			t && /* @__PURE__ */ Y(Xr, {
+			t && /* @__PURE__ */ Y(Zr, {
 				onOpenApp: e,
 				statusBarHeight: 0,
 				navBarHeight: 0,
@@ -4230,8 +4278,8 @@ function hi({ onOpenApp: e, isRealDevice: t = !1 }) {
 			}),
 			!t && /* @__PURE__ */ X("div", {
 				className: "absolute top-0 inset-x-0 z-40 flex items-center justify-between px-4 text-white text-[13px] font-semibold tabular-nums pointer-events-none",
-				style: { height: fi },
-				children: [/* @__PURE__ */ Y(di, {}), /* @__PURE__ */ X("div", {
+				style: { height: pi },
+				children: [/* @__PURE__ */ Y(fi, {}), /* @__PURE__ */ X("div", {
 					className: "flex items-center gap-2",
 					children: [
 						/* @__PURE__ */ Y(Dt, { className: "w-[17px] h-[17px]" }),
@@ -4241,26 +4289,26 @@ function hi({ onOpenApp: e, isRealDevice: t = !1 }) {
 				})]
 			}),
 			/* @__PURE__ */ Y(I, {
-				statusBarHeight: fi,
-				navBarHeight: pi,
-				homeIndicatorHeight: mi,
+				statusBarHeight: pi,
+				navBarHeight: mi,
+				homeIndicatorHeight: hi,
 				useSafeArea: t
 			}),
 			!c && !t && /* @__PURE__ */ Y("div", {
 				className: "absolute bottom-0 inset-x-0 z-40",
-				children: /* @__PURE__ */ Y(Wr, {
+				children: /* @__PURE__ */ Y(Gr, {
 					onOpenApp: e,
-					navBarHeight: pi
+					navBarHeight: mi
 				})
 			}),
-			/* @__PURE__ */ Y(li, {
+			/* @__PURE__ */ Y(ui, {
 				open: n,
 				onClose: () => r(!1),
 				onOpenApp: (t) => {
 					e(t), r(!1);
 				}
 			}),
-			/* @__PURE__ */ Y(ui, {
+			/* @__PURE__ */ Y(di, {
 				open: i,
 				onClose: () => a(!1)
 			})
@@ -4269,11 +4317,11 @@ function hi({ onOpenApp: e, isRealDevice: t = !1 }) {
 }
 //#endregion
 //#region node_modules/.pnpm/@radix-ui+react-context-menu@2.2.16_@types+react-dom@19.2.3_@types+react@19.2.14__@type_7ddebea395c65d3c4d3683b445765102/node_modules/@radix-ui/react-context-menu/dist/index.mjs
-var gi = "ContextMenu", [_i, vi] = r(gi, [Ae]), Q = Ae(), [yi, bi] = _i(gi), xi = (e) => {
+var _i = "ContextMenu", [vi, yi] = r(_i, [Ae]), Q = Ae(), [bi, xi] = vi(_i), Si = (e) => {
 	let { __scopeContextMenu: t, children: n, onOpenChange: r, dir: i, modal: a = !0 } = e, [o, c] = U.useState(!1), l = Q(t), u = s(r), d = U.useCallback((e) => {
 		c(e), u(e);
 	}, [u]);
-	return /* @__PURE__ */ Y(yi, {
+	return /* @__PURE__ */ Y(bi, {
 		scope: t,
 		open: o,
 		onOpenChange: d,
@@ -4288,9 +4336,9 @@ var gi = "ContextMenu", [_i, vi] = r(gi, [Ae]), Q = Ae(), [yi, bi] = _i(gi), xi 
 		})
 	});
 };
-xi.displayName = gi;
-var Si = "ContextMenuTrigger", Ci = U.forwardRef((t, n) => {
-	let { __scopeContextMenu: r, disabled: i = !1, ...a } = t, s = bi(Si, r), c = Q(r), l = U.useRef({
+Si.displayName = _i;
+var Ci = "ContextMenuTrigger", wi = U.forwardRef((t, n) => {
+	let { __scopeContextMenu: r, disabled: i = !1, ...a } = t, s = xi(Ci, r), c = Q(r), l = U.useRef({
 		x: 0,
 		y: 0
 	}), u = U.useRef({ getBoundingClientRect: () => DOMRect.fromRect({
@@ -4318,25 +4366,25 @@ var Si = "ContextMenuTrigger", Ci = U.forwardRef((t, n) => {
 		onContextMenu: i ? t.onContextMenu : e(t.onContextMenu, (e) => {
 			f(), p(e), e.preventDefault();
 		}),
-		onPointerDown: i ? t.onPointerDown : e(t.onPointerDown, Qi((e) => {
+		onPointerDown: i ? t.onPointerDown : e(t.onPointerDown, $i((e) => {
 			f(), d.current = window.setTimeout(() => p(e), 700);
 		})),
-		onPointerMove: i ? t.onPointerMove : e(t.onPointerMove, Qi(f)),
-		onPointerCancel: i ? t.onPointerCancel : e(t.onPointerCancel, Qi(f)),
-		onPointerUp: i ? t.onPointerUp : e(t.onPointerUp, Qi(f))
+		onPointerMove: i ? t.onPointerMove : e(t.onPointerMove, $i(f)),
+		onPointerCancel: i ? t.onPointerCancel : e(t.onPointerCancel, $i(f)),
+		onPointerUp: i ? t.onPointerUp : e(t.onPointerUp, $i(f))
 	})] });
 });
-Ci.displayName = Si;
-var wi = "ContextMenuPortal", Ti = (e) => {
+wi.displayName = Ci;
+var Ti = "ContextMenuPortal", Ei = (e) => {
 	let { __scopeContextMenu: t, ...n } = e;
 	return /* @__PURE__ */ Y(Re, {
 		...Q(t),
 		...n
 	});
 };
-Ti.displayName = wi;
-var Ei = "ContextMenuContent", Di = U.forwardRef((e, t) => {
-	let { __scopeContextMenu: n, ...r } = e, i = bi(Ei, n), a = Q(n), o = U.useRef(!1);
+Ei.displayName = Ti;
+var Di = "ContextMenuContent", Oi = U.forwardRef((e, t) => {
+	let { __scopeContextMenu: n, ...r } = e, i = xi(Di, n), a = Q(n), o = U.useRef(!1);
 	return /* @__PURE__ */ Y(Le, {
 		...a,
 		...r,
@@ -4360,8 +4408,8 @@ var Ei = "ContextMenuContent", Di = U.forwardRef((e, t) => {
 		}
 	});
 });
-Di.displayName = Ei;
-var Oi = "ContextMenuGroup", ki = U.forwardRef((e, t) => {
+Oi.displayName = Di;
+var ki = "ContextMenuGroup", Ai = U.forwardRef((e, t) => {
 	let { __scopeContextMenu: n, ...r } = e;
 	return /* @__PURE__ */ Y(je, {
 		...Q(n),
@@ -4369,8 +4417,8 @@ var Oi = "ContextMenuGroup", ki = U.forwardRef((e, t) => {
 		ref: t
 	});
 });
-ki.displayName = Oi;
-var Ai = "ContextMenuLabel", ji = U.forwardRef((e, t) => {
+Ai.displayName = ki;
+var ji = "ContextMenuLabel", Mi = U.forwardRef((e, t) => {
 	let { __scopeContextMenu: n, ...r } = e;
 	return /* @__PURE__ */ Y(Me, {
 		...Q(n),
@@ -4378,8 +4426,8 @@ var Ai = "ContextMenuLabel", ji = U.forwardRef((e, t) => {
 		ref: t
 	});
 });
-ji.displayName = Ai;
-var Mi = "ContextMenuItem", Ni = U.forwardRef((e, t) => {
+Mi.displayName = ji;
+var Ni = "ContextMenuItem", Pi = U.forwardRef((e, t) => {
 	let { __scopeContextMenu: n, ...r } = e;
 	return /* @__PURE__ */ Y(Ve, {
 		...Q(n),
@@ -4387,8 +4435,8 @@ var Mi = "ContextMenuItem", Ni = U.forwardRef((e, t) => {
 		ref: t
 	});
 });
-Ni.displayName = Mi;
-var Pi = "ContextMenuCheckboxItem", Fi = U.forwardRef((e, t) => {
+Pi.displayName = Ni;
+var Fi = "ContextMenuCheckboxItem", Ii = U.forwardRef((e, t) => {
 	let { __scopeContextMenu: n, ...r } = e;
 	return /* @__PURE__ */ Y(Ue, {
 		...Q(n),
@@ -4396,8 +4444,8 @@ var Pi = "ContextMenuCheckboxItem", Fi = U.forwardRef((e, t) => {
 		ref: t
 	});
 });
-Fi.displayName = Pi;
-var Ii = "ContextMenuRadioGroup", Li = U.forwardRef((e, t) => {
+Ii.displayName = Fi;
+var Li = "ContextMenuRadioGroup", Ri = U.forwardRef((e, t) => {
 	let { __scopeContextMenu: n, ...r } = e;
 	return /* @__PURE__ */ Y(Ke, {
 		...Q(n),
@@ -4405,8 +4453,8 @@ var Ii = "ContextMenuRadioGroup", Li = U.forwardRef((e, t) => {
 		ref: t
 	});
 });
-Li.displayName = Ii;
-var Ri = "ContextMenuRadioItem", zi = U.forwardRef((e, t) => {
+Ri.displayName = Li;
+var zi = "ContextMenuRadioItem", Bi = U.forwardRef((e, t) => {
 	let { __scopeContextMenu: n, ...r } = e;
 	return /* @__PURE__ */ Y(Ne, {
 		...Q(n),
@@ -4414,8 +4462,8 @@ var Ri = "ContextMenuRadioItem", zi = U.forwardRef((e, t) => {
 		ref: t
 	});
 });
-zi.displayName = Ri;
-var Bi = "ContextMenuItemIndicator", Vi = U.forwardRef((e, t) => {
+Bi.displayName = zi;
+var Vi = "ContextMenuItemIndicator", Hi = U.forwardRef((e, t) => {
 	let { __scopeContextMenu: n, ...r } = e;
 	return /* @__PURE__ */ Y(We, {
 		...Q(n),
@@ -4423,8 +4471,8 @@ var Bi = "ContextMenuItemIndicator", Vi = U.forwardRef((e, t) => {
 		ref: t
 	});
 });
-Vi.displayName = Bi;
-var Hi = "ContextMenuSeparator", Ui = U.forwardRef((e, t) => {
+Hi.displayName = Vi;
+var Ui = "ContextMenuSeparator", Wi = U.forwardRef((e, t) => {
 	let { __scopeContextMenu: n, ...r } = e;
 	return /* @__PURE__ */ Y(He, {
 		...Q(n),
@@ -4432,8 +4480,8 @@ var Hi = "ContextMenuSeparator", Ui = U.forwardRef((e, t) => {
 		ref: t
 	});
 });
-Ui.displayName = Hi;
-var Wi = "ContextMenuArrow", Gi = U.forwardRef((e, t) => {
+Wi.displayName = Ui;
+var Gi = "ContextMenuArrow", Ki = U.forwardRef((e, t) => {
 	let { __scopeContextMenu: n, ...r } = e;
 	return /* @__PURE__ */ Y(Be, {
 		...Q(n),
@@ -4441,13 +4489,13 @@ var Wi = "ContextMenuArrow", Gi = U.forwardRef((e, t) => {
 		ref: t
 	});
 });
-Gi.displayName = Wi;
-var Ki = "ContextMenuSub", qi = (e) => {
+Ki.displayName = Gi;
+var qi = "ContextMenuSub", Ji = (e) => {
 	let { __scopeContextMenu: t, children: n, onOpenChange: r, open: i, defaultOpen: a } = e, o = Q(t), [s, c] = f({
 		prop: i,
 		defaultProp: a ?? !1,
 		onChange: r,
-		caller: Ki
+		caller: qi
 	});
 	return /* @__PURE__ */ Y(ze, {
 		...o,
@@ -4456,8 +4504,8 @@ var Ki = "ContextMenuSub", qi = (e) => {
 		children: n
 	});
 };
-qi.displayName = Ki;
-var Ji = "ContextMenuSubTrigger", Yi = U.forwardRef((e, t) => {
+Ji.displayName = qi;
+var Yi = "ContextMenuSubTrigger", Xi = U.forwardRef((e, t) => {
 	let { __scopeContextMenu: n, ...r } = e;
 	return /* @__PURE__ */ Y(Fe, {
 		...Q(n),
@@ -4465,8 +4513,8 @@ var Ji = "ContextMenuSubTrigger", Yi = U.forwardRef((e, t) => {
 		ref: t
 	});
 });
-Yi.displayName = Ji;
-var Xi = "ContextMenuSubContent", Zi = U.forwardRef((e, t) => {
+Xi.displayName = Yi;
+var Zi = "ContextMenuSubContent", Qi = U.forwardRef((e, t) => {
 	let { __scopeContextMenu: n, ...r } = e;
 	return /* @__PURE__ */ Y(Ie, {
 		...Q(n),
@@ -4482,14 +4530,14 @@ var Xi = "ContextMenuSubContent", Zi = U.forwardRef((e, t) => {
 		}
 	});
 });
-Zi.displayName = Xi;
-function Qi(e) {
+Qi.displayName = Zi;
+function $i(e) {
 	return (t) => t.pointerType === "mouse" ? void 0 : e(t);
 }
-var $i = xi, ea = Ci, ta = Ti, na = Di, ra = Ni, ia = Ui;
+var ea = Si, ta = wi, na = Ei, ra = Oi, ia = Pi, aa = Wi;
 //#endregion
 //#region src/lib/wallpaper-fit.ts
-function aa(e) {
+function oa(e) {
 	switch (e) {
 		case "fill": return {
 			backgroundSize: "cover",
@@ -4520,7 +4568,7 @@ function aa(e) {
 }
 //#endregion
 //#region src/components/desktop/ViewOptionsDialog.tsx
-function oa() {
+function sa() {
 	let { t: e } = H(), t = R((e) => e.desktopViewOptionsOpen), n = R((e) => e.setDesktopViewOptionsOpen), r = R((e) => e.useStacks), i = R((e) => e.stackGroupBy), a = R((e) => e.toggleStacks), o = R((e) => e.setStackGroupBy), s = R((e) => e.desktopSortBy), c = R((e) => e.setDesktopSortBy), l = R((e) => e.desktopIconSize), u = R((e) => e.setDesktopIconSize), d = R((e) => e.desktopGridSpacing), f = R((e) => e.setDesktopGridSpacing), p = R((e) => e.desktopTextSize), m = R((e) => e.setDesktopTextSize), h = R((e) => e.desktopLabelPosition), g = R((e) => e.setDesktopLabelPosition), [_, v] = q({
 		x: 0,
 		y: 0
@@ -4779,8 +4827,8 @@ function oa() {
 }
 //#endregion
 //#region src/components/desktop/Wallpaper.tsx
-var sa = "flex items-center gap-2 px-2.5 py-[5px] rounded-[5px] cursor-default outline-none select-none text-[13px] text-black dark:text-white data-[highlighted]:bg-blue-500 data-[highlighted]:text-white data-[disabled]:opacity-40 data-[disabled]:pointer-events-none transition-colors", ca = "my-[3px] mx-0 h-px bg-black/10 dark:bg-white/10", la = "min-w-[220px] outline-none z-[99999]";
-function ua({ children: e }) {
+var ca = "flex items-center gap-2 px-2.5 py-[5px] rounded-[5px] cursor-default outline-none select-none text-[13px] text-black dark:text-white data-[highlighted]:bg-blue-500 data-[highlighted]:text-white data-[disabled]:opacity-40 data-[disabled]:pointer-events-none transition-colors", la = "my-[3px] mx-0 h-px bg-black/10 dark:bg-white/10", ua = "min-w-[220px] outline-none z-[99999]";
+function da({ children: e }) {
 	let { t } = H(), n = ee(), r = R((e) => e.useStacks), i = R((e) => e.toggleStacks), a = R((e) => e.openWidgetGallery), o = R((e) => e.wallpaperFitMode), s = R((e) => e.setDesktopViewOptionsOpen), c = R((e) => e.apps), l = R((e) => e.launchApp), u = R((e) => e.setSettingsActiveTab), d = Cr(), [f, p] = q(!1), m = Ce(), h = wr(), g = xe(m, h.url ?? ""), _ = Sr(g, d && h.kind !== "color"), v = h.kind === "color" ? d : _, y = d && v && h.kind !== "color" ? `url(${g})` : "none", b = () => {
 		let e = Object.values(c).find((e) => e.id === "settings");
 		e ? (u("wallpaper"), l(e)) : p(!0);
@@ -4803,45 +4851,45 @@ function ua({ children: e }) {
 			className: "absolute inset-0",
 			style: {
 				backgroundImage: y,
-				...aa(o),
+				...oa(o),
 				transition: "background-image 120ms ease-out"
 			}
 		})
 	}) : /* @__PURE__ */ Y("div", { className: "absolute inset-0 overflow-hidden bg-[#f4f4f5] dark:bg-[#18181b]" }), S = n.contextMenu && (n.wallpaperPicker || n.widgets.allowGalleryEdit || n.iconGrid);
 	return /* @__PURE__ */ X(J, { children: [
-		n.contextMenu && S ? /* @__PURE__ */ X($i, { children: [/* @__PURE__ */ Y(ea, {
+		n.contextMenu && S ? /* @__PURE__ */ X(ea, { children: [/* @__PURE__ */ Y(ta, {
 			asChild: !0,
 			children: x()
-		}), /* @__PURE__ */ Y(ta, { children: /* @__PURE__ */ Y(na, {
+		}), /* @__PURE__ */ Y(na, { children: /* @__PURE__ */ Y(ra, {
 			asChild: !0,
-			className: la,
+			className: ua,
 			children: /* @__PURE__ */ Y(D, {
 				variant: "panel",
 				className: "p-1",
 				children: /* @__PURE__ */ X("div", { children: [
-					n.wallpaperPicker && /* @__PURE__ */ Y(ra, {
-						className: sa,
+					n.wallpaperPicker && /* @__PURE__ */ Y(ia, {
+						className: ca,
 						onSelect: b,
 						children: t.changeWallpaper
 					}),
-					n.widgets.allowGalleryEdit && /* @__PURE__ */ Y(ra, {
-						className: sa,
+					n.widgets.allowGalleryEdit && /* @__PURE__ */ Y(ia, {
+						className: ca,
 						onSelect: () => a(),
 						children: t.editWidgets
 					}),
-					(n.wallpaperPicker || n.widgets.allowGalleryEdit) && n.iconGrid && /* @__PURE__ */ Y(ia, { className: ca }),
+					(n.wallpaperPicker || n.widgets.allowGalleryEdit) && n.iconGrid && /* @__PURE__ */ Y(aa, { className: la }),
 					n.iconGrid && /* @__PURE__ */ X(J, { children: [
-						/* @__PURE__ */ X(ra, {
-							className: sa,
+						/* @__PURE__ */ X(ia, {
+							className: ca,
 							onSelect: () => i(),
 							children: [/* @__PURE__ */ Y("span", {
 								className: "w-3.5 shrink-0 flex items-center justify-center",
 								children: r && /* @__PURE__ */ Y(Ee, { className: "w-3 h-3 stroke-[2.5]" })
 							}), t.useStacks]
 						}),
-						/* @__PURE__ */ Y(ia, { className: ca }),
-						/* @__PURE__ */ X(ra, {
-							className: sa,
+						/* @__PURE__ */ Y(aa, { className: la }),
+						/* @__PURE__ */ X(ia, {
+							className: ca,
 							onSelect: () => s(!0),
 							children: [/* @__PURE__ */ Y("span", { className: "w-3.5 shrink-0" }), t.showViewOptions]
 						})
@@ -4853,7 +4901,7 @@ function ua({ children: e }) {
 			className: "absolute inset-0 pointer-events-none overflow-clip",
 			children: e
 		}),
-		/* @__PURE__ */ Y(oa, {}),
+		/* @__PURE__ */ Y(sa, {}),
 		f && /* @__PURE__ */ Y("div", {
 			className: "fixed inset-0 z-[99999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 pointer-events-auto",
 			children: /* @__PURE__ */ X("div", {
@@ -4878,8 +4926,8 @@ function ua({ children: e }) {
 }
 //#endregion
 //#region src/components/desktop/EditContextMenu.tsx
-var da = "flex items-center gap-2 px-2.5 py-[5px] rounded-[5px] cursor-default outline-none select-none text-[13px] text-black dark:text-white data-[highlighted]:bg-blue-500 data-[highlighted]:text-white data-[disabled]:opacity-40 data-[disabled]:pointer-events-none transition-colors", fa = "my-[3px] mx-0 h-px bg-black/10 dark:bg-white/10", pa = "min-w-[180px] outline-none z-[99999]";
-function ma(e) {
+var fa = "flex items-center gap-2 px-2.5 py-[5px] rounded-[5px] cursor-default outline-none select-none text-[13px] text-black dark:text-white data-[highlighted]:bg-blue-500 data-[highlighted]:text-white data-[disabled]:opacity-40 data-[disabled]:pointer-events-none transition-colors", pa = "my-[3px] mx-0 h-px bg-black/10 dark:bg-white/10", ma = "min-w-[180px] outline-none z-[99999]";
+function ha(e) {
 	if (!(e instanceof HTMLElement)) return null;
 	let t = e instanceof HTMLImageElement, n = e instanceof HTMLInputElement && e.type !== "checkbox" && e.type !== "radio" && e.type !== "button" && e.type !== "submit" || e instanceof HTMLTextAreaElement, r = !e.hasAttribute("disabled") && !e.readOnly && (n || e.isContentEditable), i = ((window.getSelection?.())?.toString() ?? "").length > 0, a = r, o = r, s = r && i, c = i, l = r, u = r || t || i || e.isContentEditable;
 	return !r && !t && !i ? null : {
@@ -4898,7 +4946,7 @@ function ma(e) {
 		}
 	};
 }
-async function ha(e) {
+async function ga(e) {
 	let t;
 	try {
 		t = await navigator.clipboard.readText();
@@ -4911,7 +4959,7 @@ async function ha(e) {
 		e.setRangeText(t, n, r, "end"), e.dispatchEvent(new Event("input", { bubbles: !0 }));
 	} else e instanceof HTMLElement && e.isContentEditable && (e.focus(), document.execCommand("insertText", !1, t));
 }
-function ga(e, t) {
+function _a(e, t) {
 	if (e === "selectAll" && t instanceof HTMLElement && !(t instanceof HTMLInputElement) && !(t instanceof HTMLTextAreaElement)) {
 		let e = window.getSelection(), n = document.createRange();
 		n.selectNodeContents(t), e?.removeAllRanges(), e?.addRange(n);
@@ -4919,18 +4967,18 @@ function ga(e, t) {
 	}
 	document.execCommand(e);
 }
-async function _a(e) {
+async function va(e) {
 	let t = document.createElement("a");
 	t.href = e, t.download = e.split("/").pop()?.split("?")[0] || "image", document.body.appendChild(t), t.click(), t.remove();
 }
-function va(e, t, n) {
+function ya(e, t, n) {
 	let r = [];
 	if (e.isImage && e.imageSrc) {
 		let t = e.imageSrc;
 		r.push({
 			key: "saveImage",
 			label: n.saveImage,
-			onSelect: () => void _a(t)
+			onSelect: () => void va(t)
 		}), r.push({
 			key: "sep-save-image",
 			separator: !0
@@ -4940,12 +4988,12 @@ function va(e, t, n) {
 		key: "undo",
 		label: n.menuUndo,
 		disabled: !e.canUndo,
-		onSelect: () => ga("undo", t)
+		onSelect: () => _a("undo", t)
 	}), r.push({
 		key: "redo",
 		label: n.menuRedo,
 		disabled: !e.canRedo,
-		onSelect: () => ga("redo", t)
+		onSelect: () => _a("redo", t)
 	}), r.push({
 		key: "sep-undo-redo",
 		separator: !0
@@ -4953,17 +5001,17 @@ function va(e, t, n) {
 		key: "cut",
 		label: n.menuCut,
 		disabled: !e.canCut,
-		onSelect: () => ga("cut", t)
+		onSelect: () => _a("cut", t)
 	})), r.push({
 		key: "copy",
 		label: n.menuCopy,
 		disabled: !e.canCopy,
-		onSelect: () => ga("copy", t)
+		onSelect: () => _a("copy", t)
 	}), e.isEditable && r.push({
 		key: "paste",
 		label: n.menuPaste,
 		disabled: !e.canPaste,
-		onSelect: () => void ha(t)
+		onSelect: () => void ga(t)
 	}), r.push({
 		key: "sep-select-all",
 		separator: !0
@@ -4971,10 +5019,10 @@ function va(e, t, n) {
 		key: "selectAll",
 		label: n.menuSelectAll,
 		disabled: !e.canSelectAll,
-		onSelect: () => ga("selectAll", t)
+		onSelect: () => _a("selectAll", t)
 	}), r;
 }
-function ya({ children: e, resolveItems: t }) {
+function ba({ children: e, resolveItems: t }) {
 	let { t: n } = H(), [r, i] = q(null), a = K(null), o = K(null);
 	return G(() => {
 		if (!r) return;
@@ -4982,21 +5030,21 @@ function ya({ children: e, resolveItems: t }) {
 			o.current?.contains(e.target) || i(null);
 		};
 		return document.addEventListener("pointerdown", e, { capture: !0 }), () => document.removeEventListener("pointerdown", e, { capture: !0 });
-	}, [r]), /* @__PURE__ */ X($i, {
+	}, [r]), /* @__PURE__ */ X(ea, {
 		modal: !1,
 		onOpenChange: (e) => {
 			e || i(null);
 		},
-		children: [/* @__PURE__ */ Y(ea, {
+		children: [/* @__PURE__ */ Y(ta, {
 			asChild: !0,
 			onContextMenu: W((e) => {
-				let r = ma(e.target);
+				let r = ha(e.target);
 				if (!r) {
 					e.preventDefault(), i(null);
 					return;
 				}
 				a.current = e.target;
-				let o = va(r.flags, e.target, n), s = t?.(o, {
+				let o = ya(r.flags, e.target, n), s = t?.(o, {
 					target: r.target,
 					isEditable: r.flags.isEditable,
 					isImage: r.flags.isImage,
@@ -5012,15 +5060,15 @@ function ya({ children: e, resolveItems: t }) {
 				className: "contents",
 				children: e
 			})
-		}), /* @__PURE__ */ Y(ta, { children: /* @__PURE__ */ Y(na, {
+		}), /* @__PURE__ */ Y(na, { children: /* @__PURE__ */ Y(ra, {
 			asChild: !0,
-			className: pa,
+			className: ma,
 			children: r ? /* @__PURE__ */ Y(D, {
 				ref: o,
 				variant: "panel",
 				className: "p-1",
-				children: /* @__PURE__ */ Y("div", { children: r.map((e) => e.separator ? /* @__PURE__ */ Y(ia, { className: fa }, e.key) : /* @__PURE__ */ Y(ra, {
-					className: da,
+				children: /* @__PURE__ */ Y("div", { children: r.map((e) => e.separator ? /* @__PURE__ */ Y(aa, { className: pa }, e.key) : /* @__PURE__ */ Y(ia, {
+					className: fa,
 					disabled: e.disabled,
 					onSelect: e.onSelect,
 					children: e.label
@@ -5031,15 +5079,15 @@ function ya({ children: e, resolveItems: t }) {
 }
 //#endregion
 //#region src/components/desktop/AppIcon.tsx
-var ba = 6, xa = 700;
-function Sa({ items: e, appId: t, onClose: n }) {
+var xa = 6, Sa = 700;
+function Ca({ items: e, appId: t, onClose: n }) {
 	let r = (e) => {
 		n(), window.dispatchEvent(new CustomEvent("app:context:action", { detail: {
 			appId: t,
 			action: e
 		} }));
 	};
-	return /* @__PURE__ */ Y(J, { children: e.map((e) => e.separator ? /* @__PURE__ */ Y(ia, { className: "my-1 h-px bg-black/10 dark:bg-white/10" }, e.key) : /* @__PURE__ */ X(ra, {
+	return /* @__PURE__ */ Y(J, { children: e.map((e) => e.separator ? /* @__PURE__ */ Y(aa, { className: "my-1 h-px bg-black/10 dark:bg-white/10" }, e.key) : /* @__PURE__ */ X(ia, {
 		disabled: e.disabled,
 		onSelect: () => r(e.action),
 		className: "flex items-center justify-between px-3 py-1.5 rounded-[5px] cursor-default outline-none hover:bg-blue-500 hover:text-white data-disabled:opacity-40 transition-colors",
@@ -5049,7 +5097,7 @@ function Sa({ items: e, appId: t, onClose: n }) {
 		})]
 	}, e.key)) });
 }
-function Ca({ items: e, appId: t, anchorX: n, anchorY: r, onClose: i }) {
+function wa({ items: e, appId: t, anchorX: n, anchorY: r, onClose: i }) {
 	let a = Math.min(n, window.innerWidth - 192 - 8), o = (e) => {
 		i(), window.dispatchEvent(new CustomEvent("app:context:action", { detail: {
 			appId: t,
@@ -5079,7 +5127,7 @@ function Ca({ items: e, appId: t, anchorX: n, anchorY: r, onClose: i }) {
 		}, e.key))
 	})] }), document.body);
 }
-function wa({ appConfig: e, x: t, y: n, onOpen: r, onDrop: i, onDragStart: a, onDrag: o, isSelected: s = !1, onSelect: c, onUpAfterClick: l }) {
+function Ta({ appConfig: e, x: t, y: n, onOpen: r, onDrop: i, onDragStart: a, onDrag: o, isSelected: s = !1, onSelect: c, onUpAfterClick: l }) {
 	let u = R((e) => e.desktopIconSize), d = R((e) => e.desktopLabelPosition), f = R((e) => e.desktopTextSize), [p, m] = q(!1), { getAppName: h } = H(), g = h(e.id, e.name), [_, v] = q({
 		x: t,
 		y: n
@@ -5107,13 +5155,13 @@ function wa({ appConfig: e, x: t, y: n, onOpen: r, onDrop: i, onDragStart: a, on
 	}, j = () => {
 		E.current &&= (clearTimeout(E.current), null);
 	};
-	return /* @__PURE__ */ X(J, { children: [x && e.contextMenu && e.contextMenu.length > 0 && /* @__PURE__ */ Y(Ca, {
+	return /* @__PURE__ */ X(J, { children: [x && e.contextMenu && e.contextMenu.length > 0 && /* @__PURE__ */ Y(wa, {
 		items: e.contextMenu,
 		appId: e.id,
 		anchorX: x.x,
 		anchorY: x.y,
 		onClose: () => S(null)
-	}), /* @__PURE__ */ X($i, { children: [/* @__PURE__ */ Y(ea, {
+	}), /* @__PURE__ */ X(ea, { children: [/* @__PURE__ */ Y(ta, {
 		asChild: !0,
 		children: /* @__PURE__ */ Y("div", {
 			"data-app-icon": "true",
@@ -5146,11 +5194,11 @@ function wa({ appConfig: e, x: t, y: n, onOpen: r, onDrop: i, onDragStart: a, on
 								y: C.current.startMouseY
 							}), C.current = null, window.removeEventListener("pointermove", i), window.removeEventListener("pointerup", a);
 						}
-					}, xa));
+					}, Sa));
 					let i = (e) => {
 						if (!C.current) return;
 						let t = e.clientX - C.current.startMouseX, n = e.clientY - C.current.startMouseY;
-						if (!C.current.moved && Math.hypot(t, n) < ba) return;
+						if (!C.current.moved && Math.hypot(t, n) < xa) return;
 						j();
 						let r = !C.current.moved;
 						C.current.moved = !0, m(!0);
@@ -5197,13 +5245,13 @@ function wa({ appConfig: e, x: t, y: n, onOpen: r, onDrop: i, onDragStart: a, on
 				})]
 			})
 		})
-	}), e.contextMenu && e.contextMenu.length > 0 && /* @__PURE__ */ Y(ta, { children: /* @__PURE__ */ Y(na, {
+	}), e.contextMenu && e.contextMenu.length > 0 && /* @__PURE__ */ Y(na, { children: /* @__PURE__ */ Y(ra, {
 		asChild: !0,
 		className: "min-w-48 outline-none z-[99999]",
 		children: /* @__PURE__ */ Y(D, {
 			variant: "panel",
 			className: "p-1 text-xs",
-			children: /* @__PURE__ */ Y("div", { children: /* @__PURE__ */ Y(Sa, {
+			children: /* @__PURE__ */ Y("div", { children: /* @__PURE__ */ Y(Ca, {
 				items: e.contextMenu,
 				appId: e.id,
 				onClose: () => {}
@@ -5211,7 +5259,7 @@ function wa({ appConfig: e, x: t, y: n, onOpen: r, onDrop: i, onDragStart: a, on
 		})
 	}) })] })] });
 }
-function Ta({ appList: e, posMap: t, activeDrag: n, maxRows: r, maxCols: i, cellW: a, cellH: o, desktopSortBy: s = "none", useStacks: c = !1 }) {
+function Ea({ appList: e, posMap: t, activeDrag: n, maxRows: r, maxCols: i, cellW: a, cellH: o, desktopSortBy: s = "none", useStacks: c = !1 }) {
 	let l = e.map((e, n) => {
 		let i = t[e.id], l = n, u = !1;
 		if (i && s === "none" && !c) {
@@ -5253,7 +5301,7 @@ function Ta({ appList: e, posMap: t, activeDrag: n, maxRows: r, maxCols: i, cell
 		hoveredIndex: u
 	};
 }
-function Ea({ onOpenApp: e }) {
+function Da({ onOpenApp: e }) {
 	let { config: t } = L(), n = ft(), r = R((e) => e.apps), i = R((e) => e.iconLayout), a = R((e) => e.setIconLayout), o = R((e) => e.desktopIconSize), s = R((e) => e.desktopGridSpacing), c = R((e) => e.desktopLabelPosition), l = R((e) => e.desktopSortBy), u = R((e) => e.useStacks), d = R((e) => e.stackGroupBy), f = K(null), { getAppName: p } = H(), [m, h] = q(null), [g, _] = q(/* @__PURE__ */ new Set()), [v, y] = q(null), [b, x] = q({}), S = K(!1), C = 108, w = 124;
 	if (c === "bottom") {
 		let e = 44 + (s - 50) * .8, t = 32 + (s - 50) * .8;
@@ -5284,7 +5332,7 @@ function Ea({ onOpenApp: e }) {
 		let e = b[m.appId] || {
 			x: m.x,
 			y: m.y
-		}, t = m.x - e.x, n = m.y - e.y, { coords: r } = Ta({
+		}, t = m.x - e.x, n = m.y - e.y, { coords: r } = Ea({
 			appList: j.filter((e) => !g.has(e.id)),
 			posMap: M,
 			activeDrag: null,
@@ -5311,7 +5359,7 @@ function Ea({ onOpenApp: e }) {
 		let i = Math.max(0, Math.min(O - 1, Math.round((m.x - 20) / C))), a = Math.max(0, Math.min(D - 1, Math.round((m.y - 20) / w)));
 		F = i * D + a;
 	} else {
-		let e = Ta({
+		let e = Ea({
 			appList: j,
 			posMap: M,
 			activeDrag: m,
@@ -5408,7 +5456,7 @@ function Ea({ onOpenApp: e }) {
 				};
 			} else o[e.id] = { ...a };
 		}
-		let { coords: s } = Ta({
+		let { coords: s } = Ea({
 			appList: j,
 			posMap: o,
 			activeDrag: null,
@@ -5489,7 +5537,7 @@ function Ea({ onOpenApp: e }) {
 					x: 0,
 					y: 0
 				};
-				return /* @__PURE__ */ Y(wa, {
+				return /* @__PURE__ */ Y(Ta, {
 					appConfig: t,
 					x: n,
 					y: r,
@@ -5511,7 +5559,7 @@ function Ea({ onOpenApp: e }) {
 }
 //#endregion
 //#region src/types/widget.ts
-var Da = {
+var Oa = {
 	small: {
 		w: 170,
 		h: 170
@@ -5524,36 +5572,36 @@ var Da = {
 		w: 360,
 		h: 360
 	}
-}, Oa = [{
+}, ka = [{
 	id: "weather",
 	appId: "__built-in__",
 	name: "Weather",
 	description: "Current weather conditions",
 	sizes: ["small", "medium"],
 	componentKey: "WeatherWidget"
-}], ka = [...le.flatMap((e) => (e.widgets ?? []).map((t) => ({
+}], Aa = [...le.flatMap((e) => (e.widgets ?? []).map((t) => ({
 	...t,
 	appId: e.id
-}))), ...Oa];
-[...new Set(ka.map((e) => e.appId))];
-function Aa(e) {
-	return ka.find((t) => t.id === e);
+}))), ...ka];
+[...new Set(Aa.map((e) => e.appId))];
+function ja(e) {
+	return Aa.find((t) => t.id === e);
 }
 //#endregion
 //#region src/components/widgets/WidgetRenderer.tsx
-var ja = {
-	ClockWidget: et(() => import("./ClockWidget-CdVR4PUt.js").then((e) => ({ default: e.ClockWidget }))),
-	ClockDarkWidget: et(() => import("./ClockWidget-CdVR4PUt.js").then((e) => ({ default: e.ClockDarkWidget }))),
-	ClockWorldWidget: et(() => import("./ClockWidget-CdVR4PUt.js").then((e) => ({ default: e.ClockWorldWidget }))),
-	ClockDigitalWidget: et(() => import("./ClockWidget-CdVR4PUt.js").then((e) => ({ default: e.ClockDigitalWidget }))),
-	ClockFlipWidget: et(() => import("./ClockWidget-CdVR4PUt.js").then((e) => ({ default: e.ClockFlipWidget }))),
-	CalendarWidget: et(() => import("./CalendarWidget-5RcsEhGl.js").then((e) => ({ default: e.CalendarWidget }))),
-	CalendarTodayWidget: et(() => import("./CalendarWidget-5RcsEhGl.js").then((e) => ({ default: e.CalendarTodayWidget }))),
+var Ma = {
+	ClockWidget: et(() => import("./ClockWidget-CRvnJeKt.js").then((e) => ({ default: e.ClockWidget }))),
+	ClockDarkWidget: et(() => import("./ClockWidget-CRvnJeKt.js").then((e) => ({ default: e.ClockDarkWidget }))),
+	ClockWorldWidget: et(() => import("./ClockWidget-CRvnJeKt.js").then((e) => ({ default: e.ClockWorldWidget }))),
+	ClockDigitalWidget: et(() => import("./ClockWidget-CRvnJeKt.js").then((e) => ({ default: e.ClockDigitalWidget }))),
+	ClockFlipWidget: et(() => import("./ClockWidget-CRvnJeKt.js").then((e) => ({ default: e.ClockFlipWidget }))),
+	CalendarWidget: et(() => import("./CalendarWidget-DKyxdcTK.js").then((e) => ({ default: e.CalendarWidget }))),
+	CalendarTodayWidget: et(() => import("./CalendarWidget-DKyxdcTK.js").then((e) => ({ default: e.CalendarTodayWidget }))),
 	WeatherWidget: et(() => import("./WeatherWidget-D4EQ_pKf.js").then((e) => ({ default: e.WeatherWidget }))),
 	NotesWidget: et(() => import("./NotesWidget-CWxNXfe-.js").then((e) => ({ default: e.NotesWidget })))
 };
-function Ma({ componentKey: e, size: t }) {
-	let n = ja[e];
+function Na({ componentKey: e, size: t }) {
+	let n = Ma[e];
 	return n ? /* @__PURE__ */ Y($e, {
 		fallback: /* @__PURE__ */ Y("div", { className: "w-full h-full rounded-[20px] bg-white/5 animate-pulse" }),
 		children: /* @__PURE__ */ Y(n, { size: t })
@@ -5564,9 +5612,9 @@ function Ma({ componentKey: e, size: t }) {
 }
 //#endregion
 //#region src/components/widgets/WidgetCard.tsx
-var Na = 4;
-function Pa({ instance: e }) {
-	let t = R((e) => e.moveWidget), n = R((e) => e.removeWidget), r = R((e) => e.isEditingWidgets), i = Aa(e.definitionId), { w: a, h: o } = Da[e.size], [s, c] = q({
+var Pa = 4;
+function Fa({ instance: e }) {
+	let t = R((e) => e.moveWidget), n = R((e) => e.removeWidget), r = R((e) => e.isEditingWidgets), i = ja(e.definitionId), { w: a, h: o } = Oa[e.size], [s, c] = q({
 		x: e.x,
 		y: e.y
 	}), l = K(null);
@@ -5602,7 +5650,7 @@ function Pa({ instance: e }) {
 			let r = (e) => {
 				if (!l.current) return;
 				let t = e.clientX - l.current.startMouseX, n = e.clientY - l.current.startMouseY;
-				!l.current.moved && Math.hypot(t, n) < Na || (l.current.moved = !0, c({
+				!l.current.moved && Math.hypot(t, n) < Pa || (l.current.moved = !0, c({
 					x: l.current.startX + t,
 					y: l.current.startY + n
 				}));
@@ -5627,7 +5675,7 @@ function Pa({ instance: e }) {
 			children: /* @__PURE__ */ Y(D, {
 				variant: "widget",
 				className: "w-full h-full",
-				children: /* @__PURE__ */ Y(Ma, {
+				children: /* @__PURE__ */ Y(Na, {
 					componentKey: i.componentKey,
 					size: e.size
 				})
@@ -5637,7 +5685,7 @@ function Pa({ instance: e }) {
 }
 //#endregion
 //#region src/components/widgets/WidgetLayer.tsx
-function Fa() {
+function Ia() {
 	let e = R((e) => e.widgetInstances);
 	return /* @__PURE__ */ Y("div", {
 		className: "absolute inset-0 pointer-events-none",
@@ -5666,14 +5714,14 @@ function Fa() {
 				left: 0,
 				top: 0
 			},
-			children: /* @__PURE__ */ Y(Pa, { instance: e })
+			children: /* @__PURE__ */ Y(Fa, { instance: e })
 		}, e.instanceId)) })
 	});
 }
 //#endregion
 //#region src/components/widgets/WidgetGalleryPanel.tsx
-function Ia({ ghost: e }) {
-	let { w: t, h: n } = Da[e.size];
+function La({ ghost: e }) {
+	let { w: t, h: n } = Oa[e.size];
 	return at(/* @__PURE__ */ Y("div", {
 		className: "fixed pointer-events-none z-[99999] rounded-[20px] overflow-hidden opacity-80",
 		style: {
@@ -5685,15 +5733,15 @@ function Ia({ ghost: e }) {
 		children: /* @__PURE__ */ Y(D, {
 			variant: "widget",
 			className: "w-full h-full",
-			children: /* @__PURE__ */ Y(Ma, {
+			children: /* @__PURE__ */ Y(Na, {
 				componentKey: e.def.componentKey,
 				size: e.size
 			})
 		})
 	}), document.body);
 }
-function La({ def: e, size: t, onDragStart: n, cardIndex: r }) {
-	let { w: i, h: a } = Da[t], o = Math.min(140 / i, 110 / a), s = Math.round(i * o), c = Math.round(a * o), [l, u] = q(!1);
+function Ra({ def: e, size: t, onDragStart: n, cardIndex: r }) {
+	let { w: i, h: a } = Oa[t], o = Math.min(140 / i, 110 / a), s = Math.round(i * o), c = Math.round(a * o), [l, u] = q(!1);
 	return G(() => {
 		let e = setTimeout(() => {
 			u(!0);
@@ -5721,7 +5769,7 @@ function La({ def: e, size: t, onDragStart: n, cardIndex: r }) {
 				children: /* @__PURE__ */ Y(D, {
 					variant: "widget",
 					className: "w-full h-full",
-					children: l ? /* @__PURE__ */ Y(Ma, {
+					children: l ? /* @__PURE__ */ Y(Na, {
 						componentKey: e.componentKey,
 						size: t
 					}) : /* @__PURE__ */ Y("div", { className: "w-full h-full bg-black/5 dark:bg-white/5 animate-pulse" })
@@ -5733,7 +5781,7 @@ function La({ def: e, size: t, onDragStart: n, cardIndex: r }) {
 		})]
 	});
 }
-function Ra({ appId: e, selected: t, onClick: n }) {
+function za({ appId: e, selected: t, onClick: n }) {
 	let r = R((e) => e.apps), { t: i, getAppName: a } = H(), o = e === "__built-in__" ? null : r[e], s = o ? a(o.id, o.name) : i.builtIn;
 	return /* @__PURE__ */ X("button", {
 		onClick: n,
@@ -5748,7 +5796,7 @@ function Ra({ appId: e, selected: t, onClick: n }) {
 		})]
 	});
 }
-function za() {
+function Ba() {
 	let e = R((e) => e.closeWidgetGallery), t = R((e) => e.addWidget), n = R((e) => e.apps), { t: r, getAppName: i, getWidgetName: a, getWidgetDescription: o } = H(), [s, c] = q(""), [l, u] = q("__all__"), [d, f] = q(null), [p, m] = q(!1), h = K(null), g = K(null);
 	G(() => {
 		let e = setTimeout(() => {
@@ -5756,7 +5804,7 @@ function za() {
 		}, 200);
 		return () => clearTimeout(e);
 	}, []);
-	let _ = [...new Set(ka.map((e) => e.appId))], b = ka.filter((e) => {
+	let _ = [...new Set(Aa.map((e) => e.appId))], b = Aa.filter((e) => {
 		let t = l === "__all__" || e.appId === l, r = s.toLowerCase(), c = !r || a(e.id, e.name).toLowerCase().includes(r) || o(e.id, e.description ?? "").toLowerCase().includes(r) || i(e.appId, n[e.appId]?.name ?? "").toLowerCase().includes(r);
 		return t && c;
 	}), x = {};
@@ -5781,7 +5829,7 @@ function za() {
 			window.removeEventListener("pointermove", a), window.removeEventListener("pointerup", o);
 			let n = h.current;
 			if ((!n || !n.contains(e.target)) && g.current) {
-				let { def: n, size: r } = g.current, { w: i, h: a } = Da[r];
+				let { def: n, size: r } = g.current, { w: i, h: a } = Oa[r];
 				t(n, r, e.clientX - i / 2, e.clientY - a / 2);
 			}
 			g.current = null, f(null);
@@ -5861,7 +5909,7 @@ function za() {
 										children: r.allWidgets
 									})]
 								}),
-								_.map((e) => /* @__PURE__ */ Y(Ra, {
+								_.map((e) => /* @__PURE__ */ Y(za, {
 									appId: e,
 									selected: l === e,
 									onClick: () => u(e)
@@ -5900,7 +5948,7 @@ function za() {
 												className: "flex flex-wrap gap-4",
 												children: t.sizes.map((n) => {
 													let r = e++;
-													return /* @__PURE__ */ Y(La, {
+													return /* @__PURE__ */ Y(Ra, {
 														def: t,
 														size: n,
 														onDragStart: S,
@@ -5936,12 +5984,12 @@ function za() {
 				})
 			})
 		}),
-		/* @__PURE__ */ Y(v, { children: d && /* @__PURE__ */ Y(Ia, { ghost: d }) })
+		/* @__PURE__ */ Y(v, { children: d && /* @__PURE__ */ Y(La, { ghost: d }) })
 	] });
 }
 //#endregion
 //#region src/components/macOS/Spotlight.tsx
-function Ba({ open: e, onClose: t }) {
+function Va({ open: e, onClose: t }) {
 	let [n, r] = q(""), [i, a] = q(0), o = K(null), s = R((e) => e.apps), c = R((e) => e.launchApp), { t: l, getAppName: u } = H();
 	G(() => {
 		e && (tt(() => {
@@ -6055,7 +6103,7 @@ function Ba({ open: e, onClose: t }) {
 }
 //#endregion
 //#region src/components/macOS/AppSwitcher.tsx
-function Va({ open: e, onClose: t }) {
+function Ha({ open: e, onClose: t }) {
 	let n = R((e) => e.apps), r = R((e) => e.runningAppIds), i = R((e) => e.launchApp), a = R((e) => e.dockAppIds), { getAppName: o } = H(), s = Array.from(/* @__PURE__ */ new Set([...r, ...a])).map((e) => n[e]).filter(Boolean), [c, l] = q(0);
 	return G(() => {
 		if (!e) return;
@@ -6137,7 +6185,7 @@ function Va({ open: e, onClose: t }) {
 }
 //#endregion
 //#region src/components/notifications/NotificationBanner.tsx
-function Ha({ notification: e, onDismiss: t }) {
+function Ua({ notification: e, onDismiss: t }) {
 	let n = R((e) => e.launchApp), r = R((e) => e.apps), { osTheme: i } = L(), a = i === "windows";
 	return G(() => {
 		let e = setTimeout(t, 5e3);
@@ -6205,7 +6253,7 @@ function Ha({ notification: e, onDismiss: t }) {
 		]
 	});
 }
-function Ua() {
+function Wa() {
 	let e = R((e) => e.notifications), t = R((e) => e.dismissNotification), { osTheme: n } = L(), r = e.filter((e) => !e.read).slice(0, 3), i = W((e) => {
 		t(e);
 	}, [t]);
@@ -6215,7 +6263,7 @@ function Ua() {
 			mode: "popLayout",
 			children: r.map((e) => /* @__PURE__ */ Y("div", {
 				className: "pointer-events-auto",
-				children: /* @__PURE__ */ Y(Ha, {
+				children: /* @__PURE__ */ Y(Ua, {
 					notification: e,
 					onDismiss: () => i(e.id)
 				})
@@ -6225,7 +6273,7 @@ function Ua() {
 }
 //#endregion
 //#region src/hooks/useKeyboardShortcuts.ts
-function Wa({ onSpotlight: e, onAppSwitcher: t } = {}) {
+function Ga({ onSpotlight: e, onAppSwitcher: t } = {}) {
 	let n = R((e) => e.closeWindow), r = R((e) => e.minimizeWindow), i = R((e) => e.focusedWindowId), a = R((e) => e.osTheme);
 	G(() => {
 		let o = (o) => {
@@ -6256,7 +6304,7 @@ function Wa({ onSpotlight: e, onAppSwitcher: t } = {}) {
 }
 //#endregion
 //#region src/hooks/useWallpaperCycle.ts
-var Ga = {
+var Ka = {
 	"5m": 5 * 6e4,
 	"10m": 10 * 6e4,
 	"30m": 30 * 6e4,
@@ -6265,7 +6313,7 @@ var Ga = {
 	"5h": 300 * 6e4,
 	"1d": 1440 * 6e4
 };
-function Ka() {
+function qa() {
 	let e = R((e) => e.wallpaperCycle), t = R((e) => e.customWallpapers), n = R((e) => e.wallpaperId), r = R((e) => e.setWallpaper), i = Te(), a = K(0);
 	G(() => {
 		if (!e.enabled) return;
@@ -6280,7 +6328,7 @@ function Ka() {
 				}
 				r(e.id);
 			} else a.current = (a.current + 1) % o.length, r(o[a.current].id);
-		}, Ga[e.interval]);
+		}, Ka[e.interval]);
 		return () => clearInterval(s);
 	}, [
 		e.enabled,
@@ -6295,7 +6343,7 @@ function Ka() {
 //#endregion
 //#region src/lib/theme-layout.ts
 var $ = (e) => `${e}px`;
-function qa(e) {
+function Ja(e) {
 	let { desktopInsets: t, chrome: n, window: r } = e.layout;
 	return {
 		"--dock-height": $(n.dockHeight),
@@ -6317,14 +6365,14 @@ function qa(e) {
 }
 //#endregion
 //#region src/utils/simple-mode-resolver.ts
-var Ja = [
+var Ya = [
 	"macos",
 	"windows",
 	"ipad",
 	"iphone",
 	"android"
 ];
-function Ya(e, t = "macos") {
+function Xa(e, t = "macos") {
 	if (!e) return {
 		isSimpleModeActive: !1,
 		wallpaper: !0,
@@ -6348,7 +6396,7 @@ function Ya(e, t = "macos") {
 		},
 		dock: !0,
 		defaultApps: !0,
-		allowedOSThemes: Ja,
+		allowedOSThemes: Ya,
 		allowDarkModeToggle: !0
 	};
 	if (e === !0) return {
@@ -6435,51 +6483,51 @@ function Ya(e, t = "macos") {
 }
 //#endregion
 //#region src/components/themes/ThemeProvider.tsx
-var Xa = "desktop-layout-synced-props";
-function Za() {
+var Za = "desktop-layout-synced-props";
+function Qa() {
 	if (typeof window > "u") return {};
 	try {
-		let e = window.localStorage.getItem(Xa);
+		let e = window.localStorage.getItem(Za);
 		return e ? JSON.parse(e) : {};
 	} catch {
 		return {};
 	}
 }
-function Qa(e) {
+function $a(e) {
 	if (!(typeof window > "u")) try {
-		window.localStorage.setItem(Xa, JSON.stringify(e));
+		window.localStorage.setItem(Za, JSON.stringify(e));
 	} catch {}
 }
-function $a({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, colorScheme: i, osTheme: a, fallbackMenuBarAppId: o = null, resolveEditContextMenuItems: s } = {}) {
+function eo({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, colorScheme: i, osTheme: a, fallbackMenuBarAppId: o = null, resolveEditContextMenuItems: s } = {}) {
 	let c = R((e) => e.osTheme), l = R((e) => e.setOSTheme), u = R((e) => e.colorScheme), d = R((e) => e.setColorScheme), f = R((e) => e.resolvedColorScheme), p = R((e) => e.resolveColorScheme), m = K(a), h = K(i), g = K(!1), _ = K(!1);
 	G(() => {
-		let e = Za(), t = !g.current;
+		let e = Qa(), t = !g.current;
 		g.current = !0;
 		let n = !t && m.current !== a, r = t && e.osTheme !== a;
-		m.current = a, (n || r) && (Qa({
+		m.current = a, (n || r) && ($a({
 			...e,
 			osTheme: a
 		}), a && a !== R.getState().osTheme && l(a));
 	}, [a, l]), G(() => {
-		let e = Za(), t = !_.current;
+		let e = Qa(), t = !_.current;
 		_.current = !0;
 		let n = !t && h.current !== i, r = t && e.colorScheme !== i;
-		h.current = i, (n || r) && (Qa({
+		h.current = i, (n || r) && ($a({
 			...e,
 			colorScheme: i
 		}), i && i !== R.getState().colorScheme && d(i));
 	}, [i, d]);
-	let b = R((e) => e.registerApps), S = R((e) => e.launchApp), w = R((e) => e.glassEnabled), T = R((e) => e.isEditingWidgets), E = R((e) => e.accentColor), D = R((e) => e.highlightColor), [O, k] = q(!1), [A, j] = q(!1), [M, N] = q(!1), [ee, P] = q(!1), F = it(() => Ya(r, c), [r, c]);
+	let b = R((e) => e.registerApps), S = R((e) => e.launchApp), w = R((e) => e.glassEnabled), T = R((e) => e.isEditingWidgets), E = R((e) => e.accentColor), D = R((e) => e.highlightColor), [O, k] = q(!1), [A, j] = q(!1), [M, N] = q(!1), [ee, P] = q(!1), F = it(() => Xa(r, c), [r, c]);
 	G(() => {
 		let e = () => {
 			let e = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent), t = window.innerWidth <= 768;
 			N(e || t), P(e || window.matchMedia("(pointer: coarse)").matches || /Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
 		};
 		return e(), window.addEventListener("resize", e), () => window.removeEventListener("resize", e);
-	}, []), Wa({
+	}, []), Ga({
 		onSpotlight: () => k((e) => !e),
 		onAppSwitcher: () => j((e) => !e)
-	}), Ka();
+	}), qa();
 	let te = it(() => {
 		let r = n === void 0 ? t : n, i = r === void 0 ? F.isSimpleModeActive ? F.defaultApps : !(e && e.length > 0) : r, a = [];
 		if (i === !0) a = le;
@@ -6544,7 +6592,7 @@ function $a({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 	let ne = W((e) => {
 		S(e);
 	}, [S]), re = I === "macos" || I === "ipad", ie = I !== "ipad" && I !== "iphone" && I !== "android", L = I === "iphone" || I === "android";
-	Ur(M && L);
+	Wr(M && L);
 	let ae = x[I] ?? x.macos;
 	return F.isSimpleModeActive && I === "macos" && !F.dock && (ae = {
 		...ae,
@@ -6576,16 +6624,16 @@ function $a({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 			className: z("w-full h-full overflow-clip relative select-none", f === "dark" && "dark"),
 			"data-os-theme": I,
 			"data-glass": w ? "true" : "false",
-			style: qa(ae),
-			children: /* @__PURE__ */ X(ya, {
+			style: Ja(ae),
+			children: /* @__PURE__ */ X(ba, {
 				resolveItems: s,
 				children: [
 					/* @__PURE__ */ Y(dt, {}),
-					/* @__PURE__ */ Y(Ua, {}),
-					re && !F.isSimpleModeActive && /* @__PURE__ */ X(J, { children: [/* @__PURE__ */ Y(Ba, {
+					/* @__PURE__ */ Y(Wa, {}),
+					re && !F.isSimpleModeActive && /* @__PURE__ */ X(J, { children: [/* @__PURE__ */ Y(Va, {
 						open: O,
 						onClose: () => k(!1)
-					}), /* @__PURE__ */ Y(Va, {
+					}), /* @__PURE__ */ Y(Ha, {
 						open: A,
 						onClose: () => j(!1)
 					})] }),
@@ -6598,7 +6646,7 @@ function $a({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 								width: M ? "100%" : "min(calc((min(calc(100dvh - 32px), 926px)) * 0.4612676056338028), 100vw)",
 								borderRadius: M ? "0px" : "min(44px, calc(min(calc(100dvh - 32px), 926px) * 0.047))"
 							},
-							children: [/* @__PURE__ */ Y(ua, { children: null }), /* @__PURE__ */ Y(v, {
+							children: [/* @__PURE__ */ Y(da, { children: null }), /* @__PURE__ */ Y(v, {
 								mode: "wait",
 								children: /* @__PURE__ */ X(y.div, {
 									className: "absolute inset-0",
@@ -6606,10 +6654,10 @@ function $a({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 									animate: { opacity: 1 },
 									exit: { opacity: 0 },
 									transition: { duration: .2 },
-									children: [I === "iphone" && /* @__PURE__ */ Y(ni, {
+									children: [I === "iphone" && /* @__PURE__ */ Y(ri, {
 										onOpenApp: ne,
 										isRealDevice: M
-									}), I === "android" && /* @__PURE__ */ Y(hi, {
+									}), I === "android" && /* @__PURE__ */ Y(gi, {
 										onOpenApp: ne,
 										isRealDevice: M
 									})]
@@ -6619,13 +6667,13 @@ function $a({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 					}) : /* @__PURE__ */ X(J, { children: [
 						/* @__PURE__ */ Y("div", {
 							className: "absolute inset-0 overflow-clip",
-							children: /* @__PURE__ */ X(ua, { children: [
-								F.widgets.showWidgets && /* @__PURE__ */ Y(Fa, {}),
-								ie && (!F.isSimpleModeActive || F.iconGrid) && /* @__PURE__ */ Y(Ea, { onOpenApp: ne }, "icon-grid"),
+							children: /* @__PURE__ */ X(da, { children: [
+								F.widgets.showWidgets && /* @__PURE__ */ Y(Ia, {}),
+								ie && (!F.isSimpleModeActive || F.iconGrid) && /* @__PURE__ */ Y(Da, { onOpenApp: ne }, "icon-grid"),
 								/* @__PURE__ */ Y(un, {}, "window-manager")
 							] })
 						}),
-						/* @__PURE__ */ Y(v, { children: F.widgets.allowGalleryEdit && T && /* @__PURE__ */ Y(za, {}) }),
+						/* @__PURE__ */ Y(v, { children: F.widgets.allowGalleryEdit && T && /* @__PURE__ */ Y(Ba, {}) }),
 						/* @__PURE__ */ Y(v, {
 							mode: "wait",
 							children: /* @__PURE__ */ X(y.div, {
@@ -6642,11 +6690,11 @@ function $a({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 										onSpotlight: F.menuBar.spotlight ? () => k(!0) : void 0,
 										onAppSwitcher: F.menuBar.appSwitcher ? () => j(!0) : void 0
 									}),
-									I === "ipad" && /* @__PURE__ */ Y(Lr, {
+									I === "ipad" && /* @__PURE__ */ Y(Rr, {
 										onOpenApp: ne,
 										isRealDevice: ee
 									}),
-									I === "windows" && /* @__PURE__ */ Y(ci, { onOpenApp: ne })
+									I === "windows" && /* @__PURE__ */ Y(li, { onOpenApp: ne })
 								]
 							}, I)
 						})
@@ -6658,7 +6706,7 @@ function $a({ apps: e, defaultApps: t, builtInApps: n, isSimpleMode: r = !1, col
 }
 //#endregion
 //#region src/hooks/useMenuAction.ts
-function eo(e, t, n) {
+function to(e, t, n) {
 	G(() => {
 		let r = (r) => {
 			let i = r.detail;
@@ -6671,7 +6719,7 @@ function eo(e, t, n) {
 		n
 	]);
 }
-function to(e, t) {
+function no(e, t) {
 	G(() => {
 		let n = (n) => {
 			let r = n.detail;
@@ -6682,13 +6730,13 @@ function to(e, t) {
 }
 //#endregion
 //#region src/lib.tsx
-function no() {
+function ro() {
 	let e = be();
 	return G(() => {
 		e && e.checkUpdate().then(me.getState().setStatus).catch(() => {});
 	}, [e]), null;
 }
-function ro(e) {
+function io(e) {
 	let { assetBaseUrl: t = "https://device-layout.vercel.app", apps: n, defaultApps: r, builtInApps: i, onImportWallpaper: a, wallpapers: o, liveWallpapers: s, allowLiveWallpapers: c = !0, updateActions: l, isSimpleMode: u, colorScheme: d, osTheme: f, fallbackMenuBarAppId: p, resolveEditContextMenuItems: m, menuBarExtras: h, macOSAppleIcon: g, windowsStartIcon: _ } = e;
 	return /* @__PURE__ */ Y(de, {
 		value: t,
@@ -6705,7 +6753,7 @@ function ro(e) {
 								macOSAppleIcon: g,
 								windowsStartIcon: _
 							},
-							children: [/* @__PURE__ */ Y(no, {}), /* @__PURE__ */ Y($a, {
+							children: [/* @__PURE__ */ Y(ro, {}), /* @__PURE__ */ Y(eo, {
 								apps: n,
 								defaultApps: r,
 								builtInApps: i,
@@ -6726,4 +6774,4 @@ function ro(e) {
 	});
 }
 //#endregion
-export { le as APPS_CONFIG, ro as DeviceLayout, ne as FloatingWindow, pe as hasAvailableUpdate, xe as resolveAssetUrl, Ce as useAssetBase, to as useContextAction, eo as useMenuAction, R as useStore, me as useUpdateStatusStore };
+export { le as APPS_CONFIG, io as DeviceLayout, ne as FloatingWindow, pe as hasAvailableUpdate, xe as resolveAssetUrl, Ce as useAssetBase, no as useContextAction, to as useMenuAction, R as useStore, me as useUpdateStatusStore };

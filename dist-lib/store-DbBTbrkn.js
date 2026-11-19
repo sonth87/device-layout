@@ -696,9 +696,9 @@ function Ve(e, t) {
 				let e = i.find((e) => !e.isMinimized);
 				if (e) return t().focusWindow(e.id), e.id;
 				let n = i.find((e) => e.isMinimized);
-				if (n) return t().restoreWindow(n.id), n.id;
+				if (n) return t().restoreWindow(n.id), t().focusWindow(n.id), n.id;
 			}
-			return e.launchMode !== "multi" && i[0] ? (t().focusWindow(i[0].id), i[0].id) : t().openWindow(e, n);
+			return e.launchMode !== "multi" && i[0] ? (i[0].isMinimized && t().restoreWindow(i[0].id), t().focusWindow(i[0].id), i[0].id) : t().openWindow(e, n);
 		},
 		openWindow(n, r) {
 			if (n.launchMode !== "multi") {
