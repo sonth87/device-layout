@@ -66,7 +66,7 @@ export function Dock({ onOpenApp }: DockProps) {
        * leaving the hoverOverflow padding-top area transparent (for mouse capture).
        * LiquidGlass fills this wrapper absolutely.
        */}
-      <div className="absolute inset-x-0 bottom-0" style={{ top: hoverOverflow }}>
+      <div className="absolute inset-x-0 bottom-0 z-0 pointer-events-none" style={{ top: hoverOverflow }}>
         <LiquidGlass
           variant="dock"
           className="absolute inset-0"

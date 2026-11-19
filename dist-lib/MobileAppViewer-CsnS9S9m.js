@@ -6208,7 +6208,7 @@ function Uf({ children: e, className: t, variant: n = "panel", forceGlass: r, bo
 	}, [o, h]), v = u && g ? `url(#${g.filterId}) blur(24px)` : u ? "url(#lg-distort) blur(24px)" : "blur(20px)";
 	return u ? d === "clear" ? /* @__PURE__ */ F("div", {
 		ref: _,
-		className: C("relative overflow-hidden border border-white/25 dark:border-white/10", m, t),
+		className: C("relative isolate overflow-hidden border border-white/25 dark:border-white/10", m, t),
 		style: {
 			...p,
 			...a
@@ -6245,7 +6245,7 @@ function Uf({ children: e, className: t, variant: n = "panel", forceGlass: r, bo
 		]
 	}) : /* @__PURE__ */ F("div", {
 		ref: _,
-		className: C("relative overflow-hidden", u ? n === "panel" ? C("bg-white/60 dark:bg-[#1a1c26]/64 border-white/40 dark:border-white/15", m) : C("bg-white/12 dark:bg-white/5 border-white/30 dark:border-white/15", m, "inset_0_1px_0_rgba(255,255,255,0.4)") : C(n === "panel" ? "bg-white/95 dark:bg-[#1a1c26]/95 border-white/20 dark:border-white/10" : "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10", m), n === "menubar" || n === "taskbar" ? "border-b" : "border", t),
+		className: C("relative isolate overflow-hidden", u ? n === "panel" ? C("bg-white/60 dark:bg-[#1a1c26]/64 border-white/40 dark:border-white/15", m) : C("bg-white/12 dark:bg-white/5 border-white/30 dark:border-white/15", m, "inset_0_1px_0_rgba(255,255,255,0.4)") : C(n === "panel" ? "bg-white/95 dark:bg-[#1a1c26]/95 border-white/20 dark:border-white/10" : "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10", m), n === "menubar" || n === "taskbar" ? "border-b" : "border", t),
 		style: {
 			...p,
 			backdropFilter: v,
@@ -6349,7 +6349,7 @@ function Uf({ children: e, className: t, variant: n = "panel", forceGlass: r, bo
 		]
 	}) : /* @__PURE__ */ P("div", {
 		ref: _,
-		className: C("relative overflow-hidden border", n === "panel" ? "bg-white/95 dark:bg-[#1a1c26]/95 border-white/20 dark:border-white/10" : "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10", m, t),
+		className: C("relative isolate overflow-hidden border", n === "panel" ? "bg-white/95 dark:bg-[#1a1c26]/95 border-white/20 dark:border-white/10" : "bg-white/15 dark:bg-black/20 border-white/20 dark:border-white/10", m, t),
 		style: {
 			...p,
 			...a
@@ -7269,7 +7269,7 @@ var bp = class extends le {
 }, xp = {
 	Finder: O(() => import("./Finder-CDYVZy4l.js").then((e) => ({ default: e.Finder }))),
 	Terminal: O(() => import("./Terminal-BtXsnR8O.js").then((e) => ({ default: e.Terminal }))),
-	Settings: O(() => import("./Settings-D5ozPoI_.js").then((e) => ({ default: e.Settings }))),
+	Settings: O(() => import("./Settings-W58pS8_R.js").then((e) => ({ default: e.Settings }))),
 	Browser: O(() => import("./Browser-DxL-8mG1.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: O(() => import("./TextEditor-Cw3AUF4f.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: O(() => import("./Clock-3y8HXyxD.js").then((e) => ({ default: e.Clock }))),
@@ -7278,7 +7278,7 @@ var bp = class extends le {
 	Photos: O(() => import("./Photos-CvMy8pyG.js").then((e) => ({ default: e.Photos }))),
 	Music: O(() => import("./Music-CHsqaQ72.js").then((e) => ({ default: e.Music }))),
 	Calendar: O(() => import("./Calendar-Cg9OU5_o.js").then((e) => ({ default: e.Calendar }))),
-	Messages: O(() => import("./Messages-D603FN9c.js").then((e) => ({ default: e.Messages }))),
+	Messages: O(() => import("./Messages-CQ6So53D.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: O(() => import("./IframeApp-CftDqXvS.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: O(() => import("./MdxApp-Bga7DxwU.js").then((e) => ({ default: e.MdxApp })))
 };

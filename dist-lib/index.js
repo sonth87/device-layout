@@ -1,10 +1,10 @@
 "use client";
 import { C as e, S as t, a as n, b as r, c as i, d as a, g as o, h as s, i as c, l, m as u, o as d, r as f, s as p, u as m, y as h } from "./Combination-dkRdWOFm.js";
-import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as F, s as te, t as I, u as ne, v as re, w as ie, x as L, y as ae } from "./MobileAppViewer-BMMn2PLj.js";
+import { A as g, C as _, D as v, E as y, O as b, S as x, T as S, a as C, b as w, c as T, d as E, f as D, g as O, i as k, j as A, k as j, l as M, m as N, o as ee, p as P, r as F, s as te, t as I, u as ne, v as re, w as ie, x as L, y as ae } from "./MobileAppViewer-CsnS9S9m.js";
 import { c as oe, d as se, l as ce, s as le, t as R, u as ue } from "./store-DbBTbrkn.js";
 import { t as z } from "./utils-B6YmNDS2.js";
 import { t as B } from "./createLucideIcon--WjuKCts.js";
-import { a as de, c as fe, d as pe, f as me, g as he, h as ge, i as _e, l as ve, m as ye, n as be, o as xe, p as V, r as Se, s as Ce, t as we, u as Te } from "./update-actions-BHssxDVj.js";
+import { a as de, c as fe, d as pe, f as me, g as he, h as ge, i as _e, l as ve, m as ye, n as be, o as xe, p as V, r as Se, s as Ce, t as we, u as Te } from "./update-actions-B20d3G6D.js";
 import { t as Ee } from "./check-DoT5IS9-.js";
 import { t as De } from "./chevron-right-BcSxNxws.js";
 import { t as Oe } from "./grid-3x3-CZiMuCC6.js";
@@ -1864,7 +1864,7 @@ function nr({ onOpenApp: e }) {
 		onMouseMove: (e) => u.set(e.clientX),
 		onMouseLeave: () => u.set(Infinity),
 		children: [/* @__PURE__ */ Y("div", {
-			className: "absolute inset-x-0 bottom-0",
+			className: "absolute inset-x-0 bottom-0 z-0 pointer-events-none",
 			style: { top: l },
 			children: /* @__PURE__ */ Y(D, {
 				variant: "dock",
