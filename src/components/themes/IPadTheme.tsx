@@ -33,8 +33,12 @@ export function IPadChrome({ onOpenApp, isRealDevice = false }: ChromeProps) {
     isRealDevice
       ? {}
       : {
-          onSwipeUp: () => setLocked(false),
-          onSwipeDown: () => setControlCenterOpen(true),
+          onSwipeUp: () => {
+            if (!hasOpenWindow) setLocked(false);
+          },
+          onSwipeDown: () => {
+            if (!hasOpenWindow) setControlCenterOpen(true);
+          },
         },
   );
 

@@ -153,13 +153,13 @@ export function MacOSChrome({ onOpenApp, onSpotlight, isSimpleMode = false, fall
     return (focused ?? wins.reduce((a, b) => (a.zIndex > b.zIndex ? a : b))).id;
   });
 
-  // Peek-hint proximity state (cursor within 50px of top, but chrome not yet revealed).
+  // Peek-hint proximity state (cursor within 20px of top, but chrome not yet revealed).
   const [peekHintNear, setPeekHintNear] = useState(false);
   const chromeRevealedRef = useRef(menuBarRevealed);
   useEffect(() => { chromeRevealedRef.current = menuBarRevealed; }, [menuBarRevealed]);
   useEffect(() => {
     if (!isFullScreenActive) { setPeekHintNear(false); return; }
-    const PROXIMITY = 50;
+    const PROXIMITY = 20;
     const handleMove = (e: MouseEvent) => {
       setPeekHintNear(e.clientY < PROXIMITY && !chromeRevealedRef.current);
     };

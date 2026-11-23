@@ -16,7 +16,44 @@ const COLS = 6;
 const ROWS = 4;
 const PAGE_SIZE = COLS * ROWS; // 24 cells
 const DOCK_COUNT = 6;
+const EDGE_SWIPE_ZONE = 50;
+const EDGE_SWIPE_COOLDOWN_MS = 900;
 const LONG_PRESS_MS = 600;
+
+function compactPages(
+  list: (string | null)[],
+  currentPage: number,
+): { nextList: (string | null)[]; nextPage: number } {
+  const totalChunks = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  const keptChunks: (string | null)[][] = [];
+  let nextPage = 0;
+
+  for (let p = 0; p < totalChunks; p++) {
+    const chunk = list.slice(p * PAGE_SIZE, (p + 1) * PAGE_SIZE);
+    while (chunk.length < PAGE_SIZE) chunk.push(null);
+    const hasApp = chunk.some((id) => id !== null);
+    if (hasApp) {
+      if (p === currentPage) {
+        nextPage = keptChunks.length;
+      } else if (p < currentPage) {
+        nextPage = keptChunks.length + 1;
+      }
+      keptChunks.push(chunk);
+    }
+  }
+
+  if (keptChunks.length === 0) {
+    keptChunks.push(new Array(PAGE_SIZE).fill(null));
+    nextPage = 0;
+  } else {
+    nextPage = Math.max(0, Math.min(nextPage, keptChunks.length - 1));
+  }
+
+  return {
+    nextList: keptChunks.flat(),
+    nextPage,
+  };
+}
 
 // Helper to shift items in the flat list when a cell is occupied
 const getPreviewList = (
@@ -56,6 +93,7 @@ const getPreviewList = (
 
 export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
   const apps = useStore((s) => s.apps);
+  const dockAppIds = useStore((s) => s.dockAppIds);
   const { getAppName } = useTranslation();
   const [currentPage, setCurrentPage] = useState(0);
   const [jiggling, setJiggling] = useState(false);
@@ -80,42 +118,131 @@ export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
   });
 
   const [previewList, setPreviewList] = useState<(string | null)[]>(orderedMainAppIds);
+
+  // Sync grid when registered apps or dockAppIds change (e.g. after ThemeProvider's registerApps effect)
+  const mainAppIdsKey = (() => {
+    const allApps = Object.values(apps).filter((a) => !a.disabled);
+    const dockIds = new Set(
+      dockAppIds.length > 0
+        ? dockAppIds
+        : allApps.slice(0, DOCK_COUNT).map((a) => a.id)
+    );
+    return allApps
+      .filter((a) => !dockIds.has(a.id))
+      .map((a) => a.id)
+      .join('\u0000');
+  })();
+
+  useEffect(() => {
+    const mainIds = mainAppIdsKey ? mainAppIdsKey.split('\u0000') : [];
+    const mainSet = new Set(mainIds);
+    setOrderedMainAppIds((prev) => {
+      const kept = prev.map((id) => (id && mainSet.has(id) ? id : null));
+      const present = new Set(kept.filter(Boolean));
+      const missing = mainIds.filter((id) => !present.has(id));
+      if (missing.length === 0 && kept.every((id, i) => id === prev[i])) {
+        return prev;
+      }
+      const next = [...kept];
+      for (const id of missing) {
+        const slot = next.indexOf(null);
+        if (slot === -1) next.push(id);
+        else next[slot] = id;
+      }
+      let last = -1;
+      for (let i = next.length - 1; i >= 0; i--) {
+        if (next[i] !== null) {
+          last = i;
+          break;
+        }
+      }
+      const pageCount = Math.max(1, Math.ceil((last + 1) / PAGE_SIZE));
+      const trimmed = next.slice(0, pageCount * PAGE_SIZE);
+      while (trimmed.length < pageCount * PAGE_SIZE) trimmed.push(null);
+      return trimmed;
+    });
+  }, [mainAppIdsKey]);
+
+  useEffect(() => {
+    setPreviewList(orderedMainAppIds);
+  }, [orderedMainAppIds]);
+
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
   const [isHoldingIcon, setIsHoldingIcon] = useState(false);
   const [pointerPos, setPointerPos] = useState({ x: 0, y: 0 });
 
+  const bgDragControls = useDragControls();
   const containerRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(768); // iPad screen width fallback
   const lastSwipeTime = useRef(0);
 
+  const activeList = activeDragId ? previewList : orderedMainAppIds;
+  let totalPages = 1;
+  let maxDragPage = 0;
+  if (activeDragId) {
+    let lastOtherIndex = -1;
+    for (let i = activeList.length - 1; i >= 0; i--) {
+      if (activeList[i] !== null && activeList[i] !== activeDragId) {
+        lastOtherIndex = i;
+        break;
+      }
+    }
+    const basePages = Math.max(1, Math.ceil((lastOtherIndex + 1) / PAGE_SIZE));
+    maxDragPage = basePages;
+    totalPages = Math.max(basePages + 1, currentPage + 1);
+  } else {
+    let lastIndex = -1;
+    for (let i = activeList.length - 1; i >= 0; i--) {
+      if (activeList[i] !== null) {
+        lastIndex = i;
+        break;
+      }
+    }
+    totalPages = Math.max(1, Math.ceil((lastIndex + 1) / PAGE_SIZE));
+    maxDragPage = totalPages - 1;
+  }
+
+  const effectivePage = Math.min(currentPage, Math.max(0, totalPages - 1));
+
   // Refs to always have latest values inside window event listener closures (avoids stale closure bug)
-  const currentPageRef = useRef(currentPage);
+  const currentPageRef = useRef(effectivePage);
+  const totalPagesRef = useRef(totalPages);
+  const maxDragPageRef = useRef(maxDragPage);
   const orderedMainAppIdsRef = useRef(orderedMainAppIds);
   const previewListRef = useRef(previewList);
   const activeDragIdRef = useRef(activeDragId);
-  useEffect(() => { currentPageRef.current = currentPage; }, [currentPage]);
+  const isHoldingIconRef = useRef(isHoldingIcon);
+
+  useEffect(() => { currentPageRef.current = effectivePage; }, [effectivePage]);
+  useEffect(() => { totalPagesRef.current = totalPages; }, [totalPages]);
+  useEffect(() => { maxDragPageRef.current = maxDragPage; }, [maxDragPage]);
   useEffect(() => { orderedMainAppIdsRef.current = orderedMainAppIds; }, [orderedMainAppIds]);
   useEffect(() => { previewListRef.current = previewList; }, [previewList]);
   useEffect(() => { activeDragIdRef.current = activeDragId; }, [activeDragId]);
+  useEffect(() => { isHoldingIconRef.current = isHoldingIcon; }, [isHoldingIcon]);
 
-  // Measure container width on mount/resize
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!activeDragId && currentPage >= totalPages) {
+      const clamped = Math.max(0, totalPages - 1);
+      currentPageRef.current = clamped;
+      setCurrentPage(clamped);
+    }
+  }, [activeDragId, currentPage, totalPages]);
+
+  // Measure viewport width on mount/resize
+  useEffect(() => {
+    const target = viewportRef.current ?? containerRef.current;
+    if (!target) return;
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         setContainerWidth(entry.contentRect.width || 768);
       }
     });
-    resizeObserver.observe(containerRef.current);
+    resizeObserver.observe(target);
     return () => resizeObserver.disconnect();
   }, []);
 
-  const activeList = activeDragId ? previewList : orderedMainAppIds;
-  let totalPages = Math.max(1, Math.ceil(activeList.length / PAGE_SIZE));
-  if (activeDragId) {
-    totalPages += 1;
-  }
- 
   // Split main apps into pages, ensuring empty page is pre-populated with nulls for dragging
   const pages: (string | null)[][] = [];
   for (let i = 0; i < totalPages * PAGE_SIZE; i += PAGE_SIZE) {
@@ -127,152 +254,227 @@ export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
   }
 
   const changePage = useCallback((nextPage: number) => {
-    if (nextPage === currentPageRef.current) return;
-    setCurrentPage(nextPage);
+    const clamped = Math.max(0, Math.min(nextPage, totalPagesRef.current - 1));
+    if (clamped === currentPageRef.current) return;
+    currentPageRef.current = clamped;
+    setCurrentPage(clamped);
   }, []);
 
   // Long-press background to enter edit mode
   const bgLongPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const didBgLongPress = useRef(false);
+  const bgPointerStart = useRef<{ x: number; y: number } | null>(null);
 
-  const onBgPointerDown = () => {
-    bgLongPressTimer.current = setTimeout(() => setJiggling(true), LONG_PRESS_MS);
+  const clearBgLongPress = () => {
+    if (bgLongPressTimer.current) {
+      clearTimeout(bgLongPressTimer.current);
+      bgLongPressTimer.current = null;
+    }
   };
+
+  const onBgPointerDown = (e: React.PointerEvent) => {
+    if (
+      activeDragIdRef.current ||
+      (e.target as HTMLElement | null)?.closest('[data-app-id]')
+    ) {
+      return;
+    }
+    didBgLongPress.current = false;
+    bgPointerStart.current = { x: e.clientX, y: e.clientY };
+    clearBgLongPress();
+    bgLongPressTimer.current = setTimeout(() => {
+      didBgLongPress.current = true;
+      setJiggling(true);
+    }, LONG_PRESS_MS);
+  };
+
+  const onBgPointerMove = (e: React.PointerEvent) => {
+    if (!bgPointerStart.current) return;
+    const dist = Math.hypot(
+      e.clientX - bgPointerStart.current.x,
+      e.clientY - bgPointerStart.current.y,
+    );
+    if (dist > 8) {
+      clearBgLongPress();
+    }
+  };
+
   const onBgPointerUp = () => {
-    if (bgLongPressTimer.current) clearTimeout(bgLongPressTimer.current);
+    bgPointerStart.current = null;
+    clearBgLongPress();
   };
 
   const onBgClick = () => {
+    if (didBgLongPress.current) {
+      didBgLongPress.current = false;
+      return;
+    }
     if (jiggling) setJiggling(false);
   };
 
+  const onViewportPointerDown = (e: React.PointerEvent) => {
+    if (
+      activeDragIdRef.current ||
+      isHoldingIconRef.current ||
+      (e.target as HTMLElement | null)?.closest('[data-app-id]')
+    ) {
+      return;
+    }
+    bgDragControls.start(e);
+  };
+
   const handleDragStart = (appId: string, event: PointerEvent | MouseEvent | TouchEvent) => {
+    activeDragIdRef.current = appId;
+    isHoldingIconRef.current = true;
     setActiveDragId(appId);
     setIsHoldingIcon(true);
-    
-    // Set initial pointer position
+
     const clientX = 'touches' in event ? (event as TouchEvent).touches[0].clientX : (event as MouseEvent).clientX;
     const clientY = 'touches' in event ? (event as TouchEvent).touches[0].clientY : (event as MouseEvent).clientY;
     setPointerPos({ x: clientX, y: clientY });
   };
 
-  const handleDragEnd = useCallback(() => {
-    // Left legacy handler empty or simple
-  }, []);
-
   // Global window pointer listeners — registered ONCE when drag starts, reads fresh values via refs
   useEffect(() => {
     if (!activeDragId) return;
 
-    const handlePointerMove = (e: PointerEvent) => {
-      setPointerPos({ x: e.clientX, y: e.clientY });
-
-      const page = currentPageRef.current;
+    const moveDraggedAppToCell = (
+      clientX: number,
+      clientY: number,
+      page: number,
+      clampToGrid: boolean,
+    ) => {
       const dragId = activeDragIdRef.current;
-      if (!dragId) return;
+      const vpEl = viewportRef.current;
+      if (!dragId || !vpEl) return;
 
-      // 1. Calculate hover index inside the current page grid
-      const grids = containerRef.current?.querySelectorAll('.grid');
-      const gridEl = grids?.[page];
-      if (gridEl) {
-        const rect = gridEl.getBoundingClientRect();
-        const localX = e.clientX - rect.left;
-        const localY = e.clientY - rect.top;
+      const vpRect = vpEl.getBoundingClientRect();
+      const innerWidth = Math.max(1, vpRect.width);
+      const innerHeight = Math.max(1, vpRect.height);
 
-        const col = Math.floor(localX / (rect.width / COLS));
-        const row = Math.floor(localY / (rect.height / ROWS));
+      let col = Math.floor(((clientX - vpRect.left) / innerWidth) * COLS);
+      let row = Math.floor(((clientY - vpRect.top) / innerHeight) * ROWS);
 
-        if (col >= 0 && col < COLS && row >= 0 && row < ROWS) {
-          const targetCellIndex = row * COLS + col;
-          const targetFlatIndex = page * PAGE_SIZE + targetCellIndex;
-
-          // Always use ref for latest list — no stale closure
-          let currentOriginList = [...orderedMainAppIdsRef.current];
-          const fromIndex = currentOriginList.indexOf(dragId);
-
-          if (fromIndex !== -1 && targetFlatIndex !== fromIndex) {
-            // Expand list to accommodate new page if needed
-            if (targetFlatIndex >= currentOriginList.length) {
-              const targetLength = (page + 1) * PAGE_SIZE;
-              while (currentOriginList.length < targetLength) {
-                currentOriginList.push(null);
-              }
-            }
-
-            const nextPreview = getPreviewList(currentOriginList, fromIndex, targetFlatIndex);
-            // Update both state and refs immediately
-            orderedMainAppIdsRef.current = nextPreview;
-            previewListRef.current = nextPreview;
-            setPreviewList(nextPreview);
-            setOrderedMainAppIds(nextPreview);
-          }
-        }
+      if (clampToGrid) {
+        col = Math.max(0, Math.min(COLS - 1, col));
+        row = Math.max(0, Math.min(ROWS - 1, row));
+      } else if (col < 0 || col >= COLS || row < 0 || row >= ROWS) {
+        return;
       }
 
-      // 2. Edge swipe detection
-      const containerRect = containerRef.current?.getBoundingClientRect();
-      if (containerRect) {
-        const x = e.clientX;
-        const now = Date.now();
-        if (now - lastSwipeTime.current > 1200) {
-          const page = currentPageRef.current;
-          if (x < containerRect.left + 50 && page > 0) {
-            changePage(page - 1);
-            lastSwipeTime.current = now;
-          } else if (x > containerRect.right - 50) {
-            changePage(page + 1);
-            lastSwipeTime.current = now;
+      const targetCellIndex = row * COLS + col;
+      const targetFlatIndex = page * PAGE_SIZE + targetCellIndex;
+
+      const currentOriginList = [...orderedMainAppIdsRef.current];
+      const fromIndex = currentOriginList.indexOf(dragId);
+
+      if (fromIndex !== -1 && targetFlatIndex !== fromIndex) {
+        if (targetFlatIndex >= currentOriginList.length) {
+          const targetLength = (page + 1) * PAGE_SIZE;
+          while (currentOriginList.length < targetLength) {
+            currentOriginList.push(null);
           }
         }
+
+        const nextPreview = getPreviewList(currentOriginList, fromIndex, targetFlatIndex);
+        orderedMainAppIdsRef.current = nextPreview;
+        previewListRef.current = nextPreview;
+        setPreviewList(nextPreview);
+        setOrderedMainAppIds(nextPreview);
       }
     };
 
+    const handlePointerMove = (e: PointerEvent) => {
+      setPointerPos({ x: e.clientX, y: e.clientY });
+
+      const dragId = activeDragIdRef.current;
+      if (!dragId) return;
+
+      const containerRect = containerRef.current?.getBoundingClientRect();
+      let page = currentPageRef.current;
+
+      // 1. Edge swipe detection (bounded to valid pages)
+      if (containerRect) {
+        const x = e.clientX;
+        const now = Date.now();
+        if (now - lastSwipeTime.current > EDGE_SWIPE_COOLDOWN_MS) {
+          if (x < containerRect.left + EDGE_SWIPE_ZONE && page > 0) {
+            page = page - 1;
+            currentPageRef.current = page;
+            setCurrentPage(page);
+            lastSwipeTime.current = now;
+            moveDraggedAppToCell(e.clientX, e.clientY, page, true);
+            return;
+          } else if (
+            x > containerRect.right - EDGE_SWIPE_ZONE &&
+            page < maxDragPageRef.current
+          ) {
+            page = page + 1;
+            totalPagesRef.current = Math.max(totalPagesRef.current, page + 1);
+            currentPageRef.current = page;
+            setCurrentPage(page);
+            lastSwipeTime.current = now;
+            moveDraggedAppToCell(e.clientX, e.clientY, page, true);
+            return;
+          }
+        }
+      }
+
+      // 2. Calculate hover index inside stationary viewport bounds
+      const insideScreen =
+        !!containerRect &&
+        e.clientX >= containerRect.left &&
+        e.clientX <= containerRect.right &&
+        e.clientY >= containerRect.top &&
+        e.clientY <= containerRect.bottom;
+      moveDraggedAppToCell(e.clientX, e.clientY, page, insideScreen);
+    };
+
     const handlePointerUp = () => {
-      // Read fresh values from refs at the moment of drop
       const latestPreview = [...previewListRef.current];
       const page = currentPageRef.current;
 
-      let lastNonEmptyIndex = -1;
-      for (let i = latestPreview.length - 1; i >= 0; i--) {
-        if (latestPreview[i] !== null) {
-          lastNonEmptyIndex = i;
-          break;
-        }
-      }
-      const neededPages = Math.max(1, Math.ceil((lastNonEmptyIndex + 1) / PAGE_SIZE));
-      const nextList = latestPreview.slice(0, neededPages * PAGE_SIZE);
-      
+      const { nextList, nextPage } = compactPages(latestPreview, page);
+
+      orderedMainAppIdsRef.current = nextList;
+      previewListRef.current = nextList;
+      currentPageRef.current = nextPage;
+      activeDragIdRef.current = null;
+      isHoldingIconRef.current = false;
+
       setOrderedMainAppIds(nextList);
       setPreviewList(nextList);
-
-      if (page >= neededPages) {
-        setCurrentPage(neededPages - 1);
-      }
-
+      setCurrentPage(nextPage);
       setActiveDragId(null);
       setIsHoldingIcon(false);
     };
 
     window.addEventListener('pointermove', handlePointerMove);
     window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointercancel', handlePointerUp);
     return () => {
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('pointercancel', handlePointerUp);
     };
-  // Only re-register when drag starts/ends — refs handle fresh values internally
-  }, [activeDragId, changePage]);
+  }, [activeDragId]);
 
   const handleBgDragEnd = (e: PointerEvent | MouseEvent | TouchEvent, info: PanInfo) => {
     void e;
+    if (activeDragIdRef.current || isHoldingIconRef.current) return;
+
     const offset = info.offset.x;
     const velocity = info.velocity.x;
+    const maxPage = Math.max(0, totalPagesRef.current - 1);
+    const basePage = Math.min(currentPageRef.current, maxPage);
 
-    let nextPage = currentPage;
+    let nextPage = basePage;
     const swipeThreshold = containerWidth / 4;
 
     if (offset < -swipeThreshold || velocity < -300) {
-      nextPage = Math.min(totalPages - 1, currentPage + 1);
+      nextPage = Math.min(maxPage, basePage + 1);
     } else if (offset > swipeThreshold || velocity > 300) {
-      nextPage = Math.max(0, currentPage - 1);
+      nextPage = Math.max(0, basePage - 1);
     }
 
     changePage(nextPage);
@@ -281,22 +483,30 @@ export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 flex flex-col overflow-hidden px-6 pt-12 pb-36 pointer-events-auto"
+      className="absolute inset-0 flex flex-col overflow-clip px-6 pt-12 pb-36 pointer-events-auto"
       onPointerDown={onBgPointerDown}
+      onPointerMove={onBgPointerMove}
       onPointerUp={onBgPointerUp}
       onPointerCancel={onBgPointerUp}
       onClick={onBgClick}
     >
       {/* App grid */}
-      <div className="flex-1 overflow-hidden">
+      <div
+        ref={viewportRef}
+        className="flex-1 overflow-clip"
+        onPointerDown={onViewportPointerDown}
+      >
         <motion.div
-          drag={isHoldingIcon ? false : "x"}
+          drag="x"
+          dragControls={bgDragControls}
+          dragListener={false}
           dragDirectionLock
           dragConstraints={{ left: -(totalPages - 1) * containerWidth, right: 0 }}
-          animate={{ x: -currentPage * containerWidth }}
+          animate={{ x: -effectivePage * containerWidth }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           onDragEnd={handleBgDragEnd}
-          className="flex h-full w-full cursor-grab active:cursor-grabbing"
+          className="flex h-full cursor-grab active:cursor-grabbing"
+          style={{ width: totalPages * containerWidth }}
         >
           {pages.map((page, pageIdx) => (
             <div
@@ -319,8 +529,16 @@ export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
                         index={i}
                         jiggling={jiggling}
                         activeDragId={activeDragId}
-                        onPointerDownStart={() => setIsHoldingIcon(true)}
-                        onPointerDownEnd={() => setIsHoldingIcon(false)}
+                        onPointerDownStart={() => {
+                          isHoldingIconRef.current = true;
+                          setIsHoldingIcon(true);
+                        }}
+                        onPointerDownEnd={() => {
+                          if (!activeDragIdRef.current) {
+                            isHoldingIconRef.current = false;
+                            setIsHoldingIcon(false);
+                          }
+                        }}
                         onOpen={onOpenApp}
                         onDragStart={handleDragStart}
                       />
@@ -346,14 +564,17 @@ export function IPadHomeScreen({ onOpenApp }: IPadHomeScreenProps) {
 
       {/* Page dots */}
       {totalPages > 1 && (
-        <div className="flex justify-center gap-2 py-2">
+        <div
+          className="flex justify-center gap-2 py-2"
+          onPointerDown={(e) => e.stopPropagation()}
+        >
           {Array.from({ length: totalPages }).map((_, i) => (
             <button
               key={i}
               onClick={(e) => { e.stopPropagation(); changePage(i); }}
               className={cn(
                 'rounded-full transition-all duration-200',
-                i === currentPage ? 'w-5 h-2 bg-white' : 'w-2 h-2 bg-white/50',
+                i === effectivePage ? 'w-5 h-2 bg-white' : 'w-2 h-2 bg-white/50',
               )}
             />
           ))}
@@ -453,7 +674,10 @@ function IPadAppIcon({
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (didLongPress.current || jiggling) return;
+    if (didLongPress.current || isDraggingInitiated.current || jiggling) {
+      isDraggingInitiated.current = false;
+      return;
+    }
     onOpen(app);
   };
 

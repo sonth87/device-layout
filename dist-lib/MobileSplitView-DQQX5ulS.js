@@ -1,4 +1,4 @@
-import { D as e, E as t, n } from "./MobileAppViewer-CsnS9S9m.js";
+import { D as e, O as t, n } from "./MobileAppViewer-C2ACSgW9.js";
 import { t as r } from "./store-DbBTbrkn.js";
 import { n as i } from "./AppViewport-BDJLAndL.js";
 import { createContext as a, useContext as o, useEffect as s, useRef as c, useState as l } from "react";
@@ -46,7 +46,7 @@ function g({ list: a, detail: o, onBack: c, className: l = "", listClassName: p 
 		children: [/* @__PURE__ */ u("div", {
 			className: `absolute inset-0 ${p}`,
 			children: a
-		}), /* @__PURE__ */ u(e, { children: o !== null && /* @__PURE__ */ u(t.div, {
+		}), /* @__PURE__ */ u(t, { children: o !== null && /* @__PURE__ */ u(e.div, {
 			...h,
 			className: `absolute inset-0 bg-white dark:bg-[#0F1115] ${m}`,
 			children: /* @__PURE__ */ u(f.Provider, {

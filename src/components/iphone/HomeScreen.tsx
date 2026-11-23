@@ -23,7 +23,45 @@ interface HomeScreenProps {
 const COLS = 4;
 const ROWS = 6;
 const PAGE_SIZE = COLS * ROWS; // 24 cells
+const GRID_PAD_X = 16; // matches px-4 on .grid
+const EDGE_SWIPE_ZONE = 36;
+const EDGE_SWIPE_COOLDOWN_MS = 900;
 const LONG_PRESS_MS = 600;
+
+function compactPages(
+  list: (string | null)[],
+  currentPage: number,
+): { nextList: (string | null)[]; nextPage: number } {
+  const totalChunks = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+  const keptChunks: (string | null)[][] = [];
+  let nextPage = 0;
+
+  for (let p = 0; p < totalChunks; p++) {
+    const chunk = list.slice(p * PAGE_SIZE, (p + 1) * PAGE_SIZE);
+    while (chunk.length < PAGE_SIZE) chunk.push(null);
+    const hasApp = chunk.some((id) => id !== null);
+    if (hasApp) {
+      if (p === currentPage) {
+        nextPage = keptChunks.length;
+      } else if (p < currentPage) {
+        nextPage = keptChunks.length + 1;
+      }
+      keptChunks.push(chunk);
+    }
+  }
+
+  if (keptChunks.length === 0) {
+    keptChunks.push(new Array(PAGE_SIZE).fill(null));
+    nextPage = 0;
+  } else {
+    nextPage = Math.max(0, Math.min(nextPage, keptChunks.length - 1));
+  }
+
+  return {
+    nextList: keptChunks.flat(),
+    nextPage,
+  };
+}
 
 // Helper to shift items in the flat list when a cell is occupied
 const getPreviewList = (
@@ -139,18 +177,58 @@ export function IPhoneHomeScreen({
   const [isHoldingIcon, setIsHoldingIcon] = useState(false);
   const [pointerPos, setPointerPos] = useState({ x: 0, y: 0 });
 
+  const bgDragControls = useDragControls();
   const containerRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(393); // Default iPhone screen width fallback
   const lastSwipeTime = useRef(0);
 
+  const activeList = activeDragId ? previewList : orderedAppIds;
+  let totalPages = 1;
+  let maxDragPage = 0;
+  if (activeDragId) {
+    let lastOtherIndex = -1;
+    for (let i = activeList.length - 1; i >= 0; i--) {
+      if (activeList[i] !== null && activeList[i] !== activeDragId) {
+        lastOtherIndex = i;
+        break;
+      }
+    }
+    const basePages = Math.max(1, Math.ceil((lastOtherIndex + 1) / PAGE_SIZE));
+    maxDragPage = basePages;
+    totalPages = Math.max(basePages + 1, currentPage + 1);
+  } else {
+    let lastIndex = -1;
+    for (let i = activeList.length - 1; i >= 0; i--) {
+      if (activeList[i] !== null) {
+        lastIndex = i;
+        break;
+      }
+    }
+    totalPages = Math.max(1, Math.ceil((lastIndex + 1) / PAGE_SIZE));
+    maxDragPage = totalPages - 1;
+  }
+
+  const effectivePage = Math.min(currentPage, Math.max(0, totalPages - 1));
+
   // Refs to always have latest values inside window event listener closures (avoids stale closure bug)
-  const currentPageRef = useRef(currentPage);
+  const currentPageRef = useRef(effectivePage);
+  const totalPagesRef = useRef(totalPages);
+  const maxDragPageRef = useRef(maxDragPage);
   const orderedAppIdsRef = useRef(orderedAppIds);
   const previewListRef = useRef(previewList);
   const activeDragIdRef = useRef(activeDragId);
+  const isHoldingIconRef = useRef(isHoldingIcon);
+
   useEffect(() => {
-    currentPageRef.current = currentPage;
-  }, [currentPage]);
+    currentPageRef.current = effectivePage;
+  }, [effectivePage]);
+  useEffect(() => {
+    totalPagesRef.current = totalPages;
+  }, [totalPages]);
+  useEffect(() => {
+    maxDragPageRef.current = maxDragPage;
+  }, [maxDragPage]);
   useEffect(() => {
     orderedAppIdsRef.current = orderedAppIds;
   }, [orderedAppIds]);
@@ -160,24 +238,30 @@ export function IPhoneHomeScreen({
   useEffect(() => {
     activeDragIdRef.current = activeDragId;
   }, [activeDragId]);
-
-  // Measure container width on mount/resize
   useEffect(() => {
-    if (!containerRef.current) return;
+    isHoldingIconRef.current = isHoldingIcon;
+  }, [isHoldingIcon]);
+
+  useEffect(() => {
+    if (!activeDragId && currentPage >= totalPages) {
+      const clamped = Math.max(0, totalPages - 1);
+      currentPageRef.current = clamped;
+      setCurrentPage(clamped);
+    }
+  }, [activeDragId, currentPage, totalPages]);
+
+  // Measure viewport width on mount/resize
+  useEffect(() => {
+    const target = viewportRef.current ?? containerRef.current;
+    if (!target) return;
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         setContainerWidth(entry.contentRect.width || 393);
       }
     });
-    resizeObserver.observe(containerRef.current);
+    resizeObserver.observe(target);
     return () => resizeObserver.disconnect();
   }, []);
-
-  const activeList = activeDragId ? previewList : orderedAppIds;
-  let totalPages = Math.max(1, Math.ceil(activeList.length / PAGE_SIZE));
-  if (activeDragId) {
-    totalPages += 1;
-  }
 
   const pages: (string | null)[][] = [];
   for (let i = 0; i < totalPages * PAGE_SIZE; i += PAGE_SIZE) {
@@ -189,32 +273,84 @@ export function IPhoneHomeScreen({
   }
 
   const changePage = useCallback((nextPage: number) => {
-    if (nextPage === currentPageRef.current) return;
-    setCurrentPage(nextPage);
+    const clamped = Math.max(0, Math.min(nextPage, totalPagesRef.current - 1));
+    if (clamped === currentPageRef.current) return;
+    currentPageRef.current = clamped;
+    setCurrentPage(clamped);
   }, []);
 
   // Long-press background to enter edit mode
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const didBgLongPress = useRef(false);
+  const bgPointerStart = useRef<{ x: number; y: number } | null>(null);
 
-  const onBgPointerDown = () => {
-    longPressTimer.current = setTimeout(() => setJiggling(true), LONG_PRESS_MS);
+  const clearBgLongPress = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
   };
+
+  const onBgPointerDown = (e: React.PointerEvent) => {
+    if (
+      activeDragIdRef.current ||
+      (e.target as HTMLElement | null)?.closest("[data-app-id]")
+    ) {
+      return;
+    }
+    didBgLongPress.current = false;
+    bgPointerStart.current = { x: e.clientX, y: e.clientY };
+    clearBgLongPress();
+    longPressTimer.current = setTimeout(() => {
+      didBgLongPress.current = true;
+      setJiggling(true);
+    }, LONG_PRESS_MS);
+  };
+
+  const onBgPointerMove = (e: React.PointerEvent) => {
+    if (!bgPointerStart.current) return;
+    const dist = Math.hypot(
+      e.clientX - bgPointerStart.current.x,
+      e.clientY - bgPointerStart.current.y,
+    );
+    if (dist > 8) {
+      clearBgLongPress();
+    }
+  };
+
   const onBgPointerUp = () => {
-    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+    bgPointerStart.current = null;
+    clearBgLongPress();
   };
 
   const onBgClick = () => {
+    if (didBgLongPress.current) {
+      didBgLongPress.current = false;
+      return;
+    }
     if (jiggling) setJiggling(false);
+  };
+
+  const onViewportPointerDown = (e: React.PointerEvent) => {
+    if (
+      activeDragIdRef.current ||
+      isHoldingIconRef.current ||
+      (e.target as HTMLElement | null)?.closest("[data-app-id]")
+    ) {
+      return;
+    }
+    bgDragControls.start(e);
   };
 
   const handleDragStart = (
     appId: string,
     event: PointerEvent | MouseEvent | TouchEvent,
   ) => {
+    activeDragIdRef.current = appId;
+    isHoldingIconRef.current = true;
     setActiveDragId(appId);
     setIsHoldingIcon(true);
 
-    // Set initial pointer position
     const clientX =
       "touches" in event
         ? (event as TouchEvent).touches[0].clientX
@@ -226,158 +362,156 @@ export function IPhoneHomeScreen({
     setPointerPos({ x: clientX, y: clientY });
   };
 
-  const handleDragEnd = useCallback(() => {
-    if (!activeDragId) return;
-
-    // Commit layout from previewList instead of using stale state callbacks
-    const currentList = [...previewList];
-
-    // Clean up empty trailing pages (only keep pages that contain at least one app)
-    let lastNonEmptyIndex = -1;
-    for (let i = currentList.length - 1; i >= 0; i--) {
-      if (currentList[i] !== null) {
-        lastNonEmptyIndex = i;
-        break;
-      }
-    }
-    const neededPages = Math.max(
-      1,
-      Math.ceil((lastNonEmptyIndex + 1) / PAGE_SIZE),
-    );
-    const nextList = currentList.slice(0, neededPages * PAGE_SIZE);
-
-    setOrderedAppIds(nextList);
-    setPreviewList(nextList);
-
-    // Prevent staying on a deleted trailing page
-    if (currentPage >= neededPages) {
-      setCurrentPage(neededPages - 1);
-    }
-
-    setActiveDragId(null);
-    setIsHoldingIcon(false);
-  }, [activeDragId, currentPage]);
-
   // Global window pointer listeners — registered ONCE when drag starts, reads fresh values via refs
   useEffect(() => {
     if (!activeDragId) return;
 
+    const moveDraggedAppToCell = (
+      clientX: number,
+      clientY: number,
+      page: number,
+      clampToGrid: boolean,
+    ) => {
+      const dragId = activeDragIdRef.current;
+      const vpEl = viewportRef.current;
+      if (!dragId || !vpEl) return;
+
+      const vpRect = vpEl.getBoundingClientRect();
+      const innerLeft = vpRect.left + GRID_PAD_X;
+      const innerWidth = Math.max(1, vpRect.width - GRID_PAD_X * 2);
+      const innerTop = vpRect.top;
+      const innerHeight = Math.max(1, vpRect.height);
+
+      let col = Math.floor(((clientX - innerLeft) / innerWidth) * COLS);
+      let row = Math.floor(((clientY - innerTop) / innerHeight) * ROWS);
+
+      if (clampToGrid) {
+        col = Math.max(0, Math.min(COLS - 1, col));
+        row = Math.max(0, Math.min(ROWS - 1, row));
+      } else if (col < 0 || col >= COLS || row < 0 || row >= ROWS) {
+        return;
+      }
+
+      const targetCellIndex = row * COLS + col;
+      const targetFlatIndex = page * PAGE_SIZE + targetCellIndex;
+
+      const currentOriginList = [...orderedAppIdsRef.current];
+      const fromIndex = currentOriginList.indexOf(dragId);
+
+      if (fromIndex !== -1 && targetFlatIndex !== fromIndex) {
+        if (targetFlatIndex >= currentOriginList.length) {
+          const targetLength = (page + 1) * PAGE_SIZE;
+          while (currentOriginList.length < targetLength) {
+            currentOriginList.push(null);
+          }
+        }
+
+        const nextPreview = getPreviewList(
+          currentOriginList,
+          fromIndex,
+          targetFlatIndex,
+        );
+        orderedAppIdsRef.current = nextPreview;
+        previewListRef.current = nextPreview;
+        setPreviewList(nextPreview);
+        setOrderedAppIds(nextPreview);
+      }
+    };
+
     const handlePointerMove = (e: PointerEvent) => {
       setPointerPos({ x: e.clientX, y: e.clientY });
 
-      const page = currentPageRef.current;
       const dragId = activeDragIdRef.current;
       if (!dragId) return;
 
-      // 1. Calculate hover index inside the current page grid
-      const grids = containerRef.current?.querySelectorAll(".grid");
-      const gridEl = grids?.[page];
-      if (gridEl) {
-        const rect = gridEl.getBoundingClientRect();
-        const localX = e.clientX - rect.left;
-        const localY = e.clientY - rect.top;
-
-        const col = Math.floor(localX / (rect.width / COLS));
-        const row = Math.floor(localY / (rect.height / ROWS));
-
-        if (col >= 0 && col < COLS && row >= 0 && row < ROWS) {
-          const targetCellIndex = row * COLS + col;
-          const targetFlatIndex = page * PAGE_SIZE + targetCellIndex;
-
-          let currentOriginList = [...orderedAppIdsRef.current];
-          const fromIndex = currentOriginList.indexOf(dragId);
-
-          if (fromIndex !== -1 && targetFlatIndex !== fromIndex) {
-            if (targetFlatIndex >= currentOriginList.length) {
-              const targetLength = (page + 1) * PAGE_SIZE;
-              while (currentOriginList.length < targetLength) {
-                currentOriginList.push(null);
-              }
-            }
-
-            const nextPreview = getPreviewList(
-              currentOriginList,
-              fromIndex,
-              targetFlatIndex,
-            );
-            orderedAppIdsRef.current = nextPreview;
-            previewListRef.current = nextPreview;
-            setPreviewList(nextPreview);
-            setOrderedAppIds(nextPreview);
-          }
-        }
-      }
-
-      // 2. Edge swipe detection
       const containerRect = containerRef.current?.getBoundingClientRect();
+      let page = currentPageRef.current;
+
+      // 1. Edge swipe detection (bounded to valid pages so it never overshoots into blank space)
       if (containerRect) {
         const x = e.clientX;
         const now = Date.now();
-        if (now - lastSwipeTime.current > 1200) {
-          const page = currentPageRef.current;
-          if (x < containerRect.left + 36 && page > 0) {
-            changePage(page - 1);
+        if (now - lastSwipeTime.current > EDGE_SWIPE_COOLDOWN_MS) {
+          if (x < containerRect.left + EDGE_SWIPE_ZONE && page > 0) {
+            page = page - 1;
+            currentPageRef.current = page;
+            setCurrentPage(page);
             lastSwipeTime.current = now;
-          } else if (x > containerRect.right - 36) {
-            changePage(page + 1);
+            moveDraggedAppToCell(e.clientX, e.clientY, page, true);
+            return;
+          } else if (
+            x > containerRect.right - EDGE_SWIPE_ZONE &&
+            page < maxDragPageRef.current
+          ) {
+            page = page + 1;
+            totalPagesRef.current = Math.max(totalPagesRef.current, page + 1);
+            currentPageRef.current = page;
+            setCurrentPage(page);
             lastSwipeTime.current = now;
+            moveDraggedAppToCell(e.clientX, e.clientY, page, true);
+            return;
           }
         }
       }
+
+      // 2. Calculate hover index inside the stationary viewport bounds for the current page
+      const insidePhone =
+        !!containerRect &&
+        e.clientX >= containerRect.left &&
+        e.clientX <= containerRect.right &&
+        e.clientY >= containerRect.top &&
+        e.clientY <= containerRect.bottom;
+      moveDraggedAppToCell(e.clientX, e.clientY, page, insidePhone);
     };
 
     const handlePointerUp = () => {
       const latestPreview = [...previewListRef.current];
       const page = currentPageRef.current;
 
-      let lastNonEmptyIndex = -1;
-      for (let i = latestPreview.length - 1; i >= 0; i--) {
-        if (latestPreview[i] !== null) {
-          lastNonEmptyIndex = i;
-          break;
-        }
-      }
-      const neededPages = Math.max(
-        1,
-        Math.ceil((lastNonEmptyIndex + 1) / PAGE_SIZE),
-      );
-      const nextList = latestPreview.slice(0, neededPages * PAGE_SIZE);
+      const { nextList, nextPage } = compactPages(latestPreview, page);
+
+      orderedAppIdsRef.current = nextList;
+      previewListRef.current = nextList;
+      currentPageRef.current = nextPage;
+      activeDragIdRef.current = null;
+      isHoldingIconRef.current = false;
 
       setOrderedAppIds(nextList);
       setPreviewList(nextList);
-
-      if (page >= neededPages) {
-        setCurrentPage(neededPages - 1);
-      }
-
+      setCurrentPage(nextPage);
       setActiveDragId(null);
       setIsHoldingIcon(false);
     };
 
     window.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerUp);
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerUp);
     };
-    // Only re-register when drag starts/ends — refs handle fresh values internally
-  }, [activeDragId, changePage]);
+  }, [activeDragId]);
 
   const handleBgDragEnd = (
     e: PointerEvent | MouseEvent | TouchEvent,
     info: PanInfo,
   ) => {
     void e;
+    if (activeDragIdRef.current || isHoldingIconRef.current) return;
+
     const offset = info.offset.x;
     const velocity = info.velocity.x;
+    const maxPage = Math.max(0, totalPagesRef.current - 1);
+    const basePage = Math.min(currentPageRef.current, maxPage);
 
-    let nextPage = currentPage;
+    let nextPage = basePage;
     const swipeThreshold = containerWidth / 4;
 
     if (offset < -swipeThreshold || velocity < -300) {
-      nextPage = Math.min(totalPages - 1, currentPage + 1);
+      nextPage = Math.min(maxPage, basePage + 1);
     } else if (offset > swipeThreshold || velocity > 300) {
-      nextPage = Math.max(0, currentPage - 1);
+      nextPage = Math.max(0, basePage - 1);
     }
 
     changePage(nextPage);
@@ -390,28 +524,36 @@ export function IPhoneHomeScreen({
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 overflow-hidden"
+      className="absolute inset-0 overflow-clip"
       style={{
         paddingTop: withInset(statusBarHeight + 12, "top"),
         paddingBottom: withInset(bottomPad, "bottom"),
       }}
       onPointerDown={onBgPointerDown}
+      onPointerMove={onBgPointerMove}
       onPointerUp={onBgPointerUp}
       onPointerCancel={onBgPointerUp}
       onClick={onBgClick}
     >
-      <div className="h-full w-full overflow-hidden">
+      <div
+        ref={viewportRef}
+        className="h-full w-full overflow-clip"
+        onPointerDown={onViewportPointerDown}
+      >
         <motion.div
-          drag={isHoldingIcon ? false : "x"}
+          drag="x"
+          dragControls={bgDragControls}
+          dragListener={false}
           dragDirectionLock
           dragConstraints={{
             left: -(totalPages - 1) * containerWidth,
             right: 0,
           }}
-          animate={{ x: -currentPage * containerWidth }}
+          animate={{ x: -effectivePage * containerWidth }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           onDragEnd={handleBgDragEnd}
-          className="flex h-full w-full cursor-grab active:cursor-grabbing"
+          className="flex h-full cursor-grab active:cursor-grabbing"
+          style={{ width: totalPages * containerWidth }}
         >
           {pages.map((page, pageIdx) => (
             <div
@@ -435,8 +577,16 @@ export function IPhoneHomeScreen({
                         index={i}
                         jiggling={jiggling}
                         activeDragId={activeDragId}
-                        onPointerDownStart={() => setIsHoldingIcon(true)}
-                        onPointerDownEnd={() => setIsHoldingIcon(false)}
+                        onPointerDownStart={() => {
+                          isHoldingIconRef.current = true;
+                          setIsHoldingIcon(true);
+                        }}
+                        onPointerDownEnd={() => {
+                          if (!activeDragIdRef.current) {
+                            isHoldingIconRef.current = false;
+                            setIsHoldingIcon(false);
+                          }
+                        }}
                         onOpen={onOpenApp}
                         onDragStart={handleDragStart}
                       />
@@ -469,6 +619,7 @@ export function IPhoneHomeScreen({
           bottom: withInset(navBarHeight + homeIndicatorHeight + 6, "bottom"),
           height: 16,
         }}
+        onPointerDown={(e) => e.stopPropagation()}
       >
         {Array.from({ length: totalPages }).map((_, i) => (
           <button
@@ -479,7 +630,7 @@ export function IPhoneHomeScreen({
             }}
             className={cn(
               "rounded-full transition-all duration-200",
-              i === currentPage
+              i === effectivePage
                 ? "w-4 h-1.5 bg-white"
                 : "w-1.5 h-1.5 bg-white/50",
             )}
@@ -583,7 +734,10 @@ function AppIcon({
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (didLongPress.current || jiggling) return;
+    if (didLongPress.current || isDraggingInitiated.current || jiggling) {
+      isDraggingInitiated.current = false;
+      return;
+    }
     onOpen(app);
   };
 

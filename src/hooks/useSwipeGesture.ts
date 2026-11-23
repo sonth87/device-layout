@@ -38,6 +38,11 @@ export function useSwipeGesture<T extends HTMLElement>(
 
     const onDown = (e: Event) => {
       const pe = e as PointerEvent;
+      const target = pe.target as HTMLElement | null;
+      if (target?.closest?.('[data-app-id], [data-no-swipe-gesture], input, textarea')) {
+        start.current = null;
+        return;
+      }
       start.current = { x: pe.clientX, y: pe.clientY, t: Date.now() };
     };
 

@@ -7269,7 +7269,7 @@ var bp = class extends le {
 }, xp = {
 	Finder: O(() => import("./Finder-CDYVZy4l.js").then((e) => ({ default: e.Finder }))),
 	Terminal: O(() => import("./Terminal-BtXsnR8O.js").then((e) => ({ default: e.Terminal }))),
-	Settings: O(() => import("./Settings-W58pS8_R.js").then((e) => ({ default: e.Settings }))),
+	Settings: O(() => import("./Settings-D5joNYjg.js").then((e) => ({ default: e.Settings }))),
 	Browser: O(() => import("./Browser-DxL-8mG1.js").then((e) => ({ default: e.Browser }))),
 	TextEditor: O(() => import("./TextEditor-Cw3AUF4f.js").then((e) => ({ default: e.TextEditor }))),
 	Clock: O(() => import("./Clock-3y8HXyxD.js").then((e) => ({ default: e.Clock }))),
@@ -7278,7 +7278,7 @@ var bp = class extends le {
 	Photos: O(() => import("./Photos-CvMy8pyG.js").then((e) => ({ default: e.Photos }))),
 	Music: O(() => import("./Music-CHsqaQ72.js").then((e) => ({ default: e.Music }))),
 	Calendar: O(() => import("./Calendar-Cg9OU5_o.js").then((e) => ({ default: e.Calendar }))),
-	Messages: O(() => import("./Messages-CQ6So53D.js").then((e) => ({ default: e.Messages }))),
+	Messages: O(() => import("./Messages-C4TUkvIR.js").then((e) => ({ default: e.Messages }))),
 	IframeApp: O(() => import("./IframeApp-CftDqXvS.js").then((e) => ({ default: e.IframeApp }))),
 	MdxApp: O(() => import("./MdxApp-Bga7DxwU.js").then((e) => ({ default: e.MdxApp })))
 };
@@ -7547,4 +7547,4 @@ function Op({ statusBarHeight: e, navBarHeight: t, homeIndicatorHeight: n = 20, 
 	}, f.id) });
 }
 //#endregion
-export { ar as A, Bd as C, pl as D, ld as E, nl as O, Wd as S, ud as T, Zd as _, gp as a, Kd as b, up as c, np as d, Uf as f, Qd as g, ef as h, vp as i, B as j, J as k, dp as l, tf as m, Dp as n, _p as o, nf as p, Cp as r, mp as s, Op as t, sp as u, Xd as v, pd as w, Gd as x, qd as y };
+export { J as A, Ud as C, ld as D, ud as E, B as M, pl as O, Wd as S, pd as T, Zd as _, gp as a, Kd as b, up as c, np as d, Uf as f, Qd as g, ef as h, vp as i, ar as j, nl as k, dp as l, tf as m, Dp as n, _p as o, nf as p, Cp as r, mp as s, Op as t, sp as u, Xd as v, Bd as w, Gd as x, qd as y };
